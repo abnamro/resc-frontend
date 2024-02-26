@@ -5,7 +5,7 @@ on:
     branches: [ "main" ]
     paths:
       - .github/workflows/frontend-ci.yaml
-      - components/resc-frontend/**
+      - /**
       - '!**.md'
       - '!**.png'
       - '!**.gif'
@@ -14,7 +14,7 @@ on:
     branches: [ "main" ]
     paths:
       - .github/workflows/frontend-ci.yaml
-      - components/resc-frontend/**
+      - /**
       - '!**.md'
       - '!**.png'
       - '!**.gif'
@@ -22,7 +22,7 @@ on:
   workflow_dispatch:
 
 env:
-  RESC_FRONTEND_DIR: components/resc-frontend
+  RESC_FRONTEND_DIR: /
   CONTAINER_REGISTRY: rescabnamro
   IMAGE_NAME: resc-frontend
 
@@ -49,29 +49,24 @@ jobs:
 
     - name: Install Dependencies
       run: | 
-        cd ${{ env.RESC_FRONTEND_DIR }}
         npm install
 
     - name: Npm Lint
       run: | 
-        cd ${{ env.RESC_FRONTEND_DIR }}
         npm run lint
 
     - name: Run Unit Tests with Vitest and coverage
       run: | 
-        cd ${{ env.RESC_FRONTEND_DIR }}
         npm run ut
 
     - name: Run Software Composition Analysis using AuditJS
       run: | 
-        cd ${{ env.RESC_FRONTEND_DIR }}
         npx auditjs@latest ossi -q || true
         
       ## Removing the dir paths and making them relative paths.
     - name: Fix coverage report
       run: |
-        cd ${{ env.RESC_FRONTEND_DIR }}
-        sed -i "s+/home/runner/work/repository-scanner/repository-scanner/components/resc-frontend/++g" tests/reports/coverage/lcov.info
+        sed -i "s+/home/runner/work/resc-frontend/++g" tests/reports/coverage/lcov.info
         cat tests/reports/coverage/lcov.info
 
     # This step will only execute if PR is created internally.
@@ -104,7 +99,6 @@ jobs:
     - id: getversion
       name: Get package version
       run: | 
-        cd ${{ env.RESC_FRONTEND_DIR }}
         frontend_version=$(npm pkg get version | sed 's/"//g')
         echo "frontend_version=$frontend_version" >> $GITHUB_OUTPUT
 
@@ -120,12 +114,11 @@ jobs:
       - name: Docker Lint
         uses: hadolint/hadolint-action@v2.0.0
         with:
-          dockerfile: ${{ env.RESC_FRONTEND_DIR }}/Dockerfile
+          dockerfile: ./Dockerfile
           failure-threshold: error
 
       - name: Build an image from Dockerfile
         run: |
-          cd ${{ env.RESC_FRONTEND_DIR }}
           docker build -t ${{ env.CONTAINER_REGISTRY }}/${{ env.IMAGE_NAME }}:${{needs.nodejs-basic-validation.outputs.frontend_version}} .
 
       - name: Run Trivy vulnerability scanner
@@ -168,6 +161,6 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
         with:
-          context: ${{ env.RESC_FRONTEND_DIR }}/
+          context: ./
           push: ${{ env.PUBLISH_IMAGE }}
           tags: ${{ env.CONTAINER_REGISTRY }}/${{ env.IMAGE_NAME }}:latest, ${{ env.CONTAINER_REGISTRY }}/${{ env.IMAGE_NAME }}:${{needs.nodejs-basic-validation.outputs.frontend_version}}
