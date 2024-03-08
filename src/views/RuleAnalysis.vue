@@ -650,8 +650,16 @@ onKeyStroke('ArrowLeft', () => !shouldIgnoreKeystroke() && closeDetails(), {
 onKeyStroke('ArrowRight', () => !shouldIgnoreKeystroke() && openDetails(), {
   eventName: 'keydown',
 });
-onKeyStroke('ArrowDown', (e: KeyboardEvent) => !shouldIgnoreKeystroke() && selectDown() && e.shiftKey && toggleSelect(), { eventName: 'keydown' });
-onKeyStroke('ArrowUp', (e: KeyboardEvent) => !shouldIgnoreKeystroke() && selectUp() && e.shiftKey && toggleSelect(), { eventName: 'keydown' });
+onKeyStroke(
+  'ArrowDown',
+  (e: KeyboardEvent) => !shouldIgnoreKeystroke() && selectDown() && e.shiftKey && toggleSelect(),
+  { eventName: 'keydown' },
+);
+onKeyStroke(
+  'ArrowUp',
+  (e: KeyboardEvent) => !shouldIgnoreKeystroke() && selectUp() && e.shiftKey && toggleSelect(),
+  { eventName: 'keydown' },
+);
 onKeyStroke('o', () => !shouldIgnoreKeystroke() && openCommitUrl(), { eventName: 'keydown' });
 onKeyStroke('f', () => !shouldIgnoreKeystroke() && markAsFalsePositive(), {
   eventName: 'keydown',
