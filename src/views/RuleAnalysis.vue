@@ -111,18 +111,16 @@
 
         <!-- Path Column -->
         <template #cell(file_path)="data">
-          {{ truncate((data.item as DetailedFindingRead).file_path, 45, '...') }}
+          <span
+            :title="(data.item as DetailedFindingRead).file_path"
+            class="span-path text-truncate"
+            >{{ (data.item as DetailedFindingRead).file_path }}</span
+          >
         </template>
 
         <!-- Line Column -->
         <template #cell(line_number)="data">
           {{ (data.item as DetailedFindingRead).line_number }}
-        </template>
-
-        <!-- Position Column -->
-        <template #cell(position)="data">
-          {{ (data.item as DetailedFindingRead).column_start }} -
-          {{ (data.item as DetailedFindingRead).column_end }}
         </template>
 
         <!-- Status Column -->
@@ -272,17 +270,10 @@ const fields = ref([
     thStyle: { borderTop: '0px' },
   },
   {
-    key: 'position',
-    sortable: true,
-    label: 'Position',
-    class: 'text-start position-sticky',
-    thStyle: { borderTop: '0px' },
-  },
-  {
     key: 'status',
     sortable: true,
     label: 'Status',
-    class: 'text-start position-sticky',
+    class: 'text-end position-sticky',
     thStyle: { borderTop: '0px' },
   },
 ]);
@@ -292,14 +283,6 @@ const skipRowCount = computed(() => (currentPage.value - 1) * perPage.value);
 const auditButtonDisabled = computed(() => selectedCheckBoxIds.value.length <= 0);
 
 const selectedIndex = ref(undefined as number | undefined);
-
-function truncate(text: string, length: number, suffix: string) {
-  if (text.length > length) {
-    return text.substring(0, length) + suffix;
-  } else {
-    return text;
-  }
-}
 
 function isRedirectedFromRuleMetricsPage() {
   const store = useAuthUserStore();

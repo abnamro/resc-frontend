@@ -20,7 +20,7 @@ import {
 
 ChartJS.register(Title, Tooltip, Legend, LineElement, LinearScale, CategoryScale, PointElement);
 
-import BootstrapVue from 'bootstrap-vue-next';
+import { createBootstrap } from 'bootstrap-vue-next';
 
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue-next/dist/bootstrap-vue-next.css';
@@ -29,7 +29,7 @@ import './styles/main.css';
 const app = createApp(App);
 app.use(PiniaVuePlugin);
 app.use(router);
-app.use(BootstrapVue);
+app.use(createBootstrap());
 importFA();
 app.component('font-awesome-icon', FontAwesomeIcon);
 

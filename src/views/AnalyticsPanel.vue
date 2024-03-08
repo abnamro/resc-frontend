@@ -1,6 +1,6 @@
 <template>
   <!-- Page Title -->
-  <div class="ms-3 col-md-2 pt-2 text-start page-title">
+  <div class="mx-4 col-md-2 pt-2 text-start page-title">
     <h3><small class="text-nowrap">ANALYTICS</small></h3>
   </div>
 
