@@ -679,10 +679,3 @@ onMounted(() => {
   }
 });
 </script>
-
-<style>
-.span-path {
-  display: inline-block;
-  width: 100%;
-}
-</style>

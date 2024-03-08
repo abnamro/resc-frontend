@@ -462,3 +462,8 @@ html {
 .bg-secondary {
   --bs-bg-opacity: 0.75;
 }
+
+.span-path {
+  display: inline-block;
+  width: 100%;
+}

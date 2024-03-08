@@ -41,7 +41,7 @@
       >
         <!-- Repository Column -->
         <template #cell(repository_name)="data">
-          {{ truncate((data.item as RepositoryEnrichedRead).repository_name, 25, '...') }}
+          {{ (data.item as RepositoryEnrichedRead).repository_name }}
         </template>
 
         <!-- Health Bar Column -->
@@ -114,7 +114,7 @@ const fields = ref([
     key: 'repository_name',
     sortable: true,
     label: 'Repository',
-    class: 'text-start position-sticky',
+    class: 'text-start position-sticky text-truncate',
     thStyle: { borderTop: '0px', width: '20%' },
   },
   {
@@ -155,15 +155,6 @@ const hasRecords = computed(() => {
 const skipRowCount = computed(() => {
   return (currentPage.value - 1) * perPage.value;
 });
-
-// remove me later
-function truncate(text: string, length: number, suffix: string) {
-  if (text.length > length) {
-    return text.substring(0, length) + suffix;
-  } else {
-    return text;
-  }
-}
 
 function rowClass(item: RepositoryEnrichedRead) {
   return item.last_scan_id ? 'row-clickable' : 'row-unclickable';
