@@ -4,11 +4,11 @@
 
   <!-- Audit Activity Over Time -->
   <div v-if="loadedData">
-    <div class="ms-3 pt-4 text-start page-title">
+    <div class="mx-4 pt-4 text-start page-title">
       <h5 class="text-nowrap">Audit Activity Over Time</h5>
     </div>
 
-    <div class="ms-3 pt-2 me-2">
+    <div class="mx-4 pt-2">
       <b-card-group class="col-md-12" deck>
         <CardVue
           :cardTitle="todayAuditTitle"
@@ -50,7 +50,7 @@
   </div>
 
   <div v-if="loadedData">
-    <div class="row ms-3 pt-1 card-deck me-2">
+    <div class="row mx-4 pt-1 card-deck">
       <!-- Audit Trend -->
       <div class="w-auto px-0">
         <div class="pt-5 page-title">

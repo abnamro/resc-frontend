@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="mx-4">
     <!-- Page Title -->
     <div class="col-md-2 pt-2 text-start page-title">
       <h3><small class="text-nowrap">SCAN FINDINGS</small></h3>
