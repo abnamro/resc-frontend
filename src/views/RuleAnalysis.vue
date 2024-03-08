@@ -1,5 +1,16 @@
 <template>
-  <div>
+  <b-navbar toggleable="lg" type="dark" class="px-4 right">
+    <!-- variant="warning" -->
+    <b-navbar-brand
+      class="ml-auto float-right px-3 rounded-circle bg-warning text-white font-bold"
+      @click="showKeybindingHelp"
+      >?</b-navbar-brand
+    >
+  </b-navbar>
+
+  <KeybindingModal ref="keybindingModal"></KeybindingModal>
+
+  <div class="m-4">
     <!-- Page Title -->
     <div class="col-md-2 pt-2 text-start page-title">
       <h3><small class="text-nowrap">RULE ANALYSIS</small></h3>
@@ -45,12 +56,15 @@
     <!-- sticky-header="85vh" -->
     <div class="p-3" v-if="hasRecords">
       <b-table
+        ref="auditTable"
         id="rule-analysis-table"
         :sticky-header="true"
         :items="findingList"
         :fields="fields"
         :current-page="1"
         :per-page="0"
+        :selectable="true"
+        :select-mode="'single'"
         primary-key="id_"
         responsive
         small
@@ -74,6 +88,14 @@
             :value="(data.item as DetailedFindingRead).id_"
             @change="selectSingleCheckbox"
           ></b-form-checkbox>
+          <template v-if="data.item.rowSelected">
+            <span aria-hidden="true">&check;</span>
+            <span class="sr-only">Selected</span>
+          </template>
+          <template v-else>
+            <span aria-hidden="true">&nbsp;</span>
+            <span class="sr-only">Not selected</span>
+          </template>
         </template>
 
         <!-- Collapse Icon Column -->
@@ -138,13 +160,15 @@
         :requestedPageNumber="requestedPageNumber"
         @page-click="handlePageClick"
         @page-size-change="handlePageSizeChange"
-      ></Pagination>
+      >
+      </Pagination>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
 import AuditModal from '@/components/ScanFindings/AuditModal.vue';
+import KeybindingModal from '@/components/Help/KeybindingModal.vue';
 import Config from '@/configuration/config';
 import AxiosConfig from '@/configuration/axios-config';
 import FindingPanel from '@/components/ScanFindings/FindingPanel.vue';
@@ -156,7 +180,7 @@ import Pagination from '@/components/Common/PaginationVue.vue';
 import { type RuleAnalysisFilter } from '@/components/Filters/RuleAnalysisFilter.vue';
 import RulePackService from '@/services/rule-pack-service';
 import { useAuthUserStore, type PreviousRouteState } from '@/store/index';
-import { computed, nextTick, onMounted, ref, type Ref } from 'vue';
+import { computed, onMounted, ref, type Ref } from 'vue';
 import type {
   DetailedFindingRead,
   FindingStatus,
@@ -167,11 +191,15 @@ import type {
 import type { AxiosResponse } from 'axios';
 import type { TableItem } from 'bootstrap-vue-next';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import { onKeyStroke } from '@vueuse/core';
+import { shouldIgnoreKeystroke } from '@/utils/common-utils';
 
 type TableItemDetailedFindingRead = DetailedFindingRead & TableItem;
 
 const loadedData = ref(false);
+const keybindingModal = ref();
 const auditModal = ref();
+const auditTable = ref();
 
 const findingList = ref([] as TableItemDetailedFindingRead[]);
 const totalRows = ref(0);
@@ -263,6 +291,8 @@ const hasRecords = computed(() => findingList.value.length > 0);
 const skipRowCount = computed(() => (currentPage.value - 1) * perPage.value);
 const auditButtonDisabled = computed(() => selectedCheckBoxIds.value.length <= 0);
 
+const selectedIndex = ref(undefined as number | undefined);
+
 function truncate(text: string, length: number, suffix: string) {
   if (text.length > length) {
     return text.substring(0, length) + suffix;
@@ -295,8 +325,22 @@ function selectAllCheckboxes() {
   }
 }
 
+function toggleAllCheckboxes() {
+  selectedCheckBoxIds.value = [];
+  allSelected.value = !allSelected.value;
+  if (allSelected.value) {
+    for (const finding of findingList.value) {
+      selectedCheckBoxIds.value.push(finding.id_);
+    }
+  }
+}
+
 function showAuditModal() {
   auditModal.value.show();
+}
+
+function showKeybindingHelp() {
+  keybindingModal.value.show();
 }
 
 function handlePageClick(page: number) {
@@ -311,18 +355,17 @@ function handlePageSizeChange(pageSize: number) {
   fetchPaginatedDetailedFindings();
 }
 
-function toggleFindingDetails(row: TableItem) {
+function toggleFindingDetails(row: TableItem, index: number) {
+  selectedIndex.value = index;
+
   if (row._showDetails) {
     row._showDetails = false;
   } else {
-    findingList.value.forEach((_item, idx, theArray) => {
-      theArray[idx]._showDetails = false;
-    });
-    nextTick(() => {
-      row._showDetails = true;
-    });
+    closeAllDetails();
+    row._showDetails = true;
   }
 }
+
 function fetchPaginatedDetailedFindings() {
   loadedData.value = false;
   const filterObj: QueryFilterType = {
@@ -355,13 +398,7 @@ function fetchPaginatedDetailedFindings() {
 }
 
 function updateAudit(status: FindingStatus, comment: string) {
-  findingList.value.forEach((finding: DetailedFindingRead, idx, theArray) => {
-    if (selectedCheckBoxIds.value.includes(finding.id_)) {
-      theArray[idx].status = status;
-      theArray[idx].comment = comment;
-    }
-  });
-  allSelected.value = false;
+  updateVisualBadge(selectedCheckBoxIds.value, status, comment);
   fetchPaginatedDetailedFindings();
 }
 
@@ -464,6 +501,188 @@ function fetchRuleTags() {
       AxiosConfig.handleError(error);
     });
 }
+
+function getCurrentFindingSelected(): TableItemDetailedFindingRead | undefined {
+  if (selectedIndex.value === undefined) {
+    return undefined;
+  }
+
+  return findingList.value[selectedIndex.value];
+}
+
+function selectDown(): boolean {
+  const detailsStatus = getCurrentFindingSelected()?._showDetails;
+  closeAllDetails();
+
+  selectedIndex.value = ((selectedIndex.value ?? -1) + 1) % perPage.value;
+  auditTable.value.clearSelected();
+  auditTable.value.selectRow(selectedIndex.value);
+
+  (getCurrentFindingSelected() as TableItemDetailedFindingRead)._showDetails = detailsStatus;
+
+  return true;
+}
+
+function selectUp(): boolean {
+  const detailsStatus = getCurrentFindingSelected()?._showDetails;
+  closeAllDetails();
+
+  selectedIndex.value = Math.max(0, (selectedIndex.value ?? 1) - 1);
+  auditTable.value.clearSelected();
+  auditTable.value.selectRow(selectedIndex.value);
+
+  (getCurrentFindingSelected() as TableItemDetailedFindingRead)._showDetails = detailsStatus;
+
+  return true;
+}
+
+function closeAllDetails() {
+  findingList.value.forEach((_item, idx, theArray) => {
+    theArray[idx]._showDetails = false;
+  });
+}
+
+function openDetails() {
+  const item = getCurrentFindingSelected();
+  if (item === undefined) {
+    return;
+  }
+  item._showDetails = true;
+}
+
+function closeDetails() {
+  const item = getCurrentFindingSelected();
+  if (item === undefined) {
+    return;
+  }
+  item._showDetails = false;
+}
+
+function openCommitUrl() {
+  const url = getCurrentFindingSelected()?.commit_url;
+  if (url !== undefined) {
+    window.open(url, '_blank')?.focus();
+  }
+}
+
+function toggleSelect() {
+  const item = getCurrentFindingSelected();
+  if (item === undefined) {
+    return;
+  }
+  const index = selectedCheckBoxIds.value.indexOf(item.id_);
+  if (index === -1) {
+    selectedCheckBoxIds.value.push(item.id_);
+  } else {
+    selectedCheckBoxIds.value.splice(index, 1);
+  }
+}
+
+function markAsFalsePositive() {
+  const item = getCurrentFindingSelected();
+  if (item === undefined) {
+    return;
+  }
+  sendUpdate([item.id_], 'FALSE_POSITIVE');
+  selectDown();
+}
+
+function markAsTruePositive() {
+  const item = getCurrentFindingSelected();
+  if (item === undefined) {
+    return;
+  }
+  sendUpdate([item.id_], 'TRUE_POSITIVE');
+  selectDown();
+}
+
+function markAllAsFalsePositive() {
+  sendUpdate(selectedCheckBoxIds.value, 'FALSE_POSITIVE');
+}
+
+function markAllAsTruePositive() {
+  sendUpdate(selectedCheckBoxIds.value, 'TRUE_POSITIVE');
+}
+
+function auditThis() {
+  if (selectedCheckBoxIds.value.length > 0) {
+    showAuditModal();
+    return;
+  }
+
+  openDetails();
+}
+
+function sendUpdate(selectedIds: number[], status: FindingStatus) {
+  FindingsService.auditFindings(selectedIds, status, '')
+    .then(() => {
+      updateVisualBadge(selectedIds, status);
+    })
+    .catch((error) => {
+      AxiosConfig.handleError(error);
+      return false;
+    });
+}
+
+function updateVisualBadge(selectedIds: number[], status: FindingStatus, comment: string = '') {
+  findingList.value.forEach((finding: DetailedFindingRead, idx, theArray) => {
+    if (selectedIds.includes(finding.id_)) {
+      theArray[idx].status = status;
+      theArray[idx].comment = comment;
+    }
+  });
+
+  if (selectedIds.length > 1) {
+    selectedCheckBoxIds.value = [];
+    allSelected.value = false;
+    return;
+  }
+
+  const index = selectedCheckBoxIds.value.indexOf(selectedIds[0]);
+  if (index !== -1) {
+    selectedCheckBoxIds.value.splice(index, 1);
+  }
+}
+
+onKeyStroke('ArrowLeft', () => !shouldIgnoreKeystroke() && closeDetails(), {
+  eventName: 'keydown',
+});
+onKeyStroke('ArrowRight', () => !shouldIgnoreKeystroke() && openDetails(), {
+  eventName: 'keydown',
+});
+onKeyStroke(
+  'ArrowDown',
+  (e: KeyboardEvent) => !shouldIgnoreKeystroke() && selectDown() && e.shiftKey && toggleSelect(),
+  { eventName: 'keydown' },
+);
+onKeyStroke(
+  'ArrowUp',
+  (e: KeyboardEvent) => !shouldIgnoreKeystroke() && selectUp() && e.shiftKey && toggleSelect(),
+  { eventName: 'keydown' },
+);
+onKeyStroke('o', () => !shouldIgnoreKeystroke() && openCommitUrl(), { eventName: 'keydown' });
+onKeyStroke('f', () => !shouldIgnoreKeystroke() && markAsFalsePositive(), {
+  eventName: 'keydown',
+});
+onKeyStroke('F', () => !shouldIgnoreKeystroke() && markAllAsFalsePositive(), {
+  eventName: 'keydown',
+});
+onKeyStroke('t', () => !shouldIgnoreKeystroke() && markAsTruePositive(), {
+  eventName: 'keydown',
+});
+onKeyStroke('T', () => !shouldIgnoreKeystroke() && markAllAsTruePositive(), {
+  eventName: 'keydown',
+});
+onKeyStroke('a', (e: KeyboardEvent) => !shouldIgnoreKeystroke() && !e.ctrlKey && auditThis(), {
+  eventName: 'keydown',
+});
+onKeyStroke(' ', () => !shouldIgnoreKeystroke() && toggleSelect(), { eventName: 'keydown' });
+onKeyStroke('?', () => !shouldIgnoreKeystroke() && showKeybindingHelp(), { eventName: 'keydown' });
+onKeyStroke(
+  'a',
+  (e: KeyboardEvent) => !shouldIgnoreKeystroke() && e.ctrlKey && toggleAllCheckboxes(),
+  { eventName: 'keydown' },
+);
 
 onMounted(() => {
   if (isRedirectedFromRuleMetricsPage()) {

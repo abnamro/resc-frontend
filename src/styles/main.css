@@ -20,6 +20,10 @@
     'Liberation Mono', 'Courier New', monospace;
 }
 
+.container-fluid {
+  --bs-gutter-x: 0;
+}
+
 html {
   font-family: sans-serif;
   line-height: 1.15;
