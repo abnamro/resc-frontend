@@ -510,7 +510,7 @@ function getCurrentFindingSelected(): TableItemDetailedFindingRead | undefined {
   return findingList.value[selectedIndex.value];
 }
 
-function selectDown() {
+function selectDown(): boolean {
   const detailsStatus = getCurrentFindingSelected()?._showDetails;
   closeAllDetails();
 
@@ -519,9 +519,11 @@ function selectDown() {
   auditTable.value.selectRow(selectedIndex.value);
 
   (getCurrentFindingSelected() as TableItemDetailedFindingRead)._showDetails = detailsStatus;
+
+  return true;
 }
 
-function selectUp() {
+function selectUp(): boolean {
   const detailsStatus = getCurrentFindingSelected()?._showDetails;
   closeAllDetails();
 
@@ -530,6 +532,8 @@ function selectUp() {
   auditTable.value.selectRow(selectedIndex.value);
 
   (getCurrentFindingSelected() as TableItemDetailedFindingRead)._showDetails = detailsStatus;
+
+  return true;
 }
 
 function closeAllDetails() {
@@ -646,8 +650,8 @@ onKeyStroke('ArrowLeft', () => !shouldIgnoreKeystroke() && closeDetails(), {
 onKeyStroke('ArrowRight', () => !shouldIgnoreKeystroke() && openDetails(), {
   eventName: 'keydown',
 });
-onKeyStroke('ArrowDown', () => !shouldIgnoreKeystroke() && selectDown(), { eventName: 'keydown' });
-onKeyStroke('ArrowUp', () => !shouldIgnoreKeystroke() && selectUp(), { eventName: 'keydown' });
+onKeyStroke('ArrowDown', (e: KeyboardEvent) => !shouldIgnoreKeystroke() && selectDown() && e.shiftKey && toggleSelect(), { eventName: 'keydown' });
+onKeyStroke('ArrowUp', (e: KeyboardEvent) => !shouldIgnoreKeystroke() && selectUp() && e.shiftKey && toggleSelect(), { eventName: 'keydown' });
 onKeyStroke('o', () => !shouldIgnoreKeystroke() && openCommitUrl(), { eventName: 'keydown' });
 onKeyStroke('f', () => !shouldIgnoreKeystroke() && markAsFalsePositive(), {
   eventName: 'keydown',
