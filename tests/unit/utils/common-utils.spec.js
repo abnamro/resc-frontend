@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import CommonUtils from '@/utils/common-utils';
+import CommonUtils, { shouldIgnoreKeystroke } from '@/utils/common-utils';
 import Config from '@/configuration/config';
 
 describe('function formatVcsProvider', () => {
@@ -38,5 +38,35 @@ describe('function parseStatusOptions', () => {
     expect(statusList[2].label).toBe(`${Config.value('clarificationRequiredStatusLabel')}`);
     expect(statusList[3].label).toBe(`${Config.value('truePostiveStatusLabel')}`);
     expect(statusList[4].label).toBe(`${Config.value('falsePositiveStatusLabel')}`);
+  });
+});
+
+describe('function shouldIgnoreKeystroke', () => {
+  it('should return false by default', () => {
+    expect(shouldIgnoreKeystroke()).toBeFalsy();
+  });
+
+  it('should return true if an element INPUT element is selected', () => {
+    // override document
+    global.document = { activeElement: { nodeName: 'INPUT' } };
+    expect(shouldIgnoreKeystroke()).toBeTruthy();
+  });
+
+  it('should return true if an element TEXTAREA element is selected', () => {
+    // override document
+    global.document = { activeElement: { nodeName: 'TEXTAREA' } };
+    expect(shouldIgnoreKeystroke()).toBeTruthy();
+  });
+
+  it('should return true if an element SELECT element is selected', () => {
+    // override document
+    global.document = { activeElement: { nodeName: 'SELECT' } };
+    expect(shouldIgnoreKeystroke()).toBeTruthy();
+  });
+
+  it('should return false if an element A element is selected', () => {
+    // override document
+    global.document = { activeElement: { nodeName: 'A' } };
+    expect(shouldIgnoreKeystroke()).toBeFalsy();
   });
 });

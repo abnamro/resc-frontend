@@ -1,7 +1,7 @@
 import { useToast } from 'bootstrap-vue-next';
 import type { BaseColorVariant } from 'node_modules/bootstrap-vue-next/dist/src/types';
 
-const c = useToast();
+const { show } = useToast();
 
 const PushNotification = {
   notify(
@@ -10,15 +10,17 @@ const PushNotification = {
     variantType: keyof BaseColorVariant,
     autoHideDelay: number,
   ) {
-    c?.show({
-      title: titlePush,
-      body: message,
-      pos: 'top-right',
-      variant: variantType,
-      value: autoHideDelay,
-      interval: 100,
-      autoHide: true,
-      solid: true,
+    show?.({
+      props: {
+        title: titlePush,
+        body: message,
+        pos: 'top-right',
+        variant: variantType,
+        value: autoHideDelay,
+        interval: 100,
+        // autoHide: true,
+        solid: true,
+      },
     });
   },
   primary(message: string, title: string, autoHideDelay: number) {
