@@ -22,9 +22,9 @@
         </template>
       </b-table>
 
-      <template #footer="{ hide }">
+      <template #footer="">
         <div class="w-100 text-end">
-          <b-button variant="secondary" class="float-right" @click="hide">CLOSE</b-button>
+          <b-button variant="secondary" class="float-right" v-on:click="hide">CLOSE</b-button>
         </div>
       </template>
     </b-modal>
@@ -36,7 +36,7 @@ import { ref } from 'vue';
 
 const keybinding_modal = ref();
 
-type KeyBinding = { combination: string; effect: string };
+type KeyBinding = { combination: string[]; effect: string };
 
 const fields = ref([
   {
@@ -107,7 +107,7 @@ function show() {
   keybinding_modal.value.show();
 }
 
-function hide() {
+function hide(value: MouseEvent) {
   keybinding_modal.value.hide();
 }
 
