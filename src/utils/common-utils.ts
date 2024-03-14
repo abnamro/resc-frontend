@@ -85,6 +85,10 @@ export function disableScrollingWithArrowsAndCtrlA(): void {
   window.addEventListener(
     'keydown',
     function (e) {
+      if (shouldIgnoreKeystroke()) {
+        return;
+      }
+
       if (['Space', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].indexOf(e.code) > -1) {
         e.preventDefault();
       }
