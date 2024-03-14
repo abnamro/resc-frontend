@@ -49,6 +49,10 @@ jobs:
       run: | 
         npm run lint
 
+    - name: Run Type checking
+      run: | 
+        npm run tsc
+
     - name: Run Unit Tests with Vitest and coverage
       run: | 
         npm run ut
