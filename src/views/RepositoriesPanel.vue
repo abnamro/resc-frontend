@@ -105,21 +105,21 @@ const includeZeroFindingRepos = ref(false);
 const fields = ref([
   {
     key: 'project_key',
-    sortable: true,
+    sortable: false,
     label: 'Project',
     class: 'text-start position-sticky',
     thStyle: { borderTop: '0px', width: '10%' },
   },
   {
     key: 'repository_name',
-    sortable: true,
+    sortable: false,
     label: 'Repository',
     class: 'text-start position-sticky text-truncate',
     thStyle: { borderTop: '0px', width: '20%' },
   },
   {
     key: 'vcs_provider',
-    sortable: true,
+    sortable: false,
     label: 'VCS Provider',
     class: 'text-start position-sticky',
     thStyle: { borderTop: '0px', width: '10%' },
@@ -127,7 +127,7 @@ const fields = ref([
   },
   {
     key: 'last_scan_timestamp',
-    sortable: true,
+    sortable: false,
     label: 'Last Scan Date',
     class: 'text-start position-sticky',
     thStyle: { borderTop: '0px', width: '20%' },
@@ -135,7 +135,7 @@ const fields = ref([
   },
   {
     key: 'total_findings_count',
-    sortable: true,
+    sortable: false,
     label: 'Findings Count',
     class: 'text-start position-sticky',
     thStyle: { borderTop: '0px', width: '15%' },

@@ -218,14 +218,14 @@ const fields = ref([
   },
   {
     key: 'rule_name',
-    sortable: true,
+    sortable: false,
     label: 'Rule',
     class: 'text-start position-sticky',
     thStyle: { borderTop: '0px' },
   },
   {
     key: 'file_path',
-    sortable: true,
+    sortable: false,
     label: 'File Path',
     class: 'text-start position-sticky',
     thStyle: { borderTop: '0px' },
@@ -239,14 +239,14 @@ const fields = ref([
   },
   {
     key: 'status',
-    sortable: true,
+    sortable: false,
     label: 'Status',
     class: 'text-start position-sticky',
     thStyle: { borderTop: '0px' },
   },
   {
     key: 'scanType',
-    sortable: true,
+    sortable: false,
     label: 'Scan Type',
     class: 'text-start position-sticky',
     thStyle: { borderTop: '0px' },
