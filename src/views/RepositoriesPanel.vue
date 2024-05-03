@@ -9,8 +9,11 @@
 
     <!--Repository Filters -->
     <div class="ml-3 mt-4">
-      <RepositoriesPageFilter v-model:projectOptions="projectNames" v-model:repositoryOptions="repositoryNames"
-        @on-filter-change="handleFilterChange"></RepositoriesPageFilter>
+      <RepositoriesPageFilter
+        v-model:projectOptions="projectNames"
+        v-model:repositoryOptions="repositoryNames"
+        @on-filter-change="handleFilterChange"
+      ></RepositoriesPageFilter>
     </div>
 
     <!--Repository Table -->
@@ -21,10 +24,22 @@
 
     <div class="p-3" v-if="hasRecords">
       <!-- sticky-header="85vh" is not supported yet. -->
-    <!-- @vue-expect-error Typescript does not recognise the proper types for field -->
-    <b-table id="repositories-table" :sticky-header="true" :items="repositoryList" :fields="fields" :current-page="1"
-        :per-page="0" primary-key="id_" v-model="currentItems" responsive small head-variant="light"
-        :tbody-tr-class="rowClass" @row-clicked="goToScanFindings">
+      <!-- @vue-expect-error Typescript does not recognise the proper types for field -->
+      <b-table
+        id="repositories-table"
+        :sticky-header="true"
+        :items="repositoryList"
+        :fields="fields"
+        :current-page="1"
+        :per-page="0"
+        primary-key="id_"
+        v-model="currentItems"
+        responsive
+        small
+        head-variant="light"
+        :tbody-tr-class="rowClass"
+        @row-clicked="goToScanFindings"
+      >
         <!-- Repository Column -->
         <template #cell(repository_name)="data">
           {{ (data.item as RepositoryEnrichedRead).repository_name }}
@@ -32,18 +47,27 @@
 
         <!-- Health Bar Column -->
         <template #cell(findings)="data">
-          <HealthBar :truePositive="(data.item as RepositoryEnrichedRead).true_positive"
+          <HealthBar
+            :truePositive="(data.item as RepositoryEnrichedRead).true_positive"
             :falsePositive="(data.item as RepositoryEnrichedRead).false_positive"
             :notAnalyzed="(data.item as RepositoryEnrichedRead).not_analyzed"
             :underReview="(data.item as RepositoryEnrichedRead).under_review"
             :clarificationRequired="(data.item as RepositoryEnrichedRead).clarification_required"
-            :totalCount="(data.item as RepositoryEnrichedRead).total_findings_count" />
+            :totalCount="(data.item as RepositoryEnrichedRead).total_findings_count"
+          />
         </template>
       </b-table>
 
       <!-- Pagination -->
-      <Pagination :currentPage="currentPage" :perPage="perPage" :totalRows="totalRows" :pageSizes="pageSizes"
-        :requestedPageNumber="requestedPageNumber" @page-click="handlePageClick" @page-size-change="handlePageSizeChange">
+      <Pagination
+        :currentPage="currentPage"
+        :perPage="perPage"
+        :totalRows="totalRows"
+        :pageSizes="pageSizes"
+        :requestedPageNumber="requestedPageNumber"
+        @page-click="handlePageClick"
+        @page-size-change="handlePageSizeChange"
+      >
       </Pagination>
     </div>
   </div>
@@ -62,7 +86,7 @@ import SpinnerVue from '@/components/Common/SpinnerVue.vue';
 import { computed, onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import type { RepositoryEnrichedRead, VCSProviders } from '@/services/shema-to-types';
-import type { TableFieldRaw, TableItem } from 'bootstrap-vue-next';
+import type { TableItem } from 'bootstrap-vue-next';
 
 const loadedData = ref(false);
 const router = useRouter();

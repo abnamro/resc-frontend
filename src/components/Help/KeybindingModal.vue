@@ -107,7 +107,7 @@ function show() {
   keybinding_modal.value.show();
 }
 
-function hide(value: MouseEvent) {
+function hide(_value: MouseEvent) {
   keybinding_modal.value.hide();
 }
 
