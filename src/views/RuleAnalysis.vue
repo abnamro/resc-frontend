@@ -89,11 +89,9 @@
             @change="selectSingleCheckbox"
           ></b-form-checkbox>
           <template v-if="data.item.rowSelected">
-            <span aria-hidden="true">&check;</span>
             <span class="sr-only">Selected</span>
           </template>
           <template v-else>
-            <span aria-hidden="true">&nbsp;</span>
             <span class="sr-only">Not selected</span>
           </template>
         </template>
