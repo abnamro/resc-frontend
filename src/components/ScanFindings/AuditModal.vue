@@ -72,11 +72,11 @@
 import AxiosConfig from '@/configuration/axios-config';
 import CommonUtils, { type StatusOptionType } from '@/utils/common-utils';
 import FindingsService from '@/services/findings-service';
-import ScanFindingsService from '@/services/scan-findings-service';
 import { computed, ref } from 'vue';
 import type { FindingStatus } from '@/services/shema-to-types';
 import type { BvTriggerableEvent } from 'bootstrap-vue-next';
 import { nextTick } from 'vue';
+import { useAuthUserStore } from '@/store';
 
 const audit_modal = ref();
 
@@ -167,13 +167,8 @@ function handleSubmit() {
   });
 }
 
-ScanFindingsService.getStatusList()
-  .then((response) => {
-    statusList.value = CommonUtils.parseStatusOptions(response.data as FindingStatus[]);
-  })
-  .catch((error) => {
-    AxiosConfig.handleError(error);
-  });
+const store = useAuthUserStore();
+statusList.value = CommonUtils.parseStatusOptions(store.get_finding_status_list);
 
 defineExpose({ show });
 </script>

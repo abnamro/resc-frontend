@@ -1,4 +1,6 @@
-import type { RulePackRead } from '@/services/shema-to-types';
+import AxiosConfig from '@/configuration/axios-config';
+import ScanFindingsService from '@/services/scan-findings-service';
+import type { FindingStatus, RulePackRead } from '@/services/shema-to-types';
 import { defineStore, type Store } from 'pinia';
 
 export type TokenData = {
@@ -12,13 +14,17 @@ export type UserDetails = {
   email: string;
 };
 
-interface ActionsStore {
+type GettersStore = {
+  get_finding_status_list: () => FindingStatus[];
+};
+
+type ActionsStore = {
   update_auth_tokens: (tokenData: TokenData | null) => void;
   update_source_route: (sourceRoute: string | null) => void;
   update_destination_route: (destinationRoute: string | null) => void;
   update_user_details: (userDetails: UserDetails | null) => void;
   update_previous_route_state: (previousRouteState: string | null | PreviousRouteState) => void;
-}
+};
 
 export type PreviousRouteState = {
   ruleName: string;
@@ -35,12 +41,12 @@ interface State {
   lastName: null | string;
   email: null | string;
   previousRouteState: null | string | PreviousRouteState;
+  findingStatusList: FindingStatus[];
 }
 
-// @ts-expect-error
-export const useAuthUserStore: () => Store<'authUser', State, {}, ActionsStore> = defineStore(
-  'authUser',
-  {
+export const useAuthUserStore: () => Store<'authUser', State, GettersStore, ActionsStore> =
+  // @ts-expect-error
+  defineStore('authUser', {
     state: (): State => ({
       idToken: null,
       accessToken: null,
@@ -50,9 +56,23 @@ export const useAuthUserStore: () => Store<'authUser', State, {}, ActionsStore> 
       lastName: null,
       email: null,
       previousRouteState: null,
+      findingStatusList: [],
     }),
-    // If extra getters are needed.
-    getters: {},
+    getters: {
+      get_finding_status_list(): FindingStatus[] {
+        if (this.findingStatusList.length === 0) {
+          ScanFindingsService.getStatusList()
+            .then((response) => {
+              this.findingStatusList = response.data as FindingStatus[];
+            })
+            .catch((error) => {
+              AxiosConfig.handleError(error);
+            });
+        }
+
+        return this.findingStatusList;
+      },
+    },
     actions: {
       update_auth_tokens(tokenData: TokenData | null) {
         this.idToken = tokenData?.id_token ?? null;
@@ -75,5 +95,4 @@ export const useAuthUserStore: () => Store<'authUser', State, {}, ActionsStore> 
     },
     modules: {},
     persist: true,
-  },
-);
+  });

@@ -60,10 +60,10 @@
 import AxiosConfig from '@/configuration/axios-config';
 import CommonUtils, { type StatusOptionType } from '@/utils/common-utils';
 import FindingsService from '@/services/findings-service';
-import ScanFindingsService from '@/services/scan-findings-service';
 import SpinnerVue from '@/components/Common/SpinnerVue.vue';
 import type { DetailedFindingRead, FindingStatus } from '@/services/shema-to-types';
 import { computed, nextTick, ref } from 'vue';
+import { useAuthUserStore } from '@/store';
 
 const loadedData = ref(false);
 
@@ -149,12 +149,7 @@ function reset() {
   });
 }
 
-ScanFindingsService.getStatusList()
-  .then((response) => {
-    statusList.value = CommonUtils.parseStatusOptions(response.data as FindingStatus[]);
-    loadedData.value = true;
-  })
-  .catch((error) => {
-    AxiosConfig.handleError(error);
-  });
+const store = useAuthUserStore();
+statusList.value = CommonUtils.parseStatusOptions(store.get_finding_status_list);
+loadedData.value = true;
 </script>
