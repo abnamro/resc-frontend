@@ -10,6 +10,7 @@ import mock_statuses from '@/../tests/resources/mock_status.json';
 import rule_tags from '@/../tests/resources/mock_rule_tags.json';
 import RuleTagsFilter from '@/components/Filters/RuleTagsFilter.vue';
 import RuleFilter from '@/components/Filters/RuleFilter.vue';
+import { createTestingPinia } from '@pinia/testing';
 
 vi.mock('axios');
 vi.mock('vue-router', async () => {
@@ -75,6 +76,16 @@ describe('ScanFindingsFilter tests', () => {
         includePreviousScans: true,
       },
       components,
+      global: {
+        plugins: [
+          createTestingPinia({
+            stubActions: false,
+            initialState: {
+              findingStatusList: []
+            },
+          }),
+        ]
+      }
     });
 
     expect(wrapper.exists()).toBe(true);
@@ -89,6 +100,16 @@ describe('ScanFindingsFilter tests', () => {
         includePreviousScans: true,
       },
       components,
+      global: {
+        plugins: [
+          createTestingPinia({
+            stubActions: false,
+            initialState: {
+              findingStatusList: []
+            },
+          }),
+        ]
+      }
     });
 
     expect(wrapper.exists()).toBe(true);
@@ -134,6 +155,16 @@ describe('ScanFindingsFilter tests', () => {
         repository,
       },
       components,
+      global: {
+        plugins: [
+          createTestingPinia({
+            stubActions: false,
+            initialState: {
+              findingStatusList: []
+            },
+          }),
+        ]
+      }
     });
 
     expect(wrapper.exists()).toBe(true);

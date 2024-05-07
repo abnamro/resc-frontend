@@ -6,6 +6,7 @@ import SpinnerVue from '@/components/Common/SpinnerVue.vue';
 import status from '@/../tests/resources/mock_status.json';
 import findings from '@/../tests/resources/mock_findings.json';
 import { BTab, BFormGroup, BFormSelect, BFormTextarea, BButton } from 'bootstrap-vue-next';
+import { createTestingPinia } from '@pinia/testing';
 
 vi.mock('axios');
 
@@ -27,9 +28,19 @@ describe('Audit Tab', () => {
         BButton,
         SpinnerVue,
       },
+      global: {
+        plugins: [
+          createTestingPinia({
+            stubActions: false,
+            initialState: {
+              findingStatusList: []
+            },
+          }),
+        ]
+      }
     });
 
-    expect(wrapper.vm.loadedData).toBe(false);
+    expect(wrapper.vm.loadedData).toBe(true);
     await wrapper.vm.$nextTick();
     await wrapper.vm.$nextTick();
     await wrapper.vm.$nextTick();
