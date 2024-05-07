@@ -24,6 +24,7 @@
 
     <div class="p-3" v-if="hasRecords">
       <!-- sticky-header="85vh" is not supported yet. -->
+      <!-- @vue-expect-error Typescript does not recognise the proper types for field -->
       <b-table
         id="repositories-table"
         :sticky-header="true"
@@ -66,7 +67,8 @@
         :requestedPageNumber="requestedPageNumber"
         @page-click="handlePageClick"
         @page-size-change="handlePageSizeChange"
-      ></Pagination>
+      >
+      </Pagination>
     </div>
   </div>
 </template>
@@ -89,8 +91,10 @@ import type { TableItem } from 'bootstrap-vue-next';
 const loadedData = ref(false);
 const router = useRouter();
 
-const repositoryList = ref([] as RepositoryEnrichedRead[]);
-const currentItems = ref([] as RepositoryEnrichedRead[]);
+type TableRepositoryEnrichedRead = RepositoryEnrichedRead & TableItem;
+
+const repositoryList = ref([] as TableRepositoryEnrichedRead[]);
+const currentItems = ref([] as TableRepositoryEnrichedRead[]);
 const totalRows = ref(0);
 const currentPage = ref(1);
 const perPage = ref(Number(`${Config.value('defaultPageSize')}`));

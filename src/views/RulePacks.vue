@@ -31,6 +31,7 @@
 
     <div class="p-3" v-if="hasRecords">
       <!-- sticky-header="85vh" -->
+      <!-- @vue-expect-error Typescript does not recognise the proper types for field -->
       <b-table
         id="rule-packs-table"
         :items="rulePackList"
