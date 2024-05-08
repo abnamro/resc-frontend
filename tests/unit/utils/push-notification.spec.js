@@ -22,26 +22,26 @@ describe('Testing PushNotification', () => {
   });
 
   it('danger notification', async () => {
-    const spy = vi.spyOn(PushNotification, 'danger');
+    const spy = vi.spyOn(PushNotification, 'notify');
     PushNotification.danger('danger message', 'danger title', 1000);
-    expect(spy).toHaveBeenCalledWith('danger message', 'danger title', 1000);
+    expect(spy).toHaveBeenCalledWith('danger message', 'danger title', 'danger', 1000);
   });
 
   it('warning notification', async () => {
-    const spy = vi.spyOn(PushNotification, 'warning');
+    const spy = vi.spyOn(PushNotification, 'notify');
     PushNotification.warning('warning message', 'warning title', 1000);
-    expect(spy).toHaveBeenCalledWith('warning message', 'warning title', 1000);
+    expect(spy).toHaveBeenCalledWith('warning message', 'warning title', 'warning', 1000);
   });
 
   it('success notification', async () => {
-    const spy = vi.spyOn(PushNotification, 'success');
+    const spy = vi.spyOn(PushNotification, 'notify');
     PushNotification.success('success message', 'success title', 1000);
-    expect(spy).toHaveBeenCalledWith('success message', 'success title', 1000);
+    expect(spy).toHaveBeenCalledWith('success message', 'success title', 'success', 1000);
   });
 
   it('info notification', async () => {
-    const spy = vi.spyOn(PushNotification, 'info');
+    const spy = vi.spyOn(PushNotification, 'notify');
     PushNotification.info('info message', 'info title', 1000);
-    expect(spy).toHaveBeenCalledWith('info message', 'info title', 1000);
+    expect(spy).toHaveBeenCalledWith('info message', 'info title', 'info', 1000);
   });
 });

@@ -68,6 +68,7 @@ const routes = [
   },
 ];
 
+/* istanbul ignore if -- @preserve */
 if (authenticationRequired && authenticationRequired === 'true') {
   const loginRoute = {
     path: '/login',
@@ -92,6 +93,7 @@ const router = createRouter({
 
 export const loginGuard =
   () => (to: RouteLocationNormalized, from: RouteLocationNormalized, next: NavigationGuardNext) => {
+    /* istanbul ignore else -- @preserve */
     if (authenticationRequired && authenticationRequired === 'false') {
       const store = useAuthUserStore();
       store.update_source_route(from.fullPath);

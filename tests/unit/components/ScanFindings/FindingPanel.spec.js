@@ -24,12 +24,11 @@ describe('FindingPanel Tab', () => {
           createTestingPinia({
             stubActions: false,
             initialState: {
-              findingStatusList: []
+              findingStatusList: [],
             },
           }),
-        ]
-      }
-
+        ],
+      },
     });
     expect(wrapper.html()).toContain('roles/fixgate/defaults/main.yml');
   });

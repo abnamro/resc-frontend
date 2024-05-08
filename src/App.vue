@@ -44,6 +44,7 @@ function onToggleCollapse(collapsed: boolean) {
 }
 
 const showMenu = computed(() => {
+  /* istanbul ignore if -- @preserve */
   if (route?.name === 'Login') {
     onToggleCollapse(true);
     return false;

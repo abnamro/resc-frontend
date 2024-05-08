@@ -33,11 +33,11 @@ describe('Audit Tab', () => {
           createTestingPinia({
             stubActions: false,
             initialState: {
-              findingStatusList: []
+              findingStatusList: [],
             },
           }),
-        ]
-      }
+        ],
+      },
     });
 
     expect(wrapper.vm.loadedData).toBe(true);

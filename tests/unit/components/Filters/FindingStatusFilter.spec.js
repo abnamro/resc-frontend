@@ -25,11 +25,11 @@ describe('FindingStatusFilter tests', () => {
           createTestingPinia({
             stubActions: false,
             initialState: {
-              findingStatusList: []
+              findingStatusList: [],
             },
           }),
-        ]
-      }
+        ],
+      },
     });
 
     expect(wrapper.exists()).toBe(true);
@@ -60,11 +60,11 @@ describe('FindingStatusFilter tests', () => {
           createTestingPinia({
             stubActions: false,
             initialState: {
-              findingStatusList: []
+              findingStatusList: [],
             },
           }),
-        ]
-      }
+        ],
+      },
     });
 
     expect(wrapper.exists()).toBe(true);

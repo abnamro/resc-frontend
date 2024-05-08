@@ -16,7 +16,7 @@ export default mergeConfig(
         enabled: true,
         provider: 'istanbul',
         all: true,
-        reporter: ['lcov', 'text', 'cobertura'],
+        reporter: ['lcov', 'text', 'cobertura', 'html'],
         reportsDirectory: 'tests/reports/coverage',
         // Next version of Vite
         // thresholds: {

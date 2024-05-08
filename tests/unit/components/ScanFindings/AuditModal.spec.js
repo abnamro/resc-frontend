@@ -10,7 +10,6 @@ vi.mock('axios');
 
 describe('Audit Modal', () => {
   it('fetch a audit', async () => {
-
     // Mock axios response
     axios.get.mockResolvedValueOnce(status);
     axios.post.mockResolvedValueOnce({});
@@ -31,11 +30,11 @@ describe('Audit Modal', () => {
           createTestingPinia({
             stubActions: false,
             initialState: {
-              findingStatusList: []
+              findingStatusList: [],
             },
           }),
-        ]
-      }
+        ],
+      },
     });
 
     expect(wrapper.vm.isStatusValid).toBe(true);

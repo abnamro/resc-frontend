@@ -81,11 +81,11 @@ describe('ScanFindingsFilter tests', () => {
           createTestingPinia({
             stubActions: false,
             initialState: {
-              findingStatusList: []
+              findingStatusList: [],
             },
           }),
-        ]
-      }
+        ],
+      },
     });
 
     expect(wrapper.exists()).toBe(true);
@@ -105,11 +105,11 @@ describe('ScanFindingsFilter tests', () => {
           createTestingPinia({
             stubActions: false,
             initialState: {
-              findingStatusList: []
+              findingStatusList: [],
             },
           }),
-        ]
-      }
+        ],
+      },
     });
 
     expect(wrapper.exists()).toBe(true);
@@ -160,11 +160,11 @@ describe('ScanFindingsFilter tests', () => {
           createTestingPinia({
             stubActions: false,
             initialState: {
-              findingStatusList: []
+              findingStatusList: [],
             },
           }),
-        ]
-      }
+        ],
+      },
     });
 
     expect(wrapper.exists()).toBe(true);
