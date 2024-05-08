@@ -2,12 +2,7 @@
   <div>
     <b-tab title="AUDIT" title-item-class="tab-pills">
       <SpinnerVue v-if="!loadedData" />
-      <b-form
-        class="pl-1 pr-4"
-        @submit="onSubmit"
-        v-if="loadedData"
-        novalidate
-      >
+      <b-form class="pl-1 pr-4" @submit="onSubmit" @reset="onReset" v-if="loadedData" novalidate>
         <b-form-group
           label="Status"
           label-for="status-select"

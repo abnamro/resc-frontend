@@ -17,12 +17,7 @@
           invalid-feedback="Status is required"
           :state="isStatusValid"
         >
-          <b-form-select
-            id="audit-status"
-            v-model="status"
-            :state="isStatusValid"
-            required
-          >
+          <b-form-select id="audit-status" v-model="status" :state="isStatusValid" required>
             <option value="">-- Select Status</option>
             <option v-for="status in statusList" :value="status.value" :key="status.id">
               {{ status.label }}
