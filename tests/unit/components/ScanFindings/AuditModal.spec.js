@@ -4,6 +4,7 @@ import { describe, expect, it, vi } from 'vitest';
 import App from '@/components/ScanFindings/AuditModal.vue';
 import status from '@/../tests/resources/mock_status.json';
 import { BTab, BFormGroup, BFormSelect, BFormTextarea, BButton } from 'bootstrap-vue-next';
+import { createTestingPinia } from '@pinia/testing';
 
 vi.mock('axios');
 
@@ -23,6 +24,16 @@ describe('Audit Modal', () => {
         BFormSelect,
         BFormTextarea,
         BButton,
+      },
+      global: {
+        plugins: [
+          createTestingPinia({
+            stubActions: false,
+            initialState: {
+              findingStatusList: [],
+            },
+          }),
+        ],
       },
     });
 

@@ -178,7 +178,7 @@ html {
   margin-left: 25px;
 }
 
-.custom-control-input:checked ~ .custom-control-label::before {
+.custom-control-input:checked~.custom-control-label::before {
   color: #fff;
   border-color: var(--bs-secondary) !important;
   background-color: #01857a !important;

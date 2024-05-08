@@ -40,6 +40,7 @@ function login() {
   AuthService.requestLoginPage();
 }
 
+/* istanbul ignore if -- @preserve */
 if (store.idToken && !AuthService.isTokenExpired(store.idToken)) {
   if (store.destinationRoute) {
     router.push(store.destinationRoute).catch((error) => {

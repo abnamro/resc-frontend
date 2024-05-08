@@ -24,12 +24,11 @@
   </div>
 </template>
 <script setup lang="ts">
-import AxiosConfig from '@/configuration/axios-config';
 import CommonUtils, { type StatusOptionType } from '@/utils/common-utils';
 import Multiselect from 'vue-multiselect';
-import ScanFindingsService from '@/services/scan-findings-service';
 import { ref } from 'vue';
 import type { FindingStatus } from '@/services/shema-to-types';
+import { useAuthUserStore } from '@/store';
 
 type Props = {
   statusOptions?: StatusOptionType[];
@@ -58,12 +57,7 @@ function onStatusFilterChange() {
   }
 }
 
-ScanFindingsService.getStatusList()
-  .then((response) => {
-    optionsStatus.value = CommonUtils.parseStatusOptions(response.data as FindingStatus[]);
-  })
-  .catch((error) => {
-    AxiosConfig.handleError(error);
-  });
+const store = useAuthUserStore();
+optionsStatus.value = CommonUtils.parseStatusOptions(store.get_finding_status_list);
 </script>
 <style src="vue-multiselect/dist/vue-multiselect.css"></style>

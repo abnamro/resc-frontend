@@ -15,15 +15,9 @@
           label="Status"
           label-for="audit-status"
           invalid-feedback="Status is required"
-          :state="statusState"
+          :state="isStatusValid"
         >
-          <b-form-select
-            id="audit-status"
-            v-model="status"
-            @change="checkFormValidity"
-            :state="statusState"
-            required
-          >
+          <b-form-select id="audit-status" v-model="status" :state="isStatusValid" required>
             <option value="">-- Select Status</option>
             <option v-for="status in statusList" :value="status.value" :key="status.id">
               {{ status.label }}
@@ -35,7 +29,7 @@
           label="Comment"
           label-for="comment-input"
           invalid-feedback="Maximum 255 characters are allowed"
-          :state="commentState"
+          :state="isCommentValid"
         >
           <b-form-textarea
             id="comment-input"
@@ -43,8 +37,7 @@
             rows="3"
             trim
             v-model="comment"
-            :state="commentState"
-            v-on:keyup="checkFormValidity"
+            :state="isCommentValid"
           ></b-form-textarea>
         </b-form-group>
       </form>
@@ -72,11 +65,11 @@
 import AxiosConfig from '@/configuration/axios-config';
 import CommonUtils, { type StatusOptionType } from '@/utils/common-utils';
 import FindingsService from '@/services/findings-service';
-import ScanFindingsService from '@/services/scan-findings-service';
 import { computed, ref } from 'vue';
 import type { FindingStatus } from '@/services/shema-to-types';
 import type { BvTriggerableEvent } from 'bootstrap-vue-next';
 import { nextTick } from 'vue';
+import { useAuthUserStore } from '@/store';
 
 const audit_modal = ref();
 
@@ -89,8 +82,6 @@ const emit = defineEmits(['update-audit']);
 
 const comment = ref('');
 const status = ref('NOT_ANALYZED' as FindingStatus | '');
-const commentState = ref(true);
-const statusState = ref(true);
 const statusList = ref([] as StatusOptionType[]);
 
 const getModalTitle = computed(() => {
@@ -100,7 +91,7 @@ const isStatusValid = computed(() => {
   return status.value !== '';
 });
 const isCommentValid = computed(() => {
-  return comment.value.length > 255 ? false : true;
+  return comment.value !== '' && comment.value.length > 255 ? false : true;
 });
 
 function show() {
@@ -111,31 +102,9 @@ function hide() {
   audit_modal.value.hide();
 }
 
-// ! TODO is this really necessary?
-function checkFormValidity() {
-  let valid = false;
-  if (isStatusValid.value && isCommentValid.value) {
-    valid = true;
-    statusState.value = true;
-    commentState.value = true;
-  } else if (!isStatusValid.value && isCommentValid.value) {
-    statusState.value = false;
-    commentState.value = true;
-  } else if (isStatusValid.value && !isCommentValid.value) {
-    statusState.value = true;
-    commentState.value = false;
-  } else {
-    statusState.value = false;
-    commentState.value = false;
-  }
-  return valid;
-}
-
 function resetModal() {
   status.value = 'NOT_ANALYZED';
   comment.value = '';
-  statusState.value = true;
-  commentState.value = true;
 }
 
 function handleOk(bvModalEvt: BvTriggerableEvent | MouseEvent) {
@@ -144,8 +113,7 @@ function handleOk(bvModalEvt: BvTriggerableEvent | MouseEvent) {
 }
 
 function handleSubmit() {
-  // Don't close the modal if form is invalid
-  if (!checkFormValidity()) {
+  if (!isStatusValid.value || !isCommentValid.value) {
     return;
   }
 
@@ -167,13 +135,8 @@ function handleSubmit() {
   });
 }
 
-ScanFindingsService.getStatusList()
-  .then((response) => {
-    statusList.value = CommonUtils.parseStatusOptions(response.data as FindingStatus[]);
-  })
-  .catch((error) => {
-    AxiosConfig.handleError(error);
-  });
+const store = useAuthUserStore();
+statusList.value = CommonUtils.parseStatusOptions(store.get_finding_status_list);
 
 defineExpose({ show });
 </script>

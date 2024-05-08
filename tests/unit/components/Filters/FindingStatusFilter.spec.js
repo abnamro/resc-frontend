@@ -6,6 +6,7 @@ import mock_statuses from '@/../tests/resources/mock_status.json';
 import { BFormGroup } from 'bootstrap-vue-next';
 import Multiselect from 'vue-multiselect';
 import CommonUtils from '@/utils/common-utils';
+import { createTestingPinia } from '@pinia/testing';
 
 vi.mock('axios');
 
@@ -18,6 +19,16 @@ describe('FindingStatusFilter tests', () => {
       components: {
         BFormGroup: BFormGroup,
         Multiselect: Multiselect,
+      },
+      global: {
+        plugins: [
+          createTestingPinia({
+            stubActions: false,
+            initialState: {
+              findingStatusList: [],
+            },
+          }),
+        ],
       },
     });
 
@@ -43,6 +54,16 @@ describe('FindingStatusFilter tests', () => {
       components: {
         BFormGroup: BFormGroup,
         Multiselect: Multiselect,
+      },
+      global: {
+        plugins: [
+          createTestingPinia({
+            stubActions: false,
+            initialState: {
+              findingStatusList: [],
+            },
+          }),
+        ],
       },
     });
 

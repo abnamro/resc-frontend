@@ -19,7 +19,7 @@ vi.mock('vue-router', async () => {
 });
 
 describe('App.vue unit tests', () => {
-  it('Given an App When login then Top bar and SideMenubar will be displayed', () => {
+  it('Given an App When login then Top bar and SideMenubar will be displayed', async () => {
     const wrapper = shallowMount(App, {
       global: {
         components: {
@@ -42,6 +42,12 @@ describe('App.vue unit tests', () => {
     expect(wrapper.exists()).toBe(true);
     expect(wrapper.findComponent(TopBarMenu).exists()).toBe(true);
     expect(wrapper.findComponent(SidebarMenu).exists()).toBe(true);
+    expect(wrapper.vm.showMenu).toBe(true);
+
+    expect(() => wrapper.vm.onToggleCollapse(true)).not.toThrow();
+    expect(wrapper.vm.sidebarCollapsed).toBe(true);
+    expect(() => wrapper.vm.onToggleCollapse(false)).not.toThrow();
+    expect(wrapper.vm.sidebarCollapsed).toBe(false);
   });
 
   it('Configuration with non Existing key should return error', () => {
