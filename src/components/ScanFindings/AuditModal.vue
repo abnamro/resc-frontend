@@ -15,13 +15,12 @@
           label="Status"
           label-for="audit-status"
           invalid-feedback="Status is required"
-          :state="statusState"
+          :state="isStatusValid"
         >
           <b-form-select
             id="audit-status"
             v-model="status"
-            @change="checkFormValidity"
-            :state="statusState"
+            :state="isStatusValid"
             required
           >
             <option value="">-- Select Status</option>
@@ -35,7 +34,7 @@
           label="Comment"
           label-for="comment-input"
           invalid-feedback="Maximum 255 characters are allowed"
-          :state="commentState"
+          :state="isCommentValid"
         >
           <b-form-textarea
             id="comment-input"
@@ -43,8 +42,7 @@
             rows="3"
             trim
             v-model="comment"
-            :state="commentState"
-            v-on:keyup="checkFormValidity"
+            :state="isCommentValid"
           ></b-form-textarea>
         </b-form-group>
       </form>
@@ -89,8 +87,6 @@ const emit = defineEmits(['update-audit']);
 
 const comment = ref('');
 const status = ref('NOT_ANALYZED' as FindingStatus | '');
-const commentState = ref(true);
-const statusState = ref(true);
 const statusList = ref([] as StatusOptionType[]);
 
 const getModalTitle = computed(() => {
@@ -100,7 +96,7 @@ const isStatusValid = computed(() => {
   return status.value !== '';
 });
 const isCommentValid = computed(() => {
-  return comment.value.length > 255 ? false : true;
+  return comment.value !== '' && comment.value.length > 255 ? false : true;
 });
 
 function show() {
@@ -111,31 +107,9 @@ function hide() {
   audit_modal.value.hide();
 }
 
-// ! TODO is this really necessary?
-function checkFormValidity() {
-  let valid = false;
-  if (isStatusValid.value && isCommentValid.value) {
-    valid = true;
-    statusState.value = true;
-    commentState.value = true;
-  } else if (!isStatusValid.value && isCommentValid.value) {
-    statusState.value = false;
-    commentState.value = true;
-  } else if (isStatusValid.value && !isCommentValid.value) {
-    statusState.value = true;
-    commentState.value = false;
-  } else {
-    statusState.value = false;
-    commentState.value = false;
-  }
-  return valid;
-}
-
 function resetModal() {
   status.value = 'NOT_ANALYZED';
   comment.value = '';
-  statusState.value = true;
-  commentState.value = true;
 }
 
 function handleOk(bvModalEvt: BvTriggerableEvent | MouseEvent) {
@@ -144,8 +118,7 @@ function handleOk(bvModalEvt: BvTriggerableEvent | MouseEvent) {
 }
 
 function handleSubmit() {
-  // Don't close the modal if form is invalid
-  if (!checkFormValidity()) {
+  if (!isStatusValid.value || !isCommentValid.value) {
     return;
   }
 

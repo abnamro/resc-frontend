@@ -45,7 +45,8 @@ describe('Audit Tab', () => {
     await wrapper.vm.$nextTick();
     await wrapper.vm.$nextTick();
     expect(wrapper.vm.loadedData).toBe(true);
-    expect(wrapper.vm.checkFormValidity()).toBe(true);
+    expect(wrapper.vm.isStatusValid).toBe(true);
+    expect(wrapper.vm.isStatusValid).toBe(true);
     expect(() => wrapper.vm.onReset(new Event('reset'))).not.toThrow();
     expect(() => wrapper.vm.onSubmit(new Event('submit'))).not.toThrow();
   });

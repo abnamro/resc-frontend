@@ -5,8 +5,7 @@
       <b-form
         class="pl-1 pr-4"
         @submit="onSubmit"
-        @reset="onReset"
-        v-if="show && loadedData"
+        v-if="loadedData"
         novalidate
       >
         <b-form-group
@@ -14,14 +13,13 @@
           label-for="status-select"
           label-class="mr-sm-2 fw-bold small"
           invalid-feedback="Status is required"
-          :state="statusState"
+          :state="isStatusValid"
         >
           <b-form-select
             id="status-select"
             class="mb-2 mr-sm-2 mb-sm-0"
             size="sm"
             v-model="status"
-            @change="checkFormValidity"
             required
           >
             <option v-for="status in statusList" :value="status.value" :key="status.id">
@@ -34,7 +32,7 @@
           label-for="comment-textarea"
           label-class="mr-sm-2 fw-bold small"
           invalid-feedback="Maximum 255 characters are allowed"
-          :state="commentState"
+          :state="isCommentValid"
         >
           <b-form-textarea
             id="comment-textarea"
@@ -43,8 +41,7 @@
             rows="3"
             trim
             v-model="comment"
-            :state="commentState"
-            v-on:keyup="checkFormValidity"
+            :state="isCommentValid"
           ></b-form-textarea>
         </b-form-group>
 
@@ -62,7 +59,7 @@ import CommonUtils, { type StatusOptionType } from '@/utils/common-utils';
 import FindingsService from '@/services/findings-service';
 import SpinnerVue from '@/components/Common/SpinnerVue.vue';
 import type { DetailedFindingRead, FindingStatus } from '@/services/shema-to-types';
-import { computed, nextTick, ref } from 'vue';
+import { computed, ref } from 'vue';
 import { useAuthUserStore } from '@/store';
 
 const loadedData = ref(false);
@@ -76,9 +73,6 @@ const finding = ref(props.finding);
 
 const status = ref(props.finding.status ?? ('NOT_ANALYZED' as FindingStatus | ''));
 const comment = ref(props.finding.comment ?? '');
-const commentState = ref(true);
-const statusState = ref(true);
-const show = ref(true);
 const statusList = ref([] as StatusOptionType[]);
 const selectedFindingIds = ref([] as number[]);
 
@@ -89,28 +83,9 @@ const isCommentValid = computed(() => {
   return comment.value !== '' && comment.value.length > 255 ? false : true;
 });
 
-function checkFormValidity() {
-  let valid = false;
-  if (isStatusValid.value && isCommentValid.value) {
-    valid = true;
-    statusState.value = true;
-    commentState.value = true;
-  } else if (!isStatusValid.value && isCommentValid.value) {
-    statusState.value = false;
-    commentState.value = true;
-  } else if (isStatusValid.value && !isCommentValid.value) {
-    statusState.value = true;
-    commentState.value = false;
-  } else {
-    statusState.value = false;
-    commentState.value = false;
-  }
-  return valid;
-}
-
 function onSubmit(event: Event) {
   event.preventDefault();
-  if (!checkFormValidity()) {
+  if (!isStatusValid.value || !isCommentValid.value) {
     return;
   }
 
@@ -134,19 +109,10 @@ function onSubmit(event: Event) {
     .catch((error) => {
       AxiosConfig.handleError(error);
     });
-  reset();
 }
 
 function onReset(event: Event) {
   event.preventDefault();
-}
-
-function reset() {
-  commentState.value = false;
-  show.value = false;
-  nextTick(() => {
-    show.value = true;
-  });
 }
 
 const store = useAuthUserStore();
