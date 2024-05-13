@@ -187,7 +187,7 @@ import type { AxiosResponse } from 'axios';
 import type { TableItem } from 'bootstrap-vue-next';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { onKeyStroke } from '@vueuse/core';
-import { shouldIgnoreKeystroke } from '@/utils/common-utils';
+import CommonUtils, { shouldIgnoreKeystroke } from '@/utils/common-utils';
 
 type TableItemDetailedFindingRead = DetailedFindingRead & TableItem;
 
@@ -434,6 +434,7 @@ function fetchRulePackVersionsWhenRedirectedFromRuleMetricsPage() {
       response.data.data.forEach((rulePack) => {
         rulePackVersions.value.push(rulePack);
       });
+      rulePackVersions.value.sort(CommonUtils.compareRulePackRead).reverse()
       //Select rule pack versions passed from rule analysis scrren
       const previousRouteState = store.previousRouteState as PreviousRouteState;
       if (previousRouteState && previousRouteState.rulePackVersions !== undefined) {
@@ -464,6 +465,7 @@ function fetchRulePackVersions() {
         }
         rulePackVersions.value.push(data);
       }
+      rulePackVersions.value.sort(CommonUtils.compareRulePackRead).reverse()
       fetchPaginatedDetailedFindings();
     })
     .catch((error) => {
