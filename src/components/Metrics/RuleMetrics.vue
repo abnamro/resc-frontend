@@ -148,6 +148,7 @@ import type {
 import { useRouter } from 'vue-router';
 import type { AxiosResponse } from 'axios';
 import type { TableItem } from 'bootstrap-vue-next';
+import CommonUtils from '@/utils/common-utils';
 
 const loadedData = ref(false);
 
@@ -426,6 +427,7 @@ RulePackService.getRulePackVersions(10000, 0)
       }
       allRulePackVersions.value.push(data);
     }
+    allRulePackVersions.value.sort(CommonUtils.compareRulePackRead).reverse();
     fetchRuleTags();
     fetchRulesWithFindingStatusCount();
   })

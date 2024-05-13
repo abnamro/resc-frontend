@@ -93,6 +93,7 @@
 import AxiosConfig from '@/configuration/axios-config';
 import Config from '@/configuration/config';
 import DateUtils from '@/utils/date-utils';
+import CommonUtils from '@/utils/common-utils';
 import SpinnerVue from '@/components/Common/SpinnerVue.vue';
 import RulePackUploadModal from '@/components/RulePack/RulePackUploadModal.vue';
 import Pagination from '@/components/Common/PaginationVue.vue';
@@ -167,7 +168,7 @@ function fetchPaginatedRulePacks() {
   loadedData.value = false;
   RulePackService.getRulePackVersions()
     .then((response: AxiosResponse<PaginationType<RulePackRead>>) => {
-      rulePackList.value = response.data.data;
+      rulePackList.value = response.data.data.sort(CommonUtils.compareRulePackRead).reverse();
       totalRows.value = response.data.total;
       loadedData.value = true;
     })
