@@ -32,7 +32,6 @@
     </div>
 
     <div class="pt-3" v-if="hasRecords">
-      <!-- sticky-header="85vh" -->
       <b-table
         id="rule-metrics-table"
         :no-border-collapse="true"
@@ -151,17 +150,6 @@ import type { TableItem } from 'bootstrap-vue-next';
 import CommonUtils from '@/utils/common-utils';
 
 const loadedData = ref(false);
-
-// Is this really used???
-type Props = {
-  selectedRulePackVersionsList?: string[];
-  rulePackVersions?: RulePackRead[];
-};
-
-const props = withDefaults(defineProps<Props>(), {
-  selectedRulePackVersionsList: () => [],
-  rulePackVersions: () => [],
-});
 
 type Stats = {
   tpCount: number;

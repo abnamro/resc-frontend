@@ -43,7 +43,6 @@
       <br />No Record Found...
     </div>
 
-    <!-- sticky-header="85vh" -->
     <div class="p-3" v-if="hasRecords">
       <b-table
         id="scan-findings-table"

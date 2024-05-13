@@ -23,8 +23,6 @@
     </div>
 
     <div class="p-3" v-if="hasRecords">
-      <!-- sticky-header="85vh" is not supported yet. -->
-      <!-- @vue-expect-error Typescript does not recognise the proper types for field -->
       <b-table
         id="repositories-table"
         :items="repositoryList"
@@ -47,11 +45,10 @@
         <template #cell(vcs_provider)="data">
           {{ formatVcsProvider((data.item as RepositoryEnrichedRead).vcs_provider) }}
         </template>
-        
+
         <template #cell(last_scan_timestamp)="data">
           {{ formatDate((data.item as RepositoryEnrichedRead).last_scan_timestamp ?? '') }}
         </template>
-
 
         <!-- Health Bar Column -->
         <template #cell(findings)="data">
