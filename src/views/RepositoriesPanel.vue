@@ -27,7 +27,6 @@
       <!-- @vue-expect-error Typescript does not recognise the proper types for field -->
       <b-table
         id="repositories-table"
-        :sticky-header="true"
         :items="repositoryList"
         :fields="fields"
         :current-page="1"

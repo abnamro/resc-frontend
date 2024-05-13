@@ -13,7 +13,6 @@
         <!-- sticky-header="230px" -->
         <b-table
           id="audit-history-table"
-          :sticky-header="true"
           :items="auditList"
           :fields="fields"
           :current-page="currentPage"

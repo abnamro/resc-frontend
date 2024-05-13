@@ -35,7 +35,6 @@
       <b-table
         id="rule-packs-table"
         :items="rulePackList"
-        :sticky-header="true"
         :fields="fields"
         :current-page="1"
         :per-page="0"

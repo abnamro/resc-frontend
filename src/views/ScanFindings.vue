@@ -47,7 +47,6 @@
     <div class="p-3" v-if="hasRecords">
       <b-table
         id="scan-findings-table"
-        :sticky-header="true"
         :items="findingList"
         :fields="fields"
         :current-page="1"
