@@ -1,6 +1,6 @@
 {
   "name": "resc-frontend",
-  "version": "3.0.4-dev",
+  "version": "3.0.4",
   "author": "ABN AMRO Bank",
   "description": "Repository Scanner Frontend",
   "license": "MIT",
