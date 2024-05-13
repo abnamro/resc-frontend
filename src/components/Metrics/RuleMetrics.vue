@@ -427,7 +427,7 @@ RulePackService.getRulePackVersions(10000, 0)
       }
       allRulePackVersions.value.push(data);
     }
-    allRulePackVersions.value.sort(CommonUtils.compareRulePackRead).reverse()
+    allRulePackVersions.value.sort(CommonUtils.compareRulePackRead).reverse();
     fetchRuleTags();
     fetchRulesWithFindingStatusCount();
   })

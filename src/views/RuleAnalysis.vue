@@ -434,7 +434,7 @@ function fetchRulePackVersionsWhenRedirectedFromRuleMetricsPage() {
       response.data.data.forEach((rulePack) => {
         rulePackVersions.value.push(rulePack);
       });
-      rulePackVersions.value.sort(CommonUtils.compareRulePackRead).reverse()
+      rulePackVersions.value.sort(CommonUtils.compareRulePackRead).reverse();
       //Select rule pack versions passed from rule analysis scrren
       const previousRouteState = store.previousRouteState as PreviousRouteState;
       if (previousRouteState && previousRouteState.rulePackVersions !== undefined) {
@@ -465,7 +465,7 @@ function fetchRulePackVersions() {
         }
         rulePackVersions.value.push(data);
       }
-      rulePackVersions.value.sort(CommonUtils.compareRulePackRead).reverse()
+      rulePackVersions.value.sort(CommonUtils.compareRulePackRead).reverse();
       fetchPaginatedDetailedFindings();
     })
     .catch((error) => {
