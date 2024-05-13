@@ -35,7 +35,6 @@
       <!-- sticky-header="85vh" -->
       <b-table
         id="rule-metrics-table"
-        :sticky-header="true"
         :no-border-collapse="true"
         :items="ruleList"
         :fields="fields"

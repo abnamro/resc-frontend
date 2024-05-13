@@ -58,7 +58,6 @@
       <b-table
         ref="auditTable"
         id="rule-analysis-table"
-        :sticky-header="true"
         :items="findingList"
         :fields="fields"
         :current-page="1"
