@@ -1,5 +1,5 @@
 import Config from '@/configuration/config';
-import { type FindingStatus, type VCSProviders } from '@/services/shema-to-types';
+import type { FindingStatus, VCSProviders, RulePackRead } from '@/services/shema-to-types';
 
 export type StatusOptionType = {
   id: number;
@@ -51,6 +51,29 @@ const CommonUtils = {
       return `${Config.value('falsePositiveStatusLabel')}`;
     }
     return `${Config.value('notAnalyzedStatusLabel')}`;
+  },
+
+  parseVersion(version: string): number {
+    const parts = version.split('.');
+    return 10000 * parseInt(parts[0]) + 100 * parseInt(parts[1] ?? '0') + parseInt(parts[2] ?? '0');
+  },
+
+  compareVersions(version_a: string, version_b: string): 0 | 1 | -1 {
+    const version_a_int = CommonUtils.parseVersion(version_a);
+    const version_b_int = CommonUtils.parseVersion(version_b);
+    if (version_a_int < version_b_int) {
+      return -1;
+    }
+
+    if (version_a_int > version_b_int) {
+      return 1;
+    }
+
+    return 0;
+  },
+
+  compareRulePackRead(rulepack_a: RulePackRead, rulepack_b: RulePackRead): 0 | 1 | -1 {
+    return CommonUtils.compareVersions(rulepack_a.version, rulepack_b.version);
   },
 };
 
