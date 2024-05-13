@@ -30,8 +30,6 @@
     </div>
 
     <div class="p-3" v-if="hasRecords">
-      <!-- sticky-header="85vh" -->
-      <!-- @vue-expect-error Typescript does not recognise the proper types for field -->
       <b-table
         id="rule-packs-table"
         :items="rulePackList"
@@ -53,14 +51,18 @@
         <template #cell(active)="data">
           <FontAwesomeIcon
             v-if="(data.item as RulePackRead).active"
-            icon="check-circle"
+            :icon="['fas', 'circle-check']"
             :style="{ color: 'green' }"
           />
           <FontAwesomeIcon
             v-if="!(data.item as RulePackRead).active"
-            icon="check-circle"
+            :icon="['fas', 'circle-check']"
             class="disabled-button"
           />
+        </template>
+
+        <template #cell(created)="data">
+          {{ formatDate((data.item as RulePackRead).created) }}
         </template>
 
         <!-- Download Column -->
@@ -100,7 +102,7 @@ import { computed, ref } from 'vue';
 import type { AxiosResponse } from 'axios';
 import type { PaginationType, RulePackRead } from '@/services/shema-to-types';
 import type { TableItem } from 'bootstrap-vue-next';
-import type { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 const loadedData = ref(false);
 const rulePackUploadModal = ref();
@@ -115,31 +117,30 @@ const requestedPageNumber = ref(1);
 const fields = ref([
   {
     key: 'version',
-    sortable: true,
+    sortable: false,
     label: 'Version',
     class: 'text-start position-sticky',
     thStyle: { borderTop: '0px' },
   },
   {
     key: 'active',
-    sortable: true,
+    sortable: false,
     label: 'Active',
-    class: 'text-start position-sticky',
+    class: 'text-center position-sticky',
     thStyle: { borderTop: '0px' },
   },
   {
     key: 'created',
-    sortable: true,
+    sortable: false,
     label: 'Created',
     class: 'text-start position-sticky',
     thStyle: { borderTop: '0px' },
-    formatter: 'formatDate',
   },
   {
     key: 'download',
     sortable: false,
     label: 'Download',
-    class: 'text-start position-sticky',
+    class: 'text-center position-sticky',
     thStyle: { borderTop: '0px' },
   },
 ]);
@@ -198,9 +199,7 @@ function downloadRulePack(rulePackVersion: string) {
     });
 }
 
-// Used in code above
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-function formatDate(timestamp: number) {
+function formatDate(timestamp: string) {
   const date = DateUtils.formatDate(timestamp);
   return timestamp ? date : 'Not Available';
 }
