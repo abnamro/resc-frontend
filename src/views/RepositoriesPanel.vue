@@ -23,8 +23,6 @@
     </div>
 
     <div class="p-3" v-if="hasRecords">
-      <!-- sticky-header="85vh" is not supported yet. -->
-      <!-- @vue-expect-error Typescript does not recognise the proper types for field -->
       <b-table
         id="repositories-table"
         :items="repositoryList"
@@ -42,6 +40,14 @@
         <!-- Repository Column -->
         <template #cell(repository_name)="data">
           {{ (data.item as RepositoryEnrichedRead).repository_name }}
+        </template>
+
+        <template #cell(vcs_provider)="data">
+          {{ formatVcsProvider((data.item as RepositoryEnrichedRead).vcs_provider) }}
+        </template>
+
+        <template #cell(last_scan_timestamp)="data">
+          {{ formatDate((data.item as RepositoryEnrichedRead).last_scan_timestamp ?? '') }}
         </template>
 
         <!-- Health Bar Column -->
@@ -126,7 +132,6 @@ const fields = ref([
     label: 'VCS Provider',
     class: 'text-start position-sticky',
     thStyle: { borderTop: '0px', width: '10%' },
-    formatter: 'formatVcsProvider',
   },
   {
     key: 'last_scan_timestamp',
@@ -134,7 +139,6 @@ const fields = ref([
     label: 'Last Scan Date',
     class: 'text-start position-sticky',
     thStyle: { borderTop: '0px', width: '20%' },
-    formatter: 'formatDate',
   },
   {
     key: 'total_findings_count',
@@ -163,15 +167,11 @@ function rowClass(item: RepositoryEnrichedRead) {
   return item.last_scan_id ? 'row-clickable' : 'row-unclickable';
 }
 
-// It is used in formatting above.
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-function formatDate(timestamp: number) {
+function formatDate(timestamp: string) {
   const date = DateUtils.formatDate(timestamp);
   return timestamp ? date : 'Not Scanned';
 }
 
-// It is used in formatting above.
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function formatVcsProvider(vcsProvider: VCSProviders) {
   return CommonUtils.formatVcsProvider(vcsProvider);
 }

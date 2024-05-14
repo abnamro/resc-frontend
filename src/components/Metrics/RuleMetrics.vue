@@ -32,7 +32,6 @@
     </div>
 
     <div class="pt-3" v-if="hasRecords">
-      <!-- sticky-header="85vh" -->
       <b-table
         id="rule-metrics-table"
         :no-border-collapse="true"
@@ -152,17 +151,6 @@ import CommonUtils from '@/utils/common-utils';
 
 const loadedData = ref(false);
 
-// Is this really used???
-type Props = {
-  selectedRulePackVersionsList?: string[];
-  rulePackVersions?: RulePackRead[];
-};
-
-const props = withDefaults(defineProps<Props>(), {
-  selectedRulePackVersionsList: () => [],
-  rulePackVersions: () => [],
-});
-
 type Stats = {
   tpCount: number;
   fpCount: number;
@@ -190,7 +178,6 @@ const totalFindingsCountForAllRules = ref(0);
 const truePositiveRateList = ref([] as number[]);
 const avgTruePosiitveRate = ref('0');
 const allRulePackVersions = ref([] as RulePackRead[]);
-const selectedRulePackVersions = ref([] as string[]);
 const selectedRuleTags = ref([] as string[]);
 const selectedVersionsList = ref([] as RulePackRead[]);
 const selectedVersions = ref([] as string[]);
@@ -397,12 +384,11 @@ function goToRuleAnalysisPage(recordItem: TableItem) {
   router.push({ name: 'RuleAnalysis' });
 }
 
-function onRulePackVersionChange(rulePackVersions: string[]) {
-  selectedRulePackVersions.value = rulePackVersions;
+function onRulePackVersionChange(rulePackVersions: RulePackRead[]) {
   selectedVersions.value = [];
   selectedVersionsList.value = [];
-  if (props.rulePackVersions) {
-    for (const obj of props.rulePackVersions) {
+  if (rulePackVersions) {
+    for (const obj of rulePackVersions) {
       selectedVersionsList.value.push(obj);
       selectedVersions.value.push(obj.version);
     }
@@ -417,12 +403,10 @@ RulePackService.getRulePackVersions(10000, 0)
   .then((response: AxiosResponse<PaginationType<RulePackRead>>) => {
     selectedVersions.value = [];
     allRulePackVersions.value = [];
-    selectedRulePackVersions.value = [];
     for (const index of response.data.data.keys()) {
       const data: RulePackRead = response.data.data[index];
       if (data.active) {
         selectedVersions.value.push(data.version);
-        selectedRulePackVersions.value.push(data.version);
         selectedVersionsList.value.push(data);
       }
       allRulePackVersions.value.push(data);
