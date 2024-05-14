@@ -133,7 +133,7 @@ describe('function getRepositoriesWithFindingsMetadata', () => {
     expect(response.data[0].true_positive).toBe(1);
     expect(response.data[0].false_positive).toBe(2);
     expect(response.data[0].not_analyzed).toBe(3);
-    expect(response.data[0].under_review).toBe(4);
+    expect(response.data[0].not_accessible).toBe(4);
     expect(response.data[0].clarification_required).toBe(5);
     expect(response.data[0].total_findings_count).toBe(15);
     expect(response.total).toBe(100);

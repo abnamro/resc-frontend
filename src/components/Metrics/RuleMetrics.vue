@@ -78,16 +78,16 @@
           </span>
         </template>
 
-        <!-- Under Review Count Column -->
-        <template #cell(under_review)="data">
+        <!-- Not Accessible Count Column -->
+        <template #cell(not_accessible)="data">
           <span v-for="(item, i) in data.item.finding_statuses_count" :key="i">
-            <span v-if="(item as StatusCount).status == 'UNDER_REVIEW'">
+            <span v-if="(item as StatusCount).status == 'NOT_ACCESSIBLE'">
               {{ (item as StatusCount).count }}
             </span>
           </span>
         </template>
 
-        <!-- Under Review Count Column -->
+        <!-- Not Accessible Count Column -->
         <template #cell(not_analyzed)="data">
           <span v-for="(item, i) in data.item.finding_statuses_count" :key="i">
             <span v-if="(item as StatusCount).status == 'NOT_ANALYZED'">
@@ -229,9 +229,9 @@ const fields = ref([
     thStyle: { borderTop: '0px' },
   },
   {
-    key: 'under_review',
+    key: 'not_accessible',
     sortable: false,
-    label: 'Under Review',
+    label: 'Not Accessible',
     class: 'text-start position-sticky',
     thStyle: { borderTop: '0px' },
   },
@@ -344,7 +344,7 @@ function getRuleFindingCountAugmented(rule: RuleFindingCountModel): RuleFindingC
     TRUE_POSITIVE: 0,
     FALSE_POSITIVE: 0,
     CLARIFICATION_REQUIRED: 0,
-    UNDER_REVIEW: 0,
+    NOT_ACCESSIBLE: 0,
     NOT_ANALYZED: 0,
   };
   rule.finding_statuses_count?.forEach((findingStatus) => {
@@ -358,7 +358,7 @@ function getRuleFindingCountAugmented(rule: RuleFindingCountModel): RuleFindingC
     tpCount: counts['TRUE_POSITIVE'],
     fpCount: counts['FALSE_POSITIVE'],
     naCount: counts['NOT_ANALYZED'],
-    urCount: counts['UNDER_REVIEW'],
+    urCount: counts['NOT_ACCESSIBLE'],
     crCount: counts['CLARIFICATION_REQUIRED'],
   };
 

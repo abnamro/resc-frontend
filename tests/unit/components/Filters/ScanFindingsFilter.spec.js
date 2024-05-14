@@ -42,7 +42,7 @@ const repository = {
   true_positive: 1,
   false_positive: 2,
   not_analyzed: 3,
-  under_review: 4,
+  not_accessible: 4,
   clarification_required: 5,
   total_findings_count: 15,
   id_: 1,

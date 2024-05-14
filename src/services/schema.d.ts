@@ -196,7 +196,7 @@ export interface paths {
      *
      * - **db_connection**: Session of the database connection
      * - **finding_ids**: List of finding IDs for which audit to be performed
-     * - **status**: Status of the finding, Valid values are NOT_ANALYZED, UNDER_REVIEW,
+     * - **status**: Status of the finding, Valid values are NOT_ANALYZED, NOT_ACCESSIBLE,
      *               CLARIFICATION_REQUIRED, FALSE_POSITIVE, TRUE_POSITIVE
      * - **comment**: Comment
      * - **return**: int
@@ -549,7 +549,7 @@ export interface paths {
      * - **commit_timestamp**: Commit timestamp
      * - **author**: Author name
      * - **email**: Email of the author
-     * - **status**: Status of the finding, Valid values are NOT_ANALYZED, UNDER_REVIEW,
+     * - **status**: Status of the finding, Valid values are NOT_ANALYZED, NOT_ACCESSIBLE,
      *               CLARIFICATION_REQUIRED, FALSE_POSITIVE, TRUE_POSITIVE
      * - **comment**: Comment
      * - **event_sent_on**: event sent timestamp
@@ -846,7 +846,7 @@ export interface components {
      * FindingCountModel[RepositoryRead]
      * @description     Generic encapsulation class for findings count end points to standardize output of the API
      *     example creation, FindingCountModel[FindingRead](data=db_findings, true_positive=true_positive,
-     *     false_positive=false_positive, not_analyzed=not_analyzed, under_review=under_review,
+     *     false_positive=false_positive, not_analyzed=not_analyzed, not_accessible=not_accessible,
      *     clarification_required=clarification_required, total_findings_count=total_findings_count)
      * :param Generic[Model]:
      *     Type of the object in the data list
@@ -859,8 +859,8 @@ export interface components {
       false_positive: number;
       /** Not Analyzed */
       not_analyzed: number;
-      /** Under Review */
-      under_review: number;
+      /** Not Accessible */
+      not_accessible: number;
       /** Clarification Required */
       clarification_required: number;
       /** Total Findings Count */
@@ -970,7 +970,7 @@ export interface components {
      */
     FindingStatus:
       | 'NOT_ANALYZED'
-      | 'UNDER_REVIEW'
+      | 'NOT_ACCESSIBLE'
       | 'CLARIFICATION_REQUIRED'
       | 'FALSE_POSITIVE'
       | 'TRUE_POSITIVE';
@@ -1246,8 +1246,8 @@ export interface components {
       false_positive: number;
       /** Not Analyzed */
       not_analyzed: number;
-      /** Under Review */
-      under_review: number;
+      /** Not Accessible */
+      not_accessible: number;
       /** Clarification Required */
       clarification_required: number;
       /** Total Findings Count */
@@ -2102,7 +2102,7 @@ export interface operations {
    *
    * - **db_connection**: Session of the database connection
    * - **finding_ids**: List of finding IDs for which audit to be performed
-   * - **status**: Status of the finding, Valid values are NOT_ANALYZED, UNDER_REVIEW,
+   * - **status**: Status of the finding, Valid values are NOT_ANALYZED, NOT_ACCESSIBLE,
    *               CLARIFICATION_REQUIRED, FALSE_POSITIVE, TRUE_POSITIVE
    * - **comment**: Comment
    * - **return**: int
@@ -3166,7 +3166,7 @@ export interface operations {
    * - **commit_timestamp**: Commit timestamp
    * - **author**: Author name
    * - **email**: Email of the author
-   * - **status**: Status of the finding, Valid values are NOT_ANALYZED, UNDER_REVIEW,
+   * - **status**: Status of the finding, Valid values are NOT_ANALYZED, NOT_ACCESSIBLE,
    *               CLARIFICATION_REQUIRED, FALSE_POSITIVE, TRUE_POSITIVE
    * - **comment**: Comment
    * - **event_sent_on**: event sent timestamp

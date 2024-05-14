@@ -11,7 +11,7 @@
       "true_positive": 1,
       "false_positive": 2,
       "not_analyzed": 3,
-      "under_review": 4,
+      "not_accessible": 4,
       "clarification_required": 5,
       "total_findings_count": 15,
       "id_": 1
@@ -27,7 +27,7 @@
       "true_positive": 2,
       "false_positive": 1,
       "not_analyzed": 4,
-      "under_review": 3,
+      "not_accessible": 3,
       "clarification_required": 5,
       "total_findings_count": 15,
       "id_": 2

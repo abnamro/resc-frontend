@@ -1,7 +1,7 @@
 <template>
   <div>
     <b-badge v-if="props.status == 'NOT_ANALYZED'" variant="secondary">Not Analyzed</b-badge>
-    <b-badge v-if="props.status == 'UNDER_REVIEW'" class="badge bg-info">Under Review</b-badge>
+    <b-badge v-if="props.status == 'NOT_ACCESSIBLE'" class="badge bg-info">Not Accessible</b-badge>
     <b-badge v-if="props.status == 'CLARIFICATION_REQUIRED'" variant="warning"
       >Clarification Required</b-badge
     >

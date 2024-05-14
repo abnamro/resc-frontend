@@ -37,7 +37,7 @@
         </div>
       </b-progress-bar>
       <b-progress-bar
-        v-b-popover.hover.bottom="getPopOverContent('Under Review', props.underReview)"
+        v-b-popover.hover.bottom="getPopOverContent('Not Accessible', props.underReview)"
         :value="props.underReview"
         variant="info"
       >
