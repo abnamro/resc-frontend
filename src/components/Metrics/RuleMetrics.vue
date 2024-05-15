@@ -102,7 +102,7 @@
             :truePositive="(data.item as RuleFindingCountModelAugmented).tpCount"
             :falsePositive="(data.item as RuleFindingCountModelAugmented).fpCount"
             :notAnalyzed="(data.item as RuleFindingCountModelAugmented).naCount"
-            :underReview="(data.item as RuleFindingCountModelAugmented).urCount"
+            :notAccessible="(data.item as RuleFindingCountModelAugmented).urCount"
             :clarificationRequired="(data.item as RuleFindingCountModelAugmented).crCount"
             :totalCount="(data.item as RuleFindingCountModelAugmented).finding_count ?? 0"
           />
@@ -115,7 +115,7 @@
           <td :class="ruleTotalRowClass">{{ truePositiveTotalCount }}</td>
           <td :class="ruleTotalRowClass">{{ falsePositiveTotalCount }}</td>
           <td :class="ruleTotalRowClass">{{ clarificationRequiredTotalCount }}</td>
-          <td :class="ruleTotalRowClass">{{ underReviewTotalCount }}</td>
+          <td :class="ruleTotalRowClass">{{ notAccessibleTotalCount }}</td>
           <td :class="ruleTotalRowClass">{{ notAnalyzedTotalCount }}</td>
           <td :class="ruleTotalRowClass">{{ totalFindingsCountForAllRules }}</td>
           <td :class="ruleTotalRowClass"></td>
@@ -172,7 +172,7 @@ const ruleTagsList = ref([] as string[]);
 const truePositiveTotalCount = ref(0);
 const falsePositiveTotalCount = ref(0);
 const clarificationRequiredTotalCount = ref(0);
-const underReviewTotalCount = ref(0);
+const notAccessibleTotalCount = ref(0);
 const notAnalyzedTotalCount = ref(0);
 const totalFindingsCountForAllRules = ref(0);
 const truePositiveRateList = ref([] as number[]);
@@ -315,7 +315,7 @@ function getTotalCountRowValuesForRuleMetricsTable(ruleListCounts: RuleFindingCo
   truePositiveTotalCount.value = 0;
   falsePositiveTotalCount.value = 0;
   clarificationRequiredTotalCount.value = 0;
-  underReviewTotalCount.value = 0;
+  notAccessibleTotalCount.value = 0;
   notAnalyzedTotalCount.value = 0;
   notAnalyzedTotalCount.value = 0;
   truePositiveRateList.value = [];
@@ -332,7 +332,7 @@ function getTotalCountRowValuesForRuleMetricsTable(ruleListCounts: RuleFindingCo
     truePositiveTotalCount.value += ruleFindingCountAugmented.tpCount;
     falsePositiveTotalCount.value += ruleFindingCountAugmented.fpCount;
     clarificationRequiredTotalCount.value += ruleFindingCountAugmented.crCount;
-    underReviewTotalCount.value += ruleFindingCountAugmented.urCount;
+    notAccessibleTotalCount.value += ruleFindingCountAugmented.urCount;
     notAnalyzedTotalCount.value += ruleFindingCountAugmented.naCount;
   });
 

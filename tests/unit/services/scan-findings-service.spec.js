@@ -112,7 +112,7 @@ describe('getRepositoryById', () => {
   describe('getStatusList', () => {
     let mock_statuses = [
       `${Config.value('notAnalyzedStatusVal')}`,
-      `${Config.value('underReviewStatusVal')}`,
+      `${Config.value('notAccessibleStatusVal')}`,
       `${Config.value('clarificationRequiredStatusVal')}`,
       `${Config.value('falsePositiveStatusVal')}`,
       `${Config.value('truePostiveStatusVal')}`,

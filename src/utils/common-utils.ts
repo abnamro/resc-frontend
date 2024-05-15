@@ -38,8 +38,8 @@ const CommonUtils = {
   },
 
   formatStatusLabels(input: FindingStatus): string {
-    if (input === `${Config.value('underReviewStatusVal')}`) {
-      return `${Config.value('underReviewStatusLabel')}`;
+    if (input === `${Config.value('notAccessibleStatusVal')}`) {
+      return `${Config.value('notAccessibleStatusLabel')}`;
     }
     if (input === `${Config.value('clarificationRequiredStatusVal')}`) {
       return `${Config.value('clarificationRequiredStatusLabel')}`;

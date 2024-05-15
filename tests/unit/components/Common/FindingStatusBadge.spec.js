@@ -8,7 +8,7 @@ describe('FindingStatusBadge data-line tests', () => {
   let wrapper;
 
   const status_notAnalyzed = `${Config.value('notAnalyzedStatusVal')}`;
-  const status_underReveiw = `${Config.value('underReviewStatusVal')}`;
+  const status_underReveiw = `${Config.value('notAccessibleStatusVal')}`;
   const status_clarificationRequired = `${Config.value('clarificationRequiredStatusVal')}`;
   const status_truePositive = `${Config.value('truePostiveStatusVal')}`;
   const status_falsePositive = `${Config.value('falsePositiveStatusVal')}`;

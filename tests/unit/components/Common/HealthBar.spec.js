@@ -10,7 +10,7 @@ describe('HealthBar tests', () => {
         truePositive: 5,
         falsePositive: 4,
         notAnalyzed: 3,
-        underReview: 2,
+        notAccessible: 2,
         clarificationRequired: 1,
         totalCount: 15,
       },
