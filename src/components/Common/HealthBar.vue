@@ -37,13 +37,13 @@
         </div>
       </b-progress-bar>
       <b-progress-bar
-        v-b-popover.hover.bottom="getPopOverContent('Not Accessible', props.underReview)"
-        :value="props.underReview"
+        v-b-popover.hover.bottom="getPopOverContent('Not Accessible', props.notAccessible)"
+        :value="props.notAccessible"
         variant="info"
       >
         <div>
           <small
-            ><strong>{{ showFindingsInPercentage(props.underReview) }}</strong></small
+            ><strong>{{ showFindingsInPercentage(props.notAccessible) }}</strong></small
           >
         </div>
       </b-progress-bar>
@@ -67,7 +67,7 @@ type Props = {
   truePositive: number;
   falsePositive: number;
   notAnalyzed: number;
-  underReview: number;
+  notAccessible: number;
   clarificationRequired: number;
   totalCount: number;
 };

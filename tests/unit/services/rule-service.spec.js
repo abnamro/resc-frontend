@@ -34,7 +34,7 @@ describe('function getRulesWithFindingStatusCount', () => {
       );
       expect(response[0].finding_statuses_count[2].count).toBe(3);
       expect(response[0].finding_statuses_count[3].status).toBe(
-        `${Config.value('underReviewStatusVal')}`,
+        `${Config.value('notAccessibleStatusVal')}`,
       );
       expect(response[0].finding_statuses_count[3].count).toBe(4);
       expect(response[0].finding_statuses_count[4].status).toBe(

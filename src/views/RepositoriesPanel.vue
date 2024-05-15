@@ -56,7 +56,7 @@
             :truePositive="(data.item as RepositoryEnrichedRead).true_positive"
             :falsePositive="(data.item as RepositoryEnrichedRead).false_positive"
             :notAnalyzed="(data.item as RepositoryEnrichedRead).not_analyzed"
-            :underReview="(data.item as RepositoryEnrichedRead).not_accessible"
+            :notAccessible="(data.item as RepositoryEnrichedRead).not_accessible"
             :clarificationRequired="(data.item as RepositoryEnrichedRead).clarification_required"
             :totalCount="(data.item as RepositoryEnrichedRead).total_findings_count"
           />

@@ -25,8 +25,8 @@ type ConfigKey =
   | 'githubPublicLabel'
   | 'notAnalyzedStatusVal'
   | 'notAnalyzedStatusLabel'
-  | 'underReviewStatusVal'
-  | 'underReviewStatusLabel'
+  | 'notAccessibleStatusVal'
+  | 'notAccessibleStatusLabel'
   | 'clarificationRequiredStatusVal'
   | 'clarificationRequiredStatusLabel'
   | 'truePostiveStatusVal'
@@ -63,8 +63,8 @@ export default class Config {
       githubPublicLabel: 'GitHub Public',
       notAnalyzedStatusVal: 'NOT_ANALYZED',
       notAnalyzedStatusLabel: 'Not Analyzed',
-      underReviewStatusVal: 'NOT_ACCESSIBLE',
-      underReviewStatusLabel: 'Not Accessible',
+      notAccessibleStatusVal: 'NOT_ACCESSIBLE',
+      notAccessibleStatusLabel: 'Not Accessible',
       clarificationRequiredStatusVal: 'CLARIFICATION_REQUIRED',
       clarificationRequiredStatusLabel: 'Clarification Required',
       truePostiveStatusVal: 'TRUE_POSITIVE',
