@@ -23,7 +23,7 @@
     },
     {
       "id_": 2,
-      "status": "UNDER_REVIEW",
+      "status": "NOT_ACCESSIBLE",
       "auditor": "Anonymous",
       "comment": "review started",
       "timestamp": "2023-04-08T10:01:28.512Z"

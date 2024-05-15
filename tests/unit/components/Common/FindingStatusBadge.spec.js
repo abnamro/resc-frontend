@@ -39,10 +39,10 @@ describe('FindingStatusBadge data-line tests', () => {
     expect(wrapper.html()).toContain('Not Analyzed');
   });
 
-  it('Given a FindingStatusBadge When status Under Review is passed then Under Review badge will be displayed', () => {
+  it('Given a FindingStatusBadge When status Not Accessible is passed then Not Accessible badge will be displayed', () => {
     initMountApp(status_underReveiw);
     expect(wrapper.exists()).toBe(true);
-    expect(wrapper.html()).toContain('Under Review');
+    expect(wrapper.html()).toContain('Not Accessible');
   });
 
   it('Given a FindingStatusBadge When status Clarification Required is passed then Clarification Required badge will be displayed', () => {
