@@ -186,7 +186,8 @@ import type { AxiosResponse } from 'axios';
 import type { TableItem } from 'bootstrap-vue-next';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { onKeyStroke } from '@vueuse/core';
-import CommonUtils, { shouldIgnoreKeystroke } from '@/utils/common-utils';
+import CommonUtils from '@/utils/common-utils';
+import { shouldIgnoreKeystroke } from '@/utils/keybind-utils';
 
 type TableItemDetailedFindingRead = DetailedFindingRead & TableItem;
 
