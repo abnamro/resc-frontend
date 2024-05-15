@@ -123,6 +123,7 @@ const AuthService = {
     store.update_user_details(null);
     store.update_source_route(null);
     store.update_destination_route(null);
+    store.clear_finding_status_list();
     this.removeCodeVerifier();
     Router.push('/login').catch((error) => {
       AxiosConfig.handleError(error);
