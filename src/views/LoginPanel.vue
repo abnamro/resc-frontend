@@ -18,7 +18,9 @@
       </b-row>
       <b-row>
         <b-col>
-          <b-button variant="primary" class="mx-auto" v-on:click="login" @keydown.enter="login" > LOGIN </b-button>
+          <b-button variant="primary" class="mx-auto" v-on:click="login" @keydown.enter="login">
+            LOGIN
+          </b-button>
         </b-col>
       </b-row>
     </b-container>
