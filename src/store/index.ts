@@ -24,6 +24,7 @@ type ActionsStore = {
   update_destination_route: (destinationRoute: string | null) => void;
   update_user_details: (userDetails: UserDetails | null) => void;
   update_previous_route_state: (previousRouteState: string | null | PreviousRouteState) => void;
+  clear_finding_status_list: () => void;
 };
 
 export type PreviousRouteState = {
@@ -41,7 +42,7 @@ interface State {
   lastName: null | string;
   email: null | string;
   previousRouteState: null | string | PreviousRouteState;
-  findingStatusList: FindingStatus[];
+  findingStatusList: null | FindingStatus[];
 }
 
 export const useAuthUserStore: () => Store<'authUser', State, GettersStore, ActionsStore> =
@@ -60,7 +61,7 @@ export const useAuthUserStore: () => Store<'authUser', State, GettersStore, Acti
     }),
     getters: {
       get_finding_status_list(): FindingStatus[] {
-        if (this.findingStatusList.length === 0) {
+        if (this.findingStatusList === null || this.findingStatusList.length === 0) {
           ScanFindingsService.getStatusList()
             .then((response) => {
               this.findingStatusList = response.data as FindingStatus[];
@@ -70,7 +71,7 @@ export const useAuthUserStore: () => Store<'authUser', State, GettersStore, Acti
             });
         }
 
-        return this.findingStatusList;
+        return this.findingStatusList as FindingStatus[];
       },
     },
     actions: {
@@ -91,6 +92,9 @@ export const useAuthUserStore: () => Store<'authUser', State, GettersStore, Acti
       },
       update_previous_route_state(previousRouteState: string | null | PreviousRouteState) {
         this.previousRouteState = previousRouteState;
+      },
+      clear_finding_status_list() {
+        this.findingStatusList = null;
       },
     },
     modules: {},
