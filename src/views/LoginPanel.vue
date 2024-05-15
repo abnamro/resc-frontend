@@ -18,9 +18,7 @@
       </b-row>
       <b-row>
         <b-col>
-          <b-button variant="primary" class="mx-auto" v-on:click="login" @keydown.enter="login">
-            LOGIN
-          </b-button>
+          <b-button variant="primary" class="mx-auto" v-on:click="login"> LOGIN </b-button>
         </b-col>
       </b-row>
     </b-container>
@@ -33,6 +31,7 @@ import AxiosConfig from '@/configuration/axios-config';
 import Config from '@/configuration/config';
 import { useAuthUserStore } from '@/store/index';
 import { useRouter } from 'vue-router';
+import { onKeyStroke } from '@vueuse/core';
 
 const ssoLoginPageMessage = `${Config.value('ssoLoginPageMessage')}`;
 const router = useRouter();
@@ -54,6 +53,7 @@ if (store.idToken && !AuthService.isTokenExpired(store.idToken)) {
     });
   }
 }
+onKeyStroke('Enter', login, { eventName: 'keydown' });
 </script>
 
 <style scoped>
