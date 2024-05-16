@@ -29,6 +29,8 @@ type ConfigKey =
   | 'notAccessibleStatusLabel'
   | 'clarificationRequiredStatusVal'
   | 'clarificationRequiredStatusLabel'
+  | 'outdatedStatusVal'
+  | 'outdatedStatusLabel'
   | 'truePostiveStatusVal'
   | 'truePostiveStatusLabel'
   | 'falsePositiveStatusVal'
@@ -67,6 +69,8 @@ export default class Config {
       notAccessibleStatusLabel: 'Not Accessible',
       clarificationRequiredStatusVal: 'CLARIFICATION_REQUIRED',
       clarificationRequiredStatusLabel: 'Clarification Required',
+      outdatedStatusVal: 'OUTDATED',
+      outdatedStatusLabel: 'Outdated',
       truePostiveStatusVal: 'TRUE_POSITIVE',
       truePostiveStatusLabel: 'True Positive',
       falsePositiveStatusVal: 'FALSE_POSITIVE',

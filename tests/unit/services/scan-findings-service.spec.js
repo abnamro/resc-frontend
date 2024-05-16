@@ -114,6 +114,7 @@ describe('getRepositoryById', () => {
       `${Config.value('notAnalyzedStatusVal')}`,
       `${Config.value('notAccessibleStatusVal')}`,
       `${Config.value('clarificationRequiredStatusVal')}`,
+      `${Config.value('outdatedStatusVal')}`,
       `${Config.value('falsePositiveStatusVal')}`,
       `${Config.value('truePostiveStatusVal')}`,
     ];
@@ -126,7 +127,7 @@ describe('getRepositoryById', () => {
         expect(response).toEqual(mock_statuses);
         expect(response).toBeDefined();
         expect(response).not.toBeNull();
-        expect(response.length).toBe(5);
+        expect(response.length).toBe(6);
       });
     });
 

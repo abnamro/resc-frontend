@@ -12,6 +12,7 @@ describe('HealthBar tests', () => {
         notAnalyzed: 3,
         notAccessible: 2,
         clarificationRequired: 1,
+        outdated: 0,
         totalCount: 15,
       },
       components: {

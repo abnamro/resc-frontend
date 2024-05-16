@@ -22,6 +22,10 @@
       {
         "status": "NOT_ANALYZED",
         "count": 5
+      },
+      {
+        "status": "OUTDATED",
+        "count": 0
       }
     ]
   },
@@ -48,7 +52,12 @@
       {
         "status": "NOT_ANALYZED",
         "count": 5
+      },
+      {
+        "status": "OUTDATED",
+        "count": 0
       }
+
     ]
   },
   {
@@ -74,7 +83,12 @@
       {
         "status": "NOT_ANALYZED",
         "count": 5
+      },
+      {
+        "status": "OUTDATED",
+        "count": 0
       }
+
     ]
   },
   {
@@ -100,7 +114,12 @@
       {
         "status": "NOT_ANALYZED",
         "count": 5
+      },
+      {
+        "status": "OUTDATED",
+        "count": 0
       }
+
     ]
   },
   {
@@ -126,7 +145,12 @@
       {
         "status": "NOT_ANALYZED",
         "count": 5
+      },
+      {
+        "status": "OUTDATED",
+        "count": 0
       }
+
     ]
   },
   {
@@ -152,7 +176,12 @@
       {
         "status": "NOT_ANALYZED",
         "count": 5
+      },
+      {
+        "status": "OUTDATED",
+        "count": 0
       }
+
     ]
   },
   {
@@ -178,6 +207,10 @@
       {
         "status": "NOT_ANALYZED",
         "count": 5
+      },
+      {
+        "status": "OUTDATED",
+        "count": 0
       }
     ]
   },
@@ -204,6 +237,10 @@
       {
         "status": "NOT_ANALYZED",
         "count": 5
+      },
+      {
+        "status": "OUTDATED",
+        "count": 0
       }
     ]
   },
@@ -230,6 +267,10 @@
       {
         "status": "NOT_ANALYZED",
         "count": 5
+      },
+      {
+        "status": "OUTDATED",
+        "count": 0
       }
     ]
   },
@@ -256,6 +297,10 @@
       {
         "status": "NOT_ANALYZED",
         "count": 5
+      },
+      {
+        "status": "OUTDATED",
+        "count": 0
       }
     ]
   }

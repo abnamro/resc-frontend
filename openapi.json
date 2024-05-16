@@ -61,12 +61,7 @@
           "503": {
             "description": "Unable to communicate with DataBase, Please contact your system administrator"
           }
-        },
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ]
+        }
       }
     },
     "/resc/v1/auth-check": {
@@ -92,12 +87,7 @@
           "503": {
             "description": "Unable to communicate with DataBase, Please contact your system administrator"
           }
-        },
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ]
+        }
       }
     },
     "/resc/v1/detected-rules": {
@@ -219,12 +209,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ]
+        }
       }
     },
     "/resc/v1/rules/finding-status-count": {
@@ -292,12 +277,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ]
+        }
       }
     },
     "/resc/v1/rule-packs/versions": {
@@ -380,12 +360,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ]
+        }
       }
     },
     "/resc/v1/rule-packs": {
@@ -443,12 +418,7 @@
           "503": {
             "description": "Unable to communicate with DataBase, Please contact your system administrator"
           }
-        },
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ]
+        }
       },
       "post": {
         "tags": [
@@ -527,12 +497,7 @@
           "503": {
             "description": "Unable to communicate with DataBase, Please contact your system administrator"
           }
-        },
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ]
+        }
       }
     },
     "/resc/v1/rule-packs/tags": {
@@ -588,12 +553,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ]
+        }
       }
     },
     "/resc/v1/findings": {
@@ -655,12 +615,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ]
+        }
       },
       "post": {
         "tags": [
@@ -721,12 +676,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ]
+        }
       }
     },
     "/resc/v1/findings/{finding_id}": {
@@ -785,12 +735,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ]
+        }
       },
       "delete": {
         "tags": [
@@ -845,12 +790,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ]
+        }
       },
       "patch": {
         "tags": [
@@ -917,12 +857,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ]
+        }
       }
     },
     "/resc/v1/findings/total-count-by-rule/{rule_name}": {
@@ -969,12 +904,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ]
+        }
       }
     },
     "/resc/v1/findings/by-rule/{rule_name}": {
@@ -1045,12 +975,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ]
+        }
       }
     },
     "/resc/v1/findings/audit/": {
@@ -1109,12 +1034,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ]
+        }
       }
     },
     "/resc/v1/findings/{finding_id}/audit": {
@@ -1185,12 +1105,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ]
+        }
       }
     },
     "/resc/v1/findings/supported-statuses/": {
@@ -1222,12 +1137,7 @@
           "503": {
             "description": "Unable to communicate with DataBase, Please contact your system administrator"
           }
-        },
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ]
+        }
       }
     },
     "/resc/v1/findings/count-by-time/{time_type}": {
@@ -1317,12 +1227,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ]
+        }
       }
     },
     "/resc/v1/detailed-findings": {
@@ -1393,12 +1298,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ]
+        }
       }
     },
     "/resc/v1/detailed-findings/{finding_id}": {
@@ -1457,12 +1357,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ]
+        }
       }
     },
     "/resc/v1/repositories": {
@@ -1558,12 +1453,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ]
+        }
       },
       "post": {
         "tags": [
@@ -1609,12 +1499,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ]
+        }
       }
     },
     "/resc/v1/repositories/{repository_id}": {
@@ -1673,12 +1558,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ]
+        }
       },
       "put": {
         "tags": [
@@ -1745,12 +1625,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ]
+        }
       },
       "delete": {
         "tags": [
@@ -1805,12 +1680,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ]
+        }
       }
     },
     "/resc/v1/repositories/distinct-projects/": {
@@ -1887,12 +1757,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ]
+        }
       }
     },
     "/resc/v1/repositories/distinct-repositories/": {
@@ -1969,12 +1834,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ]
+        }
       }
     },
     "/resc/v1/repositories/{repository_id}/findings-metadata": {
@@ -2033,12 +1893,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ]
+        }
       }
     },
     "/resc/v1/repositories/findings-metadata/": {
@@ -2144,12 +1999,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ]
+        }
       }
     },
     "/resc/v1/repositories/{repository_id}/last-scan": {
@@ -2201,12 +2051,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ]
+        }
       }
     },
     "/resc/v1/repositories/{repository_id}/scans": {
@@ -2277,12 +2122,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ]
+        }
       }
     },
     "/resc/v1/scans": {
@@ -2344,12 +2184,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ]
+        }
       },
       "post": {
         "tags": [
@@ -2405,12 +2240,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ]
+        }
       }
     },
     "/resc/v1/scans/{scan_id}": {
@@ -2469,12 +2299,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ]
+        }
       },
       "put": {
         "tags": [
@@ -2541,12 +2366,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ]
+        }
       },
       "delete": {
         "tags": [
@@ -2601,12 +2421,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ]
+        }
       }
     },
     "/resc/v1/scans/{scan_id}/findings": {
@@ -2704,12 +2519,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ]
+        }
       },
       "post": {
         "tags": [
@@ -2771,12 +2581,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ]
+        }
       }
     },
     "/resc/v1/scans/findings/": {
@@ -2878,12 +2683,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ]
+        }
       }
     },
     "/resc/v1/scans/detected-rules/": {
@@ -2940,12 +2740,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ]
+        }
       }
     },
     "/resc/v1/vcs-instances": {
@@ -3024,12 +2819,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ]
+        }
       },
       "post": {
         "tags": [
@@ -3085,12 +2875,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ]
+        }
       }
     },
     "/resc/v1/vcs-instances/{vcs_instance_id}": {
@@ -3149,12 +2934,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ]
+        }
       },
       "put": {
         "tags": [
@@ -3221,12 +3001,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ]
+        }
       },
       "delete": {
         "tags": [
@@ -3281,12 +3056,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ]
+        }
       }
     },
     "/resc/v1/metrics/audited-count-over-time": {
@@ -3354,12 +3124,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ]
+        }
       }
     },
     "/resc/v1/metrics/count-per-vcs-provider-by-week": {
@@ -3414,12 +3179,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ]
+        }
       }
     },
     "/resc/v1/metrics/un-triaged-count-over-time": {
@@ -3474,12 +3234,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ]
+        }
       }
     },
     "/resc/v1/metrics/audit-count-by-auditor-over-time": {
@@ -3534,12 +3289,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ]
+        }
       }
     },
     "/resc/v1/metrics/personal-audits": {
@@ -3567,12 +3317,7 @@
           "503": {
             "description": "Unable to communicate with DataBase, Please contact your system administrator"
           }
-        },
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ]
+        }
       }
     },
     "/": {
@@ -3904,6 +3649,11 @@
             "exclusiveMinimum": -1.0,
             "title": "Clarification Required"
           },
+          "outdated": {
+            "type": "integer",
+            "exclusiveMinimum": -1.0,
+            "title": "Outdated"
+          },
           "total_findings_count": {
             "type": "integer",
             "exclusiveMinimum": -1.0,
@@ -3917,10 +3667,11 @@
           "not_analyzed",
           "not_accessible",
           "clarification_required",
+          "outdated",
           "total_findings_count"
         ],
         "title": "FindingCountModel[RepositoryRead]",
-        "description": "    Generic encapsulation class for findings count end points to standardize output of the API\n    example creation, FindingCountModel[FindingRead](data=db_findings, true_positive=true_positive,\n    false_positive=false_positive, not_analyzed=not_analyzed, not_accessible=not_accessible,\n    clarification_required=clarification_required, total_findings_count=total_findings_count)\n:param Generic[Model]:\n    Type of the object in the data list"
+        "description": "    Generic encapsulation class for findings count end points to standardize output of the API\n    example creation, FindingCountModel[FindingRead](data=db_findings, true_positive=true_positive,\n    false_positive=false_positive, not_analyzed=not_analyzed, not_accessible=not_accessible,\n    clarification_required=clarification_required, outdated=outdated,\n    total_findings_count=total_findings_count)\n:param Generic[Model]:\n    Type of the object in the data list"
       },
       "FindingCountOverTime": {
         "properties": {
@@ -4145,7 +3896,8 @@
           "NOT_ACCESSIBLE",
           "CLARIFICATION_REQUIRED",
           "FALSE_POSITIVE",
-          "TRUE_POSITIVE"
+          "TRUE_POSITIVE",
+          "OUTDATED"
         ],
         "title": "FindingStatus",
         "description": "An enumeration."
@@ -4671,6 +4423,11 @@
             "exclusiveMinimum": -1.0,
             "title": "Clarification Required"
           },
+          "outdated": {
+            "type": "integer",
+            "exclusiveMinimum": -1.0,
+            "title": "Outdated"
+          },
           "total_findings_count": {
             "type": "integer",
             "exclusiveMinimum": -1.0,
@@ -4694,6 +4451,7 @@
           "not_analyzed",
           "not_accessible",
           "clarification_required",
+          "outdated",
           "total_findings_count",
           "id_"
         ],
@@ -5119,12 +4877,6 @@
         },
         "type": "object",
         "title": "VcsProviderFindingCount"
-      }
-    },
-    "securitySchemes": {
-      "HTTPBearer": {
-        "type": "http",
-        "scheme": "bearer"
       }
     }
   },

@@ -8,8 +8,9 @@ describe('FindingStatusBadge data-line tests', () => {
   let wrapper;
 
   const status_notAnalyzed = `${Config.value('notAnalyzedStatusVal')}`;
-  const status_underReveiw = `${Config.value('notAccessibleStatusVal')}`;
+  const status_notAccessible = `${Config.value('notAccessibleStatusVal')}`;
   const status_clarificationRequired = `${Config.value('clarificationRequiredStatusVal')}`;
+  const status_outdated = `${Config.value('outdatedStatusVal')}`;
   const status_truePositive = `${Config.value('truePostiveStatusVal')}`;
   const status_falsePositive = `${Config.value('falsePositiveStatusVal')}`;
 
@@ -40,9 +41,15 @@ describe('FindingStatusBadge data-line tests', () => {
   });
 
   it('Given a FindingStatusBadge When status Not Accessible is passed then Not Accessible badge will be displayed', () => {
-    initMountApp(status_underReveiw);
+    initMountApp(status_notAccessible);
     expect(wrapper.exists()).toBe(true);
     expect(wrapper.html()).toContain('Not Accessible');
+  });
+
+  it('Given a FindingStatusBadge When status Outdated is passed then Outdated badge will be displayed', () => {
+    initMountApp(status_outdated);
+    expect(wrapper.exists()).toBe(true);
+    expect(wrapper.html()).toContain('Outdated');
   });
 
   it('Given a FindingStatusBadge When status Clarification Required is passed then Clarification Required badge will be displayed', () => {

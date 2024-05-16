@@ -7,6 +7,7 @@
     >
     <b-badge v-if="props.status == 'TRUE_POSITIVE'" variant="danger">True Positive</b-badge>
     <b-badge v-if="props.status == 'FALSE_POSITIVE'" variant="success">False Positive</b-badge>
+    <b-badge v-if="props.status == 'OUTDATED'" variant="dark">Outdated</b-badge>
   </div>
 </template>
 <script setup lang="ts">

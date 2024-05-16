@@ -26,18 +26,20 @@ describe('function parseStatusOptions', () => {
       `${Config.value('clarificationRequiredStatusVal')}`,
       `${Config.value('truePostiveStatusVal')}`,
       `${Config.value('falsePositiveStatusVal')}`,
+      `${Config.value('outdatedStatusVal')}`,
     ];
 
     const statusList = CommonUtils.parseStatusOptions(statusOptions);
 
     expect(statusList).toBeDefined();
     expect(statusList).not.toBeNull();
-    expect(statusList.length).toBe(5);
+    expect(statusList.length).toBe(6);
     expect(statusList[0].label).toBe(`${Config.value('notAnalyzedStatusLabel')}`);
     expect(statusList[1].label).toBe(`${Config.value('notAccessibleStatusLabel')}`);
     expect(statusList[2].label).toBe(`${Config.value('clarificationRequiredStatusLabel')}`);
     expect(statusList[3].label).toBe(`${Config.value('truePostiveStatusLabel')}`);
     expect(statusList[4].label).toBe(`${Config.value('falsePositiveStatusLabel')}`);
+    expect(statusList[5].label).toBe(`${Config.value('outdatedStatusLabel')}`);
   });
 });
 

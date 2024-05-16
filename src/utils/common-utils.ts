@@ -44,6 +44,9 @@ const CommonUtils = {
     if (input === `${Config.value('clarificationRequiredStatusVal')}`) {
       return `${Config.value('clarificationRequiredStatusLabel')}`;
     }
+    if (input === `${Config.value('outdatedStatusVal')}`) {
+      return `${Config.value('outdatedStatusLabel')}`;
+    }
     if (input === `${Config.value('truePostiveStatusVal')}`) {
       return `${Config.value('truePostiveStatusLabel')}`;
     }

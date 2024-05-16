@@ -78,6 +78,15 @@
           </span>
         </template>
 
+        <!-- Outdated Count Column -->
+        <template #cell(outdated)="data">
+          <span v-for="(item, i) in data.item.finding_statuses_count" :key="i">
+            <span v-if="(item as StatusCount).status == 'OUTDATED'">
+              {{ (item as StatusCount).count }}
+            </span>
+          </span>
+        </template>
+
         <!-- Not Accessible Count Column -->
         <template #cell(not_accessible)="data">
           <span v-for="(item, i) in data.item.finding_statuses_count" :key="i">
@@ -104,6 +113,7 @@
             :notAnalyzed="(data.item as RuleFindingCountModelAugmented).naCount"
             :notAccessible="(data.item as RuleFindingCountModelAugmented).urCount"
             :clarificationRequired="(data.item as RuleFindingCountModelAugmented).crCount"
+            :outdated="(data.item as RuleFindingCountModelAugmented).odCount"
             :totalCount="(data.item as RuleFindingCountModelAugmented).finding_count ?? 0"
           />
         </template>
@@ -117,6 +127,7 @@
           <td :class="ruleTotalRowClass">{{ clarificationRequiredTotalCount }}</td>
           <td :class="ruleTotalRowClass">{{ notAccessibleTotalCount }}</td>
           <td :class="ruleTotalRowClass">{{ notAnalyzedTotalCount }}</td>
+          <td :class="ruleTotalRowClass">{{ outdatedTotalCount }}</td>
           <td :class="ruleTotalRowClass">{{ totalFindingsCountForAllRules }}</td>
           <td :class="ruleTotalRowClass"></td>
         </tr>
@@ -157,6 +168,7 @@ type Stats = {
   naCount: number;
   urCount: number;
   crCount: number;
+  odCount: number;
 };
 
 function getTruePositiveRate(stat: Stats): number {
@@ -174,6 +186,7 @@ const falsePositiveTotalCount = ref(0);
 const clarificationRequiredTotalCount = ref(0);
 const notAccessibleTotalCount = ref(0);
 const notAnalyzedTotalCount = ref(0);
+const outdatedTotalCount = ref(0);
 const totalFindingsCountForAllRules = ref(0);
 const truePositiveRateList = ref([] as number[]);
 const avgTruePosiitveRate = ref('0');
@@ -239,6 +252,13 @@ const fields = ref([
     key: 'not_analyzed',
     sortable: false,
     label: 'Not Analyzed',
+    class: 'text-start position-sticky',
+    thStyle: { borderTop: '0px' },
+  },
+  {
+    key: 'outdated',
+    sortable: false,
+    label: 'Outdated',
     class: 'text-start position-sticky',
     thStyle: { borderTop: '0px' },
   },
@@ -315,6 +335,7 @@ function getTotalCountRowValuesForRuleMetricsTable(ruleListCounts: RuleFindingCo
   truePositiveTotalCount.value = 0;
   falsePositiveTotalCount.value = 0;
   clarificationRequiredTotalCount.value = 0;
+  outdatedTotalCount.value = 0;
   notAccessibleTotalCount.value = 0;
   notAnalyzedTotalCount.value = 0;
   notAnalyzedTotalCount.value = 0;
@@ -332,6 +353,7 @@ function getTotalCountRowValuesForRuleMetricsTable(ruleListCounts: RuleFindingCo
     truePositiveTotalCount.value += ruleFindingCountAugmented.tpCount;
     falsePositiveTotalCount.value += ruleFindingCountAugmented.fpCount;
     clarificationRequiredTotalCount.value += ruleFindingCountAugmented.crCount;
+    outdatedTotalCount.value += ruleFindingCountAugmented.odCount;
     notAccessibleTotalCount.value += ruleFindingCountAugmented.urCount;
     notAnalyzedTotalCount.value += ruleFindingCountAugmented.naCount;
   });
@@ -344,6 +366,7 @@ function getRuleFindingCountAugmented(rule: RuleFindingCountModel): RuleFindingC
     TRUE_POSITIVE: 0,
     FALSE_POSITIVE: 0,
     CLARIFICATION_REQUIRED: 0,
+    OUTDATED: 0,
     NOT_ACCESSIBLE: 0,
     NOT_ANALYZED: 0,
   };
@@ -360,6 +383,7 @@ function getRuleFindingCountAugmented(rule: RuleFindingCountModel): RuleFindingC
     naCount: counts['NOT_ANALYZED'],
     urCount: counts['NOT_ACCESSIBLE'],
     crCount: counts['CLARIFICATION_REQUIRED'],
+    odCount: counts['OUTDATED'],
   };
 
   return ruleFindingCountAugmented;
