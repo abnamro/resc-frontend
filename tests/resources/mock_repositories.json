@@ -13,6 +13,7 @@
       "not_analyzed": 3,
       "not_accessible": 4,
       "clarification_required": 5,
+      "outdated": 0,
       "total_findings_count": 15,
       "id_": 1
     },
@@ -29,6 +30,7 @@
       "not_analyzed": 4,
       "not_accessible": 3,
       "clarification_required": 5,
+      "outdated": 0,
       "total_findings_count": 15,
       "id_": 2
     }

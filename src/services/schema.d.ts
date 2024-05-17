@@ -197,7 +197,7 @@ export interface paths {
      * - **db_connection**: Session of the database connection
      * - **finding_ids**: List of finding IDs for which audit to be performed
      * - **status**: Status of the finding, Valid values are NOT_ANALYZED, NOT_ACCESSIBLE,
-     *               CLARIFICATION_REQUIRED, FALSE_POSITIVE, TRUE_POSITIVE
+     *               CLARIFICATION_REQUIRED, FALSE_POSITIVE, TRUE_POSITIVE, OUTDATED
      * - **comment**: Comment
      * - **return**: int
      *     The output will contain count of successful saved audits
@@ -550,7 +550,7 @@ export interface paths {
      * - **author**: Author name
      * - **email**: Email of the author
      * - **status**: Status of the finding, Valid values are NOT_ANALYZED, NOT_ACCESSIBLE,
-     *               CLARIFICATION_REQUIRED, FALSE_POSITIVE, TRUE_POSITIVE
+     *               CLARIFICATION_REQUIRED, FALSE_POSITIVE, TRUE_POSITIVE, OUTDATED
      * - **comment**: Comment
      * - **event_sent_on**: event sent timestamp
      * - **rule_name**: rule name
@@ -847,7 +847,8 @@ export interface components {
      * @description     Generic encapsulation class for findings count end points to standardize output of the API
      *     example creation, FindingCountModel[FindingRead](data=db_findings, true_positive=true_positive,
      *     false_positive=false_positive, not_analyzed=not_analyzed, not_accessible=not_accessible,
-     *     clarification_required=clarification_required, total_findings_count=total_findings_count)
+     *     clarification_required=clarification_required, outdated=outdated,
+     *     total_findings_count=total_findings_count)
      * :param Generic[Model]:
      *     Type of the object in the data list
      */
@@ -863,6 +864,8 @@ export interface components {
       not_accessible: number;
       /** Clarification Required */
       clarification_required: number;
+      /** Outdated */
+      outdated: number;
       /** Total Findings Count */
       total_findings_count: number;
     };
@@ -973,7 +976,8 @@ export interface components {
       | 'NOT_ACCESSIBLE'
       | 'CLARIFICATION_REQUIRED'
       | 'FALSE_POSITIVE'
-      | 'TRUE_POSITIVE';
+      | 'TRUE_POSITIVE'
+      | 'OUTDATED';
     /** HTTPValidationError */
     HTTPValidationError: {
       /** Detail */
@@ -1250,6 +1254,8 @@ export interface components {
       not_accessible: number;
       /** Clarification Required */
       clarification_required: number;
+      /** Outdated */
+      outdated: number;
       /** Total Findings Count */
       total_findings_count: number;
       /** Id */
@@ -2103,7 +2109,7 @@ export interface operations {
    * - **db_connection**: Session of the database connection
    * - **finding_ids**: List of finding IDs for which audit to be performed
    * - **status**: Status of the finding, Valid values are NOT_ANALYZED, NOT_ACCESSIBLE,
-   *               CLARIFICATION_REQUIRED, FALSE_POSITIVE, TRUE_POSITIVE
+   *               CLARIFICATION_REQUIRED, FALSE_POSITIVE, TRUE_POSITIVE, OUTDATED
    * - **comment**: Comment
    * - **return**: int
    *     The output will contain count of successful saved audits
@@ -3167,7 +3173,7 @@ export interface operations {
    * - **author**: Author name
    * - **email**: Email of the author
    * - **status**: Status of the finding, Valid values are NOT_ANALYZED, NOT_ACCESSIBLE,
-   *               CLARIFICATION_REQUIRED, FALSE_POSITIVE, TRUE_POSITIVE
+   *               CLARIFICATION_REQUIRED, FALSE_POSITIVE, TRUE_POSITIVE, OUTDATED
    * - **comment**: Comment
    * - **event_sent_on**: event sent timestamp
    * - **rule_name**: rule name

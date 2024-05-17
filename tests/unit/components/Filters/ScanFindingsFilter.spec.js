@@ -44,6 +44,7 @@ const repository = {
   not_analyzed: 3,
   not_accessible: 4,
   clarification_required: 5,
+  outdated: 0,
   total_findings_count: 15,
   id_: 1,
 };

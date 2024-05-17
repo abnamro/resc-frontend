@@ -58,6 +58,7 @@
             :notAnalyzed="(data.item as RepositoryEnrichedRead).not_analyzed"
             :notAccessible="(data.item as RepositoryEnrichedRead).not_accessible"
             :clarificationRequired="(data.item as RepositoryEnrichedRead).clarification_required"
+            :outdated="(data.item as RepositoryEnrichedRead).outdated"
             :totalCount="(data.item as RepositoryEnrichedRead).total_findings_count"
           />
         </template>

@@ -41,6 +41,10 @@ describe('function getRulesWithFindingStatusCount', () => {
         `${Config.value('notAnalyzedStatusVal')}`,
       );
       expect(response[0].finding_statuses_count[4].count).toBe(5);
+      expect(response[0].finding_statuses_count[5].status).toBe(
+        `${Config.value('outdatedStatusVal')}`,
+      );
+      expect(response[0].finding_statuses_count[5].count).toBe(0);
     });
   });
 

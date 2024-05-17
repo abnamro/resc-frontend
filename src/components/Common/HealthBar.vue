@@ -59,6 +59,17 @@
           >
         </div>
       </b-progress-bar>
+      <b-progress-bar
+        v-b-popover.hover.bottom="getPopOverContent('Outdated', props.outdated)"
+        :value="props.outdated"
+        variant="dark"
+      >
+        <div>
+          <small
+            ><strong>{{ showFindingsInPercentage(props.notAccessible) }}</strong></small
+          >
+        </div>
+      </b-progress-bar>
     </b-progress>
   </div>
 </template>
@@ -69,6 +80,7 @@ type Props = {
   notAnalyzed: number;
   notAccessible: number;
   clarificationRequired: number;
+  outdated: number;
   totalCount: number;
 };
 const props = defineProps<Props>();
