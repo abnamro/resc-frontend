@@ -625,22 +625,23 @@ function updateVisualBadge(selectedIds: number[], status: FindingStatus, comment
   }
 }
 
-onKeyStroke('ArrowLeft', () => !shouldIgnoreKeystroke() && closeDetails(), {
+onKeyStroke(['ArrowLeft', 'h'], () => !shouldIgnoreKeystroke() && closeDetails(), {
   eventName: 'keydown',
 });
-onKeyStroke('ArrowRight', () => !shouldIgnoreKeystroke() && openDetails(), {
+onKeyStroke(['ArrowRight', 'l'], () => !shouldIgnoreKeystroke() && openDetails(), {
   eventName: 'keydown',
 });
 onKeyStroke(
-  'ArrowDown',
+  ['ArrowDown', 'j'],
   (e: KeyboardEvent) => !shouldIgnoreKeystroke() && selectDown() && e.shiftKey && toggleSelect(),
   { eventName: 'keydown' },
 );
 onKeyStroke(
-  'ArrowUp',
+  ['ArrowUp', 'k'],
   (e: KeyboardEvent) => !shouldIgnoreKeystroke() && selectUp() && e.shiftKey && toggleSelect(),
   { eventName: 'keydown' },
 );
+
 onKeyStroke('o', () => !shouldIgnoreKeystroke() && openCommitUrl(), { eventName: 'keydown' });
 onKeyStroke('f', () => !shouldIgnoreKeystroke() && markAsFalsePositive(), {
   eventName: 'keydown',
