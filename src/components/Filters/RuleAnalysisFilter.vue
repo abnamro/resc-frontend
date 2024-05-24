@@ -14,14 +14,14 @@
         <FindingStatusFilter @on-findings-status-change="onFindingsStatusChange" />
       </div>
       <div class="col-md-2 mt-1 ml-1 pt-1">
-        <b-button variant="primary" class="mt-4" size="sm" v-b-toggle.advance-search-collapse>
+        <b-button variant="primary" class="mt-4" size="sm" @click="toggleAdvancedSearch">
           Advanced Search
         </b-button>
       </div>
     </div>
 
     <div class="ml-3 mt-2 mb-1">
-      <b-collapse id="advance-search-collapse">
+      <b-collapse id="advance-search-collapse"  v-model="advancedSearchVisible">
         <div class="row pt-1">
           <!-- VCS Filter -->
           <div class="col-md-3">
@@ -117,6 +117,8 @@ import RuleTagsFilter from '@/components/Filters/RuleTagsFilter.vue';
 import { ref } from 'vue';
 import type { FindingStatus, RulePackRead, VCSProviders } from '@/services/shema-to-types';
 import type { Ref } from 'vue';
+import { onKeyStroke } from '@vueuse/core';
+import CommonUtils, { shouldIgnoreKeystroke } from '@/utils/common-utils';
 
 type Props = {
   projectOptions?: string[];
@@ -156,6 +158,7 @@ const selectedRepository = ref(undefined as string | undefined);
 const selectedRule = ref([] as string[]);
 const selectedRuleTags = ref([] as string[]);
 const selectedRulePackVersions = ref([] as RulePackRead[]);
+const advancedSearchVisible = ref(false);
 
 const emit = defineEmits(['on-filter-change']);
 
@@ -335,6 +338,12 @@ function applyRuleFilterInRuleAnalysisPage() {
     selectedRule.value = [];
   }
 }
+
+function toggleAdvancedSearch() {
+  advancedSearchVisible.value = !advancedSearchVisible.value;
+}
+
+onKeyStroke('/', () => !shouldIgnoreKeystroke() && toggleAdvancedSearch(), { eventName: 'keydown' })
 
 applyRuleFilterInRuleAnalysisPage();
 </script>

@@ -665,7 +665,6 @@ onKeyStroke(
   (e: KeyboardEvent) => !shouldIgnoreKeystroke() && e.ctrlKey && toggleAllCheckboxes(),
   { eventName: 'keydown' },
 );
-
 onMounted(() => {
   if (isRedirectedFromRuleMetricsPage()) {
     fetchRulePackVersionsWhenRedirectedFromRuleMetricsPage();
