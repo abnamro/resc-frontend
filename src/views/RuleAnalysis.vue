@@ -625,22 +625,23 @@ function updateVisualBadge(selectedIds: number[], status: FindingStatus, comment
   }
 }
 
-onKeyStroke('ArrowLeft', () => !shouldIgnoreKeystroke() && closeDetails(), {
+onKeyStroke(['ArrowLeft', 'h', 'H'], () => !shouldIgnoreKeystroke() && closeDetails(), {
   eventName: 'keydown',
 });
-onKeyStroke('ArrowRight', () => !shouldIgnoreKeystroke() && openDetails(), {
+onKeyStroke(['ArrowRight', 'l', 'L'], () => !shouldIgnoreKeystroke() && openDetails(), {
   eventName: 'keydown',
 });
 onKeyStroke(
-  'ArrowDown',
+  ['ArrowDown', 'j', 'J'],
   (e: KeyboardEvent) => !shouldIgnoreKeystroke() && selectDown() && e.shiftKey && toggleSelect(),
   { eventName: 'keydown' },
 );
 onKeyStroke(
-  'ArrowUp',
+  ['ArrowUp', 'k', 'K'],
   (e: KeyboardEvent) => !shouldIgnoreKeystroke() && selectUp() && e.shiftKey && toggleSelect(),
   { eventName: 'keydown' },
 );
+
 onKeyStroke('o', () => !shouldIgnoreKeystroke() && openCommitUrl(), { eventName: 'keydown' });
 onKeyStroke('f', () => !shouldIgnoreKeystroke() && markAsFalsePositive(), {
   eventName: 'keydown',
@@ -664,7 +665,6 @@ onKeyStroke(
   (e: KeyboardEvent) => !shouldIgnoreKeystroke() && e.ctrlKey && toggleAllCheckboxes(),
   { eventName: 'keydown' },
 );
-
 onMounted(() => {
   if (isRedirectedFromRuleMetricsPage()) {
     fetchRulePackVersionsWhenRedirectedFromRuleMetricsPage();
