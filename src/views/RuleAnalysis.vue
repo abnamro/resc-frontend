@@ -625,19 +625,19 @@ function updateVisualBadge(selectedIds: number[], status: FindingStatus, comment
   }
 }
 
-onKeyStroke(['ArrowLeft', 'h'], () => !shouldIgnoreKeystroke() && closeDetails(), {
+onKeyStroke(['ArrowLeft', 'h', 'H'], () => !shouldIgnoreKeystroke() && closeDetails(), {
   eventName: 'keydown',
 });
-onKeyStroke(['ArrowRight', 'l'], () => !shouldIgnoreKeystroke() && openDetails(), {
+onKeyStroke(['ArrowRight', 'l', 'L'], () => !shouldIgnoreKeystroke() && openDetails(), {
   eventName: 'keydown',
 });
 onKeyStroke(
-  ['ArrowDown', 'j'],
+  ['ArrowDown', 'j', 'J'],
   (e: KeyboardEvent) => !shouldIgnoreKeystroke() && selectDown() && e.shiftKey && toggleSelect(),
   { eventName: 'keydown' },
 );
 onKeyStroke(
-  ['ArrowUp', 'k'],
+  ['ArrowUp', 'k', 'K'],
   (e: KeyboardEvent) => !shouldIgnoreKeystroke() && selectUp() && e.shiftKey && toggleSelect(),
   { eventName: 'keydown' },
 );
