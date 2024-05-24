@@ -21,7 +21,7 @@
     </div>
 
     <div class="ml-3 mt-2 mb-1">
-      <b-collapse id="advance-search-collapse"  v-model="advancedSearchVisible">
+      <b-collapse id="advance-search-collapse" v-model="advancedSearchVisible">
         <div class="row pt-1">
           <!-- VCS Filter -->
           <div class="col-md-3">
@@ -118,7 +118,7 @@ import { ref } from 'vue';
 import type { FindingStatus, RulePackRead, VCSProviders } from '@/services/shema-to-types';
 import type { Ref } from 'vue';
 import { onKeyStroke } from '@vueuse/core';
-import CommonUtils, { shouldIgnoreKeystroke } from '@/utils/common-utils';
+import { shouldIgnoreKeystroke } from '@/utils/common-utils';
 
 type Props = {
   projectOptions?: string[];
@@ -343,7 +343,9 @@ function toggleAdvancedSearch() {
   advancedSearchVisible.value = !advancedSearchVisible.value;
 }
 
-onKeyStroke('/', () => !shouldIgnoreKeystroke() && toggleAdvancedSearch(), { eventName: 'keydown' })
+onKeyStroke('/', () => !shouldIgnoreKeystroke() && toggleAdvancedSearch(), {
+  eventName: 'keydown',
+});
 
 applyRuleFilterInRuleAnalysisPage();
 </script>
