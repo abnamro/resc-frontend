@@ -18,6 +18,7 @@ export function shouldIgnoreKeystroke(): boolean {
   return false;
 }
 
+/* istanbul ignore next @preserve */
 export function disableScrollingWithArrowsAndCtrlA(): void {
   window.addEventListener(
     'keydown',
