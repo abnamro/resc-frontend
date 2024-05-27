@@ -9,7 +9,6 @@
     width="250px"
     @update:collapsed="onToggleCollapse"
     v-if="showMenu"
-
   />
   <TopBarMenu v-if="showMenu" />
   <div

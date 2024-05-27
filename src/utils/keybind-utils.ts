@@ -11,29 +11,28 @@
  * @returns boolean true if we should ignore the current stroke.
  */
 export function shouldIgnoreKeystroke(): boolean {
-    const skipped = ['TEXTAREA', 'INPUT', 'SELECT'];
-    if (document.activeElement !== null && skipped.includes(document.activeElement.nodeName)) {
-      return true;
-    }
-    return false;
+  const skipped = ['TEXTAREA', 'INPUT', 'SELECT'];
+  if (document.activeElement !== null && skipped.includes(document.activeElement.nodeName)) {
+    return true;
+  }
+  return false;
 }
 
 export function disableScrollingWithArrowsAndCtrlA(): void {
-window.addEventListener(
+  window.addEventListener(
     'keydown',
     function (e) {
-    if (shouldIgnoreKeystroke()) {
+      if (shouldIgnoreKeystroke()) {
         return;
-    }
+      }
 
-    if (['Space', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].indexOf(e.code) > -1) {
+      if (['Space', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].indexOf(e.code) > -1) {
         e.preventDefault();
-    }
-    if (e.code == 'KeyA' && e.ctrlKey) {
+      }
+      if (e.code == 'KeyA' && e.ctrlKey) {
         e.preventDefault();
-    }
+      }
     },
     false,
-);
+  );
 }
-  

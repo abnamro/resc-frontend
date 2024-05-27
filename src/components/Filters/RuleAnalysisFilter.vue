@@ -118,7 +118,7 @@ import { ref } from 'vue';
 import type { FindingStatus, RulePackRead, VCSProviders } from '@/services/shema-to-types';
 import type { Ref } from 'vue';
 import { onKeyStroke } from '@vueuse/core';
-import { shouldIgnoreKeystroke } from '@/utils/common-utils';
+import { shouldIgnoreKeystroke } from '@/utils/keybind-utils';
 
 type Props = {
   projectOptions?: string[];
