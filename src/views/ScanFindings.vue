@@ -1,4 +1,15 @@
 <template>
+  <b-navbar toggleable="lg" type="dark" class="px-4 right">
+    <!-- variant="warning" -->
+    <b-navbar-brand
+      class="ml-auto float-right px-3 rounded-circle bg-warning text-white font-bold"
+      @click="showKeybindingHelp"
+      >?</b-navbar-brand
+    >
+  </b-navbar>
+
+  <KeybindingModal ref="keybindingModal"></KeybindingModal>
+
   <div class="mx-4">
     <!-- Page Title -->
     <div class="col-md-2 pt-2 text-start page-title">
@@ -8,26 +19,11 @@
     <SpinnerVue v-if="!loadedData" />
 
     <!-- Repository Panel -->
-    <div class="col-md-4 ml-3 mt-4 text-start">
+    <div class="col-md-6 ms-2 mt-4 text-start">
       <RepositoryPanel :repository="repository" :vcs_instance="vcsInstance"></RepositoryPanel>
     </div>
 
     <div>
-      <!-- Button to audit multiple findings -->
-      <b-button
-        class="float-left ml-3 audit-btn"
-        variant="primary"
-        size="sm"
-        v-on:click="showAuditModal()"
-        :disabled="auditButtonDisabled"
-        >AUDIT</b-button
-      >
-      <AuditModal
-        ref="auditModal"
-        :selectedCheckBoxIds="selectedCheckBoxIds"
-        @update-audit="updateAudit"
-      />
-
       <!-- Filters -->
       <ScanFindingsFilter
         :repository="repository"
@@ -43,93 +39,15 @@
       <br />No Record Found...
     </div>
 
+    <FindingsTable
+      :findings="findingList"
+      :is_rule_finding="false"
+      v-if="hasRecords"
+      @refresh-table="fetchPaginatedFindingsByScanId"
+    >
+    </FindingsTable>
+
     <div class="p-3" v-if="hasRecords">
-      <b-table
-        id="scan-findings-table"
-        :items="findingList"
-        :fields="fields"
-        :current-page="1"
-        :per-page="0"
-        primary-key="id_"
-        responsive
-        small
-        head-variant="light"
-        @row-clicked="toggleFindingDetails"
-      >
-        <!-- Select all checkboxes -->
-        <template #head(select)>
-          <b-form-checkbox
-            class="checkbox"
-            v-model="allSelected"
-            @change="selectAllCheckboxes"
-          ></b-form-checkbox>
-        </template>
-
-        <!-- Selection checkboxes -->
-        <template #cell(select)="data">
-          <b-form-checkbox
-            class="checkbox"
-            v-model="selectedCheckBoxIds"
-            :value="(data.item as AugmentedDetailedFindingRead).id_"
-            @change="selectSingleCheckbox"
-          >
-          </b-form-checkbox>
-        </template>
-
-        <!-- Collapse Icon Column -->
-        <template v-slot:cell(toggle_row)="{ detailsShowing }">
-          <FontAwesomeIcon
-            size="lg"
-            class="collapse-arrow"
-            name="dropdown-icon"
-            icon="angle-right"
-            :rotation="detailsShowing ? 90 : undefined"
-          />
-        </template>
-
-        <!-- Path Column -->
-        <template #cell(file_path)="data">
-          <span
-            :title="(data.item as AugmentedDetailedFindingRead).file_path"
-            class="span-path text-truncate"
-            >{{ (data.item as AugmentedDetailedFindingRead).file_path }}</span
-          >
-        </template>
-
-        <!-- Line Column -->
-        <template #cell(line_number)="data">
-          {{ (data.item as AugmentedDetailedFindingRead).line_number }}
-        </template>
-
-        <!-- Status Column -->
-        <template #cell(status)="data">
-          <FindingStatusBadge
-            :status="(data.item as AugmentedDetailedFindingRead).status ?? 'NOT_ANALYZED'"
-          />
-        </template>
-
-        <!-- Remaining Columns (Rule) -->
-        <template #cell()="data">
-          {{ data.value }}
-        </template>
-
-        <!-- Scan Type Column -->
-        <template #cell(scanType)="data">
-          <ScanTypeBadge
-            :scanType="(data.item as AugmentedDetailedFindingRead).scanType as string"
-            :incrementNumber="(data.item as AugmentedDetailedFindingRead).incrementNumber as number"
-          />
-        </template>
-
-        <!-- Expand Table Row To Display Finding Panel -->
-        <template v-slot:row-details="{ item }">
-          <FindingPanel
-            :finding="item as AugmentedDetailedFindingRead"
-            :repository="repository"
-          ></FindingPanel>
-        </template>
-      </b-table>
-
       <!-- Pagination -->
       <Pagination
         :currentPage="currentPage"
@@ -145,21 +63,16 @@
 </template>
 
 <script setup lang="ts">
-import AuditModal from '@/components/ScanFindings/AuditModal.vue';
 import AxiosConfig from '@/configuration/axios-config';
 import Config from '@/configuration/config';
-import FindingPanel from '@/components/ScanFindings/FindingPanel.vue';
-import FindingStatusBadge from '@/components/Common/FindingStatusBadge.vue';
 import Pagination from '@/components/Common/PaginationVue.vue';
 import RepositoryPanel from '@/components/ScanFindings/RepositoryPanel.vue';
 import ScanFindingsFilter from '@/components/Filters/ScanFindingsFilter.vue';
 import ScanFindingsService from '@/services/scan-findings-service';
-import ScanTypeBadge from '@/components/Common/ScanTypeBadge.vue';
 import SpinnerVue from '@/components/Common/SpinnerVue.vue';
 import FindingsService, { type QueryFilterType } from '@/services/findings-service';
 import VCSInstanceService from '@/services/vcs-instance-service';
-import { computed, nextTick, ref, type Ref } from 'vue';
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import { computed, ref, type Ref } from 'vue';
 import type {
   DetailedFindingRead,
   ScanRead,
@@ -173,7 +86,7 @@ import type { AxiosResponse } from 'axios';
 import type { TableItem } from 'bootstrap-vue-next';
 
 const loadedData = ref(false);
-const auditModal = ref();
+const keybindingModal = ref();
 
 type Props = {
   scanId: string;
@@ -201,71 +114,12 @@ const currentPage = ref(1);
 const perPage = ref(Number(`${Config.value('defaultPageSize')}`));
 const pageSizes = ref([20, 50, 100]);
 const requestedPageNumber = ref(1);
-const fields = ref([
-  {
-    key: 'select',
-    label: '',
-    class: 'text-start position-sticky',
-    thStyle: { borderTop: '0px' },
-  },
-  {
-    key: 'toggle_row',
-    label: '',
-    class: 'text-start position-sticky',
-    thStyle: { borderTop: '0px' },
-  },
-  {
-    key: 'rule_name',
-    sortable: false,
-    label: 'Rule',
-    class: 'text-start position-sticky',
-    thStyle: { borderTop: '0px' },
-  },
-  {
-    key: 'file_path',
-    sortable: false,
-    label: 'File Path',
-    class: 'text-start position-sticky',
-    thStyle: { borderTop: '0px' },
-  },
-  {
-    key: 'line_number',
-    sortable: false,
-    label: 'Line',
-    class: 'text-start position-sticky',
-    thStyle: { borderTop: '0px' },
-  },
-  {
-    key: 'status',
-    sortable: false,
-    label: 'Status',
-    class: 'text-start position-sticky',
-    thStyle: { borderTop: '0px' },
-  },
-  {
-    key: 'scanType',
-    sortable: false,
-    label: 'Scan Type',
-    class: 'text-start position-sticky',
-    thStyle: { borderTop: '0px' },
-  },
-]);
 
 const hasRecords = computed(() => findingList.value.length > 0);
 const skipRowCount = computed(() => (currentPage.value - 1) * perPage.value);
-const auditButtonDisabled = computed(() => selectedCheckBoxIds.value.length <= 0);
 
-function selectSingleCheckbox() {
-  allSelected.value = false;
-}
-
-function selectAllCheckboxes() {
-  selectedCheckBoxIds.value = [];
-  if (allSelected.value) {
-    for (const finding of findingList.value) {
-      selectedCheckBoxIds.value.push(finding.id_);
-    }
-  }
+function showKeybindingHelp() {
+  keybindingModal.value.show();
 }
 
 function onPreviousScanChecked(checked: boolean) {
@@ -282,19 +136,6 @@ function handlePageSizeChange(pageSize: number) {
   perPage.value = pageSize;
   currentPage.value = 1;
   previousScanChecked.value ? fetchPreviousScanFindings() : fetchPaginatedFindingsByScanId();
-}
-
-function toggleFindingDetails(row: TableItem) {
-  if (row._showDetails) {
-    row['_showDetails'] = false;
-  } else {
-    findingList.value.forEach((_item: TableItem, idx, theArray) => {
-      theArray[idx]._showDetails = false;
-    });
-    nextTick(() => {
-      row._showDetails = true;
-    });
-  }
 }
 
 function fetchVCSInstance() {
@@ -378,21 +219,6 @@ function addScanTypeTagForSingleScan() {
     theArray[idx].scanType = scanType.value;
     theArray[idx].incrementNumber = incrementNumber.value;
   });
-}
-
-function showAuditModal() {
-  auditModal.value.show();
-}
-
-function updateAudit(status: FindingStatus, comment: string) {
-  findingList.value.forEach((finding, idx, theArray) => {
-    if (selectedCheckBoxIds.value.includes(finding.id_)) {
-      theArray[idx].status = status;
-      theArray[idx].comment = comment;
-    }
-  });
-  fetchPaginatedFindingsByScanId();
-  allSelected.value = false;
 }
 
 function handleFilterChange(

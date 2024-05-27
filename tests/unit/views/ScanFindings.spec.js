@@ -77,8 +77,6 @@ describe('ScanFindings tests', () => {
 
     initMountApp();
     expect(wrapper.exists()).toBe(true);
-    expect(() => wrapper.vm.selectSingleCheckbox()).not.toThrow();
-    expect(() => wrapper.vm.selectAllCheckboxes()).not.toThrow();
     expect(() => wrapper.vm.onPreviousScanChecked(true)).not.toThrow();
 
     axios.get.mockResolvedValueOnce({ data: detailed_findings });
@@ -99,6 +97,5 @@ describe('ScanFindings tests', () => {
 
     axios.get.mockResolvedValueOnce({ data: scan });
     axios.get.mockResolvedValueOnce({ data: detailed_findings });
-    expect(() => wrapper.vm.updateAudit('NOT_ANALYZED', 'Rien a declarer')).not.toThrow();
   });
 });

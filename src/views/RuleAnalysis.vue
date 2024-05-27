@@ -29,122 +29,21 @@
       ></RuleAnalysisFilter>
     </div>
 
-    <div class="ml-3">
-      <!-- Button to audit multiple findings -->
-      <b-button
-        class="float-left mt-2 mb-2"
-        variant="primary"
-        size="sm"
-        v-on:click="showAuditModal()"
-        :disabled="auditButtonDisabled"
-        >AUDIT</b-button
-      >
-      <!-- Audit Modal -->
-      <AuditModal
-        ref="auditModal"
-        :selectedCheckBoxIds="selectedCheckBoxIds"
-        @update-audit="updateAudit"
-      />
-    </div>
-
     <!--Scan Findings Table -->
     <div v-if="!hasRecords && loadedData" class="text-center cursor-default">
       <br />
       <br />No Record Found...
     </div>
 
+    <FindingsTable
+      :findings="findingList"
+      :is_rule_finding="true"
+      v-if="hasRecords"
+      @refresh-table="fetchPaginatedDetailedFindings"
+    >
+    </FindingsTable>
+
     <div class="p-3" v-if="hasRecords">
-      <b-table
-        ref="auditTable"
-        id="rule-analysis-table"
-        :items="findingList"
-        :fields="fields"
-        :current-page="1"
-        :per-page="0"
-        :selectable="true"
-        :select-mode="'single'"
-        primary-key="id_"
-        responsive
-        small
-        head-variant="light"
-        @row-clicked="toggleFindingDetails"
-      >
-        <!-- Select all checkboxes -->
-        <template #head(select)>
-          <b-form-checkbox
-            class="checkbox"
-            v-model="allSelected"
-            @change="selectAllCheckboxes"
-          ></b-form-checkbox>
-        </template>
-
-        <!-- Selection checkboxes -->
-        <template #cell(select)="data">
-          <b-form-checkbox
-            class="checkbox"
-            v-model="selectedCheckBoxIds"
-            :value="(data.item as DetailedFindingRead).id_"
-            @change="selectSingleCheckbox"
-          ></b-form-checkbox>
-          <template v-if="data.item.rowSelected">
-            <span class="sr-only">Selected</span>
-          </template>
-          <template v-else>
-            <span class="sr-only">Not selected</span>
-          </template>
-        </template>
-
-        <!-- Collapse Icon Column -->
-        <template v-slot:cell(toggle_row)="{ detailsShowing }">
-          <FontAwesomeIcon
-            size="lg"
-            class="collapse-arrow"
-            name="dropdown-icon"
-            icon="angle-right"
-            :rotation="detailsShowing ? 90 : undefined"
-          />
-        </template>
-
-        <!-- Path Column -->
-        <template #cell(file_path)="data">
-          <span
-            :title="(data.item as DetailedFindingRead).file_path"
-            class="span-path text-truncate"
-            >{{ (data.item as DetailedFindingRead).file_path }}</span
-          >
-        </template>
-
-        <!-- Line Column -->
-        <template #cell(line_number)="data">
-          {{ (data.item as DetailedFindingRead).line_number }}
-        </template>
-
-        <!-- Status Column -->
-        <template #cell(status)="data">
-          <FindingStatusBadge
-            :status="(data.item as DetailedFindingRead).status ?? 'NOT_ANALYZED'"
-          />
-        </template>
-
-        <!-- Remaining Columns (Rule) -->
-        <template #cell()="data">
-          {{ data.value }}
-        </template>
-
-        <!-- Expand Table Row To Display Finding Panel -->
-        <template v-slot:row-details="{ item }">
-          <FindingPanel
-            :finding="item as DetailedFindingRead"
-            :repository="{
-              project_key: item.project_key,
-              repository_name: item.repository_name,
-              repository_url: item.repository_url,
-              vcs_provider: item.vcs_provider,
-            }"
-          ></FindingPanel>
-        </template>
-      </b-table>
-
       <!-- Pagination -->
       <Pagination
         :currentPage="currentPage"
@@ -161,13 +60,11 @@
 </template>
 
 <script lang="ts" setup>
-import AuditModal from '@/components/ScanFindings/AuditModal.vue';
 import KeybindingModal from '@/components/Help/KeybindingModal.vue';
 import Config from '@/configuration/config';
 import AxiosConfig from '@/configuration/axios-config';
-import FindingPanel from '@/components/ScanFindings/FindingPanel.vue';
+import FindingsTable from '@/components/Findings/FindingsTable.vue';
 import FindingsService, { type QueryFilterType } from '@/services/findings-service';
-import FindingStatusBadge from '@/components/Common/FindingStatusBadge.vue';
 import RepositoryService from '@/services/repository-service';
 import SpinnerVue from '@/components/Common/SpinnerVue.vue';
 import Pagination from '@/components/Common/PaginationVue.vue';
@@ -184,16 +81,12 @@ import type {
 } from '@/services/shema-to-types';
 import type { AxiosResponse } from 'axios';
 import type { TableItem } from 'bootstrap-vue-next';
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import { onKeyStroke } from '@vueuse/core';
-import CommonUtils, { shouldIgnoreKeystroke } from '@/utils/common-utils';
+import CommonUtils from '@/utils/common-utils';
 
 type TableItemDetailedFindingRead = DetailedFindingRead & TableItem;
 
 const loadedData = ref(false);
 const keybindingModal = ref();
-const auditModal = ref();
-const auditTable = ref();
 
 const findingList = ref([] as TableItemDetailedFindingRead[]);
 const totalRows = ref(0);
@@ -217,68 +110,9 @@ const selectedRulePackVersions = ref([] as string[]);
 const selectedRulePackVersionsList = ref([] as RulePackRead[]);
 const selectedCheckBoxIds = ref([] as number[]);
 const allSelected = ref(false);
-const fields = ref([
-  {
-    key: 'select',
-    label: '',
-    class: 'text-start position-sticky',
-    thStyle: { borderTop: '0px' },
-  },
-  {
-    key: 'toggle_row',
-    label: '',
-    class: 'text-start position-sticky',
-    thStyle: { borderTop: '0px' },
-  },
-  {
-    key: 'project_key',
-    sortable: false,
-    label: 'Project',
-    class: 'text-start position-sticky',
-    thStyle: { borderTop: '0px' },
-  },
-  {
-    key: 'repository_name',
-    sortable: false,
-    label: 'Repository',
-    class: 'text-start position-sticky',
-    thStyle: { borderTop: '0px' },
-  },
-  {
-    key: 'rule_name',
-    sortable: false,
-    label: 'Rule',
-    class: 'text-start position-sticky',
-    thStyle: { borderTop: '0px' },
-  },
-  {
-    key: 'file_path',
-    sortable: false,
-    label: 'File Path',
-    class: 'text-start position-sticky',
-    thStyle: { borderTop: '0px' },
-  },
-  {
-    key: 'line_number',
-    sortable: false,
-    label: 'Line',
-    class: 'text-start position-sticky',
-    thStyle: { borderTop: '0px' },
-  },
-  {
-    key: 'status',
-    sortable: false,
-    label: 'Status',
-    class: 'text-end position-sticky',
-    thStyle: { borderTop: '0px' },
-  },
-]);
 
 const hasRecords = computed(() => findingList.value.length > 0);
 const skipRowCount = computed(() => (currentPage.value - 1) * perPage.value);
-const auditButtonDisabled = computed(() => selectedCheckBoxIds.value.length <= 0);
-
-const selectedIndex = ref(undefined as number | undefined);
 
 function isRedirectedFromRuleMetricsPage() {
   const store = useAuthUserStore();
@@ -289,33 +123,6 @@ function isRedirectedFromRuleMetricsPage() {
     store.previousRouteState
     ? true
     : false;
-}
-
-function selectSingleCheckbox() {
-  allSelected.value = false;
-}
-
-function selectAllCheckboxes() {
-  selectedCheckBoxIds.value = [];
-  if (allSelected.value) {
-    for (const finding of findingList.value) {
-      selectedCheckBoxIds.value.push(finding.id_);
-    }
-  }
-}
-
-function toggleAllCheckboxes() {
-  selectedCheckBoxIds.value = [];
-  allSelected.value = !allSelected.value;
-  if (allSelected.value) {
-    for (const finding of findingList.value) {
-      selectedCheckBoxIds.value.push(finding.id_);
-    }
-  }
-}
-
-function showAuditModal() {
-  auditModal.value.show();
 }
 
 function showKeybindingHelp() {
@@ -332,17 +139,6 @@ function handlePageSizeChange(pageSize: number) {
   perPage.value = pageSize;
   currentPage.value = 1;
   fetchPaginatedDetailedFindings();
-}
-
-function toggleFindingDetails(row: TableItem, index: number) {
-  selectedIndex.value = index;
-
-  if (row._showDetails) {
-    row._showDetails = false;
-  } else {
-    closeAllDetails();
-    row._showDetails = true;
-  }
 }
 
 function fetchPaginatedDetailedFindings() {
@@ -374,11 +170,6 @@ function fetchPaginatedDetailedFindings() {
     .catch((error) => {
       AxiosConfig.handleError(error);
     });
-}
-
-function updateAudit(status: FindingStatus, comment: string) {
-  updateVisualBadge(selectedCheckBoxIds.value, status, comment);
-  fetchPaginatedDetailedFindings();
 }
 
 function handleFilterChange(filterObj: RuleAnalysisFilter) {
@@ -483,207 +274,6 @@ function fetchRuleTags() {
     });
 }
 
-function getCurrentFindingSelected(): TableItemDetailedFindingRead | undefined {
-  if (selectedIndex.value === undefined) {
-    return undefined;
-  }
-
-  return findingList.value[selectedIndex.value];
-}
-
-function selectDown(): boolean {
-  const detailsStatus = getCurrentFindingSelected()?._showDetails;
-  closeAllDetails();
-
-  selectedIndex.value = ((selectedIndex.value ?? -1) + 1) % perPage.value;
-  auditTable.value.clearSelected();
-  auditTable.value.selectRow(selectedIndex.value);
-
-  (getCurrentFindingSelected() as TableItemDetailedFindingRead)._showDetails = detailsStatus;
-
-  return true;
-}
-
-function selectUp(): boolean {
-  const detailsStatus = getCurrentFindingSelected()?._showDetails;
-  closeAllDetails();
-
-  selectedIndex.value = Math.max(0, (selectedIndex.value ?? 1) - 1);
-  auditTable.value.clearSelected();
-  auditTable.value.selectRow(selectedIndex.value);
-
-  (getCurrentFindingSelected() as TableItemDetailedFindingRead)._showDetails = detailsStatus;
-
-  return true;
-}
-
-function closeAllDetails() {
-  findingList.value.forEach((_item, idx, theArray) => {
-    theArray[idx]._showDetails = false;
-  });
-}
-
-function openDetails() {
-  const item = getCurrentFindingSelected();
-  if (item === undefined) {
-    return;
-  }
-  item._showDetails = true;
-}
-
-function closeDetails() {
-  const item = getCurrentFindingSelected();
-  if (item === undefined) {
-    return;
-  }
-  item._showDetails = false;
-}
-
-function openCommitUrl() {
-  const url = getCurrentFindingSelected()?.commit_url;
-  if (url !== undefined) {
-    window.open(url, '_blank')?.focus();
-  }
-}
-
-function toggleSelect() {
-  const item = getCurrentFindingSelected();
-  if (item === undefined) {
-    return;
-  }
-  const index = selectedCheckBoxIds.value.indexOf(item.id_);
-  if (index === -1) {
-    selectedCheckBoxIds.value.push(item.id_);
-  } else {
-    selectedCheckBoxIds.value.splice(index, 1);
-  }
-}
-
-function markAsFalsePositive() {
-  const item = getCurrentFindingSelected();
-  if (item === undefined) {
-    return;
-  }
-  sendUpdate([item.id_], 'FALSE_POSITIVE');
-  selectDown();
-}
-
-function markAsTruePositive() {
-  const item = getCurrentFindingSelected();
-  if (item === undefined) {
-    return;
-  }
-  sendUpdate([item.id_], 'TRUE_POSITIVE');
-  selectDown();
-}
-
-function markAsGone() {
-  const item = getCurrentFindingSelected();
-  if (item === undefined) {
-    return;
-  }
-  sendUpdate([item.id_], 'NOT_ACCESSIBLE');
-  selectDown();
-}
-
-function markAllAsFalsePositive() {
-  sendUpdate(selectedCheckBoxIds.value, 'FALSE_POSITIVE');
-}
-
-function markAllAsTruePositive() {
-  sendUpdate(selectedCheckBoxIds.value, 'TRUE_POSITIVE');
-}
-
-function markAllAsGone() {
-  sendUpdate(selectedCheckBoxIds.value, 'NOT_ACCESSIBLE');
-}
-
-function auditThis() {
-  if (selectedCheckBoxIds.value.length > 0) {
-    showAuditModal();
-    return;
-  }
-
-  openDetails();
-}
-
-function sendUpdate(selectedIds: number[], status: FindingStatus) {
-  FindingsService.auditFindings(selectedIds, status, '')
-    .then(() => {
-      updateVisualBadge(selectedIds, status);
-    })
-    .catch((error) => {
-      AxiosConfig.handleError(error);
-      return false;
-    });
-}
-
-function updateVisualBadge(selectedIds: number[], status: FindingStatus, comment: string = '') {
-  findingList.value.forEach((finding: DetailedFindingRead, idx, theArray) => {
-    if (selectedIds.includes(finding.id_)) {
-      theArray[idx].status = status;
-      theArray[idx].comment = comment;
-    }
-  });
-
-  if (selectedIds.length > 1) {
-    selectedCheckBoxIds.value = [];
-    allSelected.value = false;
-    return;
-  }
-
-  const index = selectedCheckBoxIds.value.indexOf(selectedIds[0]);
-  if (index !== -1) {
-    selectedCheckBoxIds.value.splice(index, 1);
-  }
-}
-
-onKeyStroke(['ArrowLeft', 'h', 'H'], () => !shouldIgnoreKeystroke() && closeDetails(), {
-  eventName: 'keydown',
-});
-onKeyStroke(['ArrowRight', 'l', 'L'], () => !shouldIgnoreKeystroke() && openDetails(), {
-  eventName: 'keydown',
-});
-onKeyStroke(
-  ['ArrowDown', 'j', 'J'],
-  (e: KeyboardEvent) => !shouldIgnoreKeystroke() && selectDown() && e.shiftKey && toggleSelect(),
-  { eventName: 'keydown' },
-);
-onKeyStroke(
-  ['ArrowUp', 'k', 'K'],
-  (e: KeyboardEvent) => !shouldIgnoreKeystroke() && selectUp() && e.shiftKey && toggleSelect(),
-  { eventName: 'keydown' },
-);
-
-onKeyStroke('o', () => !shouldIgnoreKeystroke() && openCommitUrl(), { eventName: 'keydown' });
-onKeyStroke('f', () => !shouldIgnoreKeystroke() && markAsFalsePositive(), {
-  eventName: 'keydown',
-});
-onKeyStroke('F', () => !shouldIgnoreKeystroke() && markAllAsFalsePositive(), {
-  eventName: 'keydown',
-});
-onKeyStroke('t', () => !shouldIgnoreKeystroke() && markAsTruePositive(), {
-  eventName: 'keydown',
-});
-onKeyStroke('T', () => !shouldIgnoreKeystroke() && markAllAsTruePositive(), {
-  eventName: 'keydown',
-});
-onKeyStroke('g', () => !shouldIgnoreKeystroke() && markAsGone(), {
-  eventName: 'keydown',
-});
-onKeyStroke('G', () => !shouldIgnoreKeystroke() && markAllAsGone(), {
-  eventName: 'keydown',
-});
-onKeyStroke('a', (e: KeyboardEvent) => !shouldIgnoreKeystroke() && !e.ctrlKey && auditThis(), {
-  eventName: 'keydown',
-});
-onKeyStroke(' ', () => !shouldIgnoreKeystroke() && toggleSelect(), { eventName: 'keydown' });
-onKeyStroke('?', () => !shouldIgnoreKeystroke() && showKeybindingHelp(), { eventName: 'keydown' });
-onKeyStroke(
-  'a',
-  (e: KeyboardEvent) => !shouldIgnoreKeystroke() && e.ctrlKey && toggleAllCheckboxes(),
-  { eventName: 'keydown' },
-);
 onMounted(() => {
   if (isRedirectedFromRuleMetricsPage()) {
     fetchRulePackVersionsWhenRedirectedFromRuleMetricsPage();
