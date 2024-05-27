@@ -13,12 +13,16 @@
           {{ data.item.effect }}
         </template>
         <template #cell(combination)="data">
-          <b-badge
-            v-for="combination in data.item.combination"
-            v-bind:key="combination"
-            variant="light"
-            ><span v-html="combination"></span
-          ></b-badge>
+          <template
+            v-for="combinations in data.item.combination"
+            v-bind:key="'_' + combinations[0].combination"
+          >
+            <span class="kb">
+              <template v-for="combination in combinations" v-bind:key="combination">
+                <b-badge variant="light"><span v-html="combination"></span></b-badge>
+              </template>
+            </span>
+          </template>
         </template>
       </b-table>
 
@@ -36,7 +40,7 @@ import { ref } from 'vue';
 
 const keybinding_modal = ref();
 
-type KeyBinding = { combination: string[]; effect: string };
+type KeyBinding = { combination: string[][]; effect: string };
 
 const fields = ref([
   {
@@ -55,51 +59,55 @@ const fields = ref([
 const keybindings = ref([
   {
     effect: 'Highlight next finding.',
-    combination: ['&darr;'],
+    combination: [['j'], ['&darr;']],
   },
   {
     effect: 'Highlight previous finding.',
-    combination: ['&uarr;'],
+    combination: [['k'], ['&uarr;']],
   },
   {
     effect: 'Close details.',
-    combination: ['&larr;'],
+    combination: [['h'], ['&larr;']],
   },
   {
     effect: 'Open details.',
-    combination: ['&rarr;'],
+    combination: [['l'], ['&rarr;']],
   },
   {
     effect: 'Toggle selection.',
-    combination: ['&UnderBracket;'],
+    combination: [['&UnderBracket;']],
   },
   {
     effect: 'Open commit url.',
-    combination: ['o'],
+    combination: [['o']],
   },
   {
     effect: 'Audit as False positive.',
-    combination: ['f'],
+    combination: [['f']],
   },
   {
     effect: 'Audit as True positive.',
-    combination: ['t'],
+    combination: [['t']],
+  },
+  {
+    effect: 'Audit as Not Accessible (Gone).',
+    combination: [['g']],
   },
   {
     effect: 'Open Audit on selection.',
-    combination: ['a'],
+    combination: [['a']],
   },
   {
     effect: 'Audit selection as False positive.',
-    combination: ['&uArr; shift', 'f'],
+    combination: [['&uArr; shift', 'f']],
   },
   {
     effect: 'Audit selection as True positive.',
-    combination: ['&uArr; shift', 't'],
+    combination: [['&uArr; shift', 't']],
   },
   {
     effect: 'Toggle select all.',
-    combination: ['Ctrl', 'a'],
+    combination: [['Ctrl', 'a']],
   },
 ] as KeyBinding[]);
 
@@ -116,9 +124,20 @@ defineExpose({ show, hide });
 
 <style>
 #keybindings-table .badge {
-  margin-left: 0.5rem;
   box-shadow: 2px 2px 2px 0px rgba(0, 0, 0, 0.5);
   border: 1px solid #cccccc;
   box-sizing: border-box;
+  min-width: 2rem;
+  display: inline-block;
+}
+
+#keybindings-table .badge + .badge {
+  margin-left: 0.5rem;
+}
+
+#keybindings-table .kb + .kb::before {
+  content: 'or';
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
 }
 </style>

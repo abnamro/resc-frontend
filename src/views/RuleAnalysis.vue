@@ -577,12 +577,25 @@ function markAsTruePositive() {
   selectDown();
 }
 
+function markAsGone() {
+  const item = getCurrentFindingSelected();
+  if (item === undefined) {
+    return;
+  }
+  sendUpdate([item.id_], 'NOT_ACCESSIBLE');
+  selectDown();
+}
+
 function markAllAsFalsePositive() {
   sendUpdate(selectedCheckBoxIds.value, 'FALSE_POSITIVE');
 }
 
 function markAllAsTruePositive() {
   sendUpdate(selectedCheckBoxIds.value, 'TRUE_POSITIVE');
+}
+
+function markAllAsGone() {
+  sendUpdate(selectedCheckBoxIds.value, 'NOT_ACCESSIBLE');
 }
 
 function auditThis() {
@@ -653,6 +666,12 @@ onKeyStroke('t', () => !shouldIgnoreKeystroke() && markAsTruePositive(), {
   eventName: 'keydown',
 });
 onKeyStroke('T', () => !shouldIgnoreKeystroke() && markAllAsTruePositive(), {
+  eventName: 'keydown',
+});
+onKeyStroke('g', () => !shouldIgnoreKeystroke() && markAsGone(), {
+  eventName: 'keydown',
+});
+onKeyStroke('G', () => !shouldIgnoreKeystroke() && markAllAsGone(), {
   eventName: 'keydown',
 });
 onKeyStroke('a', (e: KeyboardEvent) => !shouldIgnoreKeystroke() && !e.ctrlKey && auditThis(), {
