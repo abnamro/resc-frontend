@@ -37,6 +37,7 @@
 
     <FindingsTable
       :findings="findingList"
+      :is_rule_finding="true"
       v-if="hasRecords"
       @refresh-table="fetchPaginatedDetailedFindings"
     >
@@ -81,8 +82,6 @@ import type {
 import type { AxiosResponse } from 'axios';
 import type { TableItem } from 'bootstrap-vue-next';
 import CommonUtils from '@/utils/common-utils';
-import { onKeyStroke } from '@vueuse/core';
-import { shouldIgnoreKeystroke } from '@/utils/keybind-utils';
 
 type TableItemDetailedFindingRead = DetailedFindingRead & TableItem;
 
@@ -274,8 +273,6 @@ function fetchRuleTags() {
       AxiosConfig.handleError(error);
     });
 }
-
-onKeyStroke('?', () => !shouldIgnoreKeystroke() && showKeybindingHelp(), { eventName: 'keydown' });
 
 onMounted(() => {
   if (isRedirectedFromRuleMetricsPage()) {

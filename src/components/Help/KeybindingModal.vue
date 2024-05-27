@@ -36,6 +36,8 @@
 </template>
 
 <script setup lang="ts">
+import { shouldIgnoreKeystroke } from '@/utils/keybind-utils';
+import { onKeyStroke } from '@vueuse/core';
 import { ref } from 'vue';
 
 const keybinding_modal = ref();
@@ -120,6 +122,8 @@ function hide(_value: MouseEvent) {
 }
 
 defineExpose({ show, hide });
+
+onKeyStroke('?', () => !shouldIgnoreKeystroke() && show(), { eventName: 'keydown' });
 </script>
 
 <style>

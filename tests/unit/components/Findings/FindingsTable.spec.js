@@ -18,49 +18,47 @@ importFA();
 vi.mock('axios');
 
 describe('FindingsTable tests', () => {
-    it('Given a FindingsTable then FindingsTable will be displayed', () => {
-        axios.get.mockResolvedValueOnce({ data: rule_packs });
-        axios.get.mockResolvedValueOnce({ data: allProjects });
-        axios.get.mockResolvedValueOnce({ data: allRepos });
-        axios.get.mockResolvedValueOnce({ data: detailed_findings });
+  it('Given a FindingsTable then FindingsTable will be displayed', () => {
+    axios.get.mockResolvedValueOnce({ data: rule_packs });
+    axios.get.mockResolvedValueOnce({ data: allProjects });
+    axios.get.mockResolvedValueOnce({ data: allRepos });
+    axios.get.mockResolvedValueOnce({ data: detailed_findings });
 
-        const wrapper = shallowMount(App, {
-            props: {
-                findings: detailed_findings.data
-            },
-            components: {
-                BTable,
-                BButton,
-                BFormCheckbox,
-                FontAwesomeIcon,
-            },
-            global: {
-                plugins: [createTestingPinia()],
-                stubs: {
-                    AuditModal: true,
-                    FindingPanel: true,
-                    FindingStatusBadge: true,
-                },
-            },
-        });
+    const wrapper = shallowMount(App, {
+      props: {
+        findings: detailed_findings.data,
+      },
+      components: {
+        BTable,
+        BButton,
+        BFormCheckbox,
+        FontAwesomeIcon,
+      },
+      global: {
+        plugins: [createTestingPinia()],
+        stubs: {
+          AuditModal: true,
+          FindingPanel: true,
+          FindingStatusBadge: true,
+        },
+      },
+    });
 
-        expect(wrapper.exists()).toBe(true);
-        expect(wrapper.vm.findingList).toEqual(detailed_findings.data);
+    expect(wrapper.exists()).toBe(true);
+    expect(wrapper.vm.findingList).toEqual(detailed_findings.data);
 
-        expect(() => wrapper.vm.toggleAllCheckboxes()).not.toThrow();
-        expect(wrapper.vm.selectedCheckBoxIds).toEqual([detailed_findings.data[0].id_]);
-        expect(() => wrapper.vm.selectAllCheckboxes()).not.toThrow();
-        expect(() => wrapper.vm.updateVisualBadge([detailed_findings.data[0].id_], 'TRUE_POSITIVE')).not.toThrow();
-        
+    expect(() => wrapper.vm.toggleAllCheckboxes()).not.toThrow();
+    expect(wrapper.vm.selectedCheckBoxIds).toEqual([detailed_findings.data[0].id_]);
+    expect(() => wrapper.vm.selectAllCheckboxes()).not.toThrow();
+    expect(() =>
+      wrapper.vm.updateVisualBadge([detailed_findings.data[0].id_], 'TRUE_POSITIVE'),
+    ).not.toThrow();
 
-        expect(() => wrapper.vm.selectSingleCheckbox()).not.toThrow();
+    expect(() => wrapper.vm.selectSingleCheckbox()).not.toThrow();
 
-        // expect(() => wrapper.vm.selectDown()).not.toThrow();
+    // expect(() => wrapper.vm.selectDown()).not.toThrow();
 
-        axios.get.mockResolvedValueOnce({ data: detailed_findings });
-        expect(() => wrapper.vm.updateAudit('NOT_ANALYZED', 'Rien a declarer')).not.toThrow();
-
-    })
-
-
-})
+    axios.get.mockResolvedValueOnce({ data: detailed_findings });
+    expect(() => wrapper.vm.updateAudit('NOT_ANALYZED', 'Rien a declarer')).not.toThrow();
+  });
+});

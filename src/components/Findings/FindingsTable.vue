@@ -123,6 +123,7 @@ type TableItemDetailedFindingRead = DetailedFindingRead & TableItem;
 
 type Props = {
   findings: DetailedFindingRead[];
+  is_rule_finding: boolean;
 };
 
 const props = defineProps<Props>();
@@ -189,6 +190,19 @@ const fields = ref([
     thStyle: { borderTop: '0px' },
   },
 ]);
+
+if (!props.is_rule_finding) {
+  // remove project_key
+  // remove repository_name
+  fields.value.splice(2, 2);
+  fields.value.push({
+    key: 'scanType',
+    sortable: false,
+    label: 'Scan Type',
+    class: 'text-start position-sticky',
+    thStyle: { borderTop: '0px' },
+  });
+}
 
 const auditButtonDisabled = computed(() => selectedCheckBoxIds.value.length <= 0);
 const selectedIndex = ref(undefined as number | undefined);

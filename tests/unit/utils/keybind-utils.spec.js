@@ -16,7 +16,7 @@ describe('function shouldIgnoreKeystroke', () => {
     // override document
     global.document = { activeElement: { nodeName: 'TEXTAREA' } };
     expect(shouldIgnoreKeystroke()).toBeTruthy();
-  }); 
+  });
 
   it('should return true if an element SELECT element is selected', () => {
     // override document
