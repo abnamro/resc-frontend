@@ -47,17 +47,12 @@ describe('RuleAnalysis tests', () => {
     });
 
     expect(wrapper.exists()).toBe(true);
-    // expect(() => wrapper.vm.selectSingleCheckbox()).not.toThrow();
-    // expect(() => wrapper.vm.selectAllCheckboxes()).not.toThrow();
 
     axios.get.mockResolvedValueOnce({ data: detailed_findings });
     expect(() => wrapper.vm.handlePageSizeChange(10)).not.toThrow();
 
     axios.get.mockResolvedValueOnce({ data: detailed_findings });
     expect(() => wrapper.vm.handlePageClick(1)).not.toThrow();
-
-    // axios.get.mockResolvedValueOnce({ data: detailed_findings });
-    // expect(() => wrapper.vm.updateAudit('NOT_ANALYZED', 'Rien a declarer')).not.toThrow();
 
     axios.get.mockResolvedValueOnce({ data: detailed_findings });
     expect(() => wrapper.vm.fetchPaginatedDetailedFindings()).not.toThrow();
