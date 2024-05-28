@@ -7,8 +7,6 @@ import { importFA } from '@/assets/font-awesome';
 import rule_packs from '@/../tests/resources/mock_rule_packs.json';
 import detailed_findings from '@/../tests/resources/mock_detailed_findings2.json';
 import bootstrapVue from 'bootstrap-vue-next';
-import { wrap } from 'module';
-
 
 let allProjects = ['ABC', 'XYZ', 'GRD0000001', 'GRD0000002'];
 let allRepos = ['bb_repo1', 'bb_repo2', 'ado_repo1', 'ado_repo2'];
@@ -31,26 +29,32 @@ describe('FindingsTable tests', () => {
       },
       components: {},
       global: {
-        plugins: [
-          createTestingPinia(), 
-          bootstrapVue({ plugins: { modalController: true } })
-        ],
+        plugins: [createTestingPinia(), bootstrapVue({ plugins: { modalController: true } })],
         stubs: {},
       },
     });
 
     expect(wrapper.exists()).toBe(true);
     expect(wrapper.vm.findingList).toEqual(detailed_findings.data);
-    expect(() => wrapper.find("#allSelected").setValue(true)).not.toThrow();
+    expect(() => wrapper.find('#allSelected').setValue(true)).not.toThrow();
     expect(() => wrapper.vm.selectAllCheckboxes()).not.toThrow();
-    expect(wrapper.vm.selectedCheckBoxIds).toEqual([detailed_findings.data[0].id_, detailed_findings.data[1].id_]);
+    expect(wrapper.vm.selectedCheckBoxIds).toEqual([
+      detailed_findings.data[0].id_,
+      detailed_findings.data[1].id_,
+    ]);
     expect(() => wrapper.vm.toggleAllCheckboxes()).not.toThrow();
     expect(wrapper.vm.selectedCheckBoxIds).toEqual([]);
     expect(() => wrapper.vm.toggleAllCheckboxes()).not.toThrow();
-    expect(wrapper.vm.selectedCheckBoxIds).toEqual([detailed_findings.data[0].id_, detailed_findings.data[1].id_]);
+    expect(wrapper.vm.selectedCheckBoxIds).toEqual([
+      detailed_findings.data[0].id_,
+      detailed_findings.data[1].id_,
+    ]);
 
     expect(() =>
-      wrapper.vm.updateVisualBadge([detailed_findings.data[0].id_, detailed_findings.data[1].id_], 'TRUE_POSITIVE'),
+      wrapper.vm.updateVisualBadge(
+        [detailed_findings.data[0].id_, detailed_findings.data[1].id_],
+        'TRUE_POSITIVE',
+      ),
     ).not.toThrow();
     expect(() => wrapper.vm.toggleAllCheckboxes()).not.toThrow();
     expect(() =>
@@ -95,10 +99,9 @@ describe('FindingsTable tests', () => {
 
     // expect(() => wrapper.vm.toggleFindingDetails()).not.toThrow();
     // expect(() => wrapper.vm.toggleFindingDetails()).not.toThrow();
-    
+
     // expect(() => wrapper.vm.selectDown()).not.toThrow();
     // expect(() => wrapper.vm.showAuditModal()).not.toThrow();
-
 
     axios.get.mockResolvedValueOnce({ data: detailed_findings });
     expect(() => wrapper.vm.updateAudit('NOT_ANALYZED', 'Rien a declarer')).not.toThrow();
@@ -117,10 +120,7 @@ describe('FindingsTable tests', () => {
       },
       components: {},
       global: {
-        plugins: [
-          createTestingPinia(), 
-          bootstrapVue({ plugins: { modalController: true } })
-        ],
+        plugins: [createTestingPinia(), bootstrapVue({ plugins: { modalController: true } })],
         stubs: {},
       },
     });
@@ -129,4 +129,3 @@ describe('FindingsTable tests', () => {
     expect(wrapper.vm.findingList).toEqual(detailed_findings.data);
   });
 });
-
