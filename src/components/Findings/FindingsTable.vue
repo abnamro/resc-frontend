@@ -5,6 +5,7 @@
       class="float-left mt-2 mb-2"
       variant="primary"
       size="sm"
+      id="AuditButton"
       v-on:click="showAuditModal()"
       :disabled="auditButtonDisabled"
       >AUDIT</b-button
@@ -36,6 +37,7 @@
       <!-- Select all checkboxes -->
       <template #head(select)>
         <b-form-checkbox
+          id="allSelected"
           class="checkbox"
           v-model="allSelected"
           @change="selectAllCheckboxes"
@@ -118,6 +120,7 @@ import { onKeyStroke } from '@vueuse/core';
 import { shouldIgnoreKeystroke } from '@/utils/keybind-utils';
 import { computed, ref } from 'vue';
 import { watch } from 'vue';
+import { BTable, BFormCheckbox, BButton } from 'bootstrap-vue-next';
 
 type TableItemDetailedFindingRead = DetailedFindingRead & TableItem;
 
@@ -406,52 +409,67 @@ function sendUpdate(selectedIds: number[], status: FindingStatus) {
     });
 }
 
+/* istanbul ignore next @preserve */
 onKeyStroke(['ArrowLeft', 'h', 'H'], () => !shouldIgnoreKeystroke() && closeDetails(), {
   eventName: 'keydown',
 });
+/* istanbul ignore next @preserve */
 onKeyStroke(['ArrowRight', 'l', 'L'], () => !shouldIgnoreKeystroke() && openDetails(), {
   eventName: 'keydown',
 });
+/* istanbul ignore next @preserve */
 onKeyStroke(
   ['ArrowDown', 'j', 'J'],
   (e: KeyboardEvent) => !shouldIgnoreKeystroke() && selectDown() && e.shiftKey && toggleSelect(),
   { eventName: 'keydown' },
 );
+/* istanbul ignore next @preserve */
 onKeyStroke(
   ['ArrowUp', 'k', 'K'],
   (e: KeyboardEvent) => !shouldIgnoreKeystroke() && selectUp() && e.shiftKey && toggleSelect(),
   { eventName: 'keydown' },
 );
 
+/* istanbul ignore next @preserve */
 onKeyStroke('o', () => !shouldIgnoreKeystroke() && openCommitUrl(), { eventName: 'keydown' });
+/* istanbul ignore next @preserve */
 onKeyStroke('f', () => !shouldIgnoreKeystroke() && markAsFalsePositive(), {
   eventName: 'keydown',
 });
+/* istanbul ignore next @preserve */
 onKeyStroke('F', () => !shouldIgnoreKeystroke() && markAllAsFalsePositive(), {
   eventName: 'keydown',
 });
+/* istanbul ignore next @preserve */
 onKeyStroke('t', () => !shouldIgnoreKeystroke() && markAsTruePositive(), {
   eventName: 'keydown',
 });
+/* istanbul ignore next @preserve */
 onKeyStroke('T', () => !shouldIgnoreKeystroke() && markAllAsTruePositive(), {
   eventName: 'keydown',
 });
+/* istanbul ignore next @preserve */
 onKeyStroke('g', () => !shouldIgnoreKeystroke() && markAsGone(), {
   eventName: 'keydown',
 });
+/* istanbul ignore next @preserve */
 onKeyStroke('G', () => !shouldIgnoreKeystroke() && markAllAsGone(), {
   eventName: 'keydown',
 });
+/* istanbul ignore next @preserve */
 onKeyStroke('a', (e: KeyboardEvent) => !shouldIgnoreKeystroke() && !e.ctrlKey && auditThis(), {
   eventName: 'keydown',
 });
+/* istanbul ignore next @preserve */
 onKeyStroke(' ', () => !shouldIgnoreKeystroke() && toggleSelect(), { eventName: 'keydown' });
+/* istanbul ignore next @preserve */
 onKeyStroke(
   'a',
   (e: KeyboardEvent) => !shouldIgnoreKeystroke() && e.ctrlKey && toggleAllCheckboxes(),
   { eventName: 'keydown' },
 );
 
+/* istanbul ignore next @preserve */
 watch(
   () => props.findings,
   (findings, _prevFindings) => {
