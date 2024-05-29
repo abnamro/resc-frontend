@@ -3,7 +3,7 @@
   "info": {
     "title": "Repository Scanner (RESC)",
     "description": "RESC API helps you to perform several operations upon findings obtained from multiple source code repositories.",
-    "version": "3.1.1"
+    "version": "3.3.3"
   },
   "paths": {
     "/resc/v1/health": {
@@ -3584,6 +3584,10 @@
             "format": "date-time",
             "title": "Event Sent On"
           },
+          "is_dir_scan": {
+            "type": "boolean",
+            "title": "Is Dir Scan"
+          },
           "id_": {
             "type": "integer",
             "exclusiveMinimum": 0.0,
@@ -3615,6 +3619,7 @@
           "vcs_provider",
           "last_scanned_commit",
           "scan_id",
+          "is_dir_scan",
           "id_"
         ],
         "title": "DetailedFindingRead"
@@ -4552,6 +4557,11 @@
             "type": "integer",
             "exclusiveMinimum": 0.0,
             "title": "Global Allow List"
+          },
+          "outdated": {
+            "type": "boolean",
+            "title": "Outdated",
+            "default": false
           },
           "created": {
             "type": "string",

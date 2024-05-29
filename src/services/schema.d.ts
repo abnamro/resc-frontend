@@ -837,6 +837,8 @@ export interface components {
        * Format: date-time
        */
       event_sent_on?: string;
+      /** Is Dir Scan */
+      is_dir_scan: boolean;
       /** Id */
       id_: number;
       /** Commit Url */
@@ -1309,6 +1311,11 @@ export interface components {
       active?: boolean;
       /** Global Allow List */
       global_allow_list?: number;
+      /**
+       * Outdated
+       * @default false
+       */
+      outdated?: boolean;
       /**
        * Created
        * Format: date-time
