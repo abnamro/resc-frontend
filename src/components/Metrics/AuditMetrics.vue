@@ -84,7 +84,7 @@ function prepareDataSet(datasetLabel: string, datasetFirstValue: number): DataSe
     backgroundColor: colourCode,
   };
 
-  if (datasetLabel === 'Total') {
+  if (datasetLabel === 'Total' || datasetLabel == 'resc') {
     datasetsObj.hidden = true;
   }
 
