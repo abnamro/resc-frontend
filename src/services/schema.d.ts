@@ -103,6 +103,31 @@ export interface paths {
      */
     get: operations['get_rule_packs_tags_resc_v1_rule_packs_tags_get'];
   };
+  '/resc/v1/rule-packs/mark-as-outdated': {
+    /**
+     * Mark rule pack as outdated
+     * @description Mark rule pack as outdated.
+     *
+     *     We fetch all the findings which are not in any scans that are in younger rule pack.
+     *     We mark those findings as out dated.
+     *     e.g.
+     *
+     *     Finding 1 - Scan 1 - Rulepack 1
+     *     Finding 1 - Scan 2 - Rulepack 2
+     *     Finding 1 - Scan 3 - Rulepack 3
+     *     Finding 2 - Scan 1 - Rulepack 1
+     *     Finding 2 - Scan 2 - Rulepack 2
+     *     Finding 3 - Scan 3 - Rulepack 3
+     *
+     *     Marking Rule pack 2 as outdated will mark finding 2 as outdated: 1 and 3 are still found in rule pack 3
+     *     Marking Rule pack 1 as outdated will mark no findings as outdated: 1, 2 and 3 are found in rule packs 2 and 3.
+     *
+     * - **db_connection**: Session of the database connection
+     * - **version**: Version of the rule pack to be marked
+     * - **return**: int The number of findings marked.
+     */
+    post: operations['mark_rule_pack_as_outdated_resc_v1_rule_packs_mark_as_outdated_post'];
+  };
   '/resc/v1/findings': {
     /**
      * Get findings
@@ -1789,6 +1814,63 @@ export interface operations {
       422: {
         content: {
           'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+      /** @description Internal server error. Contact your system administrator */
+      500: {
+        content: never;
+      };
+      /** @description Unable to communicate with DataBase, Please contact your system administrator */
+      503: {
+        content: never;
+      };
+    };
+  };
+  /**
+   * Mark rule pack as outdated
+   * @description Mark rule pack as outdated.
+   *
+   *     We fetch all the findings which are not in any scans that are in younger rule pack.
+   *     We mark those findings as out dated.
+   *     e.g.
+   *
+   *     Finding 1 - Scan 1 - Rulepack 1
+   *     Finding 1 - Scan 2 - Rulepack 2
+   *     Finding 1 - Scan 3 - Rulepack 3
+   *     Finding 2 - Scan 1 - Rulepack 1
+   *     Finding 2 - Scan 2 - Rulepack 2
+   *     Finding 3 - Scan 3 - Rulepack 3
+   *
+   *     Marking Rule pack 2 as outdated will mark finding 2 as outdated: 1 and 3 are still found in rule pack 3
+   *     Marking Rule pack 1 as outdated will mark no findings as outdated: 1, 2 and 3 are found in rule packs 2 and 3.
+   *
+   * - **db_connection**: Session of the database connection
+   * - **version**: Version of the rule pack to be marked
+   * - **return**: int The number of findings marked.
+   */
+  mark_rule_pack_as_outdated_resc_v1_rule_packs_mark_as_outdated_post: {
+    parameters: {
+      query: {
+        version: string;
+      };
+    };
+    responses: {
+      /** @description Rulepack successfully updated */
+      200: {
+        content: {
+          'application/json': number;
+        };
+      };
+      /** @description Rule-pack version <version_id> does not exists */
+      404: {
+        content: {
+          'application/json': components['schemas']['Model404'];
+        };
+      };
+      /** @description Version <version_id> is not a valid semantic version */
+      422: {
+        content: {
+          'application/json': components['schemas']['Model422'];
         };
       };
       /** @description Internal server error. Contact your system administrator */
