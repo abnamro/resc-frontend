@@ -66,12 +66,16 @@
           <FontAwesomeIcon
             v-if="(data.item as RulePackRead).outdated"
             :icon="['fas', 'circle-check']"
-            :style="{ color: '#d2042d' }"
+            :style="{ color: '#d2042d', cursor: 'pointer' }"
+            v-on:click="openMarkAsOutdated(data.item)"
+            :class="(data.item as RulePackRead).active ? 'disabled-button' : ''"
           />
           <FontAwesomeIcon
             v-if="!(data.item as RulePackRead).outdated"
             :icon="['fas', 'circle-check']"
-            class="disabled-button"
+            :style="{ color: 'rgba(0,0,0,0.5)', cursor: 'pointer' }"
+            v-on:click="openMarkAsOutdated(data.item)"
+            :class="(data.item as RulePackRead).active ? 'disabled-button' : ''"
           />
         </template>
 
@@ -101,6 +105,25 @@
       ></Pagination>
     </div>
   </div>
+  <b-modal
+    ref="confirmMarkOutdated"
+    hide-footer
+    header-bg-variant="warning"
+    title="Mark findings as outdated?"
+  >
+    <div>
+      This will mark all findings from rule pack {{ rulePackSelected?.version }} and older as
+      outdated.
+    </div>
+    <div class="float-right">
+      <b-button class="mt-3 float-end" variant="outline-danger" block @click="markAsOutdated"
+        >Confirm</b-button
+      >
+      <b-button class="mt-3 float-end me-2" variant="outline-secondary" block @click="cancelAction"
+        >Cancel</b-button
+      >
+    </div>
+  </b-modal>
 </template>
 
 <script setup lang="ts">
@@ -120,6 +143,7 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 const loadedData = ref(false);
 const rulePackUploadModal = ref();
+const confirmMarkOutdated = ref();
 
 const rulePackList = ref([] as RulePackRead[]);
 const currentItems = ref([] as TableItem[]);
@@ -165,6 +189,7 @@ const fields = ref([
     thStyle: { borderTop: '0px' },
   },
 ]);
+const rulePackSelected = ref(null as RulePackRead | null);
 
 const hasRecords = computed(() => rulePackList.value.length > 0);
 
@@ -223,6 +248,36 @@ function downloadRulePack(rulePackVersion: string) {
 function formatDate(timestamp: string) {
   const date = DateUtils.formatDate(timestamp);
   return timestamp ? date : 'Not Available';
+}
+
+function openMarkAsOutdated(rulePack: RulePackRead): void {
+  console.log('click');
+  rulePackSelected.value = rulePack;
+  if (rulePackSelected.value.active === true) {
+    console.log('rulepack is active');
+    rulePackSelected.value = null;
+    return;
+  }
+
+  confirmMarkOutdated.value.show();
+}
+
+function cancelAction() {
+  confirmMarkOutdated.value.hide();
+}
+
+function markAsOutdated() {
+  confirmMarkOutdated.value.hide();
+
+  if (rulePackSelected.value == null) {
+    return;
+  }
+
+  RulePackService.markAsOutdated(rulePackSelected.value.version)
+    .then((_response) => {})
+    .catch((error) => {
+      AxiosConfig.handleError(error);
+    });
 }
 
 fetchPaginatedRulePacks();

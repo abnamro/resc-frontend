@@ -70,6 +70,18 @@ const RulePackService = {
 
     return axios.get(`/rule-packs/tags?${queryParams}`);
   },
+
+  async markAsOutdated(
+    rulePackVersion: string,
+  ): Promise<
+    AxiosResponse<
+      paths['/resc/v1/rule-packs/mark-as-outdated']['post']['responses']['200']['content']['application/json']
+    >
+  > {
+    return axios.post(`/rule-packs/mark-as-outdated`, {
+      version: toRaw(rulePackVersion),
+    });
+  },
 };
 
 export default RulePackService;

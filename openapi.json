@@ -556,6 +556,67 @@
         }
       }
     },
+    "/resc/v1/rule-packs/mark-as-outdated": {
+      "post": {
+        "tags": [
+          "resc-rule-packs"
+        ],
+        "summary": "Mark rule pack as outdated",
+        "description": "Mark rule pack as outdated.\n\n    We fetch all the findings which are not in any scans that are in younger rule pack.\n    We mark those findings as out dated.\n    e.g.\n\n    Finding 1 - Scan 1 - Rulepack 1\n    Finding 1 - Scan 2 - Rulepack 2\n    Finding 1 - Scan 3 - Rulepack 3\n    Finding 2 - Scan 1 - Rulepack 1\n    Finding 2 - Scan 2 - Rulepack 2\n    Finding 3 - Scan 3 - Rulepack 3\n\n    Marking Rule pack 2 as outdated will mark finding 2 as outdated: 1 and 3 are still found in rule pack 3\n    Marking Rule pack 1 as outdated will mark no findings as outdated: 1, 2 and 3 are found in rule packs 2 and 3.\n\n- **db_connection**: Session of the database connection\n- **version**: Version of the rule pack to be marked\n- **return**: int The number of findings marked.",
+        "operationId": "mark_rule_pack_as_outdated_resc_v1_rule_packs_mark_as_outdated_post",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^\\d+(?:\\.\\d+){2}$",
+              "title": "Version"
+            },
+            "name": "version",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Rulepack successfully updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "integer",
+                  "title": "Response Mark Rule Pack As Outdated Resc V1 Rule Packs Mark As Outdated Post"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Rule-pack version <version_id> does not exists",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Model404"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Version <version_id> is not a valid semantic version",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Model422"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error. Contact your system administrator"
+          },
+          "503": {
+            "description": "Unable to communicate with DataBase, Please contact your system administrator"
+          }
+        }
+      }
+    },
     "/resc/v1/findings": {
       "get": {
         "tags": [
@@ -984,7 +1045,7 @@
           "resc-findings"
         ],
         "summary": "audit single/multiple findings",
-        "description": "Audit single/multiple findings, updating the status and comment\n\n- **db_connection**: Session of the database connection\n- **finding_ids**: List of finding IDs for which audit to be performed\n- **status**: Status of the finding, Valid values are NOT_ANALYZED, NOT_ACCESSIBLE,\n              CLARIFICATION_REQUIRED, FALSE_POSITIVE, TRUE_POSITIVE\n- **comment**: Comment\n- **return**: int\n    The output will contain count of successful saved audits",
+        "description": "Audit single/multiple findings, updating the status and comment\n\n- **db_connection**: Session of the database connection\n- **finding_ids**: List of finding IDs for which audit to be performed\n- **status**: Status of the finding, Valid values are NOT_ANALYZED, NOT_ACCESSIBLE,\n              CLARIFICATION_REQUIRED, FALSE_POSITIVE, TRUE_POSITIVE, OUTDATED\n- **comment**: Comment\n- **return**: int\n    The output will contain count of successful saved audits",
         "operationId": "audit_findings_resc_v1_findings_audit__post",
         "requestBody": {
           "content": {
@@ -2526,7 +2587,7 @@
           "resc-scans"
         ],
         "summary": "Create scan findings",
-        "description": "Creates findings and their associated scan_findings for a given scan\n\n- **db_connection**: Session of the database connection\n- **scan_id**:  Id of the scan for which findings need to be inserted\n- **file_path**: file path\n- **line_number**: Line number\n- **column_start**: Column start\n- **column_end**: Column end\n- **commit_id**: commit hash\n- **commit_message**: Commit message\n- **commit_timestamp**: Commit timestamp\n- **author**: Author name\n- **email**: Email of the author\n- **status**: Status of the finding, Valid values are NOT_ANALYZED, NOT_ACCESSIBLE,\n              CLARIFICATION_REQUIRED, FALSE_POSITIVE, TRUE_POSITIVE\n- **comment**: Comment\n- **event_sent_on**: event sent timestamp\n- **rule_name**: rule name\n- **repository_id**: repository id of the finding\n- **return**: [FindingRead]\n    The output will contain a PaginationModel containing the list of FindingRead type objects,\n    or an empty list if no scan was found",
+        "description": "Creates findings and their associated scan_findings for a given scan\n\n- **db_connection**: Session of the database connection\n- **scan_id**:  Id of the scan for which findings need to be inserted\n- **file_path**: file path\n- **line_number**: Line number\n- **column_start**: Column start\n- **column_end**: Column end\n- **commit_id**: commit hash\n- **commit_message**: Commit message\n- **commit_timestamp**: Commit timestamp\n- **author**: Author name\n- **email**: Email of the author\n- **status**: Status of the finding, Valid values are NOT_ANALYZED, NOT_ACCESSIBLE,\n              CLARIFICATION_REQUIRED, FALSE_POSITIVE, TRUE_POSITIVE, OUTDATED\n- **comment**: Comment\n- **event_sent_on**: event sent timestamp\n- **rule_name**: rule name\n- **repository_id**: repository id of the finding\n- **return**: [FindingRead]\n    The output will contain a PaginationModel containing the list of FindingRead type objects,\n    or an empty list if no scan was found",
         "operationId": "create_scan_findings_resc_v1_scans__scan_id__findings_post",
         "parameters": [
           {

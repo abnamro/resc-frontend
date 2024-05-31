@@ -3,36 +3,43 @@
     {
       "version": "0.0.0",
       "active": false,
+      "outdated": true,
       "global_allow_list": null
     },
     {
       "version": "0.0.1",
       "active": false,
+      "outdated": false,
       "global_allow_list": 31
     },
     {
       "version": "0.0.2",
       "active": false,
+      "outdated": false,
       "global_allow_list": 46
     },
     {
       "version": "0.0.3",
       "active": false,
+      "outdated": false,
       "global_allow_list": 1
     },
     {
       "version": "0.0.4",
       "active": false,
+      "outdated": false,
       "global_allow_list": 16
     },
     {
       "version": "0.0.5",
       "active": false,
+      "outdated": false,
       "global_allow_list": 61
     },
     {
       "version": "0.0.6",
       "active": true,
+      "outdated": false,
       "global_allow_list": 76
     }
   ],

@@ -64,5 +64,9 @@ describe('RulePacks tests', () => {
     await wrapper.vm.$nextTick();
     await wrapper.vm.$nextTick();
     expect(spy).toHaveBeenCalledTimes(2);
+
+    axios.post.mockResolvedValueOnce({});
+    expect(() => wrapper.vm.markAsOutdated(rule_packs.data[6])).not.toThrow();
+    expect(() => wrapper.vm.markAsOutdated(rule_packs.data[5])).not.toThrow();
   });
 });
