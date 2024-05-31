@@ -61,6 +61,20 @@
           />
         </template>
 
+        <!-- Outdated Column -->
+        <template #cell(outdated)="data">
+          <FontAwesomeIcon
+            v-if="(data.item as RulePackRead).outdated"
+            :icon="['fas', 'circle-check']"
+            :style="{ color: '#d2042d' }"
+          />
+          <FontAwesomeIcon
+            v-if="!(data.item as RulePackRead).outdated"
+            :icon="['fas', 'circle-check']"
+            class="disabled-button"
+          />
+        </template>
+
         <template #cell(created)="data">
           {{ formatDate((data.item as RulePackRead).created) }}
         </template>
@@ -126,6 +140,13 @@ const fields = ref([
     key: 'active',
     sortable: false,
     label: 'Active',
+    class: 'text-center position-sticky',
+    thStyle: { borderTop: '0px' },
+  },
+  {
+    key: 'outdated',
+    sortable: false,
+    label: 'Outdated',
     class: 'text-center position-sticky',
     thStyle: { borderTop: '0px' },
   },
