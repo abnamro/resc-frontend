@@ -66,7 +66,7 @@
       >
         <div>
           <small
-            ><strong>{{ showFindingsInPercentage(props.notAccessible) }}</strong></small
+            ><strong>{{ showFindingsInPercentage(props.outdated) }}</strong></small
           >
         </div>
       </b-progress-bar>
