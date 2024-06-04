@@ -1,6 +1,18 @@
 <template>
-  <div class="topbar-menu-group" v-if="displayLoggedInUser">
-    <b-button-toolbar aria-label="Toolbar with button groups and dropdown menu">
+  <KeybindingModal ref="keybindingModal"></KeybindingModal>
+  <div class="topbar-menu-group me-4 mt-2">
+    <div
+      class="square float-start px-3 d-flex align-items-center cursor-help justify-content-center rounded-circle bg-warning text-white font-weight-bold"
+      @click="showKeybindingHelp"
+    >
+      ?
+    </div>
+
+    <b-button-toolbar
+      aria-label="Toolbar with button groups and dropdown menu"
+      class="float-end"
+      v-if="displayLoggedInUser"
+    >
       <b-dropdown class="mx-1" right toggle-class="rounded-circle" no-caret>
         <template #button-content>
           <FontAwesomeIcon icon="user" />
@@ -37,11 +49,14 @@
 </template>
 
 <script lang="ts" setup>
+import KeybindingModal from '@/components/Help/KeybindingModal.vue';
 import AuthService from '@/services/auth-service';
 import Config from '@/configuration/config';
 import { useAuthUserStore } from '@/store/index';
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+
+const keybindingModal = ref();
 
 const displayLoggedInUser = computed(() => {
   const authenticationRequired = `${Config.value('authenticationRequired')}`;
@@ -68,11 +83,22 @@ const userEmail = computed(() => {
 function logout() {
   AuthService.doLogOut();
 }
+
+function showKeybindingHelp() {
+  keybindingModal.value.show();
+}
 </script>
 <style scoped>
 .topbar-menu-group {
   float: right;
-  margin-top: 15px;
-  margin-right: 10px;
+}
+
+.square {
+  height: 38px;
+  width: 40px;
+}
+
+.cursor-help {
+  cursor: help;
 }
 </style>

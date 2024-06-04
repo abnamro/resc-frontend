@@ -1,16 +1,5 @@
 <template>
-  <b-navbar toggleable="lg" type="dark" class="px-4 right">
-    <!-- variant="warning" -->
-    <b-navbar-brand
-      class="ml-auto float-right px-3 rounded-circle bg-warning text-white font-bold"
-      @click="showKeybindingHelp"
-      >?</b-navbar-brand
-    >
-  </b-navbar>
-
-  <KeybindingModal ref="keybindingModal"></KeybindingModal>
-
-  <div class="m-4">
+  <div class="mx-4">
     <!-- Page Title -->
     <div class="col-md-2 pt-2 text-start page-title">
       <h3><small class="text-nowrap">RULE ANALYSIS</small></h3>
@@ -60,7 +49,6 @@
 </template>
 
 <script lang="ts" setup>
-import KeybindingModal from '@/components/Help/KeybindingModal.vue';
 import Config from '@/configuration/config';
 import AxiosConfig from '@/configuration/axios-config';
 import FindingsTable from '@/components/Findings/FindingsTable.vue';
@@ -86,7 +74,6 @@ import CommonUtils from '@/utils/common-utils';
 type TableItemDetailedFindingRead = DetailedFindingRead & TableItem;
 
 const loadedData = ref(false);
-const keybindingModal = ref();
 
 const findingList = ref([] as TableItemDetailedFindingRead[]);
 const totalRows = ref(0);
@@ -123,10 +110,6 @@ function isRedirectedFromRuleMetricsPage() {
     store.previousRouteState
     ? true
     : false;
-}
-
-function showKeybindingHelp() {
-  keybindingModal.value.show();
 }
 
 function handlePageClick(page: number) {

@@ -42,3 +42,12 @@ describe('function parseStatusOptions', () => {
     expect(statusList[5].label).toBe(`${Config.value('outdatedStatusLabel')}`);
   });
 });
+
+describe('function stringify_date', () => {
+  it('check the values', () => {
+    expect(CommonUtils.stringify_date(undefined)).toBe(undefined);
+    expect(CommonUtils.stringify_date('')).toBe('');
+    expect(CommonUtils.stringify_date('01234567899876543210')).toBe('0123456789');
+    expect(CommonUtils.stringify_date(new Date('2023-05-05T05:05:30'))).toBe('2023-05-05');
+  });
+});
