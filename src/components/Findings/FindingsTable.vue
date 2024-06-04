@@ -92,9 +92,9 @@
         </span>
       </template>
 
-      <!-- Status Column -->
+      <!-- commit_timestamp Column -->
       <template #cell(commit_timestamp)="data">
-        {{ data.item.timestamp.substring(0, 10) }}
+        {{ data.item.commit_timestamp.substring(0, 10) }}
       </template>
 
       <!-- Status Column -->
