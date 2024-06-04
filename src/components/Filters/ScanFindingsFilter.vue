@@ -193,9 +193,9 @@ function handleFilterChange() {
     emit(
       'on-filter-change',
       selectedScan.value.scanId,
-      selectedRule,
-      selectedStatus,
-      selectedRuleTags,
+      selectedRule.value,
+      selectedStatus.value,
+      selectedRuleTags.value,
     );
   } else {
     togglePreviousScans();

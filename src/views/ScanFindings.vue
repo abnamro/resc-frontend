@@ -1,15 +1,4 @@
 <template>
-  <b-navbar toggleable="lg" type="dark" class="px-4 right">
-    <!-- variant="warning" -->
-    <b-navbar-brand
-      class="ml-auto float-right px-3 rounded-circle bg-warning text-white font-bold"
-      @click="showKeybindingHelp"
-      >?</b-navbar-brand
-    >
-  </b-navbar>
-
-  <KeybindingModal ref="keybindingModal"></KeybindingModal>
-
   <div class="mx-4">
     <!-- Page Title -->
     <div class="col-md-2 pt-2 text-start page-title">
@@ -86,7 +75,6 @@ import type { AxiosResponse } from 'axios';
 import type { TableItem } from 'bootstrap-vue-next';
 
 const loadedData = ref(false);
-const keybindingModal = ref();
 
 type Props = {
   scanId: string;
@@ -117,10 +105,6 @@ const requestedPageNumber = ref(1);
 
 const hasRecords = computed(() => findingList.value.length > 0);
 const skipRowCount = computed(() => (currentPage.value - 1) * perPage.value);
-
-function showKeybindingHelp() {
-  keybindingModal.value.show();
-}
 
 function onPreviousScanChecked(checked: boolean) {
   previousScanChecked.value = checked;

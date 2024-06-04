@@ -94,15 +94,6 @@ describe('FindingsTable tests', () => {
     expect(() => wrapper.vm.markAllAsGone()).not.toThrow();
     expect(() => wrapper.vm.auditThis()).not.toThrow();
 
-    // expect(() => wrapper.vm.toggleFindingDetails(detailed_findings.data[0], 0)).not.toThrow();
-    // expect(() => wrapper.vm.toggleFindingDetails(detailed_findings.data[0], 0)).not.toThrow();
-
-    // expect(() => wrapper.vm.toggleFindingDetails()).not.toThrow();
-    // expect(() => wrapper.vm.toggleFindingDetails()).not.toThrow();
-
-    // expect(() => wrapper.vm.selectDown()).not.toThrow();
-    // expect(() => wrapper.vm.showAuditModal()).not.toThrow();
-
     axios.get.mockResolvedValueOnce({ data: detailed_findings });
     expect(() => wrapper.vm.updateAudit('NOT_ANALYZED', 'Rien a declarer')).not.toThrow();
   });

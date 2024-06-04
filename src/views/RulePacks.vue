@@ -268,7 +268,6 @@ function cancelAction() {
 
 function markAsOutdated() {
   confirmMarkOutdated.value.hide();
-
   if (rulePackSelected.value == null) {
     return;
   }

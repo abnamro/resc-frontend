@@ -78,6 +78,25 @@ const CommonUtils = {
   compareRulePackRead(rulepack_a: RulePackRead, rulepack_b: RulePackRead): 0 | 1 | -1 {
     return CommonUtils.compareVersions(rulepack_a.version, rulepack_b.version);
   },
+
+  stringify_date(val: undefined | Date | string): undefined | string {
+    if (val === undefined) {
+      return undefined;
+    }
+
+    let ret: string = '';
+
+    if (typeof val === 'string') {
+      ret = val;
+    }
+
+    if (val instanceof Date) {
+      ret = val.toISOString();
+    }
+
+    // Only keep the date part, drop the time & TZ
+    return ret.slice(0, 10);
+  },
 };
 
 export function toRaw(

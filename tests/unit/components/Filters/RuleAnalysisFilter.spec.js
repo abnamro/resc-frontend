@@ -150,4 +150,30 @@ describe('RuleAnalysisFilter tests', () => {
     expect(() => wrapper.vm.setRulePackVersionsOnRulePackFilter(['0.0.5'])).not.toThrow();
     axios.get.mockReset();
   });
+
+  it('Given a RuleAnalysisFilter When onStartDateChange then on-filter-change  is emitted', () => {
+    axios.get.mockResolvedValueOnce({ data: rules });
+    axios.get.mockResolvedValueOnce({ rule_tags });
+
+    const wrapper = initMount();
+    expect(wrapper.exists()).toBe(true);
+
+    axios.get.mockResolvedValueOnce({ data: rules });
+    axios.get.mockResolvedValueOnce({ rule_tags });
+    expect(() => wrapper.vm.onStartDateChange()).not.toThrow();
+    axios.get.mockReset();
+  });
+
+  it('Given a RuleAnalysisFilter When onEndDateChange then on-filter-change  is emitted', () => {
+    axios.get.mockResolvedValueOnce({ data: rules });
+    axios.get.mockResolvedValueOnce({ rule_tags });
+
+    const wrapper = initMount();
+    expect(wrapper.exists()).toBe(true);
+
+    axios.get.mockResolvedValueOnce({ data: rules });
+    axios.get.mockResolvedValueOnce({ rule_tags });
+    expect(() => wrapper.vm.onEndDateChange()).not.toThrow();
+    axios.get.mockReset();
+  });
 });

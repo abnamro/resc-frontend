@@ -14,6 +14,7 @@ import SpinnerVue from '@/components/Common/SpinnerVue.vue';
 import { BFormCheckbox, BButton } from 'bootstrap-vue-next';
 import { importFA } from '@/assets/font-awesome';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import { createTestingPinia } from '@pinia/testing';
 
 importFA();
 
@@ -59,6 +60,7 @@ describe('ScanFindings tests', () => {
         FontAwesomeIcon,
       },
       global: {
+        plugins: [createTestingPinia()],
         stubs: {
           AuditModal: true,
           ScanFindingsFilter: true,

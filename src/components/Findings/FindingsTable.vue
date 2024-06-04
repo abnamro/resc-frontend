@@ -1,21 +1,14 @@
 <template>
   <div class="ml-3">
     <!-- Button to audit multiple findings -->
-    <b-button
-      class="float-left mt-2 mb-2"
-      variant="primary"
-      size="sm"
-      id="AuditButton"
-      v-on:click="showAuditModal()"
-      :disabled="auditButtonDisabled"
-      >AUDIT</b-button
-    >
     <!-- Audit Modal -->
     <AuditModal
       ref="auditModal"
       :selectedCheckBoxIds="selectedCheckBoxIds"
       @update-audit="updateAudit"
     />
+    <!-- Column Modal -->
+    <ColumnSelector ref="columnModal" @update-columns="setTableFields" />
   </div>
 
   <div class="py-3">
@@ -23,7 +16,7 @@
       ref="auditTable"
       id="rule-analysis-table"
       :items="findingList"
-      :fields="fields"
+      :fields="fields as TableField[]"
       :current-page="1"
       :per-page="0"
       :selectable="true"
@@ -33,7 +26,28 @@
       small
       head-variant="light"
       @row-clicked="toggleFindingDetails"
+      :caption-top="true"
     >
+      <template #table-caption>
+        <b-button
+          class="d-inline-block me-3"
+          variant="primary"
+          size="sm"
+          id="AuditButton"
+          v-on:click="showAuditModal()"
+          :disabled="auditButtonDisabled"
+          >AUDIT</b-button
+        >
+        <b-button
+          class="d-inline-block"
+          variant="primary"
+          size="sm"
+          id="AuditButton"
+          v-on:click="showColumnSelect()"
+          >Columns</b-button
+        >
+      </template>
+
       <!-- Select all checkboxes -->
       <template #head(select)>
         <b-form-checkbox
@@ -73,14 +87,14 @@
 
       <!-- Path Column -->
       <template #cell(file_path)="data">
-        <span :title="data.item.file_path" class="span-path text-truncate">{{
-          data.item.file_path
-        }}</span>
+        <span :title="data.item.file_path" class="rtl text-nowrap text-truncate d-inline-block">
+          {{ data.item.file_path }}
+        </span>
       </template>
 
-      <!-- Line Column -->
-      <template #cell(line_number)="data">
-        {{ data.item.line_number }}
+      <!-- Status Column -->
+      <template #cell(commit_timestamp)="data">
+        {{ data.item.timestamp.substring(0, 10) }}
       </template>
 
       <!-- Status Column -->
@@ -95,15 +109,7 @@
 
       <!-- Expand Table Row To Display Finding Panel -->
       <template v-slot:row-details="data">
-        <FindingPanel
-          :finding="data.item"
-          :repository="{
-            project_key: data.item.project_key,
-            repository_name: data.item.repository_name,
-            repository_url: data.item.repository_url,
-            vcs_provider: data.item.vcs_provider,
-          }"
-        ></FindingPanel>
+        <FindingPanel :finding="data.item"></FindingPanel>
       </template>
     </b-table>
   </div>
@@ -112,7 +118,8 @@
 import AuditModal from '@/components/ScanFindings/AuditModal.vue';
 import FindingPanel from '@/components/ScanFindings/FindingPanel.vue';
 import type { DetailedFindingRead, FindingStatus } from '@/services/shema-to-types';
-import type { TableItem } from 'bootstrap-vue-next';
+import type { TableField, TableItem } from 'bootstrap-vue-next';
+import { BTable, BFormCheckbox, BButton } from 'bootstrap-vue-next';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import FindingsService from '@/services/findings-service';
 import AxiosConfig from '@/configuration/axios-config';
@@ -120,7 +127,9 @@ import { onKeyStroke } from '@vueuse/core';
 import { shouldIgnoreKeystroke } from '@/utils/keybind-utils';
 import { computed, ref } from 'vue';
 import { watch } from 'vue';
-import { BTable, BFormCheckbox, BButton } from 'bootstrap-vue-next';
+import ColumnUtils, { type SimpleTableField, type TableColumn } from '@/utils/column-utils';
+import { useAuthUserStore } from '@/store';
+import ColumnSelector from '@/components/Findings/ColumnSelector.vue';
 
 type TableItemDetailedFindingRead = DetailedFindingRead & TableItem;
 
@@ -132,84 +141,25 @@ type Props = {
 const props = defineProps<Props>();
 
 const auditModal = ref();
+const columnModal = ref();
 const auditTable = ref();
 
 const findingList = ref(props.findings as TableItemDetailedFindingRead[]);
 const selectedCheckBoxIds = ref([] as number[]);
 const allSelected = ref(false);
-const fields = ref([
-  {
-    key: 'select',
-    label: '',
-    class: 'text-start position-sticky',
-    thStyle: { borderTop: '0px' },
-  },
-  {
-    key: 'toggle_row',
-    label: '',
-    class: 'text-start position-sticky',
-    thStyle: { borderTop: '0px' },
-  },
-  {
-    key: 'project_key',
-    sortable: false,
-    label: 'Project',
-    class: 'text-start position-sticky',
-    thStyle: { borderTop: '0px' },
-  },
-  {
-    key: 'repository_name',
-    sortable: false,
-    label: 'Repository',
-    class: 'text-start position-sticky',
-    thStyle: { borderTop: '0px' },
-  },
-  {
-    key: 'rule_name',
-    sortable: false,
-    label: 'Rule',
-    class: 'text-start position-sticky',
-    thStyle: { borderTop: '0px' },
-  },
-  {
-    key: 'file_path',
-    sortable: false,
-    label: 'File Path',
-    class: 'text-start position-sticky',
-    thStyle: { borderTop: '0px' },
-  },
-  {
-    key: 'line_number',
-    sortable: false,
-    label: 'Line',
-    class: 'text-start position-sticky',
-    thStyle: { borderTop: '0px' },
-  },
-  {
-    key: 'status',
-    sortable: false,
-    label: 'Status',
-    class: 'text-end position-sticky',
-    thStyle: { borderTop: '0px' },
-  },
-]);
-
-if (!props.is_rule_finding) {
-  // remove project_key
-  // remove repository_name
-  fields.value.splice(2, 2);
-  fields.value.push({
-    key: 'scanType',
-    sortable: false,
-    label: 'Scan Type',
-    class: 'text-start position-sticky',
-    thStyle: { borderTop: '0px' },
-  });
-}
+const fields = ref([] as SimpleTableField[]);
 
 const auditButtonDisabled = computed(() => selectedCheckBoxIds.value.length <= 0);
 const selectedIndex = ref(undefined as number | undefined);
+const store = useAuthUserStore();
 const emit = defineEmits(['refresh-table']);
+
+function setTableFields(selectedColumns: TableColumn[] = []) {
+  // @ts-ignore ignore TS2589
+  fields.value = ColumnUtils.getColumns(selectedColumns, store.tableColumns, props.is_rule_finding);
+}
+
+setTableFields();
 
 function selectSingleCheckbox() {
   allSelected.value = false;
@@ -236,6 +186,10 @@ function toggleAllCheckboxes() {
 
 function showAuditModal() {
   auditModal.value.show();
+}
+
+function showColumnSelect() {
+  columnModal.value.show();
 }
 
 function updateAudit(status: FindingStatus, comment: string) {
@@ -474,6 +428,9 @@ watch(
   () => props.findings,
   (findings, _prevFindings) => {
     findingList.value = findings;
+    selectedCheckBoxIds.value = [];
+    allSelected.value = false;
+    selectedIndex.value = undefined;
   },
 );
 </script>

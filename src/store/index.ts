@@ -1,3 +1,4 @@
+import type { TableColumn } from '@/utils/column-utils';
 import AxiosConfig from '@/configuration/axios-config';
 import ScanFindingsService from '@/services/scan-findings-service';
 import type { FindingStatus, RulePackRead } from '@/services/shema-to-types';
@@ -24,6 +25,7 @@ type ActionsStore = {
   update_destination_route: (destinationRoute: string | null) => void;
   update_user_details: (userDetails: UserDetails | null) => void;
   update_previous_route_state: (previousRouteState: string | null | PreviousRouteState) => void;
+  update_table_column: (columns: TableColumn[]) => void;
   clear_finding_status_list: () => void;
 };
 
@@ -43,6 +45,7 @@ interface State {
   email: null | string;
   previousRouteState: null | string | PreviousRouteState;
   findingStatusList: null | FindingStatus[];
+  tableColumns: TableColumn[];
 }
 
 export const useAuthUserStore: () => Store<'authUser', State, GettersStore, ActionsStore> =
@@ -58,6 +61,7 @@ export const useAuthUserStore: () => Store<'authUser', State, GettersStore, Acti
       email: null,
       previousRouteState: null,
       findingStatusList: [],
+      tableColumns: [],
     }),
     getters: {
       get_finding_status_list(): FindingStatus[] {
@@ -95,6 +99,9 @@ export const useAuthUserStore: () => Store<'authUser', State, GettersStore, Acti
       },
       clear_finding_status_list() {
         this.findingStatusList = null;
+      },
+      update_table_column(columns: TableColumn[]) {
+        this.tableColumns = columns;
       },
     },
     modules: {},

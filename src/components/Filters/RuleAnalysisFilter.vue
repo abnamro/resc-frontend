@@ -14,7 +14,7 @@
         <FindingStatusFilter @on-findings-status-change="onFindingsStatusChange" />
       </div>
       <div class="col-md-2 mt-1 ml-1 pt-1">
-        <b-button variant="primary" class="mt-4" size="sm" @click="toggleAdvancedSearch">
+        <b-button variant="primary" class="mt-4 w-100" size="sm" @click="toggleAdvancedSearch">
           Advanced Search
         </b-button>
       </div>
@@ -45,40 +45,43 @@
 
         <div class="row pt-1">
           <!-- Start Date Filter -->
-          <!-- <div class="col-md-3">
+          <div class="col-md-2">
             <b-form-group class="label-title text-start" label="From Date" label-for="start-date">
-              <b-form-datepicker
+              <VueDatePicker
                 id="start-date"
-                size="md"
                 placeholder="Enter Scan Start Date"
-                selected-variant="success"
-                reset-button
+                :enable-time-picker="false"
                 v-model="startDate"
-                :max="todaysDate"
-                @input="onStartDateChange"
-              ></b-form-datepicker>
+                format="dd/MM/yyyy"
+                @update:model-value="onStartDateChange"
+                :max-date="todaysDate"
+                auto-apply
+                no-today
+              ></VueDatePicker>
             </b-form-group>
-          </div> -->
+          </div>
 
           <!-- End Date Filter -->
-          <!-- <div class="col-md-3">
+          <div class="col-md-2">
             <b-form-group class="label-title text-start" label="To Date" label-for="end-date">
-              <b-form-datepicker
+              <VueDatePicker
                 id="end-date"
-                size="md"
                 placeholder="Enter Scan End Date"
-                selected-variant="success"
-                reset-button
-                v-model="endDate"
-                :min="minEndDate"
-                :max="todaysDate"
+                :enable-time-picker="false"
+                v-model="startDate"
+                format="dd/MM/yyyy"
+                @update:model-value="onEndDateChange"
+                :min-date="minEndDate"
+                :max-date="todaysDate"
                 :disabled="endDateDisabled"
-                @input="onEndDateChange"
-              ></b-form-datepicker>
+                auto-apply
+                no-today
+              >
+              </VueDatePicker>
             </b-form-group>
-          </div> -->
+          </div>
 
-          <div class="col-md-4">
+          <div class="col-md-3">
             <RulePackFilter
               :rulePackPreSelected="props.rulePackPreSelected"
               :rulePackOptions="props.rulePackOptions"
@@ -110,15 +113,18 @@ import RepositoryFilter from '@/components/Filters/RepositoryFilter.vue';
 import RuleFilter from '@/components/Filters/RuleFilter.vue';
 import RulePackService from '@/services/rule-pack-service';
 import RuleService from '@/services/rule-service';
+import CommonUtils from '@/utils/common-utils';
 import { useAuthUserStore, type PreviousRouteState } from '@/store/index';
 import VcsProviderFilter from '@/components/Filters/VcsProviderFilter.vue';
 import RulePackFilter from '@/components/Filters/RulePackFilter.vue';
 import RuleTagsFilter from '@/components/Filters/RuleTagsFilter.vue';
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import type { FindingStatus, RulePackRead, VCSProviders } from '@/services/shema-to-types';
 import type { Ref } from 'vue';
 import { onKeyStroke } from '@vueuse/core';
 import { shouldIgnoreKeystroke } from '@/utils/keybind-utils';
+import VueDatePicker from '@vuepic/vue-datepicker';
+import '@vuepic/vue-datepicker/dist/main.css';
 
 type Props = {
   projectOptions?: string[];
@@ -148,8 +154,8 @@ export type RuleAnalysisFilter = {
 
 const optionsRules = ref([] as string[]);
 const optionsRuleTags = ref([] as string[]);
-const startDate = ref(undefined) as Ref<string | undefined>;
-const endDate = ref(undefined) as Ref<string | undefined>;
+const startDate = ref(undefined) as Ref<Date | string | undefined>;
+const endDate = ref(undefined) as Ref<Date | string | undefined>;
 
 const selectedVcsProvider = ref([] as VCSProviders[]);
 const selectedStatus = ref([] as FindingStatus[]);
@@ -162,27 +168,27 @@ const advancedSearchVisible = ref(false);
 
 const emit = defineEmits(['on-filter-change']);
 
-// const todaysDate = computed(() => {
-//   const now = new Date();
-//   const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-//   return new Date(today);
-// });
-// const minEndDate = computed(() => {
-//   return startDate.value;
-// });
-// const endDateDisabled = computed(() => {
-//   return startDate.value ? false : true;
-// });
+const todaysDate = computed(() => {
+  const now = new Date();
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  return new Date(today).toISOString();
+});
+const minEndDate = computed(() => {
+  return startDate.value ?? '';
+});
+const endDateDisabled = computed(() => {
+  return startDate.value ? false : true;
+});
 
-// function onStartDateChange() {
-//   fetchAllDetectedRules();
-//   handleFilterChange();
-// }
+function onStartDateChange() {
+  fetchAllDetectedRules();
+  handleFilterChange();
+}
 
-// function onEndDateChange() {
-//   fetchAllDetectedRules();
-//   handleFilterChange();
-// }
+function onEndDateChange() {
+  fetchAllDetectedRules();
+  handleFilterChange();
+}
 
 function onVcsProviderChange(vcsProvider: VCSProviders[]) {
   selectedVcsProvider.value = vcsProvider;
@@ -240,8 +246,8 @@ function handleFilterChange() {
     }
   }
   const filterObj: RuleAnalysisFilter = {
-    startDate: startDate.value,
-    endDate: endDate.value,
+    startDate: CommonUtils.stringify_date(startDate.value),
+    endDate: CommonUtils.stringify_date(endDate.value),
     vcsProvider: selectedVcsProvider.value,
     status: selectedStatus.value,
     project: selectedProject.value,
@@ -265,8 +271,8 @@ function fetchAllDetectedRules() {
     selectedVcsProvider.value,
     selectedProject.value,
     selectedRepository.value,
-    startDate.value,
-    endDate.value,
+    CommonUtils.stringify_date(startDate.value),
+    CommonUtils.stringify_date(endDate.value),
     rulePackVersionsFetched,
   )
     .then((response) => {
@@ -318,8 +324,8 @@ function applyRuleFilterInRuleAnalysisPage() {
     destinationRoute === '/rule-analysis'
   ) {
     const filterObj: RuleAnalysisFilter = {
-      startDate: startDate.value,
-      endDate: endDate.value,
+      startDate: CommonUtils.stringify_date(startDate.value),
+      endDate: CommonUtils.stringify_date(endDate.value),
       vcsProvider: selectedVcsProvider.value,
       status: selectedStatus.value,
       project: selectedProject.value,
