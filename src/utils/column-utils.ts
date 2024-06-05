@@ -1,18 +1,21 @@
 import type { StyleValue } from 'vue';
 
-export type TableColumn =
-  | 'select'
-  | 'toggle_row'
-  | 'project_key'
-  | 'repository_name'
-  | 'rule_name'
-  | 'file_path'
-  | 'line_number'
-  | 'commit_timestamp'
-  | 'scanType'
-  | 'timestamp'
-  | 'vcs_provider'
-  | 'status';
+const _defaultColumns = [
+  'select',
+  'toggle_row',
+  'project_key',
+  'repository_name',
+  'rule_name',
+  'file_path',
+  'line_number',
+  'commit_timestamp',
+  'timestamp',
+  'scanType',
+  'vcs_provider',
+  'status',
+];
+
+export type TableColumn = (typeof _defaultColumns)[number];
 
 export type SimpleTableField = {
   key: string;
@@ -69,23 +72,6 @@ const ColumnUtils = {
     return baseCss + 'text-start';
   },
 
-  _defaultColumns(): TableColumn[] {
-    return [
-      'select',
-      'toggle_row',
-      'project_key',
-      'repository_name',
-      'rule_name',
-      'file_path',
-      'line_number',
-      'commit_timestamp',
-      'timestamp',
-      'scanType',
-      'vcs_provider',
-      'status',
-    ];
-  },
-
   selectableColumns(): TableColumn[] {
     return [
       'project_key',
@@ -132,7 +118,7 @@ const ColumnUtils = {
     memoryColumns: TableColumn[] = [],
     isRuleFinding: boolean,
   ): SimpleTableField[] {
-    const defaultColumns = ColumnUtils._defaultColumns();
+    const defaultColumns = _defaultColumns;
 
     // Get default selected Columns if the selection is empty.
     if (selectedColumns.length === 0) {
