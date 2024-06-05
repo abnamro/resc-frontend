@@ -79,6 +79,7 @@ const ColumnUtils = {
       'file_path',
       'line_number',
       'commit_timestamp',
+      'timestamp',
       'scanType',
       'vcs_provider',
       'status',
