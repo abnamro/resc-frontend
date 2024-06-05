@@ -97,6 +97,11 @@
         {{ data.item.commit_timestamp.substring(0, 10) }}
       </template>
 
+      <!-- Scan timestamp Column -->
+      <template #cell(timestamp)="data">
+        {{ data.item.timestamp.substring(0, 10) }}
+      </template>
+
       <!-- Status Column -->
       <template #cell(status)="data">
         <FindingStatusBadge :status="data.item.status ?? 'NOT_ANALYZED'" />

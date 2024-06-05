@@ -10,6 +10,7 @@ export type TableColumn =
   | 'line_number'
   | 'commit_timestamp'
   | 'scanType'
+  | 'timestamp'
   | 'vcs_provider'
   | 'status';
 
@@ -45,6 +46,7 @@ const ColumnUtils = {
       vcs_provider: 'VCS provider',
       status: 'Status',
       scanType: 'Scan Type',
+      timestamp: 'Scan Date',
     };
     type LabelKey = keyof typeof labels;
 
@@ -93,6 +95,7 @@ const ColumnUtils = {
       'commit_timestamp',
       'scanType',
       'vcs_provider',
+      'timestamp',
     ];
   },
 
