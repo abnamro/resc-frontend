@@ -3,6 +3,7 @@
 [![BootstrapVue][bootstrapvue-shield]][bootstrapvue-url]
 [![Chart.js][chartjs-shield]][chartjs-url]
 [![CI][ci-shield]][ci-url]
+[![OpenSSF Scorecard][ossf-shield]][ossf-url]
 [![SonarCloud][sonar-cloud-shield]][sonar-cloud-url]
 
 > [!NOTE]  
@@ -114,3 +115,5 @@ Compiles and minifies for production: ```npm run build```
 [ci-url]: https://github.com/abnamro/repository-scanner/actions/workflows/frontend-ci.yaml
 [sonar-cloud-shield]: https://sonarcloud.io/api/project_badges/measure?project=abnamro-resc_resc-frontend&metric=alert_status
 [sonar-cloud-url]: https://sonarcloud.io/summary/new_code?id=abnamro-resc_resc-frontend
+[ossf-shield]: https://api.securityscorecards.dev/projects/github.com/abnamro/resc-frontend/badge
+[ossf-url]: https://securityscorecards.dev/viewer/?uri=github.com/abnamro/resc-frontend
