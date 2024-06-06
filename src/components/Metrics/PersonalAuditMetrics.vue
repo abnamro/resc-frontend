@@ -11,39 +11,39 @@
     <div class="mx-4 pt-2">
       <b-card-group class="col-md-12" deck>
         <CardVue
-          :cardTitle="todayAuditTitle"
+          cardTitle="Today"
           :cardBodyContent="todayAuditCount"
-          :titleIcon="tootltipIcon"
-          :titleIconColor="tootltipIconColor"
-          :titleIconTooltip="todayAuditTooltip"
+          titleIcon="info-circle"
+          titleIconColor="#948C8C"
+          titleIconTooltip="Total number of findings you triaged today"
         />
         <CardVue
-          :cardTitle="currentWeekAuditTitle"
+          cardTitle="Current Week"
           :cardBodyContent="currentWeekAuditCount"
-          :titleIcon="tootltipIcon"
-          :titleIconColor="tootltipIconColor"
-          :titleIconTooltip="currentWeekAuditTooltip"
+          titleIcon="info-circle"
+          titleIconColor="#948C8C"
+          titleIconTooltip="Total number of findings you triaged this week"
         />
         <CardVue
-          :cardTitle="currentMonthAuditTitle"
+          :cardTitle="`${DateUtils.getCurrentMonth()}-${DateUtils.getCurrentYear()}`"
           :cardBodyContent="currentMonthAuditCount"
-          :titleIcon="tootltipIcon"
-          :titleIconColor="tootltipIconColor"
-          :titleIconTooltip="currentMonthAuditTooltip"
+          titleIcon="info-circle"
+          titleIconColor="#948C8C"
+          titleIconTooltip="Total number of findings you triaged this month"
         />
         <CardVue
-          :cardTitle="currentYearAuditTitle"
+          :cardTitle="`Year-${DateUtils.getCurrentYear()}`"
           :cardBodyContent="currentYearAuditCount"
-          :titleIcon="tootltipIcon"
-          :titleIconColor="tootltipIconColor"
-          :titleIconTooltip="currentYearAuditTooltip"
+          titleIcon="info-circle"
+          titleIconColor="#948C8C"
+          titleIconTooltip="Total number of findings you triaged this year"
         />
         <CardVue
-          :cardTitle="allTimeAuditTitle"
+          cardTitle="All Time"
           :cardBodyContent="allTimeAuditCount"
-          :titleIcon="tootltipIcon"
-          :titleIconColor="tootltipIconColor"
-          :titleIconTooltip="allTimeAuditTooltip"
+          titleIcon="info-circle"
+          titleIconColor="#948C8C"
+          titleIconTooltip="Total number of findings you triaged till today"
         />
       </b-card-group>
     </div>
@@ -59,14 +59,14 @@
 
         <b-card-group deck>
           <CardVue
-            :cardTitle="currentWeekAuditTrendTitle"
+            cardTitle="Current Week"
             :cardBodyContent="currentWeekAuditTrendPercentageCount"
             :contentColor="currentWeekAuditTrendContentColor"
             :contentIcon="currentWeekAuditTrendIcon"
             :contentIconColor="currentWeekAuditTrendIconColor"
-            :titleIcon="tootltipIcon"
-            :titleIconColor="tootltipIconColor"
-            :titleIconTooltip="currentWeekAuditTrendTooltip"
+            titleIcon="info-circle"
+            titleIconColor="#948C8C"
+            titleIconTooltip="Your audit trend this week in comparison to last week"
           />
         </b-card-group>
       </div>
@@ -79,17 +79,70 @@
 
         <b-card-group deck>
           <CardVue
-            :cardTitle="weeklyRankTitle"
+            cardTitle="Current Week"
             :cardBodyContent="weeklyRankLabel"
             :contentColor="weeklyRankContentColor"
             :contentIcon="weeklyRankIcon"
             :contentIconColor="weeklyRankIconColor"
-            :titleIcon="tootltipIcon"
-            :titleIconColor="tootltipIconColor"
-            :titleIconTooltip="weeklyRankTooltip"
+            titleIcon="info-circle"
+            titleIconColor="#948C8C"
+            titleIconTooltip="Your rank based on number of findings you triaged in current week"
           />
         </b-card-group>
       </div>
+    </div>
+  </div>
+
+  <div v-if="loadedData">
+    <div class="mx-4 pt-4 text-start page-title">
+      <h5 class="pt-5 text-nowrap">Audit Statistics</h5>
+    </div>
+
+    <div class="mx-4 pt-2">
+      <b-card-group class="col-md-12" deck>
+        <CardVue
+          :cardTitle="CommonUtils.formatStatusLabels('TRUE_POSITIVE')"
+          :cardBodyContent="truePositive"
+          titleIcon="info-circle"
+          titleIconColor="#948C8C"
+          :titleIconTooltip="`Number of ${CommonUtils.formatStatusLabels('TRUE_POSITIVE')} audited.`"
+        />
+        <CardVue
+          :cardTitle="CommonUtils.formatStatusLabels('FALSE_POSITIVE')"
+          :cardBodyContent="falsePositive"
+          titleIcon="info-circle"
+          titleIconColor="#948C8C"
+          :titleIconTooltip="`Number of ${CommonUtils.formatStatusLabels('FALSE_POSITIVE')} audited.`"
+        />
+        <CardVue
+          :cardTitle="CommonUtils.formatStatusLabels('NOT_ACCESSIBLE')"
+          :cardBodyContent="notAccessible"
+          titleIcon="info-circle"
+          titleIconColor="#948C8C"
+          :titleIconTooltip="`Number of ${CommonUtils.formatStatusLabels('NOT_ACCESSIBLE')} audited.`"
+        />
+        <CardVue
+          :cardTitle="CommonUtils.formatStatusLabels('NOT_ANALYZED')"
+          :cardBodyContent="notAnalyzed"
+          titleIcon="info-circle"
+          titleIconColor="#948C8C"
+          :titleIconTooltip="`Number of ${CommonUtils.formatStatusLabels('NOT_ANALYZED')} audited.`"
+        />
+        <CardVue
+          :cardTitle="CommonUtils.formatStatusLabels('CLARIFICATION_REQUIRED')"
+          :cardBodyContent="clarificationRequired"
+          titleIcon="info-circle"
+          titleIconColor="#948C8C"
+          :titleIconTooltip="`Number of ${CommonUtils.formatStatusLabels('CLARIFICATION_REQUIRED')} audited.`"
+        />
+        <CardVue
+          :cardTitle="CommonUtils.formatStatusLabels('OUTDATED')"
+          :cardBodyContent="outdated"
+          titleIcon="info-circle"
+          titleIconColor="#948C8C"
+          :titleIconTooltip="`Number of ${CommonUtils.formatStatusLabels('OUTDATED')} audited.`"
+        />
+      </b-card-group>
     </div>
   </div>
 </template>
@@ -97,6 +150,7 @@
 import AxiosConfig from '@/configuration/axios-config';
 import CardVue, { type CardIcon } from '@/components/Common/CardVue.vue';
 import DateUtils from '@/utils/date-utils';
+import CommonUtils from '@/utils/common-utils';
 import MetricsService from '@/services/metrics-service';
 import SpinnerVue from '@/components/Common/SpinnerVue.vue';
 import { ref, type Ref } from 'vue';
@@ -107,43 +161,29 @@ const loadedData = ref(false);
 
 const lastWeekAuditCount = ref(0);
 
-const todayAuditTitle = ref('Today');
 const todayAuditCount = ref(0);
-const todayAuditTooltip = ref('Total number of findings you triaged today');
-
-const currentWeekAuditTitle = ref('Current Week');
 const currentWeekAuditCount = ref(0);
-const currentWeekAuditTooltip = ref('Total number of findings you triaged this week');
-
-const currentMonthAuditTitle = ref(`${DateUtils.getCurrentMonth()}-${DateUtils.getCurrentYear()}`);
 const currentMonthAuditCount = ref(0);
-const currentMonthAuditTooltip = ref('Total number of findings you triaged this month');
-
-const currentYearAuditTitle = ref(`Year-${DateUtils.getCurrentYear()}`);
 const currentYearAuditCount = ref(0);
-const currentYearAuditTooltip = ref('Total number of findings you triaged this year');
-
-const allTimeAuditTitle = ref('All Time');
 const allTimeAuditCount = ref(0);
-const allTimeAuditTooltip = ref('Total number of findings you triaged till date');
 
-const currentWeekAuditTrendTitle = ref('Current Week');
+const truePositive = ref(0);
+const falsePositive = ref(0);
+const notAccessible = ref(0);
+const notAnalyzed = ref(0);
+const clarificationRequired = ref(0);
+const outdated = ref(0);
+
 const currentWeekAuditTrendPercentageCount = ref('0%');
 const currentWeekAuditTrendIcon = ref(undefined) as Ref<CardIcon | undefined>;
 const currentWeekAuditTrendIconColor = ref(undefined) as Ref<string | undefined>;
 const currentWeekAuditTrendContentColor = ref(undefined) as Ref<string | undefined>;
-const currentWeekAuditTrendTooltip = ref('Your audit trend this week in comparison to last week');
 
-const weeklyRankTitle = ref('Current Week');
 const weeklyRankValue = ref(0) as Ref<string | number>;
 const weeklyRankLabel = ref(undefined) as Ref<string | undefined>;
 const weeklyRankIcon = ref(undefined) as Ref<CardIcon | undefined>;
 const weeklyRankIconColor = ref(undefined) as Ref<string | undefined>;
 const weeklyRankContentColor = ref(undefined) as Ref<string | undefined>;
-const weeklyRankTooltip = ref('Your rank based on number of findings you triaged in current week');
-
-const tootltipIcon = ref('info-circle') as Ref<CardIcon>;
-const tootltipIconColor = ref('#948C8C');
 
 function isDecimal(num: number): boolean {
   return num % 1 !== 0;
@@ -243,6 +283,13 @@ MetricsService.getPersonalAuditMetrics()
     currentYearAuditCount.value = response.data.current_year ?? 0;
     allTimeAuditCount.value = response.data.forever ?? 0;
     weeklyRankValue.value = response.data.rank_current_week ?? 0;
+
+    truePositive.value = response.data.forever_breakdown?.true_positive ?? 0;
+    falsePositive.value = response.data.forever_breakdown?.false_positive ?? 0;
+    notAccessible.value = response.data.forever_breakdown?.not_accessible ?? 0;
+    notAnalyzed.value = response.data.forever_breakdown?.not_analyzed ?? 0;
+    clarificationRequired.value = response.data.forever_breakdown?.clarification_required ?? 0;
+    outdated.value = response.data.forever_breakdown?.outdated ?? 0;
     weeklyRankLabel.value = formatWeeklyRankLabel(response.data.rank_current_week ?? 0);
 
     currentWeekAuditTrendPercentageCount.value = calculateAuditTrendInPercentage();

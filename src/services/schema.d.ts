@@ -783,6 +783,25 @@ export interface components {
        */
       timestamp: string;
     };
+    /** AuditorMetric */
+    AuditorMetric: {
+      /** Auditor */
+      auditor: string;
+      /** True Positive */
+      true_positive: number;
+      /** False Positive */
+      false_positive: number;
+      /** Clarification Required */
+      clarification_required: number;
+      /** Not Accessible */
+      not_accessible: number;
+      /** Outdated */
+      outdated: number;
+      /** Not Analyzed */
+      not_analyzed: number;
+      /** Total */
+      total: number;
+    };
     /** Body_upload_rule_pack_toml_file_resc_v1_rule_packs_post */
     Body_upload_rule_pack_toml_file_resc_v1_rule_packs_post: {
       /**
@@ -1019,6 +1038,15 @@ export interface components {
      */
     Model400: Record<string, never>;
     /**
+     * Model403
+     * @description Response schema to be used for a 403 FORBIDDEN.
+     * @example {
+     *   "data": {},
+     *   "detail": "Action Forbidden"
+     * }
+     */
+    Model403: Record<string, never>;
+    /**
      * Model404
      * @description Response schema to be used for a 404 NOT FOUND.
      * @example {
@@ -1233,6 +1261,7 @@ export interface components {
        * @default 0
        */
       rank_current_week?: number;
+      forever_breakdown?: components['schemas']['AuditorMetric'];
     };
     /** RepositoryCreate */
     RepositoryCreate: {
@@ -1346,6 +1375,11 @@ export interface components {
        * Format: date-time
        */
       created: string;
+    };
+    /** RulePackVersion */
+    RulePackVersion: {
+      /** Version */
+      version: string;
     };
     /** ScanCreate */
     ScanCreate: {
@@ -1849,16 +1883,22 @@ export interface operations {
    * - **return**: int The number of findings marked.
    */
   mark_rule_pack_as_outdated_resc_v1_rule_packs_mark_as_outdated_post: {
-    parameters: {
-      query: {
-        version: string;
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['RulePackVersion'];
       };
     };
     responses: {
       /** @description Rulepack successfully updated */
       200: {
         content: {
-          'application/json': number;
+          'application/json': Record<string, never>;
+        };
+      };
+      /** @description Rule-pack version <version_id> is active */
+      403: {
+        content: {
+          'application/json': components['schemas']['Model403'];
         };
       };
       /** @description Rule-pack version <version_id> does not exists */
