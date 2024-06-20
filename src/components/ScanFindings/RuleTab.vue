@@ -3,7 +3,7 @@
     <b-tab title="RULE" title-item-class="tab-pills" v-on:click="fetchRuleForRulePack">
       <SpinnerVue v-if="!loadedData" />
 
-      <div class="pr-1" v-if="loadedData">
+      <div class="pr-1" v-if="loadedData && rule">
         <b-card-text v-if="rule?.description"
           ><span class="fw-bold">Description: </span>{{ rule.description }}</b-card-text
         >
@@ -16,6 +16,9 @@
         <b-card-text v-if="rule?.comment"
           ><span class="fw-bold">Comment: </span>{{ rule.comment }}</b-card-text
         >
+      </div>
+      <div class="pr-1" v-if="loadedData && !rule">
+          Rule not found.
       </div>
     </b-tab>
   </div>
@@ -44,9 +47,9 @@ function fetchRuleForRulePack() {
     .then((response) => {
       rule.value = response.data;
       loadedData.value = true;
-      console.log(rule.value);
     })
     .catch((error) => {
+        loadedData.value = true;
       AxiosConfig.handleError(error);
     });
 }
