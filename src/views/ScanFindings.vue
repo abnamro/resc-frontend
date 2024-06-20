@@ -100,7 +100,7 @@ const statusFilter = ref(undefined) as Ref<FindingStatus[] | undefined>;
 const totalRows = ref(0);
 const currentPage = ref(1);
 const perPage = ref(Number(`${Config.value('defaultPageSize')}`));
-const pageSizes = ref([20, 50, 100]);
+const pageSizes = ref([20, 50, 100, 1000]);
 const requestedPageNumber = ref(1);
 
 const hasRecords = computed(() => findingList.value.length > 0);
