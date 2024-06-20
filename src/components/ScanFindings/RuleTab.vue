@@ -17,9 +17,7 @@
           ><span class="fw-bold">Comment: </span>{{ rule.comment }}</b-card-text
         >
       </div>
-      <div class="pr-1" v-if="loadedData && !rule">
-          Rule not found.
-      </div>
+      <div class="pr-1" v-if="loadedData && !rule">Rule not found.</div>
     </b-tab>
   </div>
 </template>
@@ -49,7 +47,7 @@ function fetchRuleForRulePack() {
       loadedData.value = true;
     })
     .catch((error) => {
-        loadedData.value = true;
+      loadedData.value = true;
       AxiosConfig.handleError(error);
     });
 }

@@ -161,4 +161,4 @@ describe('function getRuleFromRulePack', () => {
       expect(response).toEqual(rule);
     });
   });
-})
+});
