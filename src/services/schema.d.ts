@@ -128,6 +128,18 @@ export interface paths {
      */
     post: operations['mark_rule_pack_as_outdated_resc_v1_rule_packs_mark_as_outdated_post'];
   };
+  '/resc/v1/rule-packs/{rule_pack_version}/rules': {
+    /**
+     * Get unique rule from rule pack
+     * @description Retrieve the rule data from a rule_name and rule_pack
+     *
+     * - **db_connection**: Session of the database connection
+     * - **rule_pack_version**: filter on rule pack version
+     * - **rule_name**: filter on rule pack version
+     * - **return**: List[str] The output will contain a list of strings of unique rules in the findings table
+     */
+    get: operations['get_rule_from_rule_pack_resc_v1_rule_packs__rule_pack_version__rules_get'];
+  };
   '/resc/v1/findings': {
     /**
      * Get findings
@@ -1381,6 +1393,31 @@ export interface components {
       /** Version */
       version: string;
     };
+    /** RuleRead */
+    RuleRead: {
+      /** Rule Name */
+      rule_name: string;
+      /** Description */
+      description?: string;
+      /** Comment */
+      comment?: string;
+      /** Entropy */
+      entropy?: number;
+      /** Secret Group */
+      secret_group?: number;
+      /** Regex */
+      regex?: string;
+      /** Path */
+      path?: string;
+      /** Keywords */
+      keywords?: string;
+      /** Rule Pack */
+      rule_pack: string;
+      /** Allow List */
+      allow_list?: number;
+      /** Id */
+      id_: number;
+    };
     /** ScanCreate */
     ScanCreate: {
       /** @default BASE */
@@ -1908,6 +1945,53 @@ export interface operations {
         };
       };
       /** @description Version <version_id> is not a valid semantic version */
+      422: {
+        content: {
+          'application/json': components['schemas']['Model422'];
+        };
+      };
+      /** @description Internal server error. Contact your system administrator */
+      500: {
+        content: never;
+      };
+      /** @description Unable to communicate with DataBase, Please contact your system administrator */
+      503: {
+        content: never;
+      };
+    };
+  };
+  /**
+   * Get unique rule from rule pack
+   * @description Retrieve the rule data from a rule_name and rule_pack
+   *
+   * - **db_connection**: Session of the database connection
+   * - **rule_pack_version**: filter on rule pack version
+   * - **rule_name**: filter on rule pack version
+   * - **return**: List[str] The output will contain a list of strings of unique rules in the findings table
+   */
+  get_rule_from_rule_pack_resc_v1_rule_packs__rule_pack_version__rules_get: {
+    parameters: {
+      query: {
+        rule_name: string;
+      };
+      path: {
+        rule_pack_version: string;
+      };
+    };
+    responses: {
+      /** @description Retrieve the rule data for a rule pack */
+      200: {
+        content: {
+          'application/json': components['schemas']['RuleRead'];
+        };
+      };
+      /** @description Scan <scan_id> not found */
+      404: {
+        content: {
+          'application/json': components['schemas']['Model404'];
+        };
+      };
+      /** @description RulePackVersion and RuleName required */
       422: {
         content: {
           'application/json': components['schemas']['Model422'];

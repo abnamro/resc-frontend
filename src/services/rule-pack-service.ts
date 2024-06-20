@@ -82,6 +82,17 @@ const RulePackService = {
       version: toRaw(rulePackVersion),
     });
   },
+
+  async getRuleFromRulePack(
+    rulePackVersion: string,
+    ruleId: string,
+  ): Promise<
+    AxiosResponse<
+      paths['/resc/v1/rule-packs/{rule_pack_version}/rules']['get']['responses']['200']['content']['application/json']
+    >
+  > {
+    return axios.get(`/rule-packs/${rulePackVersion}/rules?rule_name=${ruleId}`);
+  },
 };
 
 export default RulePackService;

@@ -10,7 +10,6 @@
       </div>
 
       <div class="pr-1" v-if="hasRecords">
-        <!-- sticky-header="230px" -->
         <b-table
           id="audit-history-table"
           :items="auditList"
