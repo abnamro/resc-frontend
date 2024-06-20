@@ -1,0 +1,12 @@
+{
+    "data": {
+      "rule_name": "rule1",
+      "description": "some description",
+      "comment": "some comment for CLI",
+      "regex": "BEGIN PRIVATE KEY some base64 fluff END PRIVATE KEY",
+      "path": "something.pem",
+      "rule_pack": "1.0.0",
+      "allow_list": 0,
+      "id_": 15
+    }
+  }

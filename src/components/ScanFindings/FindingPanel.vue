@@ -37,6 +37,7 @@
           <b-tabs pills card>
             <AuditTab :finding="findingRef"></AuditTab>
             <HistoryTab :finding="findingRef"></HistoryTab>
+            <RuleTab :ruleName="findingRef.rule_name" :rulePack="findingRef.rule_pack"></RuleTab>
           </b-tabs>
         </b-card>
       </div>
@@ -47,6 +48,7 @@
 <script setup lang="ts">
 import AuditTab from '@/components/ScanFindings/AuditTab.vue';
 import HistoryTab from '@/components/ScanFindings/HistoryTab.vue';
+import RuleTab from '@/components/ScanFindings/RuleTab.vue';
 import type { AugmentedDetailedFindingRead } from '@/services/shema-to-types';
 import { ref } from 'vue';
 

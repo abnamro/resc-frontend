@@ -44,6 +44,7 @@ export type RepositoryEnrichedRead = components['schemas']['RepositoryEnrichedRe
 export type RepositoryRead = components['schemas']['RepositoryRead'];
 export type RuleFindingCountModel = components['schemas']['RuleFindingCountModel'];
 export type RulePackRead = components['schemas']['RulePackRead'];
+export type RuleRead = components['schemas']['RuleRead'];
 export type ScanCreate = components['schemas']['ScanCreate'];
 export type ScanRead = components['schemas']['ScanRead'];
 export type ScanType = components['schemas']['ScanType'];

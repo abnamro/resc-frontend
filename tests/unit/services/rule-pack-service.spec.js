@@ -3,6 +3,7 @@ import { describe, expect, it, vi } from 'vitest';
 import RulePackService from '@/services/rule-pack-service';
 import rule_packs from '@/../tests/resources/mock_rule_packs.json';
 import rule_tags from '@/../tests/resources/mock_rule_tags.json';
+import rule from '@/../tests/resources/mock_rule.json';
 
 vi.mock('axios');
 
@@ -133,8 +134,6 @@ describe('function getRuleTagsByRulePackVersions', () => {
 
   describe('when getRuleTagsByRulePackVersions API call fails', () => {
     it('getRuleTagsByRulePackVersions should return error', async () => {
-      axios.get.mockResolvedValueOnce([]);
-
       await RulePackService.getRuleTagsByRulePackVersions('not_valid')
         .then((response) => {
           expect(response).toEqual([]);
@@ -145,6 +144,21 @@ describe('function getRuleTagsByRulePackVersions', () => {
           expect(error).toBeDefined();
           expect(error).not.toBeNull();
         });
+    });
+  });
+});
+
+describe('function getRuleFromRulePack', () => {
+  describe('when getRuleFromRulePack API call is successful', () => {
+    it('should return rule for provided rule pack versions', async () => {
+      axios.get.mockResolvedValueOnce(rule);
+      const rulePackVersion = '1.0.0';
+      const ruleName = 'rule1';
+      const response = await RulePackService.getRuleFromRulePack(rulePackVersion, ruleName);
+
+      expect(response).toBeDefined();
+      expect(response).not.toBeNull();
+      expect(response).toEqual(rule);
     });
   });
 });

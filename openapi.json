@@ -3,7 +3,7 @@
   "info": {
     "title": "Repository Scanner (RESC)",
     "description": "RESC API helps you to perform several operations upon findings obtained from multiple source code repositories.",
-    "version": "3.3.5"
+    "version": "3.5.0"
   },
   "paths": {
     "/resc/v1/health": {
@@ -608,6 +608,74 @@
           },
           "422": {
             "description": "Version <version_id> is not a valid semantic version",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Model422"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error. Contact your system administrator"
+          },
+          "503": {
+            "description": "Unable to communicate with DataBase, Please contact your system administrator"
+          }
+        }
+      }
+    },
+    "/resc/v1/rule-packs/{rule_pack_version}/rules": {
+      "get": {
+        "tags": [
+          "resc-rule-packs"
+        ],
+        "summary": "Get unique rule from rule pack",
+        "description": "Retrieve the rule data from a rule_name and rule_pack\n\n- **db_connection**: Session of the database connection\n- **rule_pack_version**: filter on rule pack version\n- **rule_name**: filter on rule pack version\n- **return**: List[str] The output will contain a list of strings of unique rules in the findings table",
+        "operationId": "get_rule_from_rule_pack_resc_v1_rule_packs__rule_pack_version__rules_get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Rule Pack Version"
+            },
+            "name": "rule_pack_version",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "RuleName"
+            },
+            "name": "rule_name",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Retrieve the rule data for a rule pack",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RuleRead"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Scan <scan_id> not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Model404"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "RulePackVersion and RuleName required",
             "content": {
               "application/json": {
                 "schema": {
@@ -4719,6 +4787,68 @@
           "version"
         ],
         "title": "RulePackVersion"
+      },
+      "RuleRead": {
+        "properties": {
+          "rule_name": {
+            "type": "string",
+            "maxLength": 400,
+            "minLength": 1,
+            "title": "Rule Name"
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 4000,
+            "title": "Description"
+          },
+          "comment": {
+            "type": "string",
+            "maxLength": 2000,
+            "title": "Comment"
+          },
+          "entropy": {
+            "type": "number",
+            "title": "Entropy"
+          },
+          "secret_group": {
+            "type": "integer",
+            "title": "Secret Group"
+          },
+          "regex": {
+            "type": "string",
+            "title": "Regex"
+          },
+          "path": {
+            "type": "string",
+            "title": "Path"
+          },
+          "keywords": {
+            "type": "string",
+            "title": "Keywords"
+          },
+          "rule_pack": {
+            "type": "string",
+            "pattern": "^(\\d+\\.)?(\\d+\\.)?(\\*|\\d+)$",
+            "title": "Rule Pack"
+          },
+          "allow_list": {
+            "type": "integer",
+            "exclusiveMinimum": 0.0,
+            "title": "Allow List"
+          },
+          "id_": {
+            "type": "integer",
+            "exclusiveMinimum": 0.0,
+            "title": "Id "
+          }
+        },
+        "type": "object",
+        "required": [
+          "rule_name",
+          "rule_pack",
+          "id_"
+        ],
+        "title": "RuleRead"
       },
       "ScanCreate": {
         "properties": {
