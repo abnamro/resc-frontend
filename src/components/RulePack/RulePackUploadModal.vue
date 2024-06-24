@@ -55,7 +55,7 @@
             variant="primary"
             class="float-end"
             v-on:click="handleOk"
-            :disabled="(file && file.length == 0) || !versionState"
+            :disabled="!file || !versionState"
           >
             UPLOAD
           </b-button>
@@ -84,7 +84,7 @@ import {
 const loadedData = ref(true);
 const rule_pack_upload_modal = ref();
 
-const file = ref([] as File[]);
+const file = ref(undefined) as Ref<File | undefined>;
 const version = ref('');
 const versionState = ref(null) as Ref<boolean | null>;
 const emit = defineEmits(['on-file-upload-suceess']);
@@ -95,14 +95,14 @@ function show(): void {
 
 function hide(): void {
   version.value = '';
-  file.value = [];
+  file.value = undefined;
   versionState.value = null;
   rule_pack_upload_modal.value.hide();
 }
 
 function resetModal(): void {
   version.value = '';
-  file.value = [];
+  file.value = undefined;
   versionState.value = null;
 }
 
@@ -123,7 +123,7 @@ function handleOk(bvModalEvt: BvEvent | MouseEvent) {
 
 function submitForm() {
   loadedData.value = false;
-  RulePackService.uploadRulePack(version.value, file.value)
+  RulePackService.uploadRulePack(version.value, file.value as File)
     .then((response) => {
       emit('on-file-upload-suceess');
       if (response && response.status === 200) {
