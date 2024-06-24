@@ -49,17 +49,17 @@
         </div>
       </form>
 
-      <template #modal-footer>
+      <template #footer>
         <div class="w-100">
           <b-button
             variant="primary"
-            class="float-right"
+            class="float-end"
             v-on:click="handleOk"
             :disabled="(file && file.length == 0) || !versionState"
           >
             UPLOAD
           </b-button>
-          <b-button variant="secondary" class="float-right mr-3" v-on:click="hide">
+          <b-button variant="secondary" class="float-end me-3" v-on:click="hide">
             CLOSE
           </b-button>
         </div>
@@ -74,7 +74,7 @@ import SpinnerVue from '@/components/Common/SpinnerVue.vue';
 import PushNotification from '@/utils/push-notification';
 import RulePackService from '@/services/rule-pack-service';
 import { nextTick, ref, type Ref } from 'vue';
-import type { BvEvent } from 'bootstrap-vue-next';
+import { BFormFile, BButton, BFromGroup, BFormInput, BModal, type BvEvent } from 'bootstrap-vue-next';
 
 const loadedData = ref(true);
 const rule_pack_upload_modal = ref();
@@ -118,7 +118,7 @@ function handleOk(bvModalEvt: BvEvent | MouseEvent) {
 
 function submitForm() {
   loadedData.value = false;
-  RulePackService.uploadRulePack(version.value, file.value[0])
+  RulePackService.uploadRulePack(version.value, file.value)
     .then((response) => {
       emit('on-file-upload-suceess');
       if (response && response.status === 200) {
