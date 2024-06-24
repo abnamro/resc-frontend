@@ -59,9 +59,7 @@
           >
             UPLOAD
           </b-button>
-          <b-button variant="secondary" class="float-end me-3" v-on:click="hide">
-            CLOSE
-          </b-button>
+          <b-button variant="secondary" class="float-end me-3" v-on:click="hide"> CLOSE </b-button>
         </div>
       </template>
     </b-modal>
@@ -74,7 +72,14 @@ import SpinnerVue from '@/components/Common/SpinnerVue.vue';
 import PushNotification from '@/utils/push-notification';
 import RulePackService from '@/services/rule-pack-service';
 import { nextTick, ref, type Ref } from 'vue';
-import { BFormFile, BButton, BFromGroup, BFormInput, BModal, type BvEvent } from 'bootstrap-vue-next';
+import {
+  BFormFile,
+  BButton,
+  BFormGroup,
+  BFormInput,
+  BModal,
+  type BvEvent,
+} from 'bootstrap-vue-next';
 
 const loadedData = ref(true);
 const rule_pack_upload_modal = ref();
