@@ -21,8 +21,8 @@
         </div>
       </div>
 
-      <div class="row">
-        <div class="col-md-5 mt-5 pt-2">
+      <div class="row mt-5">
+        <div class="col-md-5 pt-2">
           <h5><small class="text-nowrap">UnTriaged findings per week</small></h5>
           <SpinnerVue v-if="!loadedUnTriaged" />
           <MultiLineChart
@@ -30,8 +30,9 @@
             :chart-data="chartDataForUnTriagedFindingsCountGraph"
           />
         </div>
-        <div class="col-md-5 mt-5 pt-2">
-          <h5><small class="text-nowrap">Percent of triaged findings per week</small></h5>
+        <div class="col-md-1"></div>
+        <div class="col-md-5 pt-2">
+          <h5><small class="text-nowrap">Percent of untriaged findings per week</small></h5>
           <SpinnerVue v-if="!loadedUnTriaged || !loadedTotal" />
           <MultiLineChart
             v-if="loadedUnTriaged && loadedTotal"
@@ -381,7 +382,7 @@ function setChartDataForPercentTriagedFindingGraph() {
 }
 
 function zipUntriagedTotalToPercent(untriaged: number[], total: number[]) {
-  return total.map((item, index) => ((untriaged[index]) * 100) / Math.max(1, item));
+  return total.map((item, index) => (untriaged[index] * 100) / Math.max(1, item));
 }
 
 getGraphData();
