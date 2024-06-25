@@ -21,13 +21,22 @@
         </div>
       </div>
 
-      <div class="row">
-        <div class="col-md-5 mt-5 pt-2">
+      <div class="row mt-5">
+        <div class="col-md-5 pt-2">
           <h5><small class="text-nowrap">UnTriaged findings per week</small></h5>
           <SpinnerVue v-if="!loadedUnTriaged" />
           <MultiLineChart
             v-if="loadedUnTriaged"
             :chart-data="chartDataForUnTriagedFindingsCountGraph"
+          />
+        </div>
+        <div class="col-md-1"></div>
+        <div class="col-md-5 pt-2">
+          <h5><small class="text-nowrap">Percent of untriaged findings per week</small></h5>
+          <SpinnerVue v-if="!loadedUnTriaged || !loadedTotal" />
+          <MultiLineChart
+            v-if="loadedUnTriaged && loadedTotal"
+            :chart-data="chartDataForPercentTriagedFindingGraph"
           />
         </div>
       </div>
@@ -64,6 +73,10 @@ const chartDataForUnTriagedFindingsCountGraph = ref({
   labels: [] as string[],
   datasets: [] as DataSetObject[],
 });
+const chartDataForPercentTriagedFindingGraph = ref({
+  labels: [] as string[],
+  datasets: [] as DataSetObject[],
+});
 const findingsCount = ref([] as FindingCountOverTime[]);
 const azureDevOpsTotalFindingsCountList = ref([] as number[]);
 const bitbucketTotalFindingsCountList = ref([] as number[]);
@@ -77,6 +90,10 @@ const azureDevOpsUnTriagedFindingsCountList = ref([] as number[]);
 const bitbucketUnTriagedFindingsCountList = ref([] as number[]);
 const gitHubUnTriagedFindingsCountList = ref([] as number[]);
 const totalUnTriagedFindingsCountList = ref([] as number[]);
+const percentTriagedAzureDevOpsList = ref([] as number[]);
+const percentTriagedBitbucketList = ref([] as number[]);
+const percentTriagedGitHubList = ref([] as number[]);
+const percentTriagedTotalList = ref([] as number[]);
 
 function arrayContainsAllZeros(arr: number[]) {
   return arr.every((item) => item === 0);
@@ -130,6 +147,7 @@ function getTotalCounts() {
       });
 
       setChartDataForTotalFindingsCount();
+      setChartDataForPercentTriagedFindingGraph();
     })
     .catch((error) => {
       AxiosConfig.handleError(error);
@@ -155,6 +173,7 @@ function getUnTriagedCounts() {
       });
 
       setChartDataForUnTriagedFindingsCount();
+      setChartDataForPercentTriagedFindingGraph();
     })
     .catch((error) => {
       AxiosConfig.handleError(error);
@@ -302,6 +321,68 @@ function setChartDataForUnTriagedFindingsCount() {
   chartDataForUnTriagedFindingsCountGraph.value['labels'] = labelsWeekUnTriaged.value;
   chartDataForUnTriagedFindingsCountGraph.value['datasets'] = datasets;
   loadedUnTriaged.value = true;
+}
+
+function setChartDataForPercentTriagedFindingGraph() {
+  // Do not execute if not all data is loaded
+  if (loadedTotal.value === false || loadedUnTriaged.value === false) {
+    return;
+  }
+
+  const datasets = [];
+
+  if (!arrayContainsAllZeros(azureDevOpsTotalFindingsCountList.value)) {
+    percentTriagedAzureDevOpsList.value = zipUntriagedTotalToPercent(
+      azureDevOpsUnTriagedFindingsCountList.value,
+      azureDevOpsTotalFindingsCountList.value,
+    );
+    const datasetObj = prepareDataSetForVcsProvider(
+      `${Config.value('azureDevOpsVal')}`,
+      percentTriagedAzureDevOpsList.value,
+    );
+    datasets.push(datasetObj);
+  }
+
+  if (!arrayContainsAllZeros(bitbucketTotalFindingsCountList.value)) {
+    percentTriagedBitbucketList.value = zipUntriagedTotalToPercent(
+      bitbucketUnTriagedFindingsCountList.value,
+      bitbucketTotalFindingsCountList.value,
+    );
+    const datasetObj = prepareDataSetForVcsProvider(
+      `${Config.value('bitbucketVal')}`,
+      percentTriagedBitbucketList.value,
+    );
+    datasets.push(datasetObj);
+  }
+
+  if (!arrayContainsAllZeros(gitHubTotalFindingsCountList.value)) {
+    percentTriagedGitHubList.value = zipUntriagedTotalToPercent(
+      gitHubUnTriagedFindingsCountList.value,
+      gitHubTotalFindingsCountList.value,
+    );
+    const datasetObj = prepareDataSetForVcsProvider(
+      `${Config.value('githubPublicVal')}`,
+      percentTriagedGitHubList.value,
+    );
+    datasets.push(datasetObj);
+  }
+
+  if (!arrayContainsAllZeros(totalTotalFindingsCountList.value)) {
+    percentTriagedTotalList.value = zipUntriagedTotalToPercent(
+      totalUnTriagedFindingsCountList.value,
+      totalTotalFindingsCountList.value,
+    );
+    const datasetObj = prepareDataSetForVcsProvider('Total', percentTriagedTotalList.value);
+    datasets.push(datasetObj);
+  }
+
+  chartDataForPercentTriagedFindingGraph.value['labels'] = labelsWeekUnTriaged.value;
+  chartDataForPercentTriagedFindingGraph.value['datasets'] = datasets;
+  loadedUnTriaged.value = true;
+}
+
+function zipUntriagedTotalToPercent(untriaged: number[], total: number[]) {
+  return total.map((item, index) => (untriaged[index] * 100) / Math.max(1, item));
 }
 
 getGraphData();
