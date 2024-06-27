@@ -23,15 +23,17 @@
           @on-rule-tags-change="onRuleTagsFilterChange"
         />
       </div>
-      <div class="col-md-4">
-        <b-form-checkbox
+    </div>
+    <div class="row pl-3 pt-3">
+      <div class="col-md-4 text-start">
+        <BFormCheckbox
           v-model="includeDeletedRepositories"
           name="check-button"
           switch
           @change="fetchRulesWithFindingStatusCount"
         >
           <small class="text-nowrap">Include data from repositories marked as deleted.</small>
-        </b-form-checkbox>
+        </BFormCheckbox>
       </div>
     </div>
 
@@ -167,7 +169,7 @@ import type {
 } from '@/services/shema-to-types';
 import { useRouter } from 'vue-router';
 import type { AxiosResponse } from 'axios';
-import type { TableItem } from 'bootstrap-vue-next';
+import type { TableItem, BFormCheckbox } from 'bootstrap-vue-next';
 import CommonUtils from '@/utils/common-utils';
 
 const loadedData = ref(false);

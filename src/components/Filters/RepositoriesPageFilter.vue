@@ -24,8 +24,8 @@
     </div>
 
     <!-- Include zero finding repos -->
-    <div class="row">
-      <div class="col-md-4">
+    <div class="row pt-3">
+      <div class="col-md-3 text-start">
         <b-form-checkbox
           v-model="includeZeroFindingRepos"
           name="check-button"
@@ -35,7 +35,7 @@
           <small class="text-nowrap">Display repositories with 0 findings.</small>
         </b-form-checkbox>
       </div>
-      <div class="col-md-4">
+      <div class="col-md-4 text-start">
         <b-form-checkbox
           v-model="includeDeletedRepositories"
           name="check-button"

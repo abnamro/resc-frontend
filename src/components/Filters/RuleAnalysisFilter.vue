@@ -99,8 +99,8 @@
           </div>
         </div>
 
-        <div class="row pt-1">
-          <div class="col-md-4">
+        <div class="row pt-3">
+          <div class="col-md-4 text-start">
             <b-form-checkbox
               v-model="includeDeletedRepositories"
               name="check-button"
