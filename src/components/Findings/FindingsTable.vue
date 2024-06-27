@@ -291,7 +291,7 @@ function closeDetails() {
 
 function openCommitUrl() {
   const url = getCurrentFindingSelected()?.commit_url;
-  if (url !== undefined) {
+  if (url !== undefined && url !== null) {
     window.open(url, '_blank')?.focus();
   }
 }

@@ -356,7 +356,7 @@ export interface paths {
      * - **db_connection**: Session of the database connection
      * - **skip**: Integer amount of records to skip to support pagination
      * - **limit**: Integer amount of records to return, to support pagination
-     * - **vcsproviders**: Optional, filter on supported vcs provider types
+     * - **vcs_providers**: Optional, filter on supported vcs provider types
      * - **projectfilter**: Optional, filter on project name. It is used as a string contains filter
      * - **repositoryfilter**: Optional, filter on repository name. It is used as a string contains filter
      * - **return**: [RepositoryRead]
@@ -415,9 +415,9 @@ export interface paths {
      * @description Retrieve all unique project names
      *
      * - **db_connection**: Session of the database connection
-     * - **vcsproviders**: Optional, filter on supported vcs provider types
+     * - **vcs_providers**: Optional, filter on supported vcs provider types
      * - **repositoryfilter**: Optional, filter on repository name. It is used as a string contains filter
-     * - **onlyifhasfindings**: Optional, filter all projects those have findings
+     * - **only_if_has_findings**: Optional, filter all projects those have findings
      * - **return**: List[str]
      *     The output will contain a list of unique projects
      */
@@ -429,9 +429,9 @@ export interface paths {
      * @description Retrieve all unique repository names
      *
      * - **db_connection**: Session of the database connection
-     * - **vcsproviders**: Optional, filter of supported vcs provider types
-     * - **projectname**: Optional, filter on project name. It is used as a full string match filter
-     * - **onlyifhasfindings**: Optional, filter all repositories that have findings
+     * - **vcs_providers**: Optional, filter of supported vcs provider types
+     * - **project_name**: Optional, filter on project name. It is used as a full string match filter
+     * - **only_if_has_findings**: Optional, filter all repositories that have findings
      * - **return**: List[str]
      *     The output will contain a list of unique repositories
      */
@@ -458,10 +458,10 @@ export interface paths {
      * - **db_connection**: Session of the database connection
      * - **skip**: Integer amount of records to skip to support pagination
      * - **limit**: Integer amount of records to return, to support pagination
-     * - **vcsproviders**: Optional, filter on supported vcs provider types
+     * - **vcs_providers**: Optional, filter on supported vcs provider types
      * - **projectfilter**: Optional, filter on project name. It is used as a string contains filter
      * - **repositoryfilter**: Optional, filter on repository name. It is used as a string contains filter
-     * - **onlyifhasfindings**: Optional, filter all repositories those have findings
+     * - **only_if_has_findings**: Optional, filter all repositories those have findings
      * - **return**: [RepositoryEnrichedRead]
      *     The output will contain a PaginationModel containing the list of RepositoryEnrichedRead type objects,
      *     or an empty list if no repository
@@ -788,7 +788,7 @@ export interface components {
       /** Auditor */
       auditor: string;
       /** Comment */
-      comment?: string;
+      comment?: string | null;
       /**
        * Timestamp
        * Format: date-time
@@ -834,7 +834,6 @@ export interface components {
     };
     /**
      * DateFilter
-     * @description An enumeration.
      * @enum {string}
      */
     DateFilter: 'month' | 'week' | 'day';
@@ -862,9 +861,9 @@ export interface components {
       /** Email */
       email: string;
       /** @default NOT_ANALYZED */
-      status?: components['schemas']['FindingStatus'];
+      status?: components['schemas']['FindingStatus'] | null;
       /** Comment */
-      comment?: string;
+      comment?: string | null;
       /** Rule Name */
       rule_name: string;
       /** Rule Pack */
@@ -888,30 +887,18 @@ export interface components {
       last_scanned_commit: string;
       /** Scan Id */
       scan_id: number;
-      /**
-       * Event Sent On
-       * Format: date-time
-       */
-      event_sent_on?: string;
+      /** Event Sent On */
+      event_sent_on?: string | null;
       /** Is Dir Scan */
       is_dir_scan: boolean;
       /** Id */
       id_: number;
       /** Commit Url */
-      commit_url?: string;
+      commit_url?: string | null;
     };
-    /**
-     * FindingCountModel[RepositoryRead]
-     * @description     Generic encapsulation class for findings count end points to standardize output of the API
-     *     example creation, FindingCountModel[FindingRead](data=db_findings, true_positive=true_positive,
-     *     false_positive=false_positive, not_analyzed=not_analyzed, not_accessible=not_accessible,
-     *     clarification_required=clarification_required, outdated=outdated,
-     *     total_findings_count=total_findings_count)
-     * :param Generic[Model]:
-     *     Type of the object in the data list
-     */
+    /** FindingCountModel[RepositoryRead] */
     FindingCountModel_RepositoryRead_: {
-      data?: components['schemas']['RepositoryRead'];
+      data: components['schemas']['RepositoryRead'] | null;
       /** True Positive */
       true_positive: number;
       /** False Positive */
@@ -932,7 +919,6 @@ export interface components {
       /** Time Period */
       time_period: string;
       /**
-       * Vcs Provider Finding Count
        * @default {
        *   "AZURE_DEVOPS": 0,
        *   "BITBUCKET": 0,
@@ -969,11 +955,8 @@ export interface components {
       author: string;
       /** Email */
       email: string;
-      /**
-       * Event Sent On
-       * Format: date-time
-       */
-      event_sent_on?: string;
+      /** Event Sent On */
+      event_sent_on?: string | null;
       /** Rule Name */
       rule_name: string;
       /** Repository Id */
@@ -1010,11 +993,8 @@ export interface components {
       author: string;
       /** Email */
       email: string;
-      /**
-       * Event Sent On
-       * Format: date-time
-       */
-      event_sent_on?: string;
+      /** Event Sent On */
+      event_sent_on?: string | null;
       /** Rule Name */
       rule_name: string;
       /** Repository Id */
@@ -1022,11 +1002,10 @@ export interface components {
       /** Id */
       id_: number;
       /** Scan Ids */
-      scan_ids?: number[];
+      scan_ids?: number[] | null;
     };
     /**
      * FindingStatus
-     * @description An enumeration.
      * @enum {string}
      */
     FindingStatus:
@@ -1083,13 +1062,7 @@ export interface components {
      * }
      */
     Model422: Record<string, never>;
-    /**
-     * PaginationModel[AuditRead]
-     * @description     Generic encapsulation class for paginated endpoints to standardize output of the API
-     *     example creation, PaginationModel[FindingRead](data=db_findings, total=total, limit=limit, skip=skip)
-     * :param Generic[Model]:
-     *     Type of the object in the data list
-     */
+    /** PaginationModel[AuditRead] */
     PaginationModel_AuditRead_: {
       /** Data */
       data: components['schemas']['AuditRead'][];
@@ -1100,13 +1073,7 @@ export interface components {
       /** Skip */
       skip: number;
     };
-    /**
-     * PaginationModel[DateCountModel]
-     * @description     Generic encapsulation class for paginated endpoints to standardize output of the API
-     *     example creation, PaginationModel[FindingRead](data=db_findings, total=total, limit=limit, skip=skip)
-     * :param Generic[Model]:
-     *     Type of the object in the data list
-     */
+    /** PaginationModel[DateCountModel] */
     PaginationModel_DateCountModel_: {
       /** Data */
       data: components['schemas']['DateCountModel'][];
@@ -1117,13 +1084,7 @@ export interface components {
       /** Skip */
       skip: number;
     };
-    /**
-     * PaginationModel[DetailedFindingRead]
-     * @description     Generic encapsulation class for paginated endpoints to standardize output of the API
-     *     example creation, PaginationModel[FindingRead](data=db_findings, total=total, limit=limit, skip=skip)
-     * :param Generic[Model]:
-     *     Type of the object in the data list
-     */
+    /** PaginationModel[DetailedFindingRead] */
     PaginationModel_DetailedFindingRead_: {
       /** Data */
       data: components['schemas']['DetailedFindingRead'][];
@@ -1134,13 +1095,7 @@ export interface components {
       /** Skip */
       skip: number;
     };
-    /**
-     * PaginationModel[FindingRead]
-     * @description     Generic encapsulation class for paginated endpoints to standardize output of the API
-     *     example creation, PaginationModel[FindingRead](data=db_findings, total=total, limit=limit, skip=skip)
-     * :param Generic[Model]:
-     *     Type of the object in the data list
-     */
+    /** PaginationModel[FindingRead] */
     PaginationModel_FindingRead_: {
       /** Data */
       data: components['schemas']['FindingRead'][];
@@ -1151,13 +1106,7 @@ export interface components {
       /** Skip */
       skip: number;
     };
-    /**
-     * PaginationModel[RepositoryEnrichedRead]
-     * @description     Generic encapsulation class for paginated endpoints to standardize output of the API
-     *     example creation, PaginationModel[FindingRead](data=db_findings, total=total, limit=limit, skip=skip)
-     * :param Generic[Model]:
-     *     Type of the object in the data list
-     */
+    /** PaginationModel[RepositoryEnrichedRead] */
     PaginationModel_RepositoryEnrichedRead_: {
       /** Data */
       data: components['schemas']['RepositoryEnrichedRead'][];
@@ -1168,13 +1117,7 @@ export interface components {
       /** Skip */
       skip: number;
     };
-    /**
-     * PaginationModel[RepositoryRead]
-     * @description     Generic encapsulation class for paginated endpoints to standardize output of the API
-     *     example creation, PaginationModel[FindingRead](data=db_findings, total=total, limit=limit, skip=skip)
-     * :param Generic[Model]:
-     *     Type of the object in the data list
-     */
+    /** PaginationModel[RepositoryRead] */
     PaginationModel_RepositoryRead_: {
       /** Data */
       data: components['schemas']['RepositoryRead'][];
@@ -1185,13 +1128,7 @@ export interface components {
       /** Skip */
       skip: number;
     };
-    /**
-     * PaginationModel[RulePackRead]
-     * @description     Generic encapsulation class for paginated endpoints to standardize output of the API
-     *     example creation, PaginationModel[FindingRead](data=db_findings, total=total, limit=limit, skip=skip)
-     * :param Generic[Model]:
-     *     Type of the object in the data list
-     */
+    /** PaginationModel[RulePackRead] */
     PaginationModel_RulePackRead_: {
       /** Data */
       data: components['schemas']['RulePackRead'][];
@@ -1202,13 +1139,7 @@ export interface components {
       /** Skip */
       skip: number;
     };
-    /**
-     * PaginationModel[ScanRead]
-     * @description     Generic encapsulation class for paginated endpoints to standardize output of the API
-     *     example creation, PaginationModel[FindingRead](data=db_findings, total=total, limit=limit, skip=skip)
-     * :param Generic[Model]:
-     *     Type of the object in the data list
-     */
+    /** PaginationModel[ScanRead] */
     PaginationModel_ScanRead_: {
       /** Data */
       data: components['schemas']['ScanRead'][];
@@ -1219,13 +1150,7 @@ export interface components {
       /** Skip */
       skip: number;
     };
-    /**
-     * PaginationModel[VCSInstanceRead]
-     * @description     Generic encapsulation class for paginated endpoints to standardize output of the API
-     *     example creation, PaginationModel[FindingRead](data=db_findings, total=total, limit=limit, skip=skip)
-     * :param Generic[Model]:
-     *     Type of the object in the data list
-     */
+    /** PaginationModel[VCSInstanceRead] */
     PaginationModel_VCSInstanceRead_: {
       /** Data */
       data: components['schemas']['VCSInstanceRead'][];
@@ -1273,7 +1198,7 @@ export interface components {
        * @default 0
        */
       rank_current_week?: number;
-      forever_breakdown?: components['schemas']['AuditorMetric'];
+      forever_breakdown?: components['schemas']['AuditorMetric'] | null;
     };
     /** RepositoryCreate */
     RepositoryCreate: {
@@ -1288,6 +1213,8 @@ export interface components {
        * Format: uri
        */
       repository_url: string;
+      /** Deleted At */
+      deleted_at?: string | null;
       /** Vcs Instance */
       vcs_instance: number;
     };
@@ -1306,12 +1233,9 @@ export interface components {
       repository_url: string;
       vcs_provider: components['schemas']['VCSProviders'];
       /** Last Scan Id */
-      last_scan_id?: number;
-      /**
-       * Last Scan Timestamp
-       * Format: date-time
-       */
-      last_scan_timestamp?: string;
+      last_scan_id?: number | null;
+      /** Last Scan Timestamp */
+      last_scan_timestamp?: string | null;
       /** True Positive */
       true_positive: number;
       /** False Positive */
@@ -1326,6 +1250,8 @@ export interface components {
       outdated: number;
       /** Total Findings Count */
       total_findings_count: number;
+      /** Deleted At */
+      deleted_at?: string | null;
       /** Id */
       id_: number;
     };
@@ -1342,6 +1268,8 @@ export interface components {
        * Format: uri
        */
       repository_url: string;
+      /** Deleted At */
+      deleted_at?: string | null;
       /** Vcs Instance */
       vcs_instance: number;
       /** Id */
@@ -1376,7 +1304,7 @@ export interface components {
        */
       active?: boolean;
       /** Global Allow List */
-      global_allow_list?: number;
+      global_allow_list?: number | null;
       /**
        * Outdated
        * @default false
@@ -1398,23 +1326,23 @@ export interface components {
       /** Rule Name */
       rule_name: string;
       /** Description */
-      description?: string;
+      description?: string | null;
       /** Comment */
-      comment?: string;
+      comment?: string | null;
       /** Entropy */
-      entropy?: number;
+      entropy?: number | null;
       /** Secret Group */
-      secret_group?: number;
+      secret_group?: number | null;
       /** Regex */
-      regex?: string;
+      regex?: string | null;
       /** Path */
-      path?: string;
+      path?: string | null;
       /** Keywords */
-      keywords?: string;
+      keywords?: string | null;
       /** Rule Pack */
       rule_pack: string;
       /** Allow List */
-      allow_list?: number;
+      allow_list?: number | null;
       /** Id */
       id_: number;
     };
@@ -1464,7 +1392,6 @@ export interface components {
     };
     /**
      * ScanType
-     * @description An enumeration.
      * @enum {string}
      */
     ScanType: 'BASE' | 'INCREMENTAL';
@@ -1489,11 +1416,11 @@ export interface components {
       /** Scheme */
       scheme: string;
       /** Exceptions */
-      exceptions?: string[];
+      exceptions?: string[] | null;
       /** Scope */
-      scope?: string[];
+      scope?: string[] | null;
       /** Organization */
-      organization?: string;
+      organization?: string | null;
     };
     /** VCSInstanceRead */
     VCSInstanceRead: {
@@ -1507,17 +1434,16 @@ export interface components {
       /** Scheme */
       scheme: string;
       /** Exceptions */
-      exceptions?: string[];
+      exceptions?: string[] | null;
       /** Scope */
-      scope?: string[];
+      scope?: string[] | null;
       /** Organization */
-      organization?: string;
+      organization?: string | null;
       /** Id */
       id_: number;
     };
     /**
      * VCSProviders
-     * @description An enumeration.
      * @enum {string}
      */
     VCSProviders: 'AZURE_DEVOPS' | 'BITBUCKET' | 'GITHUB_PUBLIC';
@@ -1645,12 +1571,13 @@ export interface operations {
     parameters: {
       query?: {
         findingstatus?: components['schemas']['FindingStatus'][];
-        vcsprovider?: components['schemas']['VCSProviders'][];
-        project_name?: string;
-        repository_name?: string;
-        start_date_time?: string;
-        end_date_time?: string;
-        rule_pack_version?: string[];
+        vcs_provider?: components['schemas']['VCSProviders'][];
+        project_name?: string | null;
+        repository_name?: string | null;
+        start_date_time?: string | null;
+        end_date_time?: string | null;
+        rule_pack_version?: string[] | null;
+        include_deleted_repositories?: boolean | null;
       };
     };
     responses: {
@@ -1688,8 +1615,9 @@ export interface operations {
   get_rules_finding_status_count_resc_v1_rules_finding_status_count_get: {
     parameters: {
       query?: {
-        rule_pack_version?: string[];
-        rule_tag?: string[];
+        rule_pack_version?: string[] | null;
+        rule_tag?: string[] | null;
+        include_deleted_repositories?: boolean | null;
       };
     };
     responses: {
@@ -1731,9 +1659,9 @@ export interface operations {
   get_rule_packs_resc_v1_rule_packs_versions_get: {
     parameters: {
       query?: {
-        version?: string;
+        version?: string | null;
         /** @description Filter on active rule packs */
-        active?: boolean;
+        active?: boolean | null;
         skip?: number;
         limit?: number;
       };
@@ -1772,7 +1700,7 @@ export interface operations {
   download_rule_pack_toml_file_resc_v1_rule_packs_get: {
     parameters: {
       query?: {
-        version?: string;
+        rule_pack_version?: string | null;
       };
     };
     responses: {
@@ -1871,7 +1799,7 @@ export interface operations {
   get_rule_packs_tags_resc_v1_rule_packs_tags_get: {
     parameters: {
       query?: {
-        version?: string[];
+        version?: string[] | null;
       };
     };
     responses: {
@@ -1985,13 +1913,13 @@ export interface operations {
           'application/json': components['schemas']['RuleRead'];
         };
       };
-      /** @description Scan <scan_id> not found */
+      /** @description Rule <rule_name> for <rule_pack_version> not found */
       404: {
         content: {
           'application/json': components['schemas']['Model404'];
         };
       };
-      /** @description RulePackVersion and RuleName required */
+      /** @description rule_pack_version and rule_name required */
       422: {
         content: {
           'application/json': components['schemas']['Model422'];
@@ -2287,6 +2215,7 @@ export interface operations {
       query?: {
         skip?: number;
         limit?: number;
+        include_deleted_repositories?: boolean | null;
       };
       path: {
         rule_name: string;
@@ -2451,8 +2380,8 @@ export interface operations {
       query?: {
         skip?: number;
         limit?: number;
-        start_date_time?: string;
-        end_date_time?: string;
+        start_date_time?: string | null;
+        end_date_time?: string | null;
       };
       path: {
         time_type: components['schemas']['DateFilter'];
@@ -2613,7 +2542,7 @@ export interface operations {
    * - **db_connection**: Session of the database connection
    * - **skip**: Integer amount of records to skip to support pagination
    * - **limit**: Integer amount of records to return, to support pagination
-   * - **vcsproviders**: Optional, filter on supported vcs provider types
+   * - **vcs_providers**: Optional, filter on supported vcs provider types
    * - **projectfilter**: Optional, filter on project name. It is used as a string contains filter
    * - **repositoryfilter**: Optional, filter on repository name. It is used as a string contains filter
    * - **return**: [RepositoryRead]
@@ -2625,9 +2554,10 @@ export interface operations {
       query?: {
         skip?: number;
         limit?: number;
-        vcsprovider?: components['schemas']['VCSProviders'][];
-        projectfilter?: string;
-        repositoryfilter?: string;
+        vcs_provider?: components['schemas']['VCSProviders'][];
+        project_filter?: string | null;
+        repository_filter?: string | null;
+        include_deleted_repositories?: boolean | null;
       };
     };
     responses: {
@@ -2835,18 +2765,19 @@ export interface operations {
    * @description Retrieve all unique project names
    *
    * - **db_connection**: Session of the database connection
-   * - **vcsproviders**: Optional, filter on supported vcs provider types
+   * - **vcs_providers**: Optional, filter on supported vcs provider types
    * - **repositoryfilter**: Optional, filter on repository name. It is used as a string contains filter
-   * - **onlyifhasfindings**: Optional, filter all projects those have findings
+   * - **only_if_has_findings**: Optional, filter all projects those have findings
    * - **return**: List[str]
    *     The output will contain a list of unique projects
    */
   get_distinct_projects_resc_v1_repositories_distinct_projects__get: {
     parameters: {
       query?: {
-        vcsprovider?: components['schemas']['VCSProviders'][];
-        repositoryfilter?: string;
-        onlyifhasfindings?: boolean;
+        vcs_provider?: components['schemas']['VCSProviders'][];
+        repository_filter?: string | null;
+        only_if_has_findings?: boolean;
+        include_deleted_repositories?: boolean | null;
       };
     };
     responses: {
@@ -2877,18 +2808,19 @@ export interface operations {
    * @description Retrieve all unique repository names
    *
    * - **db_connection**: Session of the database connection
-   * - **vcsproviders**: Optional, filter of supported vcs provider types
-   * - **projectname**: Optional, filter on project name. It is used as a full string match filter
-   * - **onlyifhasfindings**: Optional, filter all repositories that have findings
+   * - **vcs_providers**: Optional, filter of supported vcs provider types
+   * - **project_name**: Optional, filter on project name. It is used as a full string match filter
+   * - **only_if_has_findings**: Optional, filter all repositories that have findings
    * - **return**: List[str]
    *     The output will contain a list of unique repositories
    */
   get_distinct_repositories_resc_v1_repositories_distinct_repositories__get: {
     parameters: {
       query?: {
-        vcsprovider?: components['schemas']['VCSProviders'][];
-        projectname?: string;
-        onlyifhasfindings?: boolean;
+        vcs_provider?: components['schemas']['VCSProviders'][];
+        project_name?: string | null;
+        only_if_has_findings?: boolean;
+        include_deleted_repositories?: boolean | null;
       };
     };
     responses: {
@@ -2966,10 +2898,10 @@ export interface operations {
    * - **db_connection**: Session of the database connection
    * - **skip**: Integer amount of records to skip to support pagination
    * - **limit**: Integer amount of records to return, to support pagination
-   * - **vcsproviders**: Optional, filter on supported vcs provider types
+   * - **vcs_providers**: Optional, filter on supported vcs provider types
    * - **projectfilter**: Optional, filter on project name. It is used as a string contains filter
    * - **repositoryfilter**: Optional, filter on repository name. It is used as a string contains filter
-   * - **onlyifhasfindings**: Optional, filter all repositories those have findings
+   * - **only_if_has_findings**: Optional, filter all repositories those have findings
    * - **return**: [RepositoryEnrichedRead]
    *     The output will contain a PaginationModel containing the list of RepositoryEnrichedRead type objects,
    *     or an empty list if no repository
@@ -2979,10 +2911,11 @@ export interface operations {
       query?: {
         skip?: number;
         limit?: number;
-        vcsprovider?: components['schemas']['VCSProviders'][];
-        projectfilter?: string;
-        repositoryfilter?: string;
-        onlyifhasfindings?: boolean;
+        vcs_provider?: components['schemas']['VCSProviders'][];
+        project_filter?: string | null;
+        repository_filter?: string | null;
+        only_if_has_findings?: boolean;
+        include_deleted_repositories?: boolean | null;
       };
     };
     responses: {
@@ -3450,7 +3383,7 @@ export interface operations {
         skip?: number;
         limit?: number;
         rule?: string[];
-        status?: components['schemas']['FindingStatus'][];
+        status?: components['schemas']['FindingStatus'][] | null;
       };
     };
     responses: {
@@ -3532,8 +3465,8 @@ export interface operations {
       query?: {
         skip?: number;
         limit?: number;
-        vcs_provider_type?: components['schemas']['VCSProviders'];
-        vcs_instance_name?: string;
+        vcs_provider_type?: components['schemas']['VCSProviders'] | null;
+        vcs_instance_name?: string | null;
       };
     };
     responses: {
@@ -3758,8 +3691,8 @@ export interface operations {
   get_finding_audit_count_over_time_resc_v1_metrics_audited_count_over_time_get: {
     parameters: {
       query?: {
-        weeks?: number;
-        audit_status?: components['schemas']['FindingStatus'];
+        weeks?: number | null;
+        audit_status?: components['schemas']['FindingStatus'] | null;
       };
     };
     responses: {
@@ -3797,7 +3730,7 @@ export interface operations {
   get_finding_total_count_over_time_resc_v1_metrics_count_per_vcs_provider_by_week_get: {
     parameters: {
       query?: {
-        weeks?: number;
+        weeks?: number | null;
       };
     };
     responses: {
@@ -3835,7 +3768,7 @@ export interface operations {
   get_finding_un_triaged_count_over_time_resc_v1_metrics_un_triaged_count_over_time_get: {
     parameters: {
       query?: {
-        weeks?: number;
+        weeks?: number | null;
       };
     };
     responses: {
@@ -3872,7 +3805,7 @@ export interface operations {
   get_audit_count_by_auditor_over_time_resc_v1_metrics_audit_count_by_auditor_over_time_get: {
     parameters: {
       query?: {
-        weeks?: number;
+        weeks?: number | null;
       };
     };
     responses: {

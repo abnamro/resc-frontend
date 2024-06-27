@@ -53,6 +53,7 @@ describe('function getDetailedFindings', () => {
       filterObj.project = 'ABC';
       filterObj.repository = 'test';
       filterObj.rule = 'Hardcoded-Username';
+      filterObj.includeDeletedRepositories = true;
 
       const response = await FindingsService.getDetailedFindings(filterObj);
 

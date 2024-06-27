@@ -120,7 +120,15 @@ describe('function getRepositoriesWithFindingsMetadata', () => {
     // Mock axios response: return the 3 first elements according to the pagination parameters
     axios.get.mockResolvedValueOnce(repositories);
 
-    const response = await RepositoryService.getRepositoriesWithFindingsMetadata(20, 0);
+    const response = await RepositoryService.getRepositoriesWithFindingsMetadata(
+      20,
+      0,
+      [],
+      false,
+      undefined,
+      false,
+      false,
+    );
     expect(response).toEqual(repositories);
     expect(response).toBeDefined();
     expect(response).not.toBeNull();
@@ -146,7 +154,7 @@ describe('function getRepositoriesWithFindingsMetadata', () => {
     // Mock axios response: return an empty array according to the pagination parameters
     axios.get.mockImplementation(() => Promise.resolve({ data: [] }));
 
-    return RepositoryService.getRepositoriesWithFindingsMetadata(5, 4, 'id', false)
+    return RepositoryService.getRepositoriesWithFindingsMetadata(5, 4, [], false, 'id', false, true)
       .then((response) => {
         expect(response).toEqual([]);
         expect(response).not.toBeNull();
@@ -205,7 +213,7 @@ describe('getDistinctProjects', () => {
     it('should return all distinct projects', async () => {
       axios.get.mockResolvedValueOnce(allProjects);
 
-      const response = await RepositoryService.getDistinctProjects(null, '');
+      const response = await RepositoryService.getDistinctProjects(null, '', false, true);
 
       expect(response).toEqual(allProjects);
       expect(response).toBeDefined();
@@ -221,6 +229,8 @@ describe('getDistinctProjects', () => {
       const response = await RepositoryService.getDistinctProjects(
         [`${Config.value('bitbucketVal')}`],
         '',
+        false,
+        true,
       );
 
       expect(response).toEqual(bitbucketProjects);

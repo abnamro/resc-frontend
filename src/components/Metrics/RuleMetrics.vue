@@ -24,6 +24,18 @@
         />
       </div>
     </div>
+    <div class="row pl-3 pt-3">
+      <div class="col-md-4 text-start">
+        <BFormCheckbox
+          v-model="includeDeletedRepositories"
+          name="check-button"
+          switch
+          @change="fetchRulesWithFindingStatusCount"
+        >
+          <small class="text-nowrap">Include data from repositories marked as deleted.</small>
+        </BFormCheckbox>
+      </div>
+    </div>
 
     <!--Rule Metrics Table -->
     <div v-if="!hasRecords && loadedData" class="text-center cursor-default">
@@ -157,7 +169,7 @@ import type {
 } from '@/services/shema-to-types';
 import { useRouter } from 'vue-router';
 import type { AxiosResponse } from 'axios';
-import type { TableItem } from 'bootstrap-vue-next';
+import type { TableItem, BFormCheckbox } from 'bootstrap-vue-next';
 import CommonUtils from '@/utils/common-utils';
 
 const loadedData = ref(false);
@@ -195,6 +207,7 @@ const selectedRuleTags = ref([] as string[]);
 const selectedVersionsList = ref([] as RulePackRead[]);
 const selectedVersions = ref([] as string[]);
 const ruleTotalRowClass = ref(['text-start', 'fw-bold']);
+const includeDeletedRepositories = ref(false);
 
 type FieldType = {
   key: string;
@@ -298,7 +311,11 @@ function fetchRuleTags() {
 
 function fetchRulesWithFindingStatusCount() {
   loadedData.value = false;
-  RuleService.getRulesWithFindingStatusCount(selectedVersions.value, selectedRuleTags.value)
+  RuleService.getRulesWithFindingStatusCount(
+    selectedVersions.value,
+    selectedRuleTags.value,
+    includeDeletedRepositories.value,
+  )
     .then((response: AxiosResponse<RuleFindingCountModel[]>) => {
       getTotalCountRowValuesForRuleMetricsTable(response.data);
       loadedData.value = true;

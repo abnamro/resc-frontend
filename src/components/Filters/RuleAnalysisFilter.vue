@@ -89,8 +89,6 @@
               @set-rule-pack-versions-on-rule-pack-filter="setRulePackVersionsOnRulePackFilter"
             />
           </div>
-          <!-- </div>
-        <div class="row"> -->
           <!-- Rule Tags Filter -->
           <div class="col-md-3">
             <RuleTagsFilter
@@ -98,6 +96,21 @@
               :ruleTagsSelected="selectedRuleTags"
               @on-rule-tags-change="onRuleTagsChange"
             />
+          </div>
+        </div>
+
+        <div class="row pt-3">
+          <div class="col-md-4 text-start">
+            <b-form-checkbox
+              v-model="includeDeletedRepositories"
+              name="check-button"
+              switch
+              @change="handleFilterChange"
+            >
+              <small class="text-nowrap"
+                >Display findings for repositories marked as deleted.</small
+              >
+            </b-form-checkbox>
           </div>
         </div>
       </b-collapse>
@@ -150,6 +163,7 @@ export type RuleAnalysisFilter = {
   rule: string[];
   ruleTags: string[];
   rulePackVersions: string[];
+  includeDeletedRepositories: boolean;
 };
 
 const optionsRules = ref([] as string[]);
@@ -165,6 +179,7 @@ const selectedRule = ref([] as string[]);
 const selectedRuleTags = ref([] as string[]);
 const selectedRulePackVersions = ref([] as RulePackRead[]);
 const advancedSearchVisible = ref(false);
+const includeDeletedRepositories = ref(false);
 
 const emit = defineEmits(['on-filter-change']);
 
@@ -255,6 +270,7 @@ function handleFilterChange() {
     rule: selectedRule.value,
     rulePackVersions: rulePackVersionsValues,
     ruleTags: selectedRuleTags.value,
+    includeDeletedRepositories: includeDeletedRepositories.value,
   };
   emit('on-filter-change', filterObj);
 }
@@ -274,6 +290,7 @@ function fetchAllDetectedRules() {
     CommonUtils.stringify_date(startDate.value),
     CommonUtils.stringify_date(endDate.value),
     rulePackVersionsFetched,
+    includeDeletedRepositories.value,
   )
     .then((response) => {
       optionsRules.value = response.data;
@@ -333,6 +350,7 @@ function applyRuleFilterInRuleAnalysisPage() {
       rule: selectedRules,
       ruleTags: selectedRuleTags.value,
       rulePackVersions: selectedVersions,
+      includeDeletedRepositories: includeDeletedRepositories.value,
     };
 
     //Populate rule analysis list based on rule filter

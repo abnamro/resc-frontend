@@ -100,82 +100,134 @@
         "operationId": "get_distinct_rules_from_findings_resc_v1_detected_rules_get",
         "parameters": [
           {
+            "name": "findingstatus",
+            "in": "query",
             "required": false,
             "schema": {
+              "type": "array",
               "items": {
                 "$ref": "#/components/schemas/FindingStatus"
               },
-              "type": "array",
               "title": "FindingStatuses"
-            },
-            "name": "findingstatus",
-            "in": "query"
+            }
           },
           {
+            "name": "vcs_provider",
+            "in": "query",
             "required": false,
             "schema": {
+              "type": "array",
               "items": {
                 "$ref": "#/components/schemas/VCSProviders"
               },
-              "type": "array",
               "title": "VCSProviders"
-            },
-            "name": "vcsprovider",
-            "in": "query"
+            }
           },
           {
-            "required": false,
-            "schema": {
-              "type": "string",
-              "pattern": "^[A-z0-9 .\\-_%]*$",
-              "title": "Project Name",
-              "default": ""
-            },
             "name": "project_name",
-            "in": "query"
-          },
-          {
+            "in": "query",
             "required": false,
             "schema": {
-              "type": "string",
-              "pattern": "^[A-z0-9 .\\-_%]*$",
-              "title": "Repository Name",
-              "default": ""
-            },
+              "anyOf": [
+                {
+                  "type": "string",
+                  "pattern": "^[A-z0-9 .\\-_%]*$"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": "",
+              "title": "Project Name"
+            }
+          },
+          {
             "name": "repository_name",
-            "in": "query"
-          },
-          {
+            "in": "query",
             "required": false,
             "schema": {
-              "type": "string",
-              "format": "date-time",
-              "title": "Start Date Time"
-            },
+              "anyOf": [
+                {
+                  "type": "string",
+                  "pattern": "^[A-z0-9 .\\-_%]*$"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": "",
+              "title": "Repository Name"
+            }
+          },
+          {
             "name": "start_date_time",
-            "in": "query"
-          },
-          {
+            "in": "query",
             "required": false,
             "schema": {
-              "type": "string",
-              "format": "date-time",
-              "title": "End Date Time"
-            },
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Start Date Time"
+            }
+          },
+          {
             "name": "end_date_time",
-            "in": "query"
-          },
-          {
+            "in": "query",
             "required": false,
             "schema": {
-              "items": {
-                "type": "string"
-              },
-              "type": "array",
-              "title": "RulePackVersion"
-            },
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "End Date Time"
+            }
+          },
+          {
             "name": "rule_pack_version",
-            "in": "query"
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "RulePackVersion"
+            }
+          },
+          {
+            "name": "include_deleted_repositories",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "IncludeDeletedRepositories",
+              "default": false
+            }
           }
         ],
         "responses": {
@@ -184,10 +236,10 @@
             "content": {
               "application/json": {
                 "schema": {
+                  "type": "array",
                   "items": {
                     "type": "string"
                   },
-                  "type": "array",
                   "title": "Response Get Distinct Rules From Findings Resc V1 Detected Rules Get"
                 }
               }
@@ -222,28 +274,59 @@
         "operationId": "get_rules_finding_status_count_resc_v1_rules_finding_status_count_get",
         "parameters": [
           {
+            "name": "rule_pack_version",
+            "in": "query",
             "required": false,
             "schema": {
-              "items": {
-                "type": "string"
-              },
-              "type": "array",
+              "anyOf": [
+                {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                {
+                  "type": "null"
+                }
+              ],
               "title": "RulePackVersion"
-            },
-            "name": "rule_pack_version",
-            "in": "query"
+            }
           },
           {
+            "name": "rule_tag",
+            "in": "query",
             "required": false,
             "schema": {
-              "items": {
-                "type": "string"
-              },
-              "type": "array",
+              "anyOf": [
+                {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                {
+                  "type": "null"
+                }
+              ],
               "title": "RuleTag"
-            },
-            "name": "rule_tag",
-            "in": "query"
+            }
+          },
+          {
+            "name": "include_deleted_repositories",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "IncludeDeletedRepositories",
+              "default": false
+            }
           }
         ],
         "responses": {
@@ -252,10 +335,10 @@
             "content": {
               "application/json": {
                 "schema": {
+                  "type": "array",
                   "items": {
                     "$ref": "#/components/schemas/RuleFindingCountModel"
                   },
-                  "type": "array",
                   "title": "Response Get Rules Finding Status Count Resc V1 Rules Finding Status Count Get"
                 }
               }
@@ -290,47 +373,61 @@
         "operationId": "get_rule_packs_resc_v1_rule_packs_versions_get",
         "parameters": [
           {
-            "required": false,
-            "schema": {
-              "type": "string",
-              "pattern": "^\\d+(?:\\.\\d+){2}$",
-              "title": "Version"
-            },
             "name": "version",
-            "in": "query"
-          },
-          {
-            "description": "Filter on active rule packs",
+            "in": "query",
             "required": false,
             "schema": {
-              "type": "boolean",
-              "title": "Active",
-              "description": "Filter on active rule packs"
-            },
+              "anyOf": [
+                {
+                  "type": "string",
+                  "pattern": "^\\d+(?:\\.\\d+){2}$"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Version"
+            }
+          },
+          {
             "name": "active",
-            "in": "query"
-          },
-          {
+            "in": "query",
             "required": false,
             "schema": {
-              "type": "integer",
-              "minimum": 0.0,
-              "title": "Skip",
-              "default": 0
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Filter on active rule packs",
+              "title": "Active"
             },
+            "description": "Filter on active rule packs"
+          },
+          {
             "name": "skip",
-            "in": "query"
-          },
-          {
+            "in": "query",
             "required": false,
             "schema": {
               "type": "integer",
-              "minimum": 1.0,
-              "title": "Limit",
-              "default": 100
-            },
+              "minimum": 0,
+              "default": 0,
+              "title": "Skip"
+            }
+          },
+          {
             "name": "limit",
-            "in": "query"
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 100,
+              "title": "Limit"
+            }
           }
         ],
         "responses": {
@@ -373,14 +470,21 @@
         "operationId": "download_rule_pack_toml_file_resc_v1_rule_packs_get",
         "parameters": [
           {
+            "name": "rule_pack_version",
+            "in": "query",
             "required": false,
             "schema": {
-              "type": "string",
-              "pattern": "^\\d+(?:\\.\\d+){2}$",
-              "title": "Version"
-            },
-            "name": "version",
-            "in": "query"
+              "anyOf": [
+                {
+                  "type": "string",
+                  "pattern": "^\\d+(?:\\.\\d+){2}$"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Rule Pack Version"
+            }
           }
         ],
         "responses": {
@@ -429,25 +533,25 @@
         "operationId": "upload_rule_pack_toml_file_resc_v1_rule_packs_post",
         "parameters": [
           {
+            "name": "version",
+            "in": "query",
             "required": true,
             "schema": {
               "type": "string",
               "pattern": "^\\d+(?:\\.\\d+){2}$",
               "title": "Version"
-            },
-            "name": "version",
-            "in": "query"
+            }
           }
         ],
         "requestBody": {
+          "required": true,
           "content": {
             "multipart/form-data": {
               "schema": {
                 "$ref": "#/components/schemas/Body_upload_rule_pack_toml_file_resc_v1_rule_packs_post"
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {
@@ -510,16 +614,23 @@
         "operationId": "get_rule_packs_tags_resc_v1_rule_packs_tags_get",
         "parameters": [
           {
+            "name": "version",
+            "in": "query",
             "required": false,
             "schema": {
-              "items": {
-                "type": "string"
-              },
-              "type": "array",
+              "anyOf": [
+                {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                {
+                  "type": "null"
+                }
+              ],
               "title": "version"
-            },
-            "name": "version",
-            "in": "query"
+            }
           }
         ],
         "responses": {
@@ -528,10 +639,10 @@
             "content": {
               "application/json": {
                 "schema": {
+                  "type": "array",
                   "items": {
                     "type": "string"
                   },
-                  "type": "array",
                   "title": "Response Get Rule Packs Tags Resc V1 Rule Packs Tags Get"
                 }
               }
@@ -635,22 +746,22 @@
         "operationId": "get_rule_from_rule_pack_resc_v1_rule_packs__rule_pack_version__rules_get",
         "parameters": [
           {
+            "name": "rule_pack_version",
+            "in": "path",
             "required": true,
             "schema": {
               "type": "string",
               "title": "Rule Pack Version"
-            },
-            "name": "rule_pack_version",
-            "in": "path"
+            }
           },
           {
+            "name": "rule_name",
+            "in": "query",
             "required": true,
             "schema": {
               "type": "string",
               "title": "RuleName"
-            },
-            "name": "rule_name",
-            "in": "query"
+            }
           }
         ],
         "responses": {
@@ -665,7 +776,7 @@
             }
           },
           "404": {
-            "description": "Scan <scan_id> not found",
+            "description": "Rule <rule_name> for <rule_pack_version> not found",
             "content": {
               "application/json": {
                 "schema": {
@@ -675,7 +786,7 @@
             }
           },
           "422": {
-            "description": "RulePackVersion and RuleName required",
+            "description": "rule_pack_version and rule_name required",
             "content": {
               "application/json": {
                 "schema": {
@@ -703,26 +814,26 @@
         "operationId": "get_all_findings_resc_v1_findings_get",
         "parameters": [
           {
+            "name": "skip",
+            "in": "query",
             "required": false,
             "schema": {
               "type": "integer",
-              "minimum": 0.0,
-              "title": "Skip",
-              "default": 0
-            },
-            "name": "skip",
-            "in": "query"
+              "minimum": 0,
+              "default": 0,
+              "title": "Skip"
+            }
           },
           {
+            "name": "limit",
+            "in": "query",
             "required": false,
             "schema": {
               "type": "integer",
-              "minimum": 1.0,
-              "title": "Limit",
-              "default": 100
-            },
-            "name": "limit",
-            "in": "query"
+              "minimum": 1,
+              "default": 100,
+              "title": "Limit"
+            }
           }
         ],
         "responses": {
@@ -762,18 +873,18 @@
         "description": "Create new findings\n\n- **db_connection**: Session of the database connection\n- **file_path**: file path\n- **line_number**: Line number\n- **commit_id**: commit hash\n- **commit_message**: Commit message\n- **commit_timestamp**: Commit timestamp\n- **author**: Author name\n- **email**: Email of the author\n- **event_sent_on**: event sent timestamp\n- **rule_name**: rule name\n- **repository_id**: repository id of the finding\n- **return**: int\n      The output will contain the number of successful created findings",
         "operationId": "create_findings_resc_v1_findings_post",
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
+                "type": "array",
                 "items": {
                   "$ref": "#/components/schemas/FindingCreate"
                 },
-                "type": "array",
                 "title": "Findings"
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "201": {
@@ -826,18 +937,85 @@
         "operationId": "read_finding_resc_v1_findings__finding_id__get",
         "parameters": [
           {
+            "name": "finding_id",
+            "in": "path",
             "required": true,
             "schema": {
               "type": "integer",
               "title": "Finding Id"
-            },
-            "name": "finding_id",
-            "in": "path"
+            }
           }
         ],
         "responses": {
           "200": {
             "description": "Retrieve finding <finding_id>",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FindingRead"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Finding <finding_id> not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Model404"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error. Contact your system administrator"
+          },
+          "503": {
+            "description": "Unable to communicate with DataBase, Please contact your system administrator"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "resc-findings"
+        ],
+        "summary": "Partially update a finding by ID",
+        "description": "Partially update a finding by ID\n\n- **db_connection**: Session of the database connection\n- **finding_id**: ID of the finding for which details need to be updated\n- **event_sent_on**: Event sent timestamp",
+        "operationId": "patch_finding_resc_v1_findings__finding_id__patch",
+        "parameters": [
+          {
+            "name": "finding_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Finding Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FindingPatch"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Modify finding <finding_id>",
             "content": {
               "application/json": {
                 "schema": {
@@ -883,13 +1061,13 @@
         "operationId": "delete_finding_resc_v1_findings__finding_id__delete",
         "parameters": [
           {
+            "name": "finding_id",
+            "in": "path",
             "required": true,
             "schema": {
               "type": "integer",
               "title": "Finding Id"
-            },
-            "name": "finding_id",
-            "in": "path"
+            }
           }
         ],
         "responses": {
@@ -898,73 +1076,6 @@
             "content": {
               "application/json": {
                 "schema": {}
-              }
-            }
-          },
-          "404": {
-            "description": "Finding <finding_id> not found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Model404"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal server error. Contact your system administrator"
-          },
-          "503": {
-            "description": "Unable to communicate with DataBase, Please contact your system administrator"
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          }
-        }
-      },
-      "patch": {
-        "tags": [
-          "resc-findings"
-        ],
-        "summary": "Partially update a finding by ID",
-        "description": "Partially update a finding by ID\n\n- **db_connection**: Session of the database connection\n- **finding_id**: ID of the finding for which details need to be updated\n- **event_sent_on**: Event sent timestamp",
-        "operationId": "patch_finding_resc_v1_findings__finding_id__patch",
-        "parameters": [
-          {
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "title": "Finding Id"
-            },
-            "name": "finding_id",
-            "in": "path"
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/FindingPatch"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "Modify finding <finding_id>",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/FindingRead"
-                }
               }
             }
           },
@@ -1007,13 +1118,13 @@
         "operationId": "get_total_findings_count_by_rule_resc_v1_findings_total_count_by_rule__rule_name__get",
         "parameters": [
           {
+            "name": "rule_name",
+            "in": "path",
             "required": true,
             "schema": {
               "type": "string",
               "title": "Rule Name"
-            },
-            "name": "rule_name",
-            "in": "path"
+            }
           }
         ],
         "responses": {
@@ -1054,35 +1165,52 @@
         "operationId": "get_findings_by_rule_resc_v1_findings_by_rule__rule_name__get",
         "parameters": [
           {
+            "name": "rule_name",
+            "in": "path",
             "required": true,
             "schema": {
               "type": "string",
               "title": "Rule Name"
-            },
-            "name": "rule_name",
-            "in": "path"
+            }
           },
           {
-            "required": false,
-            "schema": {
-              "type": "integer",
-              "minimum": 0.0,
-              "title": "Skip",
-              "default": 0
-            },
             "name": "skip",
-            "in": "query"
-          },
-          {
+            "in": "query",
             "required": false,
             "schema": {
               "type": "integer",
-              "minimum": 1.0,
-              "title": "Limit",
-              "default": 100
-            },
+              "minimum": 0,
+              "default": 0,
+              "title": "Skip"
+            }
+          },
+          {
             "name": "limit",
-            "in": "query"
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 100,
+              "title": "Limit"
+            }
+          },
+          {
+            "name": "include_deleted_repositories",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "IncludeDeletedRepositories",
+              "default": false
+            }
           }
         ],
         "responses": {
@@ -1184,35 +1312,35 @@
         "operationId": "get_finding_audits_resc_v1_findings__finding_id__audit_get",
         "parameters": [
           {
+            "name": "finding_id",
+            "in": "path",
             "required": true,
             "schema": {
               "type": "integer",
               "title": "Finding Id"
-            },
-            "name": "finding_id",
-            "in": "path"
+            }
           },
           {
-            "required": false,
-            "schema": {
-              "type": "integer",
-              "minimum": 0.0,
-              "title": "Skip",
-              "default": 0
-            },
             "name": "skip",
-            "in": "query"
-          },
-          {
+            "in": "query",
             "required": false,
             "schema": {
               "type": "integer",
-              "minimum": 1.0,
-              "title": "Limit",
-              "default": 100
-            },
+              "minimum": 0,
+              "default": 0,
+              "title": "Skip"
+            }
+          },
+          {
             "name": "limit",
-            "in": "query"
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 100,
+              "title": "Limit"
+            }
           }
         ],
         "responses": {
@@ -1287,54 +1415,68 @@
         "operationId": "get_count_by_time_resc_v1_findings_count_by_time__time_type__get",
         "parameters": [
           {
+            "name": "time_type",
+            "in": "path",
             "required": true,
             "schema": {
               "$ref": "#/components/schemas/DateFilter"
-            },
-            "name": "time_type",
-            "in": "path"
+            }
           },
           {
-            "required": false,
-            "schema": {
-              "type": "integer",
-              "minimum": 0.0,
-              "title": "Skip",
-              "default": 0
-            },
             "name": "skip",
-            "in": "query"
-          },
-          {
+            "in": "query",
             "required": false,
             "schema": {
               "type": "integer",
-              "minimum": 1.0,
-              "title": "Limit",
-              "default": 100
-            },
+              "minimum": 0,
+              "default": 0,
+              "title": "Skip"
+            }
+          },
+          {
             "name": "limit",
-            "in": "query"
-          },
-          {
+            "in": "query",
             "required": false,
             "schema": {
-              "type": "string",
-              "format": "date-time",
-              "title": "Start Date Time"
-            },
+              "type": "integer",
+              "minimum": 1,
+              "default": 100,
+              "title": "Limit"
+            }
+          },
+          {
             "name": "start_date_time",
-            "in": "query"
-          },
-          {
+            "in": "query",
             "required": false,
             "schema": {
-              "type": "string",
-              "format": "date-time",
-              "title": "End Date Time"
-            },
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Start Date Time"
+            }
+          },
+          {
             "name": "end_date_time",
-            "in": "query"
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "End Date Time"
+            }
           }
         ],
         "responses": {
@@ -1377,35 +1519,35 @@
         "operationId": "get_all_detailed_findings_resc_v1_detailed_findings_get",
         "parameters": [
           {
-            "required": false,
-            "schema": {
-              "type": "integer",
-              "minimum": 0.0,
-              "title": "Skip",
-              "default": 0
-            },
             "name": "skip",
-            "in": "query"
-          },
-          {
+            "in": "query",
             "required": false,
             "schema": {
               "type": "integer",
-              "minimum": 1.0,
-              "title": "Limit",
-              "default": 100
-            },
-            "name": "limit",
-            "in": "query"
+              "minimum": 0,
+              "default": 0,
+              "title": "Skip"
+            }
           },
           {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 100,
+              "title": "Limit"
+            }
+          },
+          {
+            "name": "query_string",
+            "in": "query",
             "required": false,
             "schema": {
               "type": "string",
               "title": "Query String"
-            },
-            "name": "query_string",
-            "in": "query"
+            }
           }
         ],
         "responses": {
@@ -1448,13 +1590,13 @@
         "operationId": "read_finding_resc_v1_detailed_findings__finding_id__get",
         "parameters": [
           {
+            "name": "finding_id",
+            "in": "path",
             "required": true,
             "schema": {
               "type": "integer",
               "title": "Finding Id"
-            },
-            "name": "finding_id",
-            "in": "path"
+            }
           }
         ],
         "responses": {
@@ -1503,64 +1645,95 @@
           "resc-repositories"
         ],
         "summary": "Get repositories",
-        "description": "Retrieve all repository objects paginated\n\n- **db_connection**: Session of the database connection\n- **skip**: Integer amount of records to skip to support pagination\n- **limit**: Integer amount of records to return, to support pagination\n- **vcsproviders**: Optional, filter on supported vcs provider types\n- **projectfilter**: Optional, filter on project name. It is used as a string contains filter\n- **repositoryfilter**: Optional, filter on repository name. It is used as a string contains filter\n- **return**: [RepositoryRead]\n    The output will contain a PaginationModel containing the list of RepositoryRead type objects,\n    or an empty list if no repository",
+        "description": "Retrieve all repository objects paginated\n\n- **db_connection**: Session of the database connection\n- **skip**: Integer amount of records to skip to support pagination\n- **limit**: Integer amount of records to return, to support pagination\n- **vcs_providers**: Optional, filter on supported vcs provider types\n- **projectfilter**: Optional, filter on project name. It is used as a string contains filter\n- **repositoryfilter**: Optional, filter on repository name. It is used as a string contains filter\n- **return**: [RepositoryRead]\n    The output will contain a PaginationModel containing the list of RepositoryRead type objects,\n    or an empty list if no repository",
         "operationId": "get_all_repositories_resc_v1_repositories_get",
         "parameters": [
           {
-            "required": false,
-            "schema": {
-              "type": "integer",
-              "minimum": 0.0,
-              "title": "Skip",
-              "default": 0
-            },
             "name": "skip",
-            "in": "query"
-          },
-          {
+            "in": "query",
             "required": false,
             "schema": {
               "type": "integer",
-              "minimum": 1.0,
-              "title": "Limit",
-              "default": 100
-            },
-            "name": "limit",
-            "in": "query"
+              "minimum": 0,
+              "default": 0,
+              "title": "Skip"
+            }
           },
           {
+            "name": "limit",
+            "in": "query",
             "required": false,
             "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 100,
+              "title": "Limit"
+            }
+          },
+          {
+            "name": "vcs_provider",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "array",
               "items": {
                 "$ref": "#/components/schemas/VCSProviders"
               },
-              "type": "array",
               "title": "VCSProviders"
-            },
-            "name": "vcsprovider",
-            "in": "query"
+            }
           },
           {
+            "name": "project_filter",
+            "in": "query",
             "required": false,
             "schema": {
-              "type": "string",
-              "pattern": "^[A-z0-9 .\\-_%]*$",
-              "title": "Projectfilter",
-              "default": ""
-            },
-            "name": "projectfilter",
-            "in": "query"
+              "anyOf": [
+                {
+                  "type": "string",
+                  "pattern": "^[A-z0-9 .\\-_%]*$"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": "",
+              "title": "Project Filter"
+            }
           },
           {
+            "name": "repository_filter",
+            "in": "query",
             "required": false,
             "schema": {
-              "type": "string",
-              "pattern": "^[A-z0-9 .\\-_%]*$",
-              "title": "Repositoryfilter",
-              "default": ""
-            },
-            "name": "repositoryfilter",
-            "in": "query"
+              "anyOf": [
+                {
+                  "type": "string",
+                  "pattern": "^[A-z0-9 .\\-_%]*$"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": "",
+              "title": "Repository Filter"
+            }
+          },
+          {
+            "name": "include_deleted_repositories",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "IncludeDeletedRepositories",
+              "default": false
+            }
           }
         ],
         "responses": {
@@ -1600,14 +1773,14 @@
         "description": "Create a repository with all the information\n\n- **db_connection**: Session of the database connection\n- **project_key**: each repository must have a project name or key\n- **repository_id**: repository id\n- **repository_name**: repository name\n- **repository_url**: repository url\n- **vcs_instance**: vcs instance id",
         "operationId": "create_repository_resc_v1_repositories_post",
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/RepositoryCreate"
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "201": {
@@ -1649,13 +1822,13 @@
         "operationId": "read_repository_resc_v1_repositories__repository_id__get",
         "parameters": [
           {
+            "name": "repository_id",
+            "in": "path",
             "required": true,
             "schema": {
               "type": "integer",
               "title": "Repository Id"
-            },
-            "name": "repository_id",
-            "in": "path"
+            }
           }
         ],
         "responses": {
@@ -1706,24 +1879,24 @@
         "operationId": "update_repository_resc_v1_repositories__repository_id__put",
         "parameters": [
           {
+            "name": "repository_id",
+            "in": "path",
             "required": true,
             "schema": {
               "type": "integer",
               "title": "Repository Id"
-            },
-            "name": "repository_id",
-            "in": "path"
+            }
           }
         ],
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/RepositoryCreate"
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {
@@ -1773,13 +1946,13 @@
         "operationId": "delete_repository_resc_v1_repositories__repository_id__delete",
         "parameters": [
           {
+            "name": "repository_id",
+            "in": "path",
             "required": true,
             "schema": {
               "type": "integer",
               "title": "Repository Id"
-            },
-            "name": "repository_id",
-            "in": "path"
+            }
           }
         ],
         "responses": {
@@ -1826,41 +1999,65 @@
           "resc-repositories"
         ],
         "summary": "Get all unique project names",
-        "description": "Retrieve all unique project names\n\n- **db_connection**: Session of the database connection\n- **vcsproviders**: Optional, filter on supported vcs provider types\n- **repositoryfilter**: Optional, filter on repository name. It is used as a string contains filter\n- **onlyifhasfindings**: Optional, filter all projects those have findings\n- **return**: List[str]\n    The output will contain a list of unique projects",
+        "description": "Retrieve all unique project names\n\n- **db_connection**: Session of the database connection\n- **vcs_providers**: Optional, filter on supported vcs provider types\n- **repositoryfilter**: Optional, filter on repository name. It is used as a string contains filter\n- **only_if_has_findings**: Optional, filter all projects those have findings\n- **return**: List[str]\n    The output will contain a list of unique projects",
         "operationId": "get_distinct_projects_resc_v1_repositories_distinct_projects__get",
         "parameters": [
           {
+            "name": "vcs_provider",
+            "in": "query",
             "required": false,
             "schema": {
+              "type": "array",
               "items": {
                 "$ref": "#/components/schemas/VCSProviders"
               },
-              "type": "array",
               "title": "VCSProviders"
-            },
-            "name": "vcsprovider",
-            "in": "query"
+            }
           },
           {
+            "name": "repository_filter",
+            "in": "query",
             "required": false,
             "schema": {
-              "type": "string",
-              "pattern": "^[A-z0-9 .\\-_%]*$",
-              "title": "Repositoryfilter",
-              "default": ""
-            },
-            "name": "repositoryfilter",
-            "in": "query"
+              "anyOf": [
+                {
+                  "type": "string",
+                  "pattern": "^[A-z0-9 .\\-_%]*$"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": "",
+              "title": "Repository Filter"
+            }
           },
           {
+            "name": "only_if_has_findings",
+            "in": "query",
             "required": false,
             "schema": {
               "type": "boolean",
-              "title": "Onlyifhasfindings",
+              "default": false,
+              "title": "Only If Has Findings"
+            }
+          },
+          {
+            "name": "include_deleted_repositories",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "IncludeDeletedRepositories",
               "default": false
-            },
-            "name": "onlyifhasfindings",
-            "in": "query"
+            }
           }
         ],
         "responses": {
@@ -1869,10 +2066,10 @@
             "content": {
               "application/json": {
                 "schema": {
+                  "type": "array",
                   "items": {
                     "type": "string"
                   },
-                  "type": "array",
                   "title": "Response Get Distinct Projects Resc V1 Repositories Distinct Projects  Get"
                 }
               }
@@ -1903,41 +2100,65 @@
           "resc-repositories"
         ],
         "summary": "Get all unique repository names",
-        "description": "Retrieve all unique repository names\n\n- **db_connection**: Session of the database connection\n- **vcsproviders**: Optional, filter of supported vcs provider types\n- **projectname**: Optional, filter on project name. It is used as a full string match filter\n- **onlyifhasfindings**: Optional, filter all repositories that have findings\n- **return**: List[str]\n    The output will contain a list of unique repositories",
+        "description": "Retrieve all unique repository names\n\n- **db_connection**: Session of the database connection\n- **vcs_providers**: Optional, filter of supported vcs provider types\n- **project_name**: Optional, filter on project name. It is used as a full string match filter\n- **only_if_has_findings**: Optional, filter all repositories that have findings\n- **return**: List[str]\n    The output will contain a list of unique repositories",
         "operationId": "get_distinct_repositories_resc_v1_repositories_distinct_repositories__get",
         "parameters": [
           {
+            "name": "vcs_provider",
+            "in": "query",
             "required": false,
             "schema": {
+              "type": "array",
               "items": {
                 "$ref": "#/components/schemas/VCSProviders"
               },
-              "type": "array",
               "title": "VCSProviders"
-            },
-            "name": "vcsprovider",
-            "in": "query"
+            }
           },
           {
+            "name": "project_name",
+            "in": "query",
             "required": false,
             "schema": {
-              "type": "string",
-              "pattern": "^[A-z0-9 .\\-_%]*$",
-              "title": "Projectname",
-              "default": ""
-            },
-            "name": "projectname",
-            "in": "query"
+              "anyOf": [
+                {
+                  "type": "string",
+                  "pattern": "^[A-z0-9 .\\-_%]*$"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": "",
+              "title": "Project Name"
+            }
           },
           {
+            "name": "only_if_has_findings",
+            "in": "query",
             "required": false,
             "schema": {
               "type": "boolean",
-              "title": "Onlyifhasfindings",
+              "default": false,
+              "title": "Only If Has Findings"
+            }
+          },
+          {
+            "name": "include_deleted_repositories",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "IncludeDeletedRepositories",
               "default": false
-            },
-            "name": "onlyifhasfindings",
-            "in": "query"
+            }
           }
         ],
         "responses": {
@@ -1946,10 +2167,10 @@
             "content": {
               "application/json": {
                 "schema": {
+                  "type": "array",
                   "items": {
                     "type": "string"
                   },
-                  "type": "array",
                   "title": "Response Get Distinct Repositories Resc V1 Repositories Distinct Repositories  Get"
                 }
               }
@@ -1984,13 +2205,13 @@
         "operationId": "get_findings_metadata_for_repository_resc_v1_repositories__repository_id__findings_metadata_get",
         "parameters": [
           {
+            "name": "repository_id",
+            "in": "path",
             "required": true,
             "schema": {
               "type": "integer",
               "title": "Repository Id"
-            },
-            "name": "repository_id",
-            "in": "path"
+            }
           }
         ],
         "responses": {
@@ -2039,74 +2260,105 @@
           "resc-repositories"
         ],
         "summary": "Get all repositories with findings metadata",
-        "description": "Retrieve all repository objects paginated\n\n- **db_connection**: Session of the database connection\n- **skip**: Integer amount of records to skip to support pagination\n- **limit**: Integer amount of records to return, to support pagination\n- **vcsproviders**: Optional, filter on supported vcs provider types\n- **projectfilter**: Optional, filter on project name. It is used as a string contains filter\n- **repositoryfilter**: Optional, filter on repository name. It is used as a string contains filter\n- **onlyifhasfindings**: Optional, filter all repositories those have findings\n- **return**: [RepositoryEnrichedRead]\n    The output will contain a PaginationModel containing the list of RepositoryEnrichedRead type objects,\n    or an empty list if no repository",
+        "description": "Retrieve all repository objects paginated\n\n- **db_connection**: Session of the database connection\n- **skip**: Integer amount of records to skip to support pagination\n- **limit**: Integer amount of records to return, to support pagination\n- **vcs_providers**: Optional, filter on supported vcs provider types\n- **projectfilter**: Optional, filter on project name. It is used as a string contains filter\n- **repositoryfilter**: Optional, filter on repository name. It is used as a string contains filter\n- **only_if_has_findings**: Optional, filter all repositories those have findings\n- **return**: [RepositoryEnrichedRead]\n    The output will contain a PaginationModel containing the list of RepositoryEnrichedRead type objects,\n    or an empty list if no repository",
         "operationId": "get_all_repositories_with_findings_metadata_resc_v1_repositories_findings_metadata__get",
         "parameters": [
           {
-            "required": false,
-            "schema": {
-              "type": "integer",
-              "minimum": 0.0,
-              "title": "Skip",
-              "default": 0
-            },
             "name": "skip",
-            "in": "query"
-          },
-          {
+            "in": "query",
             "required": false,
             "schema": {
               "type": "integer",
-              "minimum": 1.0,
-              "title": "Limit",
-              "default": 100
-            },
-            "name": "limit",
-            "in": "query"
+              "minimum": 0,
+              "default": 0,
+              "title": "Skip"
+            }
           },
           {
+            "name": "limit",
+            "in": "query",
             "required": false,
             "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 100,
+              "title": "Limit"
+            }
+          },
+          {
+            "name": "vcs_provider",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "array",
               "items": {
                 "$ref": "#/components/schemas/VCSProviders"
               },
-              "type": "array",
               "title": "VCSProviders"
-            },
-            "name": "vcsprovider",
-            "in": "query"
+            }
           },
           {
+            "name": "project_filter",
+            "in": "query",
             "required": false,
             "schema": {
-              "type": "string",
-              "pattern": "^[A-z0-9 .\\-_%]*$",
-              "title": "Projectfilter",
-              "default": ""
-            },
-            "name": "projectfilter",
-            "in": "query"
+              "anyOf": [
+                {
+                  "type": "string",
+                  "pattern": "^[A-z0-9 .\\-_%]*$"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": "",
+              "title": "Project Filter"
+            }
           },
           {
+            "name": "repository_filter",
+            "in": "query",
             "required": false,
             "schema": {
-              "type": "string",
-              "pattern": "^[A-z0-9 .\\-_%]*$",
-              "title": "Repositoryfilter",
-              "default": ""
-            },
-            "name": "repositoryfilter",
-            "in": "query"
+              "anyOf": [
+                {
+                  "type": "string",
+                  "pattern": "^[A-z0-9 .\\-_%]*$"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": "",
+              "title": "Repository Filter"
+            }
           },
           {
+            "name": "only_if_has_findings",
+            "in": "query",
             "required": false,
             "schema": {
               "type": "boolean",
-              "title": "Onlyifhasfindings",
+              "default": false,
+              "title": "Only If Has Findings"
+            }
+          },
+          {
+            "name": "include_deleted_repositories",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "IncludeDeletedRepositories",
               "default": false
-            },
-            "name": "onlyifhasfindings",
-            "in": "query"
+            }
           }
         ],
         "responses": {
@@ -2149,13 +2401,13 @@
         "operationId": "get_last_scan_for_repository_resc_v1_repositories__repository_id__last_scan_get",
         "parameters": [
           {
+            "name": "repository_id",
+            "in": "path",
             "required": true,
             "schema": {
               "type": "integer",
               "title": "Repository Id"
-            },
-            "name": "repository_id",
-            "in": "path"
+            }
           }
         ],
         "responses": {
@@ -2201,35 +2453,35 @@
         "operationId": "get_scans_for_repository_resc_v1_repositories__repository_id__scans_get",
         "parameters": [
           {
+            "name": "repository_id",
+            "in": "path",
             "required": true,
             "schema": {
               "type": "integer",
               "title": "Repository Id"
-            },
-            "name": "repository_id",
-            "in": "path"
+            }
           },
           {
-            "required": false,
-            "schema": {
-              "type": "integer",
-              "minimum": 0.0,
-              "title": "Skip",
-              "default": 0
-            },
             "name": "skip",
-            "in": "query"
-          },
-          {
+            "in": "query",
             "required": false,
             "schema": {
               "type": "integer",
-              "minimum": 1.0,
-              "title": "Limit",
-              "default": 100
-            },
+              "minimum": 0,
+              "default": 0,
+              "title": "Skip"
+            }
+          },
+          {
             "name": "limit",
-            "in": "query"
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 100,
+              "title": "Limit"
+            }
           }
         ],
         "responses": {
@@ -2272,26 +2524,26 @@
         "operationId": "get_all_scans_resc_v1_scans_get",
         "parameters": [
           {
+            "name": "skip",
+            "in": "query",
             "required": false,
             "schema": {
               "type": "integer",
-              "minimum": 0.0,
-              "title": "Skip",
-              "default": 0
-            },
-            "name": "skip",
-            "in": "query"
+              "minimum": 0,
+              "default": 0,
+              "title": "Skip"
+            }
           },
           {
+            "name": "limit",
+            "in": "query",
             "required": false,
             "schema": {
               "type": "integer",
-              "minimum": 1.0,
-              "title": "Limit",
-              "default": 100
-            },
-            "name": "limit",
-            "in": "query"
+              "minimum": 1,
+              "default": 100,
+              "title": "Limit"
+            }
           }
         ],
         "responses": {
@@ -2331,14 +2583,14 @@
         "description": "Create a scan with all the information\n\n- **db_connection**: Session of the database connection\n- **scan_type**: scan type, supported values are BASE or INCREMENTAL\n- **last_scanned_commit**: last scanned commit hash\n- **timestamp**: creation timestamp\n- **increment_number**: scan increment number\n- **rule_pack**: rule pack version\n- **repository_id**: repository id",
         "operationId": "create_scan_resc_v1_scans_post",
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/ScanCreate"
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "201": {
@@ -2390,13 +2642,13 @@
         "operationId": "read_scan_resc_v1_scans__scan_id__get",
         "parameters": [
           {
+            "name": "scan_id",
+            "in": "path",
             "required": true,
             "schema": {
               "type": "integer",
               "title": "Scan Id"
-            },
-            "name": "scan_id",
-            "in": "path"
+            }
           }
         ],
         "responses": {
@@ -2447,24 +2699,24 @@
         "operationId": "update_scan_resc_v1_scans__scan_id__put",
         "parameters": [
           {
+            "name": "scan_id",
+            "in": "path",
             "required": true,
             "schema": {
               "type": "integer",
               "title": "Scan Id"
-            },
-            "name": "scan_id",
-            "in": "path"
+            }
           }
         ],
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/ScanCreate"
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {
@@ -2514,13 +2766,13 @@
         "operationId": "delete_scan_resc_v1_scans__scan_id__delete",
         "parameters": [
           {
+            "name": "scan_id",
+            "in": "path",
             "required": true,
             "schema": {
               "type": "integer",
               "title": "Scan Id"
-            },
-            "name": "scan_id",
-            "in": "path"
+            }
           }
         ],
         "responses": {
@@ -2562,80 +2814,46 @@
       }
     },
     "/resc/v1/scans/{scan_id}/findings": {
-      "get": {
+      "post": {
         "tags": [
           "resc-scans"
         ],
-        "summary": "Get scan findings associated with a scan ID",
-        "description": "Retrieve all finding objects paginated related to a scan_id\n\n- **db_connection**: Session of the database connection\n- **scan_id**: Id of the scan for which to retrieve the findings\n- **skip**: Integer amount of records to skip to support pagination\n- **limit**: Integer amount of records to return, to support pagination\n- **rules**: optional, filter on rule name. It is used as a string contains filter\n- **statuses**:  optional, filter on status of findings\n- **return**: [FindingRead]\n    The output will contain a PaginationModel containing the list of FindingRead type objects,\n    or an empty list if no scan was found",
-        "operationId": "get_scan_findings_resc_v1_scans__scan_id__findings_get",
+        "summary": "Create scan findings",
+        "description": "Creates findings and their associated scan_findings for a given scan\n\n- **db_connection**: Session of the database connection\n- **scan_id**:  Id of the scan for which findings need to be inserted\n- **file_path**: file path\n- **line_number**: Line number\n- **column_start**: Column start\n- **column_end**: Column end\n- **commit_id**: commit hash\n- **commit_message**: Commit message\n- **commit_timestamp**: Commit timestamp\n- **author**: Author name\n- **email**: Email of the author\n- **status**: Status of the finding, Valid values are NOT_ANALYZED, NOT_ACCESSIBLE,\n              CLARIFICATION_REQUIRED, FALSE_POSITIVE, TRUE_POSITIVE, OUTDATED\n- **comment**: Comment\n- **event_sent_on**: event sent timestamp\n- **rule_name**: rule name\n- **repository_id**: repository id of the finding\n- **return**: [FindingRead]\n    The output will contain a PaginationModel containing the list of FindingRead type objects,\n    or an empty list if no scan was found",
+        "operationId": "create_scan_findings_resc_v1_scans__scan_id__findings_post",
         "parameters": [
           {
+            "name": "scan_id",
+            "in": "path",
             "required": true,
             "schema": {
               "type": "integer",
               "title": "Scan Id"
-            },
-            "name": "scan_id",
-            "in": "path"
-          },
-          {
-            "required": false,
-            "schema": {
-              "type": "integer",
-              "minimum": 0.0,
-              "title": "Skip",
-              "default": 0
-            },
-            "name": "skip",
-            "in": "query"
-          },
-          {
-            "required": false,
-            "schema": {
-              "type": "integer",
-              "minimum": 1.0,
-              "title": "Limit",
-              "default": 100
-            },
-            "name": "limit",
-            "in": "query"
-          },
-          {
-            "required": false,
-            "schema": {
-              "items": {
-                "type": "string",
-                "pattern": "^[A-z0-9 .\\-_%]*$"
-              },
-              "type": "array",
-              "pattern": "^[A-z0-9 .\\-_%]*$",
-              "title": "rule",
-              "default": []
-            },
-            "name": "rule",
-            "in": "query"
-          },
-          {
-            "required": false,
-            "schema": {
-              "items": {
-                "$ref": "#/components/schemas/FindingStatus"
-              },
-              "type": "array",
-              "title": "status"
-            },
-            "name": "status",
-            "in": "query"
+            }
           }
         ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/FindingCreate"
+                },
+                "title": "Findings"
+              }
+            }
+          }
+        },
         "responses": {
-          "200": {
-            "description": "Retrieve findings associated with scan <scan_id>",
+          "201": {
+            "description": "Create findings and their associated scan_findings for scan <scan_id>",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/PaginationModel_FindingRead_"
+                  "type": "integer",
+                  "title": "Response Create Scan Findings Resc V1 Scans  Scan Id  Findings Post"
                 }
               }
             }
@@ -2658,46 +2876,80 @@
           }
         }
       },
-      "post": {
+      "get": {
         "tags": [
           "resc-scans"
         ],
-        "summary": "Create scan findings",
-        "description": "Creates findings and their associated scan_findings for a given scan\n\n- **db_connection**: Session of the database connection\n- **scan_id**:  Id of the scan for which findings need to be inserted\n- **file_path**: file path\n- **line_number**: Line number\n- **column_start**: Column start\n- **column_end**: Column end\n- **commit_id**: commit hash\n- **commit_message**: Commit message\n- **commit_timestamp**: Commit timestamp\n- **author**: Author name\n- **email**: Email of the author\n- **status**: Status of the finding, Valid values are NOT_ANALYZED, NOT_ACCESSIBLE,\n              CLARIFICATION_REQUIRED, FALSE_POSITIVE, TRUE_POSITIVE, OUTDATED\n- **comment**: Comment\n- **event_sent_on**: event sent timestamp\n- **rule_name**: rule name\n- **repository_id**: repository id of the finding\n- **return**: [FindingRead]\n    The output will contain a PaginationModel containing the list of FindingRead type objects,\n    or an empty list if no scan was found",
-        "operationId": "create_scan_findings_resc_v1_scans__scan_id__findings_post",
+        "summary": "Get scan findings associated with a scan ID",
+        "description": "Retrieve all finding objects paginated related to a scan_id\n\n- **db_connection**: Session of the database connection\n- **scan_id**: Id of the scan for which to retrieve the findings\n- **skip**: Integer amount of records to skip to support pagination\n- **limit**: Integer amount of records to return, to support pagination\n- **rules**: optional, filter on rule name. It is used as a string contains filter\n- **statuses**:  optional, filter on status of findings\n- **return**: [FindingRead]\n    The output will contain a PaginationModel containing the list of FindingRead type objects,\n    or an empty list if no scan was found",
+        "operationId": "get_scan_findings_resc_v1_scans__scan_id__findings_get",
         "parameters": [
           {
+            "name": "scan_id",
+            "in": "path",
             "required": true,
             "schema": {
               "type": "integer",
               "title": "Scan Id"
-            },
-            "name": "scan_id",
-            "in": "path"
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "items": {
-                  "$ref": "#/components/schemas/FindingCreate"
-                },
-                "type": "array",
-                "title": "Findings"
-              }
             }
           },
-          "required": true
-        },
+          {
+            "name": "skip",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0,
+              "title": "Skip"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 100,
+              "title": "Limit"
+            }
+          },
+          {
+            "name": "rule",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^[A-z0-9 .\\-_%]*$"
+              },
+              "title": "rule",
+              "default": []
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/FindingStatus"
+              },
+              "title": "status",
+              "default": []
+            }
+          }
+        ],
         "responses": {
-          "201": {
-            "description": "Create findings and their associated scan_findings for scan <scan_id>",
+          "200": {
+            "description": "Retrieve findings associated with scan <scan_id>",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "integer",
-                  "title": "Response Create Scan Findings Resc V1 Scans  Scan Id  Findings Post"
+                  "$ref": "#/components/schemas/PaginationModel_FindingRead_"
                 }
               }
             }
@@ -2731,66 +2983,73 @@
         "operationId": "get_scans_findings_resc_v1_scans_findings__get",
         "parameters": [
           {
+            "name": "scan_id",
+            "in": "query",
             "required": false,
             "schema": {
+              "type": "array",
               "items": {
                 "type": "integer"
               },
-              "type": "array",
               "title": "Scan ids",
               "default": []
-            },
-            "name": "scan_id",
-            "in": "query"
+            }
           },
           {
-            "required": false,
-            "schema": {
-              "type": "integer",
-              "minimum": 0.0,
-              "title": "Skip",
-              "default": 0
-            },
             "name": "skip",
-            "in": "query"
-          },
-          {
+            "in": "query",
             "required": false,
             "schema": {
               "type": "integer",
-              "minimum": 1.0,
-              "title": "Limit",
-              "default": 100
-            },
-            "name": "limit",
-            "in": "query"
+              "minimum": 0,
+              "default": 0,
+              "title": "Skip"
+            }
           },
           {
+            "name": "limit",
+            "in": "query",
             "required": false,
             "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 100,
+              "title": "Limit"
+            }
+          },
+          {
+            "name": "rule",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "array",
               "items": {
                 "type": "string",
                 "pattern": "^[A-z0-9 .\\-_%]*$"
               },
-              "type": "array",
-              "pattern": "^[A-z0-9 .\\-_%]*$",
               "title": "rule",
               "default": []
-            },
-            "name": "rule",
-            "in": "query"
+            }
           },
           {
+            "name": "status",
+            "in": "query",
             "required": false,
             "schema": {
-              "items": {
-                "$ref": "#/components/schemas/FindingStatus"
-              },
-              "type": "array",
-              "title": "status"
-            },
-            "name": "status",
-            "in": "query"
+              "anyOf": [
+                {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/FindingStatus"
+                  }
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "status",
+              "default": []
+            }
           }
         ],
         "responses": {
@@ -2833,17 +3092,17 @@
         "operationId": "get_distinct_rules_from_scans_resc_v1_scans_detected_rules__get",
         "parameters": [
           {
+            "name": "scan_id",
+            "in": "query",
             "required": false,
             "schema": {
+              "type": "array",
               "items": {
                 "type": "integer"
               },
-              "type": "array",
               "title": "Scan ids",
               "default": []
-            },
-            "name": "scan_id",
-            "in": "query"
+            }
           }
         ],
         "responses": {
@@ -2852,10 +3111,10 @@
             "content": {
               "application/json": {
                 "schema": {
+                  "type": "array",
                   "items": {
                     "type": "string"
                   },
-                  "type": "array",
                   "title": "Response Get Distinct Rules From Scans Resc V1 Scans Detected Rules  Get"
                 }
               }
@@ -2881,83 +3140,6 @@
       }
     },
     "/resc/v1/vcs-instances": {
-      "get": {
-        "tags": [
-          "resc-vcs-instances"
-        ],
-        "summary": "Get all VCS instances",
-        "description": "Retrieve all VCS instance objects paginated\n\n- **db_connection**: Session of the database connection\n- **skip**: Integer amount of records to skip to support pagination\n- **limit**: Integer amount of records to return, to support pagination\n- **vcs_provider_type**: Optional filter on the VCS provider type\n- **vcs_instance_name**: Optional filter on VCS instance name\n- **return**: [VCSInstanceRead]\n    The output will contain a PaginationModel containing the list of VCSInstanceRead type objects,\n    or an empty list if no VCS instance was found",
-        "operationId": "get_all_vcs_instances_resc_v1_vcs_instances_get",
-        "parameters": [
-          {
-            "required": false,
-            "schema": {
-              "type": "integer",
-              "minimum": 0.0,
-              "title": "Skip",
-              "default": 0
-            },
-            "name": "skip",
-            "in": "query"
-          },
-          {
-            "required": false,
-            "schema": {
-              "type": "integer",
-              "minimum": 1.0,
-              "title": "Limit",
-              "default": 100
-            },
-            "name": "limit",
-            "in": "query"
-          },
-          {
-            "required": false,
-            "schema": {
-              "$ref": "#/components/schemas/VCSProviders"
-            },
-            "name": "vcs_provider_type",
-            "in": "query"
-          },
-          {
-            "required": false,
-            "schema": {
-              "type": "string",
-              "title": "Vcs Instance Name"
-            },
-            "name": "vcs_instance_name",
-            "in": "query"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Retrieve all the VCS Instances",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PaginationModel_VCSInstanceRead_"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal server error. Contact your system administrator"
-          },
-          "503": {
-            "description": "Unable to communicate with DataBase, Please contact your system administrator"
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          }
-        }
-      },
       "post": {
         "tags": [
           "resc-vcs-instances"
@@ -2966,14 +3148,14 @@
         "description": "Create new VCS instance object\n\n- **db_connection**: Session of the database connection\n- **vcs_instance**: VCSInstanceCreate type object of the VCS Instance to create\n- **return**: VCSInstanceRead\n    The output will contain a VCSInstanceRead type object if the creation was successful",
         "operationId": "create_vcs_instance_resc_v1_vcs_instances_post",
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/VCSInstanceCreate"
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "201": {
@@ -3013,6 +3195,98 @@
             }
           }
         }
+      },
+      "get": {
+        "tags": [
+          "resc-vcs-instances"
+        ],
+        "summary": "Get all VCS instances",
+        "description": "Retrieve all VCS instance objects paginated\n\n- **db_connection**: Session of the database connection\n- **skip**: Integer amount of records to skip to support pagination\n- **limit**: Integer amount of records to return, to support pagination\n- **vcs_provider_type**: Optional filter on the VCS provider type\n- **vcs_instance_name**: Optional filter on VCS instance name\n- **return**: [VCSInstanceRead]\n    The output will contain a PaginationModel containing the list of VCSInstanceRead type objects,\n    or an empty list if no VCS instance was found",
+        "operationId": "get_all_vcs_instances_resc_v1_vcs_instances_get",
+        "parameters": [
+          {
+            "name": "skip",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0,
+              "title": "Skip"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 100,
+              "title": "Limit"
+            }
+          },
+          {
+            "name": "vcs_provider_type",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/VCSProviders"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Vcs Provider Type"
+            }
+          },
+          {
+            "name": "vcs_instance_name",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Vcs Instance Name"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Retrieve all the VCS Instances",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginationModel_VCSInstanceRead_"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error. Contact your system administrator"
+          },
+          "503": {
+            "description": "Unable to communicate with DataBase, Please contact your system administrator"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/resc/v1/vcs-instances/{vcs_instance_id}": {
@@ -3025,13 +3299,13 @@
         "operationId": "read_vcs_instance_resc_v1_vcs_instances__vcs_instance_id__get",
         "parameters": [
           {
+            "name": "vcs_instance_id",
+            "in": "path",
             "required": true,
             "schema": {
               "type": "integer",
               "title": "Vcs Instance Id"
-            },
-            "name": "vcs_instance_id",
-            "in": "path"
+            }
           }
         ],
         "responses": {
@@ -3082,24 +3356,24 @@
         "operationId": "update_vcs_instance_resc_v1_vcs_instances__vcs_instance_id__put",
         "parameters": [
           {
+            "name": "vcs_instance_id",
+            "in": "path",
             "required": true,
             "schema": {
               "type": "integer",
               "title": "Vcs Instance Id"
-            },
-            "name": "vcs_instance_id",
-            "in": "path"
+            }
           }
         ],
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/VCSInstanceCreate"
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {
@@ -3149,13 +3423,13 @@
         "operationId": "delete_vcs_instance_resc_v1_vcs_instances__vcs_instance_id__delete",
         "parameters": [
           {
+            "name": "vcs_instance_id",
+            "in": "path",
             "required": true,
             "schema": {
               "type": "integer",
               "title": "Vcs Instance Id"
-            },
-            "name": "vcs_instance_id",
-            "in": "path"
+            }
           }
         ],
         "responses": {
@@ -3206,28 +3480,39 @@
         "operationId": "get_finding_audit_count_over_time_resc_v1_metrics_audited_count_over_time_get",
         "parameters": [
           {
-            "required": false,
-            "schema": {
-              "type": "integer",
-              "minimum": 1.0,
-              "title": "Weeks",
-              "default": 13
-            },
             "name": "weeks",
-            "in": "query"
-          },
-          {
+            "in": "query",
             "required": false,
             "schema": {
-              "allOf": [
+              "anyOf": [
                 {
-                  "$ref": "#/components/schemas/FindingStatus"
+                  "type": "integer",
+                  "minimum": 1
+                },
+                {
+                  "type": "null"
                 }
               ],
-              "default": "TRUE_POSITIVE"
-            },
+              "default": 13,
+              "title": "Weeks"
+            }
+          },
+          {
             "name": "audit_status",
-            "in": "query"
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/FindingStatus"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": "TRUE_POSITIVE",
+              "title": "Audit Status"
+            }
           }
         ],
         "responses": {
@@ -3236,10 +3521,10 @@
             "content": {
               "application/json": {
                 "schema": {
+                  "type": "array",
                   "items": {
                     "$ref": "#/components/schemas/FindingCountOverTime"
                   },
-                  "type": "array",
                   "title": "Response Get Finding Audit Count Over Time Resc V1 Metrics Audited Count Over Time Get"
                 }
               }
@@ -3274,15 +3559,22 @@
         "operationId": "get_finding_total_count_over_time_resc_v1_metrics_count_per_vcs_provider_by_week_get",
         "parameters": [
           {
+            "name": "weeks",
+            "in": "query",
             "required": false,
             "schema": {
-              "type": "integer",
-              "minimum": 1.0,
-              "title": "Weeks",
-              "default": 13
-            },
-            "name": "weeks",
-            "in": "query"
+              "anyOf": [
+                {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": 13,
+              "title": "Weeks"
+            }
           }
         ],
         "responses": {
@@ -3291,10 +3583,10 @@
             "content": {
               "application/json": {
                 "schema": {
+                  "type": "array",
                   "items": {
                     "$ref": "#/components/schemas/FindingCountOverTime"
                   },
-                  "type": "array",
                   "title": "Response Get Finding Total Count Over Time Resc V1 Metrics Count Per Vcs Provider By Week Get"
                 }
               }
@@ -3329,15 +3621,22 @@
         "operationId": "get_finding_un_triaged_count_over_time_resc_v1_metrics_un_triaged_count_over_time_get",
         "parameters": [
           {
+            "name": "weeks",
+            "in": "query",
             "required": false,
             "schema": {
-              "type": "integer",
-              "minimum": 1.0,
-              "title": "Weeks",
-              "default": 13
-            },
-            "name": "weeks",
-            "in": "query"
+              "anyOf": [
+                {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": 13,
+              "title": "Weeks"
+            }
           }
         ],
         "responses": {
@@ -3346,10 +3645,10 @@
             "content": {
               "application/json": {
                 "schema": {
+                  "type": "array",
                   "items": {
                     "$ref": "#/components/schemas/FindingCountOverTime"
                   },
-                  "type": "array",
                   "title": "Response Get Finding Un Triaged Count Over Time Resc V1 Metrics Un Triaged Count Over Time Get"
                 }
               }
@@ -3384,15 +3683,22 @@
         "operationId": "get_audit_count_by_auditor_over_time_resc_v1_metrics_audit_count_by_auditor_over_time_get",
         "parameters": [
           {
+            "name": "weeks",
+            "in": "query",
             "required": false,
             "schema": {
-              "type": "integer",
-              "minimum": 1.0,
-              "title": "Weeks",
-              "default": 13
-            },
-            "name": "weeks",
-            "in": "query"
+              "anyOf": [
+                {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": 13,
+              "title": "Weeks"
+            }
           }
         ],
         "responses": {
@@ -3401,10 +3707,10 @@
             "content": {
               "application/json": {
                 "schema": {
+                  "type": "array",
                   "items": {
                     "$ref": "#/components/schemas/AuditCountOverTime"
                   },
-                  "type": "array",
                   "title": "Response Get Audit Count By Auditor Over Time Resc V1 Metrics Audit Count By Auditor Over Time Get"
                 }
               }
@@ -3510,7 +3816,7 @@
               "exclusiveMinimum": 0.0
             },
             "type": "array",
-            "maxItems": 500,
+            "maxItems": 1000,
             "minItems": 1,
             "title": "Finding Ids"
           },
@@ -3547,8 +3853,15 @@
             "title": "Auditor"
           },
           "comment": {
-            "type": "string",
-            "maxLength": 255,
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 255
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Comment"
           },
           "timestamp": {
@@ -3655,8 +3968,7 @@
           "week",
           "day"
         ],
-        "title": "DateFilter",
-        "description": "An enumeration."
+        "title": "DateFilter"
       },
       "DetailedFindingRead": {
         "properties": {
@@ -3704,16 +4016,26 @@
             "title": "Email"
           },
           "status": {
-            "allOf": [
+            "anyOf": [
               {
                 "$ref": "#/components/schemas/FindingStatus"
+              },
+              {
+                "type": "null"
               }
             ],
             "default": "NOT_ANALYZED"
           },
           "comment": {
-            "type": "string",
-            "maxLength": 255,
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 255
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Comment"
           },
           "rule_name": {
@@ -3765,8 +4087,15 @@
             "title": "Scan Id"
           },
           "event_sent_on": {
-            "type": "string",
-            "format": "date-time",
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Event Sent On"
           },
           "is_dir_scan": {
@@ -3779,8 +4108,15 @@
             "title": "Id "
           },
           "commit_url": {
-            "type": "string",
-            "minLength": 1,
+            "anyOf": [
+              {
+                "type": "string",
+                "minLength": 1
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Commit Url"
           }
         },
@@ -3812,7 +4148,14 @@
       "FindingCountModel_RepositoryRead_": {
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/RepositoryRead"
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/RepositoryRead"
+              },
+              {
+                "type": "null"
+              }
+            ]
           },
           "true_positive": {
             "type": "integer",
@@ -3852,6 +4195,7 @@
         },
         "type": "object",
         "required": [
+          "data",
           "true_positive",
           "false_positive",
           "not_analyzed",
@@ -3860,8 +4204,7 @@
           "outdated",
           "total_findings_count"
         ],
-        "title": "FindingCountModel[RepositoryRead]",
-        "description": "    Generic encapsulation class for findings count end points to standardize output of the API\n    example creation, FindingCountModel[FindingRead](data=db_findings, true_positive=true_positive,\n    false_positive=false_positive, not_analyzed=not_analyzed, not_accessible=not_accessible,\n    clarification_required=clarification_required, outdated=outdated,\n    total_findings_count=total_findings_count)\n:param Generic[Model]:\n    Type of the object in the data list"
+        "title": "FindingCountModel[RepositoryRead]"
       },
       "FindingCountOverTime": {
         "properties": {
@@ -3875,7 +4218,6 @@
                 "$ref": "#/components/schemas/VcsProviderFindingCount"
               }
             ],
-            "title": "Vcs Provider Finding Count",
             "default": {
               "AZURE_DEVOPS": 0,
               "BITBUCKET": 0,
@@ -3941,8 +4283,15 @@
             "title": "Email"
           },
           "event_sent_on": {
-            "type": "string",
-            "format": "date-time",
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Event Sent On"
           },
           "rule_name": {
@@ -4033,8 +4382,15 @@
             "title": "Email"
           },
           "event_sent_on": {
-            "type": "string",
-            "format": "date-time",
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Event Sent On"
           },
           "rule_name": {
@@ -4053,12 +4409,19 @@
             "title": "Id "
           },
           "scan_ids": {
-            "items": {
-              "type": "integer",
-              "exclusiveMinimum": 0.0
-            },
-            "type": "array",
-            "maxItems": 9223372036854775807,
+            "anyOf": [
+              {
+                "items": {
+                  "type": "integer",
+                  "exclusiveMinimum": 0.0
+                },
+                "type": "array",
+                "maxItems": 9223372036854775807
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Scan Ids"
           }
         },
@@ -4089,8 +4452,7 @@
           "TRUE_POSITIVE",
           "OUTDATED"
         ],
-        "title": "FindingStatus",
-        "description": "An enumeration."
+        "title": "FindingStatus"
       },
       "HTTPValidationError": {
         "properties": {
@@ -4159,6 +4521,7 @@
               "$ref": "#/components/schemas/AuditRead"
             },
             "type": "array",
+            "maxItems": 1000,
             "title": "Data"
           },
           "total": {
@@ -4184,8 +4547,7 @@
           "limit",
           "skip"
         ],
-        "title": "PaginationModel[AuditRead]",
-        "description": "    Generic encapsulation class for paginated endpoints to standardize output of the API\n    example creation, PaginationModel[FindingRead](data=db_findings, total=total, limit=limit, skip=skip)\n:param Generic[Model]:\n    Type of the object in the data list"
+        "title": "PaginationModel[AuditRead]"
       },
       "PaginationModel_DateCountModel_": {
         "properties": {
@@ -4194,6 +4556,7 @@
               "$ref": "#/components/schemas/DateCountModel"
             },
             "type": "array",
+            "maxItems": 1000,
             "title": "Data"
           },
           "total": {
@@ -4219,8 +4582,7 @@
           "limit",
           "skip"
         ],
-        "title": "PaginationModel[DateCountModel]",
-        "description": "    Generic encapsulation class for paginated endpoints to standardize output of the API\n    example creation, PaginationModel[FindingRead](data=db_findings, total=total, limit=limit, skip=skip)\n:param Generic[Model]:\n    Type of the object in the data list"
+        "title": "PaginationModel[DateCountModel]"
       },
       "PaginationModel_DetailedFindingRead_": {
         "properties": {
@@ -4229,6 +4591,7 @@
               "$ref": "#/components/schemas/DetailedFindingRead"
             },
             "type": "array",
+            "maxItems": 1000,
             "title": "Data"
           },
           "total": {
@@ -4254,8 +4617,7 @@
           "limit",
           "skip"
         ],
-        "title": "PaginationModel[DetailedFindingRead]",
-        "description": "    Generic encapsulation class for paginated endpoints to standardize output of the API\n    example creation, PaginationModel[FindingRead](data=db_findings, total=total, limit=limit, skip=skip)\n:param Generic[Model]:\n    Type of the object in the data list"
+        "title": "PaginationModel[DetailedFindingRead]"
       },
       "PaginationModel_FindingRead_": {
         "properties": {
@@ -4264,6 +4626,7 @@
               "$ref": "#/components/schemas/FindingRead"
             },
             "type": "array",
+            "maxItems": 1000,
             "title": "Data"
           },
           "total": {
@@ -4289,8 +4652,7 @@
           "limit",
           "skip"
         ],
-        "title": "PaginationModel[FindingRead]",
-        "description": "    Generic encapsulation class for paginated endpoints to standardize output of the API\n    example creation, PaginationModel[FindingRead](data=db_findings, total=total, limit=limit, skip=skip)\n:param Generic[Model]:\n    Type of the object in the data list"
+        "title": "PaginationModel[FindingRead]"
       },
       "PaginationModel_RepositoryEnrichedRead_": {
         "properties": {
@@ -4299,6 +4661,7 @@
               "$ref": "#/components/schemas/RepositoryEnrichedRead"
             },
             "type": "array",
+            "maxItems": 1000,
             "title": "Data"
           },
           "total": {
@@ -4324,8 +4687,7 @@
           "limit",
           "skip"
         ],
-        "title": "PaginationModel[RepositoryEnrichedRead]",
-        "description": "    Generic encapsulation class for paginated endpoints to standardize output of the API\n    example creation, PaginationModel[FindingRead](data=db_findings, total=total, limit=limit, skip=skip)\n:param Generic[Model]:\n    Type of the object in the data list"
+        "title": "PaginationModel[RepositoryEnrichedRead]"
       },
       "PaginationModel_RepositoryRead_": {
         "properties": {
@@ -4334,6 +4696,7 @@
               "$ref": "#/components/schemas/RepositoryRead"
             },
             "type": "array",
+            "maxItems": 1000,
             "title": "Data"
           },
           "total": {
@@ -4359,8 +4722,7 @@
           "limit",
           "skip"
         ],
-        "title": "PaginationModel[RepositoryRead]",
-        "description": "    Generic encapsulation class for paginated endpoints to standardize output of the API\n    example creation, PaginationModel[FindingRead](data=db_findings, total=total, limit=limit, skip=skip)\n:param Generic[Model]:\n    Type of the object in the data list"
+        "title": "PaginationModel[RepositoryRead]"
       },
       "PaginationModel_RulePackRead_": {
         "properties": {
@@ -4369,6 +4731,7 @@
               "$ref": "#/components/schemas/RulePackRead"
             },
             "type": "array",
+            "maxItems": 1000,
             "title": "Data"
           },
           "total": {
@@ -4394,8 +4757,7 @@
           "limit",
           "skip"
         ],
-        "title": "PaginationModel[RulePackRead]",
-        "description": "    Generic encapsulation class for paginated endpoints to standardize output of the API\n    example creation, PaginationModel[FindingRead](data=db_findings, total=total, limit=limit, skip=skip)\n:param Generic[Model]:\n    Type of the object in the data list"
+        "title": "PaginationModel[RulePackRead]"
       },
       "PaginationModel_ScanRead_": {
         "properties": {
@@ -4404,6 +4766,7 @@
               "$ref": "#/components/schemas/ScanRead"
             },
             "type": "array",
+            "maxItems": 1000,
             "title": "Data"
           },
           "total": {
@@ -4429,8 +4792,7 @@
           "limit",
           "skip"
         ],
-        "title": "PaginationModel[ScanRead]",
-        "description": "    Generic encapsulation class for paginated endpoints to standardize output of the API\n    example creation, PaginationModel[FindingRead](data=db_findings, total=total, limit=limit, skip=skip)\n:param Generic[Model]:\n    Type of the object in the data list"
+        "title": "PaginationModel[ScanRead]"
       },
       "PaginationModel_VCSInstanceRead_": {
         "properties": {
@@ -4439,6 +4801,7 @@
               "$ref": "#/components/schemas/VCSInstanceRead"
             },
             "type": "array",
+            "maxItems": 1000,
             "title": "Data"
           },
           "total": {
@@ -4464,8 +4827,7 @@
           "limit",
           "skip"
         ],
-        "title": "PaginationModel[VCSInstanceRead]",
-        "description": "    Generic encapsulation class for paginated endpoints to standardize output of the API\n    example creation, PaginationModel[FindingRead](data=db_findings, total=total, limit=limit, skip=skip)\n:param Generic[Model]:\n    Type of the object in the data list"
+        "title": "PaginationModel[VCSInstanceRead]"
       },
       "PersonalAuditMetrics": {
         "properties": {
@@ -4512,7 +4874,14 @@
             "default": 0
           },
           "forever_breakdown": {
-            "$ref": "#/components/schemas/AuditorMetric"
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/AuditorMetric"
+              },
+              {
+                "type": "null"
+              }
+            ]
           }
         },
         "type": "object",
@@ -4544,6 +4913,18 @@
             "minLength": 1,
             "format": "uri",
             "title": "Repository Url"
+          },
+          "deleted_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Deleted At"
           },
           "vcs_instance": {
             "type": "integer",
@@ -4592,13 +4973,27 @@
             "$ref": "#/components/schemas/VCSProviders"
           },
           "last_scan_id": {
-            "type": "integer",
-            "exclusiveMinimum": 0.0,
+            "anyOf": [
+              {
+                "type": "integer",
+                "exclusiveMinimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Last Scan Id"
           },
           "last_scan_timestamp": {
-            "type": "string",
-            "format": "date-time",
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Last Scan Timestamp"
           },
           "true_positive": {
@@ -4635,6 +5030,18 @@
             "type": "integer",
             "exclusiveMinimum": -1.0,
             "title": "Total Findings Count"
+          },
+          "deleted_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Deleted At"
           },
           "id_": {
             "type": "integer",
@@ -4687,6 +5094,18 @@
             "format": "uri",
             "title": "Repository Url"
           },
+          "deleted_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Deleted At"
+          },
           "vcs_instance": {
             "type": "integer",
             "exclusiveMinimum": 0.0,
@@ -4727,7 +5146,7 @@
               "$ref": "#/components/schemas/StatusCount"
             },
             "type": "array",
-            "maxItems": 500,
+            "maxItems": 1000,
             "title": "Finding Statuses Count",
             "default": []
           }
@@ -4752,8 +5171,15 @@
             "default": false
           },
           "global_allow_list": {
-            "type": "integer",
-            "exclusiveMinimum": 0.0,
+            "anyOf": [
+              {
+                "type": "integer",
+                "exclusiveMinimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Global Allow List"
           },
           "outdated": {
@@ -4797,33 +5223,82 @@
             "title": "Rule Name"
           },
           "description": {
-            "type": "string",
-            "maxLength": 4000,
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 4000
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Description"
           },
           "comment": {
-            "type": "string",
-            "maxLength": 2000,
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 2000
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Comment"
           },
           "entropy": {
-            "type": "number",
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Entropy"
           },
           "secret_group": {
-            "type": "integer",
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Secret Group"
           },
           "regex": {
-            "type": "string",
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Regex"
           },
           "path": {
-            "type": "string",
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Path"
           },
           "keywords": {
-            "type": "string",
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Keywords"
           },
           "rule_pack": {
@@ -4832,8 +5307,15 @@
             "title": "Rule Pack"
           },
           "allow_list": {
-            "type": "integer",
-            "exclusiveMinimum": 0.0,
+            "anyOf": [
+              {
+                "type": "integer",
+                "exclusiveMinimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Allow List"
           },
           "id_": {
@@ -4956,8 +5438,7 @@
           "BASE",
           "INCREMENTAL"
         ],
-        "title": "ScanType",
-        "description": "An enumeration."
+        "title": "ScanType"
       },
       "StatusCount": {
         "properties": {
@@ -5003,24 +5484,45 @@
             "title": "Scheme"
           },
           "exceptions": {
-            "items": {
-              "type": "string"
-            },
-            "type": "array",
-            "maxItems": 500,
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array",
+                "maxItems": 500
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Exceptions"
           },
           "scope": {
-            "items": {
-              "type": "string"
-            },
-            "type": "array",
-            "maxItems": 500,
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array",
+                "maxItems": 500
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Scope"
           },
           "organization": {
-            "type": "string",
-            "maxLength": 200,
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 200
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Organization"
           }
         },
@@ -5061,24 +5563,45 @@
             "title": "Scheme"
           },
           "exceptions": {
-            "items": {
-              "type": "string"
-            },
-            "type": "array",
-            "maxItems": 500,
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array",
+                "maxItems": 500
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Exceptions"
           },
           "scope": {
-            "items": {
-              "type": "string"
-            },
-            "type": "array",
-            "maxItems": 500,
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array",
+                "maxItems": 500
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Scope"
           },
           "organization": {
-            "type": "string",
-            "maxLength": 200,
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 200
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Organization"
           },
           "id_": {
@@ -5105,8 +5628,7 @@
           "BITBUCKET",
           "GITHUB_PUBLIC"
         ],
-        "title": "VCSProviders",
-        "description": "An enumeration."
+        "title": "VCSProviders"
       },
       "ValidationError": {
         "properties": {

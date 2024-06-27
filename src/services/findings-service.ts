@@ -18,6 +18,7 @@ export type QueryFilterType = {
   endDate?: string | undefined;
   rulePackVersions?: string[];
   ruleTags?: string[];
+  includeDeletedRepositories?: boolean;
   skip: number;
   limit: number;
 };
@@ -69,6 +70,12 @@ const FindingsService = {
     queryString += QueryUtils.appendIf('end_date_time', filter.endDate, 'T23:59:59');
     queryString += QueryUtils.appendArrayIf('rule_pack_versions', filter.rulePackVersions);
     queryString += QueryUtils.appendArrayIf('rule_tags', filter.ruleTags);
+    if (filter.includeDeletedRepositories) {
+      queryString += QueryUtils.appendBool(
+        'include_deleted_repositories',
+        filter.includeDeletedRepositories,
+      );
+    }
     if (queryString !== '') {
       queryString = queryString.substring(1);
     } else {
