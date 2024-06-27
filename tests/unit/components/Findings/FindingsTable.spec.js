@@ -74,6 +74,7 @@ describe('FindingsTable tests', () => {
     expect(wrapper.vm.selectedIndex).toEqual(0);
 
     expect(() => wrapper.vm.openDetails()).not.toThrow();
+    expect(() => wrapper.vm.openCommitUrl()).not.toThrow();
     expect(() => wrapper.vm.closeDetails()).not.toThrow();
     expect(() => wrapper.vm.toggleSelect()).not.toThrow();
     expect(() => wrapper.vm.markAsFalsePositive()).not.toThrow();

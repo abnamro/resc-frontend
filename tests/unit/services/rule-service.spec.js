@@ -112,6 +112,7 @@ describe('function getAllDetectedRules', () => {
         null,
         null,
         null,
+        false,
       );
 
       expect(response).toEqual(rules);
@@ -132,6 +133,7 @@ describe('function getAllDetectedRules', () => {
         null,
         null,
         null,
+        true,
       );
 
       expect(response).toEqual(rules);
@@ -152,6 +154,7 @@ describe('function getAllDetectedRules', () => {
         'repository-A',
         null,
         null,
+        false,
       );
 
       expect(response).toEqual(rules);
@@ -172,6 +175,7 @@ describe('function getAllDetectedRules', () => {
         null,
         '2022-05-01T00:00:00',
         null,
+        false,
       );
 
       expect(response).toEqual(rules);
@@ -192,6 +196,7 @@ describe('function getAllDetectedRules', () => {
         null,
         null,
         '2022-06-01T23:59:59',
+        false,
       );
 
       expect(response).toEqual(rules);
@@ -212,6 +217,7 @@ describe('function getAllDetectedRules', () => {
         'repository-A',
         '2022-05-01T00:00:00',
         '2022-06-01T23:59:59',
+        false,
       );
 
       expect(response).toEqual(rules);
