@@ -112,6 +112,7 @@ const projectFilter = ref(undefined as string | undefined);
 const projectNames = ref([] as string[]);
 const repositoryNames = ref([] as string[]);
 const includeZeroFindingRepos = ref(false);
+const includeDeletedRepositories = ref(false);
 const fields = ref([
   {
     key: 'project_key',
@@ -205,11 +206,13 @@ function handleFilterChange(
   project: string | undefined,
   repository: string | undefined,
   includeZeroFindingReposArg: boolean,
+  includeDeletedRepositoriesArg: boolean,
 ) {
   vcsFilter.value = vcsProvider;
   projectFilter.value = project;
   repositoryFilter.value = repository;
   includeZeroFindingRepos.value = includeZeroFindingReposArg;
+  includeDeletedRepositories.value = includeDeletedRepositoriesArg;
   currentPage.value = 1;
   fetchDistinctProjects();
   fetchDistinctRepositories();
@@ -226,6 +229,7 @@ function fetchPaginatedRepositories() {
     projectFilter.value,
     repositoryFilter.value,
     includeZeroFindingRepos.value,
+    includeDeletedRepositories.value,
   )
     .then((response) => {
       totalRows.value = response.data.total;
@@ -242,6 +246,7 @@ function fetchDistinctProjects() {
     vcsFilter.value,
     repositoryFilter.value,
     includeZeroFindingRepos.value,
+    includeDeletedRepositories.value,
   )
     .then((response) => {
       projectNames.value = [];
@@ -258,6 +263,7 @@ function fetchDistinctRepositories() {
     vcsFilter.value,
     projectFilter.value,
     includeZeroFindingRepos.value,
+    includeDeletedRepositories.value,
   )
     .then((response) => {
       repositoryNames.value = [];

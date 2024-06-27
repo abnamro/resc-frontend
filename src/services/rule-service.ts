@@ -15,6 +15,7 @@ const RuleService = {
     startDate: string | undefined,
     endDate: string | undefined,
     rulePackVersions: string[] | null,
+    includeDeletedRepositories: boolean,
   ): Promise<
     AxiosResponse<
       paths['/resc/v1/detected-rules']['get']['responses']['200']['content']['application/json']
@@ -22,12 +23,18 @@ const RuleService = {
   > {
     let queryParams = '';
     queryParams += QueryUtils.appendExplodArrayIf('findingstatus', findingStatusList);
-    queryParams += QueryUtils.appendExplodArrayIf('vcsprovider', vcsTypeList);
-    queryParams += QueryUtils.appendIf('projectname', projectFilter);
-    queryParams += QueryUtils.appendIf('repositoryname', repositoryFilter);
+    queryParams += QueryUtils.appendExplodArrayIf('vcs_provider', vcsTypeList);
+    queryParams += QueryUtils.appendIf('project_name', projectFilter);
+    queryParams += QueryUtils.appendIf('repository_name', repositoryFilter);
     queryParams += QueryUtils.appendIf('start_date_time', startDate, 'T00:00:00');
     queryParams += QueryUtils.appendIf('end_date_time', endDate, 'T23:59:59');
     queryParams += QueryUtils.appendExplodArrayIf('rule_pack_version', rulePackVersions);
+    if (includeDeletedRepositories) {
+      queryParams += QueryUtils.appendBool(
+        'include_deleted_repositories',
+        includeDeletedRepositories,
+      );
+    }
     if (queryParams) {
       queryParams = queryParams.slice(1);
     }
@@ -38,6 +45,7 @@ const RuleService = {
   async getRulesWithFindingStatusCount(
     rulePackVersions: string[] | null,
     ruleTags: string[] | null,
+    includeDeletedRepositories: boolean,
   ): Promise<
     AxiosResponse<
       paths['/resc/v1/rules/finding-status-count']['get']['responses']['200']['content']['application/json']
@@ -46,6 +54,12 @@ const RuleService = {
     let queryParams = '';
     queryParams += QueryUtils.appendExplodArrayIf('rule_pack_version', rulePackVersions);
     queryParams += QueryUtils.appendExplodArrayIf('rule_tag', ruleTags);
+    if (includeDeletedRepositories) {
+      queryParams += QueryUtils.appendBool(
+        'include_deleted_repositories',
+        includeDeletedRepositories,
+      );
+    }
     if (queryParams) {
       queryParams = queryParams.slice(1);
     }

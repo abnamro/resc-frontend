@@ -23,6 +23,16 @@
           @on-rule-tags-change="onRuleTagsFilterChange"
         />
       </div>
+      <div class="col-md-4">
+        <b-form-checkbox
+          v-model="includeDeletedRepositories"
+          name="check-button"
+          switch
+          @change="fetchRulesWithFindingStatusCount"
+        >
+          <small class="text-nowrap">Include data from repositories marked as deleted.</small>
+        </b-form-checkbox>
+      </div>
     </div>
 
     <!--Rule Metrics Table -->
@@ -195,6 +205,7 @@ const selectedRuleTags = ref([] as string[]);
 const selectedVersionsList = ref([] as RulePackRead[]);
 const selectedVersions = ref([] as string[]);
 const ruleTotalRowClass = ref(['text-start', 'fw-bold']);
+const includeDeletedRepositories = ref(false);
 
 type FieldType = {
   key: string;
@@ -298,7 +309,11 @@ function fetchRuleTags() {
 
 function fetchRulesWithFindingStatusCount() {
   loadedData.value = false;
-  RuleService.getRulesWithFindingStatusCount(selectedVersions.value, selectedRuleTags.value)
+  RuleService.getRulesWithFindingStatusCount(
+    selectedVersions.value,
+    selectedRuleTags.value,
+    includeDeletedRepositories.value,
+  )
     .then((response: AxiosResponse<RuleFindingCountModel[]>) => {
       getTotalCountRowValuesForRuleMetricsTable(response.data);
       loadedData.value = true;

@@ -102,6 +102,7 @@ const currentPage = ref(1);
 const perPage = ref(Number(`${Config.value('defaultPageSize')}`));
 const pageSizes = ref([20, 50, 100, 1000]);
 const requestedPageNumber = ref(1);
+const includeDeletedRepositories = ref(false);
 
 const hasRecords = computed(() => findingList.value.length > 0);
 const skipRowCount = computed(() => (currentPage.value - 1) * perPage.value);
@@ -181,6 +182,7 @@ function fetchPaginatedFindingsByScanId() {
     findingStatus: statusFilter.value,
     rule: ruleFilter.value,
     ruleTags: ruleTagsFilter.value,
+    includeDeletedRepositories: includeDeletedRepositories.value,
   };
 
   FindingsService.getDetailedFindings(filterObj)
@@ -250,6 +252,7 @@ function fetchPreviousScanFindings() {
     findingStatus: statusFilter.value,
     rule: ruleFilter.value,
     ruleTags: ruleTagsFilter.value,
+    includeDeletedRepositories: includeDeletedRepositories.value,
   };
 
   FindingsService.getDetailedFindings(filterObj)

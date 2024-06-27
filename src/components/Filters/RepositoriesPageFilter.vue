@@ -25,14 +25,24 @@
 
     <!-- Include zero finding repos -->
     <div class="row">
-      <div class="col-md-2">
+      <div class="col-md-4">
         <b-form-checkbox
           v-model="includeZeroFindingRepos"
           name="check-button"
           switch
           @change="toggleIncludeZeroFindingRepos"
         >
-          <small class="text-nowrap">Display repositories with 0 findings</small>
+          <small class="text-nowrap">Display repositories with 0 findings.</small>
+        </b-form-checkbox>
+      </div>
+      <div class="col-md-4">
+        <b-form-checkbox
+          v-model="includeDeletedRepositories"
+          name="check-button"
+          switch
+          @change="toggleincludeDeletedRepositories"
+        >
+          <small class="text-nowrap">Display repositories marked as deleted.</small>
         </b-form-checkbox>
       </div>
     </div>
@@ -62,6 +72,7 @@ const selectedVcsProvider = ref(props.vcsProviderSelected);
 const selectedProject = ref(props.projectSelected);
 const selectedRepository = ref(props.repositorySelected);
 const includeZeroFindingRepos = ref(false);
+const includeDeletedRepositories = ref(false);
 
 const emit = defineEmits(['on-filter-change']);
 
@@ -80,6 +91,9 @@ function onVcsProviderChange(vcsProvider: VCSProviders[]) {
 function toggleIncludeZeroFindingRepos() {
   handleFilterChange();
 }
+function toggleincludeDeletedRepositories() {
+  handleFilterChange();
+}
 
 function handleFilterChange() {
   // Refresh table data in Repositories page
@@ -89,6 +103,7 @@ function handleFilterChange() {
     selectedProject.value,
     selectedRepository.value,
     includeZeroFindingRepos.value,
+    includeDeletedRepositories.value,
   );
 }
 </script>

@@ -12,19 +12,23 @@ const RepositoryService = {
     vcsTypeList: string[],
     projectFilter: string | undefined,
     repositoryFilter: string | undefined,
-    includeZeroFindingRepos = true,
+    includeZeroFindingRepos: boolean,
+    includeDeletedRepos: boolean,
   ): Promise<
     AxiosResponse<
       paths['/resc/v1/repositories/findings-metadata/']['get']['responses']['200']['content']['application/json']
     >
   > {
     let queryParams = '';
-    queryParams += QueryUtils.appendExplodArrayIf('vcsprovider', vcsTypeList);
+    queryParams += QueryUtils.appendExplodArrayIf('vcs_provider', vcsTypeList);
     queryParams += QueryUtils.appendIf('skip', skipRowCount);
     queryParams += QueryUtils.appendIf('limit', perPage);
-    queryParams += QueryUtils.appendIf('projectfilter', projectFilter);
-    queryParams += QueryUtils.appendIf('repositoryfilter', repositoryFilter);
-    queryParams += QueryUtils.appendBool('onlyifhasfindings', includeZeroFindingRepos === false);
+    queryParams += QueryUtils.appendIf('project_filter', projectFilter);
+    queryParams += QueryUtils.appendIf('repository_filter', repositoryFilter);
+    queryParams += QueryUtils.appendBool('only_if_has_findings', includeZeroFindingRepos === false);
+    if (includeDeletedRepos) {
+      queryParams += QueryUtils.appendBool('include_deleted_repositories', includeDeletedRepos);
+    }
     if (queryParams) {
       queryParams = queryParams.slice(1);
     }
@@ -53,16 +57,20 @@ const RepositoryService = {
   async getDistinctProjects(
     vcsTypeList: string[],
     repositoryFilter: string | undefined,
-    includeZeroFindingRepos = true,
+    includeZeroFindingRepos: boolean,
+    includeDeletedRepos: boolean,
   ): Promise<
     AxiosResponse<
       paths['/resc/v1/repositories/distinct-projects/']['get']['responses']['200']['content']['application/json']
     >
   > {
     let queryParams = '';
-    queryParams += QueryUtils.appendExplodArrayIf('vcsprovider', vcsTypeList);
-    queryParams += QueryUtils.appendIf('repositoryfilter', repositoryFilter);
-    queryParams += QueryUtils.appendBool('onlyifhasfindings', includeZeroFindingRepos === false);
+    queryParams += QueryUtils.appendExplodArrayIf('vcs_provider', vcsTypeList);
+    queryParams += QueryUtils.appendIf('repository_filter', repositoryFilter);
+    queryParams += QueryUtils.appendBool('only_if_has_findings', includeZeroFindingRepos === false);
+    if (includeDeletedRepos) {
+      queryParams += QueryUtils.appendBool('include_deleted_repositories', includeDeletedRepos);
+    }
     if (queryParams) {
       queryParams = queryParams.slice(1);
     }
@@ -73,16 +81,20 @@ const RepositoryService = {
   async getDistinctRepositories(
     vcsTypeList: string[],
     projectFilter: string | undefined,
-    includeZeroFindingRepos = true,
+    includeZeroFindingRepos: boolean,
+    includeDeletedRepos: boolean,
   ): Promise<
     AxiosResponse<
       paths['/resc/v1/repositories/distinct-repositories/']['get']['responses']['200']['content']['application/json']
     >
   > {
     let queryParams = '';
-    queryParams += QueryUtils.appendExplodArrayIf('vcsprovider', vcsTypeList);
-    queryParams += QueryUtils.appendIf('projectname', projectFilter);
-    queryParams += QueryUtils.appendBool('onlyifhasfindings', includeZeroFindingRepos === false);
+    queryParams += QueryUtils.appendExplodArrayIf('vcs_provider', vcsTypeList);
+    queryParams += QueryUtils.appendIf('project_name', projectFilter);
+    queryParams += QueryUtils.appendBool('only_if_has_findings', includeZeroFindingRepos === false);
+    if (includeDeletedRepos) {
+      queryParams += QueryUtils.appendBool('include_deleted_repositories', includeDeletedRepos);
+    }
     if (queryParams) {
       queryParams = queryParams.slice(1);
     }

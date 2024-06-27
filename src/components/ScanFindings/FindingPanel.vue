@@ -5,7 +5,7 @@
       <div class="col-md-5">
         <b-card-text
           ><span class="fw-bold">Commit ID: </span
-          ><a class="custom-link" v-bind:href="findingRef.commit_url" target="_blank">{{
+          ><a class="custom-link" v-bind:href="findingRef.commit_url ?? ''" target="_blank">{{
             findingRef.commit_id
           }}</a></b-card-text
         >

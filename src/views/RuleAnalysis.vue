@@ -97,6 +97,7 @@ const selectedRulePackVersions = ref([] as string[]);
 const selectedRulePackVersionsList = ref([] as RulePackRead[]);
 const selectedCheckBoxIds = ref([] as number[]);
 const allSelected = ref(false);
+const includeDeletedRepositories = ref(false);
 
 const hasRecords = computed(() => findingList.value.length > 0);
 const skipRowCount = computed(() => (currentPage.value - 1) * perPage.value);
@@ -138,6 +139,7 @@ function fetchPaginatedDetailedFindings() {
     rule: selectedRule.value,
     ruleTags: selectedRuleTags.value,
     rulePackVersions: selectedRulePackVersions.value,
+    includeDeletedRepositories: includeDeletedRepositories.value,
   };
 
   findingList.value = [];
@@ -165,6 +167,7 @@ function handleFilterChange(filterObj: RuleAnalysisFilter) {
   selectedRule.value = filterObj.rule;
   selectedRuleTags.value = filterObj.ruleTags;
   selectedRulePackVersions.value = filterObj.rulePackVersions ?? [];
+  includeDeletedRepositories.value = filterObj.includeDeletedRepositories ?? false;
   currentPage.value = 1;
   allSelected.value = false;
   fetchDistinctProjects();
@@ -173,7 +176,12 @@ function handleFilterChange(filterObj: RuleAnalysisFilter) {
 }
 
 function fetchDistinctProjects() {
-  RepositoryService.getDistinctProjects(selectedVcsProvider.value, selectedRepository.value)
+  RepositoryService.getDistinctProjects(
+    selectedVcsProvider.value,
+    selectedRepository.value,
+    false,
+    includeDeletedRepositories.value,
+  )
     .then((response) => {
       projectNames.value = [];
       for (const projectKey of response.data) {
@@ -186,7 +194,12 @@ function fetchDistinctProjects() {
 }
 
 function fetchDistinctRepositories() {
-  RepositoryService.getDistinctRepositories(selectedVcsProvider.value, selectedProject.value)
+  RepositoryService.getDistinctRepositories(
+    selectedVcsProvider.value,
+    selectedProject.value,
+    false,
+    includeDeletedRepositories.value,
+  )
     .then((response) => {
       repositoryNames.value = [];
       for (const repoName of response.data) {
@@ -205,7 +218,9 @@ function fetchRulePackVersionsWhenRedirectedFromRuleMetricsPage() {
       rulePackVersions.value = [];
       selectedRulePackVersions.value = [];
       response.data.data.forEach((rulePack) => {
-        rulePackVersions.value.push(rulePack);
+        if (rulePack.outdated !== true) {
+          rulePackVersions.value.push(rulePack);
+        }
       });
       rulePackVersions.value.sort(CommonUtils.compareRulePackRead).reverse();
       //Select rule pack versions passed from rule analysis scrren
