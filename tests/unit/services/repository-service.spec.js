@@ -120,7 +120,15 @@ describe('function getRepositoriesWithFindingsMetadata', () => {
     // Mock axios response: return the 3 first elements according to the pagination parameters
     axios.get.mockResolvedValueOnce(repositories);
 
-    const response = await RepositoryService.getRepositoriesWithFindingsMetadata(20, 0, [], false, undefined, false, false);
+    const response = await RepositoryService.getRepositoriesWithFindingsMetadata(
+      20,
+      0,
+      [],
+      false,
+      undefined,
+      false,
+      false,
+    );
     expect(response).toEqual(repositories);
     expect(response).toBeDefined();
     expect(response).not.toBeNull();
