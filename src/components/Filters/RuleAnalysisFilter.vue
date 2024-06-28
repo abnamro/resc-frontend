@@ -14,9 +14,9 @@
         <FindingStatusFilter @on-findings-status-change="onFindingsStatusChange" />
       </div>
       <div class="col-md-2 mt-1 ml-1 pt-1">
-        <b-button variant="primary" class="mt-4 w-100" size="sm" @click="toggleAdvancedSearch">
+        <BButton variant="primary" class="mt-4 w-100" size="sm" @click="toggleAdvancedSearch">
           Advanced Search
-        </b-button>
+        </BButton>
       </div>
     </div>
 
@@ -138,7 +138,7 @@ import { onKeyStroke } from '@vueuse/core';
 import { shouldIgnoreKeystroke } from '@/utils/keybind-utils';
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
-import { BCollapse, BFormCheckbox, BFormGroup } from 'bootstrap-vue-next';
+import { BButton, BCollapse, BFormCheckbox, BFormGroup } from 'bootstrap-vue-next';
 
 type Props = {
   projectOptions?: string[];

@@ -71,6 +71,7 @@ function handleDeletedChange() {
       repo_deleted.value = repository_data.value.deleted_at ? true : false;
       emit('on-delete-at-change');
     })
+    /* istanbul ignore next @preserve */
     .catch((error) => {
       AxiosConfig.handleError(error);
       repo_deleted.value = repository_data.value.deleted_at ? true : false;

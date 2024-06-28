@@ -1,27 +1,27 @@
 <template>
   <div>
-    <b-container class="login-container justify-content-md-center col-8">
-      <b-row class="resc-header">
-        <b-col>
+    <BContainer class="login-container justify-content-md-center col-8">
+      <BRow class="resc-header">
+        <BCol>
           <!-- Application Name -->
           <div>Repository Scanner (RESC)</div>
-        </b-col>
-      </b-row>
-      <b-row>
-        <b-col>
+        </BCol>
+      </BRow>
+      <BRow>
+        <BCol>
           <!-- Auth warning -->
           <div class="warning-msg text-start fw-bold">
             Unauthorized access prohibited.<br />
             {{ ssoLoginPageMessage }}
           </div>
-        </b-col>
-      </b-row>
-      <b-row>
-        <b-col>
-          <b-button variant="primary" class="mx-auto" v-on:click="login"> LOGIN </b-button>
-        </b-col>
-      </b-row>
-    </b-container>
+        </BCol>
+      </BRow>
+      <BRow>
+        <BCol>
+          <BButton variant="primary" class="mx-auto" v-on:click="login"> LOGIN </BButton>
+        </BCol>
+      </BRow>
+    </BContainer>
   </div>
 </template>
 
@@ -32,6 +32,7 @@ import Config from '@/configuration/config';
 import { useAuthUserStore } from '@/store/index';
 import { useRouter } from 'vue-router';
 import { onKeyStroke } from '@vueuse/core';
+import { BButton, BCol, BContainer, BRow } from 'bootstrap-vue-next';
 
 const ssoLoginPageMessage = `${Config.value('ssoLoginPageMessage')}`;
 const router = useRouter();

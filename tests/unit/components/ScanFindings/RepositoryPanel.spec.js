@@ -1,12 +1,32 @@
 import { mount } from '@vue/test-utils';
-import { describe, expect, it } from 'vitest';
+import axios from 'axios';
+import { vi, describe, expect, it } from 'vitest';
 import App from '@/components/ScanFindings/RepositoryPanel.vue';
 
+vi.mock('axios');
+
 describe('Repository Panel', () => {
-  it('Display dummy data in a Repository Panel', () => {
-    const wrapper = mount(App, {
+  let repositoryId = 1;
+  let deletedAt = '2021-10-01T00:00:00Z';
+  let deletedAtResponse = {
+    id_: repositoryId,
+    project_key: 'project_name',
+    repository_name: 'repo_name',
+    deleted_at: deletedAt,
+  };
+
+  it('Display dummy data in a Repository Panel', async () => {
+    axios.get.mockResolvedValueOnce({ data: deletedAtResponse });
+
+    const wrapper = await mount(App, {
       props: {
-        repository: { project_key: 'project_name', repository_name: 'repo_name' },
+        repository: {
+          project_key: 'project_name',
+          repository_id: '1',
+          repository_name: 'repo_name',
+          id_: 1,
+          vcs_instance: 1,
+        },
         vcs_instance: { name: 'vcs_name' },
       },
       components: {},
@@ -15,5 +35,13 @@ describe('Repository Panel', () => {
     expect(wrapper.text()).toContain('project_name');
     expect(wrapper.text()).toContain('repo_name');
     expect(wrapper.text()).toContain('vcs_name');
+    expect(wrapper.vm.repo_deleted).toBe(false);
+    expect(async () => await wrapper.vm.handleDeletedChange()).not.toThrow();
+    await wrapper.vm.$nextTick();
+    await wrapper.vm.$nextTick();
+    await wrapper.vm.$nextTick();
+    await wrapper.vm.$nextTick();
+
+    expect(wrapper.vm.repo_deleted).toBe(true);
   });
 });

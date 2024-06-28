@@ -23,7 +23,7 @@
     </div>
 
     <div class="p-3" v-if="hasRecords">
-      <b-table
+      <BTable
         id="repositories-table"
         :items="repositoryList"
         :fields="fields"
@@ -62,7 +62,7 @@
             :totalCount="(data.item as RepositoryEnrichedRead).total_findings_count"
           />
         </template>
-      </b-table>
+      </BTable>
 
       <!-- Pagination -->
       <Pagination
@@ -92,7 +92,7 @@ import SpinnerVue from '@/components/Common/SpinnerVue.vue';
 import { computed, onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import type { RepositoryEnrichedRead, VCSProviders } from '@/services/shema-to-types';
-import type { TableItem } from 'bootstrap-vue-next';
+import { BTable, type TableItem } from 'bootstrap-vue-next';
 
 const loadedData = ref(false);
 const router = useRouter();

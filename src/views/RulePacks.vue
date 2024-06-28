@@ -9,12 +9,12 @@
 
     <div class="ml-3">
       <!-- Import button to upload rulepack -->
-      <b-button
+      <BButton
         class="float-left mt-2 mb-2"
         variant="primary"
         size="sm"
         v-on:click="showRulePackUploadModal()"
-        >IMPORT</b-button
+        >IMPORT</BButton
       >
       <!-- RulePackUpload Modal -->
       <RulePackUploadModal
@@ -30,7 +30,7 @@
     </div>
 
     <div class="p-3" v-if="hasRecords">
-      <b-table
+      <BTable
         id="rule-packs-table"
         :items="rulePackList"
         :fields="fields"
@@ -91,7 +91,7 @@
             v-on:click="downloadRulePack((data.item as RulePackRead).version)"
           />
         </template>
-      </b-table>
+      </BTable>
 
       <!-- Pagination -->
       <Pagination
@@ -105,7 +105,7 @@
       ></Pagination>
     </div>
   </div>
-  <b-modal
+  <BModal
     ref="confirmMarkOutdated"
     hide-footer
     header-bg-variant="warning"
@@ -116,14 +116,14 @@
       outdated.
     </div>
     <div class="float-right">
-      <b-button class="mt-3 float-end" variant="outline-danger" block @click="markAsOutdated"
-        >Confirm</b-button
+      <BButton class="mt-3 float-end" variant="outline-danger" block @click="markAsOutdated"
+        >Confirm</BButton
       >
-      <b-button class="mt-3 float-end me-2" variant="outline-secondary" block @click="cancelAction"
-        >Cancel</b-button
+      <BButton class="mt-3 float-end me-2" variant="outline-secondary" block @click="cancelAction"
+        >Cancel</BButton
       >
     </div>
-  </b-modal>
+  </BModal>
 </template>
 
 <script setup lang="ts">
@@ -138,7 +138,7 @@ import RulePackService from '@/services/rule-pack-service';
 import { computed, ref } from 'vue';
 import type { AxiosResponse } from 'axios';
 import type { PaginationType, RulePackRead } from '@/services/shema-to-types';
-import type { TableItem } from 'bootstrap-vue-next';
+import { BButton, BModal, BTable, type TableItem } from 'bootstrap-vue-next';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 const loadedData = ref(false);
