@@ -1,6 +1,6 @@
 <template>
   <div>
-    <b-form-group class="label-title text-start" label="Status" label-for="status-filter">
+    <BFormGroup class="label-title text-start" label="Status" label-for="status-filter">
       <multiselect
         v-model="selectedStatus"
         :options="optionsStatus"
@@ -20,7 +20,7 @@
       >
         <template v-slot:noResult><span>No status found</span></template>
       </multiselect>
-    </b-form-group>
+    </BFormGroup>
   </div>
 </template>
 <script setup lang="ts">
@@ -29,6 +29,7 @@ import Multiselect from 'vue-multiselect';
 import { ref } from 'vue';
 import type { FindingStatus } from '@/services/shema-to-types';
 import { useAuthUserStore } from '@/store';
+import { BFormGroup } from 'bootstrap-vue-next';
 
 type Props = {
   statusOptions?: StatusOptionType[];

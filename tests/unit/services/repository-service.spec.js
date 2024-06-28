@@ -289,3 +289,39 @@ describe('getDistinctProjects', () => {
     });
   });
 });
+
+describe('toggleDeletedAtForRepository', () => {
+  let repositoryId = 1;
+  let deletedAt = '2021-10-01T00:00:00Z';
+  let deletedAtResponse = { deleted_at: deletedAt };
+
+  describe('when API call is successful', () => {
+    it('should return deleted_at for repository', async () => {
+      vi.resetAllMocks();
+      axios.get.mockResolvedValueOnce(deletedAtResponse);
+
+      const response = await RepositoryService.toggleDeletedAtForRepository(repositoryId);
+
+      expect(response).toEqual(deletedAtResponse);
+      expect(response).toBeDefined();
+      expect(response).not.toBeNull();
+      expect(response.deleted_at).toBe(deletedAt);
+    });
+  });
+
+  describe('when API call fails', () => {
+    it('should return error', async () => {
+      axios.get.mockResolvedValueOnce({});
+
+      await RepositoryService.toggleDeletedAtForRepository('not_valid')
+        .then((response) => {
+          expect(response).toEqual({});
+          expect(response).not.toBeNull();
+        })
+        .catch((error) => {
+          expect(error).toBeDefined();
+          expect(error).not.toBeNull();
+        });
+    });
+  });
+});

@@ -9,7 +9,7 @@
     </div>
 
     <div class="mx-4 pt-2">
-      <b-card-group class="col-md-12" deck>
+      <BCardGroup class="col-md-12" deck>
         <CardVue
           cardTitle="Today"
           :cardBodyContent="todayAuditCount"
@@ -45,7 +45,7 @@
           titleIconColor="#948C8C"
           titleIconTooltip="Total number of findings you triaged till today"
         />
-      </b-card-group>
+      </BCardGroup>
     </div>
   </div>
 
@@ -57,7 +57,7 @@
           <h5 class="text-nowrap text-start">Audit Trend</h5>
         </div>
 
-        <b-card-group deck>
+        <BCardGroup deck>
           <CardVue
             cardTitle="Current Week"
             :cardBodyContent="currentWeekAuditTrendPercentageCount"
@@ -68,7 +68,7 @@
             titleIconColor="#948C8C"
             titleIconTooltip="Your audit trend this week in comparison to last week"
           />
-        </b-card-group>
+        </BCardGroup>
       </div>
 
       <!-- Audit Rank -->
@@ -77,7 +77,7 @@
           <h5 class="text-nowrap text-start">Audit Rank</h5>
         </div>
 
-        <b-card-group deck>
+        <BCardGroup deck>
           <CardVue
             cardTitle="Current Week"
             :cardBodyContent="weeklyRankLabel"
@@ -88,7 +88,7 @@
             titleIconColor="#948C8C"
             titleIconTooltip="Your rank based on number of findings you triaged in current week"
           />
-        </b-card-group>
+        </BCardGroup>
       </div>
     </div>
   </div>
@@ -99,7 +99,7 @@
     </div>
 
     <div class="mx-4 pt-2">
-      <b-card-group class="col-md-12" deck>
+      <BCardGroup class="col-md-12" deck>
         <CardVue
           :cardTitle="CommonUtils.formatStatusLabels('TRUE_POSITIVE')"
           :cardBodyContent="truePositive"
@@ -142,7 +142,7 @@
           titleIconColor="#948C8C"
           :titleIconTooltip="`Number of ${CommonUtils.formatStatusLabels('OUTDATED')} audited.`"
         />
-      </b-card-group>
+      </BCardGroup>
     </div>
   </div>
 </template>
@@ -156,6 +156,7 @@ import SpinnerVue from '@/components/Common/SpinnerVue.vue';
 import { ref, type Ref } from 'vue';
 import type { AxiosResponse } from 'axios';
 import type { PersonalAuditMetrics, Swr } from '@/services/shema-to-types';
+import { BCardGroup } from 'bootstrap-vue-next';
 
 const loadedData = ref(false);
 

@@ -47,6 +47,8 @@ describe('RuleAnalysisFilter tests', () => {
 
     const wrapper = initMount();
     expect(wrapper.exists()).toBe(true);
+    expect(() => wrapper.vm.toggleAdvancedSearch()).not.toThrow();
+    expect(wrapper.vm.advancedSearchVisible).toBe(true);
     axios.get.mockReset();
   });
 

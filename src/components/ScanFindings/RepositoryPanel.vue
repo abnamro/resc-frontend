@@ -23,7 +23,7 @@
         <tr>
           <th>Deleted at</th>
           <td>
-            <b-form-checkbox
+            <BFormCheckbox
               v-model="repo_deleted"
               name="check-button"
               switch
@@ -33,7 +33,7 @@
               <small class="text-nowrap" v-if="repository_data.deleted_at">{{
                 repository_data.deleted_at.substring(0, 10)
               }}</small>
-            </b-form-checkbox>
+            </BFormCheckbox>
           </td>
         </tr>
       </tbody>

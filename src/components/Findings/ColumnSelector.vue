@@ -1,6 +1,6 @@
 <template>
   <div>
-    <b-modal
+    <BModal
       id="column_modal"
       ref="column_modal"
       size="sm"
@@ -10,25 +10,26 @@
       @show="loadModal"
     >
       <template v-for="column in selectableColumns" v-bind:key="column">
-        <b-form-checkbox
+        <BFormCheckbox
           class="checkbox"
           v-model="selectedColumn"
           :value="column"
           @change="updateColumns"
-          >{{ ColumnUtils.formatColumnLabel(column) }}</b-form-checkbox
+          >{{ ColumnUtils.formatColumnLabel(column) }}</BFormCheckbox
         >
       </template>
       <template #footer="">
         <div class="w-100 text-end">
-          <b-button variant="secondary" class="float-right" v-on:click="hide">CLOSE</b-button>
+          <BButton variant="secondary" class="float-right" v-on:click="hide">CLOSE</BButton>
         </div>
       </template>
-    </b-modal>
+    </BModal>
   </div>
 </template>
 <script lang="ts" setup>
 import { useAuthUserStore } from '@/store';
 import ColumnUtils, { type TableColumn } from '@/utils/column-utils';
+import { BButton, BFormCheckbox, BModal } from 'bootstrap-vue-next';
 import { ref } from 'vue';
 
 const column_modal = ref();

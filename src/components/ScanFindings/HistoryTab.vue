@@ -1,6 +1,6 @@
 <template>
   <div>
-    <b-tab title="HISTORY" title-item-class="tab-pills" v-on:click="fetchAuditsForFinding">
+    <BTab title="HISTORY" title-item-class="tab-pills" v-on:click="fetchAuditsForFinding">
       <SpinnerVue v-if="!loadedData" />
 
       <!--Audit History Table -->
@@ -10,7 +10,7 @@
       </div>
 
       <div class="pr-1" v-if="hasRecords">
-        <b-table
+        <BTable
           id="audit-history-table"
           :items="auditList"
           :fields="fields"
@@ -49,9 +49,9 @@
             </p>
             <p v-else>{{ (data.item as AuditRead).comment }}</p>
           </template>
-        </b-table>
+        </BTable>
       </div>
-    </b-tab>
+    </BTab>
   </div>
 </template>
 
@@ -63,6 +63,7 @@ import FindingsService from '@/services/findings-service';
 import SpinnerVue from '@/components/Common/SpinnerVue.vue';
 import type { AuditRead, DetailedFindingRead, FindingStatus } from '@/services/shema-to-types';
 import { computed, ref } from 'vue';
+import { BTab, BTable } from 'bootstrap-vue-next';
 
 const loadedData = ref(false);
 

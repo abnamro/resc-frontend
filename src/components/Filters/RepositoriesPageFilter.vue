@@ -26,34 +26,34 @@
     <!-- Include zero finding repos -->
     <div class="row pt-3">
       <div class="col-md-3 text-start">
-        <b-form-checkbox
+        <BFormCheckbox
           v-model="includeZeroFindingRepos"
           name="check-button"
           switch
           @change="handleFilterChange"
         >
           <small class="text-nowrap">Display repositories with 0 findings.</small>
-        </b-form-checkbox>
+        </BFormCheckbox>
       </div>
       <div class="col-md-4 text-start">
-        <b-form-checkbox
+        <BFormCheckbox
           v-model="includeDeletedRepositories"
           name="check-button"
           switch
           @change="handleFilterChange"
         >
           <small class="text-nowrap">Display repositories marked as deleted.</small>
-        </b-form-checkbox>
+        </BFormCheckbox>
       </div>
       <div class="col-md-4 text-start">
-        <b-form-checkbox
+        <BFormCheckbox
           v-model="onlyIfHasUntriagedFindings"
           name="check-button"
           switch
           @change="handleFilterChange"
         >
           <small class="text-nowrap">Display only repositories with untriaged findings.</small>
-        </b-form-checkbox>
+        </BFormCheckbox>
       </div>
     </div>
   </div>
@@ -64,6 +64,7 @@ import ProjectFilter from '@/components/Filters/ProjectFilter.vue';
 import RepositoryFilter from '@/components/Filters/RepositoryFilter.vue';
 import VcsProviderFilter from '@/components/Filters/VcsProviderFilter.vue';
 import type { VCSProviders } from '@/services/shema-to-types';
+import { BFormCheckbox } from 'bootstrap-vue-next';
 import { ref } from 'vue';
 
 type Props = {

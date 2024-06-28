@@ -1,6 +1,6 @@
 <template>
   <div>
-    <b-form-group class="label-title text-start" label="Project" label-for="project-filter">
+    <BFormGroup class="label-title text-start" label="Project" label-for="project-filter">
       <multiselect
         v-model="selectedProject"
         :options="props.projectOptions"
@@ -18,10 +18,11 @@
       >
         <template v-slot:noResult><span>No project found</span></template>
       </multiselect>
-    </b-form-group>
+    </BFormGroup>
   </div>
 </template>
 <script setup lang="ts">
+import { BFormGroup } from 'bootstrap-vue-next';
 import { ref } from 'vue';
 import Multiselect from 'vue-multiselect';
 

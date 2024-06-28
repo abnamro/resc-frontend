@@ -1,6 +1,6 @@
 <template>
   <div>
-    <b-modal
+    <BModal
       id="audit_modal"
       ref="audit_modal"
       size="lg"
@@ -11,53 +11,51 @@
       @ok="handleOk"
     >
       <form ref="form" @submit.stop.prevent="handleSubmit">
-        <b-form-group
+        <BFormGroup
           label="Status"
           label-for="audit-status"
           invalid-feedback="Status is required"
           :state="isStatusValid"
         >
-          <b-form-select id="audit-status" v-model="status" :state="isStatusValid" required>
+          <BFormSelect id="audit-status" v-model="status" :state="isStatusValid" required>
             <option value="">-- Select Status</option>
             <option v-for="status in statusList" :value="status.value" :key="status.id">
               {{ status.label }}
             </option>
-          </b-form-select>
-        </b-form-group>
+          </BFormSelect>
+        </BFormGroup>
 
-        <b-form-group
+        <BFormGroup
           label="Comment"
           label-for="comment-input"
           invalid-feedback="Maximum 255 characters are allowed"
           :state="isCommentValid"
         >
-          <b-form-textarea
+          <BFormTextarea
             id="comment-input"
             placeholder="Enter Comment"
             rows="3"
             trim
             v-model="comment"
             :state="isCommentValid"
-          ></b-form-textarea>
-        </b-form-group>
+          ></BFormTextarea>
+        </BFormGroup>
       </form>
 
       <template #modal-footer>
         <div class="w-100">
-          <b-button
+          <BButton
             variant="primary"
             class="float-right"
             v-on:click="handleOk"
             :disabled="!isStatusValid || !isCommentValid"
           >
             APPLY
-          </b-button>
-          <b-button variant="secondary" class="float-right mr-3" v-on:click="hide">
-            CLOSE
-          </b-button>
+          </BButton>
+          <BButton variant="secondary" class="float-right mr-3" v-on:click="hide"> CLOSE </BButton>
         </div>
       </template>
-    </b-modal>
+    </BModal>
   </div>
 </template>
 
@@ -67,7 +65,14 @@ import CommonUtils, { type StatusOptionType } from '@/utils/common-utils';
 import FindingsService from '@/services/findings-service';
 import { computed, ref } from 'vue';
 import type { FindingStatus } from '@/services/shema-to-types';
-import type { BvTriggerableEvent } from 'bootstrap-vue-next';
+import {
+  BButton,
+  BFormGroup,
+  BFormSelect,
+  BFormTextarea,
+  BModal,
+  type BvTriggerableEvent,
+} from 'bootstrap-vue-next';
 import { nextTick } from 'vue';
 import { useAuthUserStore } from '@/store';
 

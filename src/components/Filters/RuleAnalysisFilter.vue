@@ -21,7 +21,7 @@
     </div>
 
     <div class="ml-3 mt-2 mb-1">
-      <b-collapse id="advance-search-collapse" v-model="advancedSearchVisible">
+      <BCollapse id="advance-search-collapse" v-model="advancedSearchVisible">
         <div class="row pt-1">
           <!-- VCS Filter -->
           <div class="col-md-3">
@@ -46,7 +46,7 @@
         <div class="row pt-1">
           <!-- Start Date Filter -->
           <div class="col-md-2">
-            <b-form-group class="label-title text-start" label="From Date" label-for="start-date">
+            <BFormGroup class="label-title text-start" label="From Date" label-for="start-date">
               <VueDatePicker
                 id="start-date"
                 placeholder="Enter Scan Start Date"
@@ -58,12 +58,12 @@
                 auto-apply
                 no-today
               ></VueDatePicker>
-            </b-form-group>
+            </BFormGroup>
           </div>
 
           <!-- End Date Filter -->
           <div class="col-md-2">
-            <b-form-group class="label-title text-start" label="To Date" label-for="end-date">
+            <BFormGroup class="label-title text-start" label="To Date" label-for="end-date">
               <VueDatePicker
                 id="end-date"
                 placeholder="Enter Scan End Date"
@@ -78,7 +78,7 @@
                 no-today
               >
               </VueDatePicker>
-            </b-form-group>
+            </BFormGroup>
           </div>
 
           <div class="col-md-3">
@@ -101,7 +101,7 @@
 
         <div class="row pt-3">
           <div class="col-md-4 text-start">
-            <b-form-checkbox
+            <BFormCheckbox
               v-model="includeDeletedRepositories"
               name="check-button"
               switch
@@ -110,10 +110,10 @@
               <small class="text-nowrap"
                 >Display findings for repositories marked as deleted.</small
               >
-            </b-form-checkbox>
+            </BFormCheckbox>
           </div>
         </div>
-      </b-collapse>
+      </BCollapse>
     </div>
   </div>
 </template>
@@ -138,6 +138,7 @@ import { onKeyStroke } from '@vueuse/core';
 import { shouldIgnoreKeystroke } from '@/utils/keybind-utils';
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
+import { BCollapse, BFormCheckbox, BFormGroup } from 'bootstrap-vue-next';
 
 type Props = {
   projectOptions?: string[];

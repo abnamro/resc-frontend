@@ -52,7 +52,7 @@ describe('RepositoriesPageFilter tests', () => {
   it('Given a RepositoriesPageFilter When props are passed and Toggle then event is emitted.', () => {
     const wrapper = getApp();
     expect(wrapper.exists()).toBe(true);
-    expect(() => wrapper.vm.toggleIncludeZeroFindingRepos()).not.toThrow();
+    expect(() => wrapper.vm.handleFilterChange()).not.toThrow();
     expect(wrapper.emitted()).toHaveProperty('on-filter-change');
   });
 });

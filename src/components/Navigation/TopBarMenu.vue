@@ -8,25 +8,25 @@
       ?
     </div>
 
-    <b-button-toolbar
+    <BButtonToolbar
       aria-label="Toolbar with button groups and dropdown menu"
       class="float-end"
       v-if="displayLoggedInUser"
     >
-      <b-dropdown class="mx-1" right toggle-class="rounded-circle" no-caret>
+      <BDropdown class="mx-1" right toggle-class="rounded-circle" no-caret>
         <template #button-content>
           <FontAwesomeIcon icon="user" />
         </template>
 
-        <b-dropdown-item disabled>
+        <BDropdownItem disabled>
           <table aria-hidden="true">
             <tr>
               <td class="user-avatar-badge">
-                <b-avatar
+                <BAvatar
                   button
                   v-bind:text="avatarText"
                   class="align-baseline user-avatar"
-                ></b-avatar>
+                ></BAvatar>
               </td>
               <td>
                 <span class="profile-menu-username">{{ userFullName }}</span
@@ -34,17 +34,17 @@
               </td>
             </tr>
           </table>
-        </b-dropdown-item>
+        </BDropdownItem>
 
         <div>
-          <b-dropdown-divider></b-dropdown-divider>
-          <b-dropdown-item v-on:click="logout">
+          <BDropdownDivider />
+          <BDropdownItem v-on:click="logout">
             <FontAwesomeIcon class="sign-out-icon" icon="sign-out-alt" />
-            <span class="sign-out-text">Logout</span></b-dropdown-item
+            <span class="sign-out-text">Logout</span></BDropdownItem
           >
         </div>
-      </b-dropdown>
-    </b-button-toolbar>
+      </BDropdown>
+    </BButtonToolbar>
   </div>
 </template>
 
@@ -55,6 +55,13 @@ import Config from '@/configuration/config';
 import { useAuthUserStore } from '@/store/index';
 import { computed, ref } from 'vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import {
+  BAvatar,
+  BButtonToolbar,
+  BDropdown,
+  BDropdownDivider,
+  BDropdownItem,
+} from 'bootstrap-vue-next';
 
 const keybindingModal = ref();
 

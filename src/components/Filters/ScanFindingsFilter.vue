@@ -3,7 +3,7 @@
     <div class="row">
       <!-- Scan Date Filter -->
       <div class="col-md-3 ml-3">
-        <b-form-group class="label-title text-start" label="Scan Date" label-for="scan-date-filter">
+        <BFormGroup class="label-title text-start" label="Scan Date" label-for="scan-date-filter">
           <multiselect
             v-model="selectedScan"
             :options="scanDateList"
@@ -20,7 +20,7 @@
               ><span>{{ formatScanDateFilterOptions(option) }}</span></template
             >
           </multiselect>
-        </b-form-group>
+        </BFormGroup>
       </div>
 
       <!-- Rule Filter -->
@@ -51,7 +51,7 @@
     <!-- Include previous scan findings -->
     <div class="row">
       <div class="col-md-2 ml-3 pt-3">
-        <b-form-checkbox
+        <BFormCheckbox
           v-model="includePreviousScans"
           name="check-button"
           switch
@@ -59,7 +59,7 @@
           v-on:click="handleToggleButtonClick"
         >
           <small class="text-nowrap">Include previous scan findings</small>
-        </b-form-checkbox>
+        </BFormCheckbox>
       </div>
       <div class="col-md-1"></div>
     </div>
@@ -79,6 +79,7 @@ import ScanFindingsService from '@/services/scan-findings-service';
 import { ref, watch, type Ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import type { FindingStatus, RepositoryRead, ScanRead } from '@/services/shema-to-types';
+import { BFormCheckbox, BFormGroup } from 'bootstrap-vue-next';
 
 const ruleFilterChildComponent = ref();
 const ruleTagsFilterChildComponent = ref();

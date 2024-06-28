@@ -1,13 +1,13 @@
 <template>
   <div>
-    <b-modal
+    <BModal
       id="keybinding_modal"
       ref="keybinding_modal"
       size="md"
       button-size="sm"
       title="Keyboard shortcuts"
     >
-      <b-table id="keybindings-table" :items="keybindings" :fields="fields" small>
+      <BTable id="keybindings-table" :items="keybindings" :fields="fields" small>
         <!-- Select all checkboxes -->
         <template #cell(effect)="data">
           {{ data.item.effect }}
@@ -19,25 +19,26 @@
           >
             <span class="kb">
               <template v-for="combination in combinations" v-bind:key="combination">
-                <b-badge variant="light"><span v-html="combination"></span></b-badge>
+                <BBadge variant="light"><span v-html="combination"></span></BBadge>
               </template>
             </span>
           </template>
         </template>
-      </b-table>
+      </BTable>
 
       <template #footer="">
         <div class="w-100 text-end">
-          <b-button variant="secondary" class="float-right" v-on:click="hide">CLOSE</b-button>
+          <BButton variant="secondary" class="float-right" v-on:click="hide">CLOSE</BButton>
         </div>
       </template>
-    </b-modal>
+    </BModal>
   </div>
 </template>
 
 <script setup lang="ts">
 import { shouldIgnoreKeystroke } from '@/utils/keybind-utils';
 import { onKeyStroke } from '@vueuse/core';
+import { BBadge, BButton, BModal, BTable } from 'bootstrap-vue-next';
 import { ref } from 'vue';
 
 const keybinding_modal = ref();

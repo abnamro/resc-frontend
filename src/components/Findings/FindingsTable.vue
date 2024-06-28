@@ -12,7 +12,7 @@
   </div>
 
   <div class="py-3">
-    <b-table
+    <BTable
       ref="auditTable"
       id="rule-analysis-table"
       :items="findingList"
@@ -29,43 +29,43 @@
       :caption-top="true"
     >
       <template #table-caption>
-        <b-button
+        <BButton
           class="d-inline-block me-3"
           variant="primary"
           size="sm"
           id="AuditButton"
           v-on:click="showAuditModal()"
           :disabled="auditButtonDisabled"
-          >AUDIT</b-button
+          >AUDIT</BButton
         >
-        <b-button
+        <BButton
           class="d-inline-block"
           variant="primary"
           size="sm"
           id="AuditButton"
           v-on:click="showColumnSelect()"
-          >Columns</b-button
+          >Columns</BButton
         >
       </template>
 
       <!-- Select all checkboxes -->
       <template #head(select)>
-        <b-form-checkbox
+        <BFormCheckbox
           id="allSelected"
           class="checkbox"
           v-model="allSelected"
           @change="selectAllCheckboxes"
-        ></b-form-checkbox>
+        ></BFormCheckbox>
       </template>
 
       <!-- Selection checkboxes -->
       <template #cell(select)="data">
-        <b-form-checkbox
+        <BFormCheckbox
           class="checkbox"
           v-model="selectedCheckBoxIds"
           :value="data.item.id_"
           @change="selectSingleCheckbox"
-        ></b-form-checkbox>
+        ></BFormCheckbox>
         <template v-if="data.item.rowSelected">
           <span class="sr-only">Selected</span>
         </template>
@@ -116,15 +116,20 @@
       <template v-slot:row-details="data">
         <FindingPanel :finding="data.item"></FindingPanel>
       </template>
-    </b-table>
+    </BTable>
   </div>
 </template>
 <script lang="ts" setup>
 import AuditModal from '@/components/ScanFindings/AuditModal.vue';
 import FindingPanel from '@/components/ScanFindings/FindingPanel.vue';
 import type { DetailedFindingRead, FindingStatus } from '@/services/shema-to-types';
-import type { TableField, TableItem } from 'bootstrap-vue-next';
-import { BTable, BFormCheckbox, BButton } from 'bootstrap-vue-next';
+import {
+  BTable,
+  BFormCheckbox,
+  BButton,
+  type TableField,
+  type TableItem,
+} from 'bootstrap-vue-next';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import FindingsService from '@/services/findings-service';
 import AxiosConfig from '@/configuration/axios-config';

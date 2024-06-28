@@ -23,6 +23,7 @@ ChartJS.register(Title, Tooltip, Legend, LineElement, LinearScale, CategoryScale
 import { createBootstrap } from 'bootstrap-vue-next';
 
 import 'bootstrap/dist/css/bootstrap.css';
+import 'vue3-toastify/dist/index.css';
 import 'bootstrap-vue-next/dist/bootstrap-vue-next.css';
 import './styles/main.css';
 

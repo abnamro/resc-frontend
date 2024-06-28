@@ -1,6 +1,6 @@
 <template>
   <div>
-    <b-card class="card-box">
+    <BCard class="card-box">
       <template #header>
         <div class="d-flex align-items-center justify-content-center fw-bold">
           <p class="mb-0 me-2">{{ title }}</p>
@@ -11,9 +11,9 @@
               :style="titleIconStyle"
               :icon="titleIconDefinition"
             />
-            <b-tooltip :target="titleIconTooltipId" placement="right">
+            <BTooltip :target="titleIconTooltipId" placement="right">
               {{ titleIconTooltip }}
-            </b-tooltip>
+            </BTooltip>
           </template>
         </div>
       </template>
@@ -31,12 +31,13 @@
           />
         </div>
       </template>
-    </b-card>
+    </BCard>
   </div>
 </template>
 <script setup lang="ts">
 import { ref } from 'vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import { BCard, BTooltip } from 'bootstrap-vue-next';
 
 export type CardIcon =
   | 'info-circle'
