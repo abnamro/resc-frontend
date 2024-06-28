@@ -1,24 +1,22 @@
 <template>
   <div>
-    <b-tab title="RULE" title-item-class="tab-pills" v-on:click="fetchRuleForRulePack">
+    <BTab title="RULE" title-item-class="tab-pills" v-on:click="fetchRuleForRulePack">
       <SpinnerVue v-if="!loadedData" />
 
       <div class="pr-1" v-if="loadedData && rule">
-        <b-card-text v-if="rule?.description"
-          ><span class="fw-bold">Description: </span>{{ rule.description }}</b-card-text
+        <BCardText v-if="rule?.description"
+          ><span class="fw-bold">Description: </span>{{ rule.description }}</BCardText
         >
-        <b-card-text v-if="rule?.regex"
-          ><span class="fw-bold">Regex: </span>{{ rule.regex }}</b-card-text
+        <BCardText v-if="rule?.regex"
+          ><span class="fw-bold">Regex: </span>{{ rule.regex }}</BCardText
         >
-        <b-card-text v-if="rule?.path"
-          ><span class="fw-bold">Path: </span>{{ rule.path }}</b-card-text
-        >
-        <b-card-text v-if="rule?.comment"
-          ><span class="fw-bold">Comment: </span>{{ rule.comment }}</b-card-text
+        <BCardText v-if="rule?.path"><span class="fw-bold">Path: </span>{{ rule.path }}</BCardText>
+        <BCardText v-if="rule?.comment"
+          ><span class="fw-bold">Comment: </span>{{ rule.comment }}</BCardText
         >
       </div>
       <div class="pr-1" v-if="loadedData && !rule">Rule not found.</div>
-    </b-tab>
+    </BTab>
   </div>
 </template>
 
@@ -28,6 +26,7 @@ import RulePackService from '@/services/rule-pack-service';
 import SpinnerVue from '@/components/Common/SpinnerVue.vue';
 import type { RuleRead } from '@/services/shema-to-types';
 import { ref } from 'vue';
+import { BCardText, BTab } from 'bootstrap-vue-next';
 
 const loadedData = ref(false);
 

@@ -23,7 +23,7 @@
     </div>
 
     <div class="p-3" v-if="hasRecords">
-      <b-table
+      <BTable
         id="repositories-table"
         :items="repositoryList"
         :fields="fields"
@@ -62,7 +62,7 @@
             :totalCount="(data.item as RepositoryEnrichedRead).total_findings_count"
           />
         </template>
-      </b-table>
+      </BTable>
 
       <!-- Pagination -->
       <Pagination
@@ -92,7 +92,7 @@ import SpinnerVue from '@/components/Common/SpinnerVue.vue';
 import { computed, onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import type { RepositoryEnrichedRead, VCSProviders } from '@/services/shema-to-types';
-import type { TableItem } from 'bootstrap-vue-next';
+import { BTable, type TableItem } from 'bootstrap-vue-next';
 
 const loadedData = ref(false);
 const router = useRouter();
@@ -113,6 +113,7 @@ const projectNames = ref([] as string[]);
 const repositoryNames = ref([] as string[]);
 const includeZeroFindingRepos = ref(false);
 const includeDeletedRepositories = ref(false);
+const onlyIfHasUntriagedFindings = ref(false);
 const fields = ref([
   {
     key: 'project_key',
@@ -207,12 +208,14 @@ function handleFilterChange(
   repository: string | undefined,
   includeZeroFindingReposArg: boolean,
   includeDeletedRepositoriesArg: boolean,
+  onlyIfHasUntriagedFindingsArg: boolean,
 ) {
   vcsFilter.value = vcsProvider;
   projectFilter.value = project;
   repositoryFilter.value = repository;
   includeZeroFindingRepos.value = includeZeroFindingReposArg;
   includeDeletedRepositories.value = includeDeletedRepositoriesArg;
+  onlyIfHasUntriagedFindings.value = onlyIfHasUntriagedFindingsArg;
   currentPage.value = 1;
   fetchDistinctProjects();
   fetchDistinctRepositories();
@@ -230,6 +233,7 @@ function fetchPaginatedRepositories() {
     repositoryFilter.value,
     includeZeroFindingRepos.value,
     includeDeletedRepositories.value,
+    onlyIfHasUntriagedFindings.value,
   )
     .then((response) => {
       totalRows.value = response.data.total;
@@ -264,6 +268,7 @@ function fetchDistinctRepositories() {
     projectFilter.value,
     includeZeroFindingRepos.value,
     includeDeletedRepositories.value,
+    onlyIfHasUntriagedFindings.value,
   )
     .then((response) => {
       repositoryNames.value = [];

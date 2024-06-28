@@ -220,6 +220,7 @@ export interface paths {
      * - **rule_name**: Name of the rule to filter the findings by
      * - **skip**: Integer amount of records to skip to support pagination
      * - **limit**: Integer amount of records to return, to support pagination
+     * - **include_deleted_repositories**: boolean flag to include deleted repositories
      * - **return**: [FindingRead]
      *     The output will contain a PaginationModel containing the list of FindingRead type objects,
      *     or an empty list if no finding was found for the given rule
@@ -316,6 +317,8 @@ export interface paths {
      *         - start_date_time of type datetime with the following format: 1970-01-31T00:00:00
      *
      *         - end_date_time of type datetime with the following format: 1970-01-31T00:00:00
+     *
+     *         - include_deleted_repositories of type boolean
      *
      * - **db_connection**
      *
@@ -432,6 +435,7 @@ export interface paths {
      * - **vcs_providers**: Optional, filter of supported vcs provider types
      * - **project_name**: Optional, filter on project name. It is used as a full string match filter
      * - **only_if_has_findings**: Optional, filter all repositories that have findings
+     * - **only_if_has_untriaged_findings**: Optional, filter repositories with untriaged findings
      * - **return**: List[str]
      *     The output will contain a list of unique repositories
      */
@@ -462,6 +466,7 @@ export interface paths {
      * - **projectfilter**: Optional, filter on project name. It is used as a string contains filter
      * - **repositoryfilter**: Optional, filter on repository name. It is used as a string contains filter
      * - **only_if_has_findings**: Optional, filter all repositories those have findings
+     * - **only_if_has_untriaged_findings**: Optional, filter repositories with untriaged findings
      * - **return**: [RepositoryEnrichedRead]
      *     The output will contain a PaginationModel containing the list of RepositoryEnrichedRead type objects,
      *     or an empty list if no repository
@@ -495,6 +500,19 @@ export interface paths {
      *     or an empty list if no scan was found
      */
     get: operations['get_scans_for_repository_resc_v1_repositories__repository_id__scans_get'];
+  };
+  '/resc/v1/repositories/{repository_id}/toggle-deleted': {
+    /**
+     * Toggle the deleted_at for a repository
+     * @description Toggle the deleted_at for a repository
+     *
+     *     Audit all associated findings as GONE (if not audited).
+     *
+     * - **db_connection**: Session of the database connection
+     * - **repository_id**: ID of the repository to toggle
+     * - **return**: The output will contain the updated metadata of the repository
+     */
+    patch: operations['toggle_deleted_at_for_repository_resc_v1_repositories__repository_id__toggle_deleted_patch'];
   };
   '/resc/v1/scans': {
     /**
@@ -2206,6 +2224,7 @@ export interface operations {
    * - **rule_name**: Name of the rule to filter the findings by
    * - **skip**: Integer amount of records to skip to support pagination
    * - **limit**: Integer amount of records to return, to support pagination
+   * - **include_deleted_repositories**: boolean flag to include deleted repositories
    * - **return**: [FindingRead]
    *     The output will contain a PaginationModel containing the list of FindingRead type objects,
    *     or an empty list if no finding was found for the given rule
@@ -2442,6 +2461,8 @@ export interface operations {
    *         - start_date_time of type datetime with the following format: 1970-01-31T00:00:00
    *
    *         - end_date_time of type datetime with the following format: 1970-01-31T00:00:00
+   *
+   *         - include_deleted_repositories of type boolean
    *
    * - **db_connection**
    *
@@ -2811,6 +2832,7 @@ export interface operations {
    * - **vcs_providers**: Optional, filter of supported vcs provider types
    * - **project_name**: Optional, filter on project name. It is used as a full string match filter
    * - **only_if_has_findings**: Optional, filter all repositories that have findings
+   * - **only_if_has_untriaged_findings**: Optional, filter repositories with untriaged findings
    * - **return**: List[str]
    *     The output will contain a list of unique repositories
    */
@@ -2821,6 +2843,7 @@ export interface operations {
         project_name?: string | null;
         only_if_has_findings?: boolean;
         include_deleted_repositories?: boolean | null;
+        only_if_has_untriaged_findings?: boolean;
       };
     };
     responses: {
@@ -2902,6 +2925,7 @@ export interface operations {
    * - **projectfilter**: Optional, filter on project name. It is used as a string contains filter
    * - **repositoryfilter**: Optional, filter on repository name. It is used as a string contains filter
    * - **only_if_has_findings**: Optional, filter all repositories those have findings
+   * - **only_if_has_untriaged_findings**: Optional, filter repositories with untriaged findings
    * - **return**: [RepositoryEnrichedRead]
    *     The output will contain a PaginationModel containing the list of RepositoryEnrichedRead type objects,
    *     or an empty list if no repository
@@ -2916,6 +2940,7 @@ export interface operations {
         repository_filter?: string | null;
         only_if_has_findings?: boolean;
         include_deleted_repositories?: boolean | null;
+        only_if_has_untriaged_findings?: boolean;
       };
     };
     responses: {
@@ -3011,6 +3036,51 @@ export interface operations {
       200: {
         content: {
           'application/json': components['schemas']['PaginationModel_ScanRead_'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+      /** @description Internal server error. Contact your system administrator */
+      500: {
+        content: never;
+      };
+      /** @description Unable to communicate with DataBase, Please contact your system administrator */
+      503: {
+        content: never;
+      };
+    };
+  };
+  /**
+   * Toggle the deleted_at for a repository
+   * @description Toggle the deleted_at for a repository
+   *
+   *     Audit all associated findings as GONE (if not audited).
+   *
+   * - **db_connection**: Session of the database connection
+   * - **repository_id**: ID of the repository to toggle
+   * - **return**: The output will contain the updated metadata of the repository
+   */
+  toggle_deleted_at_for_repository_resc_v1_repositories__repository_id__toggle_deleted_patch: {
+    parameters: {
+      path: {
+        repository_id: number;
+      };
+    };
+    responses: {
+      /** @description Toggle the deleted_at of repository <repository_id> */
+      200: {
+        content: {
+          'application/json': components['schemas']['RepositoryRead'];
+        };
+      };
+      /** @description Repository <repository_id> not found */
+      404: {
+        content: {
+          'application/json': components['schemas']['Model404'];
         };
       };
       /** @description Validation Error */

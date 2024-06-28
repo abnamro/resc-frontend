@@ -17,11 +17,11 @@
       </div>
       <div class="col-md-5 small">
         <!-- Pagination -->
-        <b-pagination
+        <BPagination
           v-model="currentPageNumber"
           :per-page="props.perPage"
           :total-rows="props.totalRows"
-          align="end"
+          :align="'end'"
           first-number
           last-number
           first-text="First"
@@ -66,7 +66,7 @@
 </template>
 
 <script setup lang="ts">
-import type { BvEvent } from 'bootstrap-vue-next';
+import { BPagination, type BvEvent } from 'bootstrap-vue-next';
 import { computed, ref } from 'vue';
 type Props = {
   currentPage: number;

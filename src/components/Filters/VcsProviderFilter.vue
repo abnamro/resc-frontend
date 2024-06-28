@@ -1,6 +1,6 @@
 <template>
   <div>
-    <b-form-group class="label-title text-start" label="VCS Provider" label-for="vcs-filter">
+    <BFormGroup class="label-title text-start" label="VCS Provider" label-for="vcs-filter">
       <multiselect
         v-model="selectedVcsProviders"
         :options="optionsVcsProviders"
@@ -20,7 +20,7 @@
       >
         <template v-slot:noResult><span>No vcs provider found</span></template>
       </multiselect>
-    </b-form-group>
+    </BFormGroup>
   </div>
 </template>
 <script setup lang="ts">
@@ -30,6 +30,7 @@ import CommonUtils from '@/utils/common-utils';
 import RepositoryService from '@/services/repository-service';
 import { ref } from 'vue';
 import type { VCSProviders } from '@/services/shema-to-types';
+import { BFormGroup } from 'bootstrap-vue-next';
 
 type VcsProvider = {
   id: number;

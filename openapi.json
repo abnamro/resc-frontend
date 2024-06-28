@@ -3,7 +3,7 @@
   "info": {
     "title": "Repository Scanner (RESC)",
     "description": "RESC API helps you to perform several operations upon findings obtained from multiple source code repositories.",
-    "version": "3.5.0"
+    "version": "3.5.1"
   },
   "paths": {
     "/resc/v1/health": {
@@ -1161,7 +1161,7 @@
           "resc-findings"
         ],
         "summary": "Get findings by rule",
-        "description": "Retrieve all findings objects paginated by rule\n\n- **db_connection**: Session of the database connection\n- **rule_name**: Name of the rule to filter the findings by\n- **skip**: Integer amount of records to skip to support pagination\n- **limit**: Integer amount of records to return, to support pagination\n- **return**: [FindingRead]\n    The output will contain a PaginationModel containing the list of FindingRead type objects,\n    or an empty list if no finding was found for the given rule",
+        "description": "Retrieve all findings objects paginated by rule\n\n- **db_connection**: Session of the database connection\n- **rule_name**: Name of the rule to filter the findings by\n- **skip**: Integer amount of records to skip to support pagination\n- **limit**: Integer amount of records to return, to support pagination\n- **include_deleted_repositories**: boolean flag to include deleted repositories\n- **return**: [FindingRead]\n    The output will contain a PaginationModel containing the list of FindingRead type objects,\n    or an empty list if no finding was found for the given rule",
         "operationId": "get_findings_by_rule_resc_v1_findings_by_rule__rule_name__get",
         "parameters": [
           {
@@ -1208,8 +1208,8 @@
                   "type": "null"
                 }
               ],
-              "title": "IncludeDeletedRepositories",
-              "default": false
+              "default": false,
+              "title": "Include Deleted Repositories"
             }
           }
         ],
@@ -1515,7 +1515,7 @@
           "resc-findings"
         ],
         "summary": "Get all detailed findings",
-        "description": "Retrieve all findings objects paginated\n- **query_string**\n\n    A query string with the following format:\n        param1=value1&param2=value2&param3=value3\n\n    Where the possible parameters are:\n\n        - vcs_providers [enum] of type VCSProviders, possible values are: BITBUCKET, AZURE_DEVOPS.\n            Will default to all if non-specified.\n\n        - finding_statuses [enum of type FindingStatus], possible values are:NOT_ANALYZED,FALSE_POSITIVE,\n          TRUE_POSITIVE. Will default to all if non-specified.\n\n        - rule_pack_versions of type [String]\n\n        - rule_names of type [String]\n\n        - rule_tags of type [String] findings in the result will have at least one of the specified tags\n          for the rules\n\n        - project_name of type String\n\n        - repository_names of type [String]\n\n        - scan_ids of type list Integer\n\n        - start_date_time of type datetime with the following format: 1970-01-31T00:00:00\n\n        - end_date_time of type datetime with the following format: 1970-01-31T00:00:00\n\n- **db_connection**\n\n    Session of the database connection\n\n- **skip**\n\n    Integer amount of records to skip to support pagination\n\n- **limit**\n\n    Integer amount of records to return, to support pagination\n\n- **return** [FindingRead]\n\n    The output will contain a PaginationModel containing the list of DetailedFinding type objects,\n    or an empty list if no finding was found",
+        "description": "Retrieve all findings objects paginated\n- **query_string**\n\n    A query string with the following format:\n        param1=value1&param2=value2&param3=value3\n\n    Where the possible parameters are:\n\n        - vcs_providers [enum] of type VCSProviders, possible values are: BITBUCKET, AZURE_DEVOPS.\n            Will default to all if non-specified.\n\n        - finding_statuses [enum of type FindingStatus], possible values are:NOT_ANALYZED,FALSE_POSITIVE,\n          TRUE_POSITIVE. Will default to all if non-specified.\n\n        - rule_pack_versions of type [String]\n\n        - rule_names of type [String]\n\n        - rule_tags of type [String] findings in the result will have at least one of the specified tags\n          for the rules\n\n        - project_name of type String\n\n        - repository_names of type [String]\n\n        - scan_ids of type list Integer\n\n        - start_date_time of type datetime with the following format: 1970-01-31T00:00:00\n\n        - end_date_time of type datetime with the following format: 1970-01-31T00:00:00\n\n        - include_deleted_repositories of type boolean\n\n- **db_connection**\n\n    Session of the database connection\n\n- **skip**\n\n    Integer amount of records to skip to support pagination\n\n- **limit**\n\n    Integer amount of records to return, to support pagination\n\n- **return** [FindingRead]\n\n    The output will contain a PaginationModel containing the list of DetailedFinding type objects,\n    or an empty list if no finding was found",
         "operationId": "get_all_detailed_findings_resc_v1_detailed_findings_get",
         "parameters": [
           {
@@ -1679,7 +1679,7 @@
               "items": {
                 "$ref": "#/components/schemas/VCSProviders"
               },
-              "title": "VCSProviders"
+              "title": "Vcs Provider"
             }
           },
           {
@@ -1731,8 +1731,8 @@
                   "type": "null"
                 }
               ],
-              "title": "IncludeDeletedRepositories",
-              "default": false
+              "default": false,
+              "title": "Include Deleted Repositories"
             }
           }
         ],
@@ -2011,7 +2011,7 @@
               "items": {
                 "$ref": "#/components/schemas/VCSProviders"
               },
-              "title": "VCSProviders"
+              "title": "Vcs Provider"
             }
           },
           {
@@ -2055,8 +2055,8 @@
                   "type": "null"
                 }
               ],
-              "title": "IncludeDeletedRepositories",
-              "default": false
+              "default": false,
+              "title": "Include Deleted Repositories"
             }
           }
         ],
@@ -2100,7 +2100,7 @@
           "resc-repositories"
         ],
         "summary": "Get all unique repository names",
-        "description": "Retrieve all unique repository names\n\n- **db_connection**: Session of the database connection\n- **vcs_providers**: Optional, filter of supported vcs provider types\n- **project_name**: Optional, filter on project name. It is used as a full string match filter\n- **only_if_has_findings**: Optional, filter all repositories that have findings\n- **return**: List[str]\n    The output will contain a list of unique repositories",
+        "description": "Retrieve all unique repository names\n\n- **db_connection**: Session of the database connection\n- **vcs_providers**: Optional, filter of supported vcs provider types\n- **project_name**: Optional, filter on project name. It is used as a full string match filter\n- **only_if_has_findings**: Optional, filter all repositories that have findings\n- **only_if_has_untriaged_findings**: Optional, filter repositories with untriaged findings\n- **return**: List[str]\n    The output will contain a list of unique repositories",
         "operationId": "get_distinct_repositories_resc_v1_repositories_distinct_repositories__get",
         "parameters": [
           {
@@ -2112,7 +2112,7 @@
               "items": {
                 "$ref": "#/components/schemas/VCSProviders"
               },
-              "title": "VCSProviders"
+              "title": "Vcs Provider"
             }
           },
           {
@@ -2156,8 +2156,18 @@
                   "type": "null"
                 }
               ],
-              "title": "IncludeDeletedRepositories",
-              "default": false
+              "default": false,
+              "title": "Include Deleted Repositories"
+            }
+          },
+          {
+            "name": "only_if_has_untriaged_findings",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false,
+              "title": "Only If Has Untriaged Findings"
             }
           }
         ],
@@ -2260,7 +2270,7 @@
           "resc-repositories"
         ],
         "summary": "Get all repositories with findings metadata",
-        "description": "Retrieve all repository objects paginated\n\n- **db_connection**: Session of the database connection\n- **skip**: Integer amount of records to skip to support pagination\n- **limit**: Integer amount of records to return, to support pagination\n- **vcs_providers**: Optional, filter on supported vcs provider types\n- **projectfilter**: Optional, filter on project name. It is used as a string contains filter\n- **repositoryfilter**: Optional, filter on repository name. It is used as a string contains filter\n- **only_if_has_findings**: Optional, filter all repositories those have findings\n- **return**: [RepositoryEnrichedRead]\n    The output will contain a PaginationModel containing the list of RepositoryEnrichedRead type objects,\n    or an empty list if no repository",
+        "description": "Retrieve all repository objects paginated\n\n- **db_connection**: Session of the database connection\n- **skip**: Integer amount of records to skip to support pagination\n- **limit**: Integer amount of records to return, to support pagination\n- **vcs_providers**: Optional, filter on supported vcs provider types\n- **projectfilter**: Optional, filter on project name. It is used as a string contains filter\n- **repositoryfilter**: Optional, filter on repository name. It is used as a string contains filter\n- **only_if_has_findings**: Optional, filter all repositories those have findings\n- **only_if_has_untriaged_findings**: Optional, filter repositories with untriaged findings\n- **return**: [RepositoryEnrichedRead]\n    The output will contain a PaginationModel containing the list of RepositoryEnrichedRead type objects,\n    or an empty list if no repository",
         "operationId": "get_all_repositories_with_findings_metadata_resc_v1_repositories_findings_metadata__get",
         "parameters": [
           {
@@ -2294,7 +2304,7 @@
               "items": {
                 "$ref": "#/components/schemas/VCSProviders"
               },
-              "title": "VCSProviders"
+              "title": "Vcs Provider"
             }
           },
           {
@@ -2356,8 +2366,18 @@
                   "type": "null"
                 }
               ],
-              "title": "IncludeDeletedRepositories",
-              "default": false
+              "default": false,
+              "title": "Include Deleted Repositories"
+            }
+          },
+          {
+            "name": "only_if_has_untriaged_findings",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false,
+              "title": "Only If Has Untriaged Findings"
             }
           }
         ],
@@ -2491,6 +2511,65 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/PaginationModel_ScanRead_"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error. Contact your system administrator"
+          },
+          "503": {
+            "description": "Unable to communicate with DataBase, Please contact your system administrator"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/resc/v1/repositories/{repository_id}/toggle-deleted": {
+      "patch": {
+        "tags": [
+          "resc-repositories"
+        ],
+        "summary": "Toggle the deleted_at for a repository",
+        "description": "Toggle the deleted_at for a repository\n\n    Audit all associated findings as GONE (if not audited).\n\n- **db_connection**: Session of the database connection\n- **repository_id**: ID of the repository to toggle\n- **return**: The output will contain the updated metadata of the repository",
+        "operationId": "toggle_deleted_at_for_repository_resc_v1_repositories__repository_id__toggle_deleted_patch",
+        "parameters": [
+          {
+            "name": "repository_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Repository Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Toggle the deleted_at of repository <repository_id>",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RepositoryRead"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Repository <repository_id> not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Model404"
                 }
               }
             }

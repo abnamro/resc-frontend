@@ -199,6 +199,7 @@ function fetchDistinctRepositories() {
     selectedProject.value,
     false,
     includeDeletedRepositories.value,
+    false,
   )
     .then((response) => {
       repositoryNames.value = [];

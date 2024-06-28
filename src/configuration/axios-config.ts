@@ -1,7 +1,9 @@
 import { useAuthUserStore } from '@/store/index';
 import Config from '@/configuration/config';
 import AuthService from '@/services/auth-service';
-import PushNotification from '@/utils/push-notification';
+
+// import PushNotification from '@/utils/push-notification';
+import { toast } from 'vue3-toastify';
 import axios, {
   type AxiosRequestConfig,
   type AxiosRequestHeaders,
@@ -20,11 +22,9 @@ const AxiosConfig = {
         const store = useAuthUserStore();
         if (store.accessToken) {
           if (AuthService.isTokenExpired(store.accessToken)) {
-            PushNotification.danger(
-              'Your session has expired. You will be redirected to the Login page.',
-              'Session Expired',
-              3000,
-            );
+            toast('Your session has expired. You will be redirected to the Login page.', {
+              type: 'error',
+            });
             setTimeout(function () {
               AuthService.doLogOut();
             }, 5000);
@@ -50,17 +50,20 @@ const AxiosConfig = {
     axios.interceptors.response.use(
       function (response: AxiosResponse): AxiosResponse {
         if (response && response.status === 201) {
-          PushNotification.success('Record saved successfully', 'Success', 5000);
+          toast('Record saved successfully.', {
+            type: 'success',
+          });
         }
         return response;
       },
       function (error: Swr): Promise<never> {
         if (error.response && error.response.status && !isNaN(error.response.status)) {
           if (error.response.status === 403) {
-            PushNotification.danger(
+            toast(
               'You do not have permission to access this resource. You will be redirected to the Login page.',
-              'Access Denied',
-              3000,
+              {
+                type: 'error',
+              },
             );
             setTimeout(function () {
               AuthService.doLogOut();
@@ -72,7 +75,9 @@ const AxiosConfig = {
             } else {
               errorMsg = error.message;
             }
-            PushNotification.danger(errorMsg, 'Error', 5000);
+            toast(errorMsg, {
+              type: 'error',
+            });
           }
         }
 

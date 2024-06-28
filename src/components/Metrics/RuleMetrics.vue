@@ -44,7 +44,7 @@
     </div>
 
     <div class="pt-3" v-if="hasRecords">
-      <b-table
+      <BTable
         id="rule-metrics-table"
         :no-border-collapse="true"
         :items="ruleList"
@@ -143,7 +143,7 @@
           <td :class="ruleTotalRowClass">{{ totalFindingsCountForAllRules }}</td>
           <td :class="ruleTotalRowClass"></td>
         </tr>
-      </b-table>
+      </BTable>
     </div>
   </div>
 </template>
@@ -169,7 +169,7 @@ import type {
 } from '@/services/shema-to-types';
 import { useRouter } from 'vue-router';
 import type { AxiosResponse } from 'axios';
-import type { TableItem, BFormCheckbox } from 'bootstrap-vue-next';
+import { type TableItem, type BFormCheckbox, BTable } from 'bootstrap-vue-next';
 import CommonUtils from '@/utils/common-utils';
 
 const loadedData = ref(false);

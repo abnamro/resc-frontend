@@ -8,8 +8,13 @@
     <SpinnerVue v-if="!loadedData" />
 
     <!-- Repository Panel -->
-    <div class="col-md-6 ms-2 mt-4 text-start">
-      <RepositoryPanel :repository="repository" :vcs_instance="vcsInstance"></RepositoryPanel>
+    <div class="col-md-6 ms-2 mt-4 text-start" v-if="loadedRepoData">
+      <RepositoryPanel
+        :repository="repository"
+        :vcs_instance="vcsInstance"
+        @on-delete-at-change="fetchPaginatedFindingsByScanId"
+      >
+      </RepositoryPanel>
     </div>
 
     <div>
@@ -75,6 +80,7 @@ import type { AxiosResponse } from 'axios';
 import type { TableItem } from 'bootstrap-vue-next';
 
 const loadedData = ref(false);
+const loadedRepoData = ref(false);
 
 type Props = {
   scanId: string;
@@ -142,7 +148,7 @@ function fetchRepository() {
     .then((response: AxiosResponse<RepositoryRead>) => {
       repository.value = response.data;
       fetchVCSInstance();
-      loadedData.value = true;
+      loadedRepoData.value = true;
     })
     .catch((error) => {
       AxiosConfig.handleError(error);

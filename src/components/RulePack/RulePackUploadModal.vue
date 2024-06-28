@@ -1,7 +1,7 @@
 <template>
   <div>
     <SpinnerVue v-if="!loadedData" />
-    <b-modal
+    <BModal
       id="rule_pack_upload_modal"
       ref="rule_pack_upload_modal"
       size="lg"
@@ -15,8 +15,8 @@
       <form ref="form" @submit.stop.prevent="submitForm">
         <div class="row">
           <div class="col-md-7">
-            <b-form-group>
-              <b-form-input
+            <BFormGroup>
+              <BFormInput
                 id="versionInput"
                 placeholder="Enter Version"
                 size="sm"
@@ -24,8 +24,8 @@
                 :state="versionState"
                 v-on:keyup="validateVersion"
                 required
-              ></b-form-input>
-            </b-form-group>
+              ></BFormInput>
+            </BFormGroup>
           </div>
           <div class="col-md-5">
             <small><a href="https://semver.org/" target="_blank" rel="noopener">semver</a></small>
@@ -35,41 +35,41 @@
 
         <div class="row">
           <div class="col-md-7">
-            <b-form-group>
-              <b-form-file
+            <BFormGroup>
+              <BFormFile
                 if="fileDrop"
                 v-model="file"
                 placeholder="Choose a file or drop it here..."
                 drop-placeholder="Drop file here..."
                 accept=".toml"
                 size="sm"
-              ></b-form-file>
-            </b-form-group>
+              ></BFormFile>
+            </BFormGroup>
           </div>
         </div>
       </form>
 
       <template #footer>
         <div class="w-100">
-          <b-button
+          <BButton
             variant="primary"
             class="float-end"
             v-on:click="handleOk"
             :disabled="!file || !versionState"
           >
             UPLOAD
-          </b-button>
-          <b-button variant="secondary" class="float-end me-3" v-on:click="hide"> CLOSE </b-button>
+          </BButton>
+          <BButton variant="secondary" class="float-end me-3" v-on:click="hide"> CLOSE </BButton>
         </div>
       </template>
-    </b-modal>
+    </BModal>
   </div>
 </template>
 
 <script setup lang="ts">
 import AxiosConfig from '@/configuration/axios-config';
 import SpinnerVue from '@/components/Common/SpinnerVue.vue';
-import PushNotification from '@/utils/push-notification';
+import { toast } from 'vue3-toastify';
 import RulePackService from '@/services/rule-pack-service';
 import { nextTick, ref, type Ref } from 'vue';
 import {
@@ -127,7 +127,7 @@ function submitForm() {
     .then((response) => {
       emit('on-file-upload-suceess');
       if (response && response.status === 200) {
-        PushNotification.success('Rulepack uploaded successfully', 'Success', 5000);
+        toast.success('Rulepack uploaded successfully');
       }
       loadedData.value = true;
       // Hide the modal manually

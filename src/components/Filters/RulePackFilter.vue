@@ -1,6 +1,6 @@
 <template>
   <div>
-    <b-form-group class="label-title text-start" label="RulePack" label-for="rule-pack-filter">
+    <BFormGroup class="label-title text-start" label="RulePack" label-for="rule-pack-filter">
       <multiselect
         v-model="selectedRulePack"
         :options="props.rulePackOptions"
@@ -27,7 +27,7 @@
         </template>
         <template v-slot:noResult><span>No RulePack found</span></template>
       </multiselect>
-    </b-form-group>
+    </BFormGroup>
   </div>
 </template>
 <script setup lang="ts">
@@ -35,6 +35,7 @@ import Multiselect from 'vue-multiselect';
 import { useAuthUserStore } from '@/store/index';
 import { onUpdated, ref } from 'vue';
 import type { RulePackRead } from '@/services/shema-to-types';
+import { BFormGroup } from 'bootstrap-vue-next';
 
 type Props = {
   rulePackOptions?: RulePackRead[];

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <b-form-group class="label-title text-start" label="Rule" label-for="rule-filter">
+    <BFormGroup class="label-title text-start" label="Rule" label-for="rule-filter">
       <multiselect
         v-model="selectedRules"
         :options="props.rulesOptions"
@@ -18,10 +18,11 @@
       >
         <template v-slot:noResult><span>No rule found</span></template>
       </multiselect>
-    </b-form-group>
+    </BFormGroup>
   </div>
 </template>
 <script setup lang="ts">
+import { BFormGroup } from 'bootstrap-vue-next';
 import { ref, watch } from 'vue';
 import Multiselect from 'vue-multiselect';
 

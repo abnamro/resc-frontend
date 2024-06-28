@@ -1,7 +1,7 @@
 <template>
   <div>
-    <b-progress class="mt-2" :max="props.totalCount" height="0.8rem" show-value>
-      <b-progress-bar
+    <BProgress class="mt-2" :max="props.totalCount" height="0.8rem" show-value>
+      <BProgressBar
         v-b-popover.hover.bottom="getPopOverContent('True Positive', props.truePositive)"
         :value="props.truePositive"
         variant="danger"
@@ -11,8 +11,8 @@
             <strong>{{ showFindingsInPercentage(props.truePositive) }}</strong></small
           >
         </div>
-      </b-progress-bar>
-      <b-progress-bar
+      </BProgressBar>
+      <BProgressBar
         v-b-popover.hover.bottom="getPopOverContent('False Positive', props.falsePositive)"
         :value="props.falsePositive"
         variant="success"
@@ -22,8 +22,8 @@
             ><strong>{{ showFindingsInPercentage(props.falsePositive) }}</strong></small
           >
         </div>
-      </b-progress-bar>
-      <b-progress-bar
+      </BProgressBar>
+      <BProgressBar
         v-b-popover.hover.bottom="
           getPopOverContent('Clarification Required', props.clarificationRequired)
         "
@@ -35,8 +35,8 @@
             ><strong>{{ showFindingsInPercentage(props.clarificationRequired) }}</strong></small
           >
         </div>
-      </b-progress-bar>
-      <b-progress-bar
+      </BProgressBar>
+      <BProgressBar
         v-b-popover.hover.bottom="getPopOverContent('Not Accessible', props.notAccessible)"
         :value="props.notAccessible"
         variant="info"
@@ -46,9 +46,9 @@
             ><strong>{{ showFindingsInPercentage(props.notAccessible) }}</strong></small
           >
         </div>
-      </b-progress-bar>
+      </BProgressBar>
       <!-- @vue-ignore -->
-      <b-progress-bar
+      <BProgressBar
         v-b-popover.hover.bottom="getPopOverContent('Not Analyzed', props.notAnalyzed)"
         :value="props.notAnalyzed"
         variant="not-analyzed"
@@ -58,8 +58,8 @@
             ><strong>{{ showFindingsInPercentage(props.notAnalyzed) }}</strong></small
           >
         </div>
-      </b-progress-bar>
-      <b-progress-bar
+      </BProgressBar>
+      <BProgressBar
         v-b-popover.hover.bottom="getPopOverContent('Outdated', props.outdated)"
         :value="props.outdated"
         variant="dark"
@@ -69,11 +69,12 @@
             ><strong>{{ showFindingsInPercentage(props.outdated) }}</strong></small
           >
         </div>
-      </b-progress-bar>
-    </b-progress>
+      </BProgressBar>
+    </BProgress>
   </div>
 </template>
 <script setup lang="ts">
+import { BProgress, BProgressBar } from 'bootstrap-vue-next';
 type Props = {
   truePositive: number;
   falsePositive: number;

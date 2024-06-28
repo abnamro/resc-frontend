@@ -1,16 +1,16 @@
 <template>
   <div>
-    <b-tab title="AUDIT" title-item-class="tab-pills">
+    <BTab title="AUDIT" title-item-class="tab-pills">
       <SpinnerVue v-if="!loadedData" />
-      <b-form class="pl-1 pr-4" @submit="onSubmit" @reset="onReset" v-if="loadedData" novalidate>
-        <b-form-group
+      <BForm class="pl-1 pr-4" @submit="onSubmit" @reset="onReset" v-if="loadedData" novalidate>
+        <BFormGroup
           label="Status"
           label-for="status-select"
           label-class="mr-sm-2 fw-bold small"
           invalid-feedback="Status is required"
           :state="isStatusValid"
         >
-          <b-form-select
+          <BFormSelect
             id="status-select"
             class="mb-2 mr-sm-2 mb-sm-0"
             size="sm"
@@ -20,16 +20,16 @@
             <option v-for="status in statusList" :value="status.value" :key="status.id">
               {{ status.label }}
             </option>
-          </b-form-select>
-        </b-form-group>
-        <b-form-group
+          </BFormSelect>
+        </BFormGroup>
+        <BFormGroup
           label="Comment"
           label-for="comment-textarea"
           label-class="mr-sm-2 fw-bold small"
           invalid-feedback="Maximum 255 characters are allowed"
           :state="isCommentValid"
         >
-          <b-form-textarea
+          <BFormTextarea
             id="comment-textarea"
             placeholder="Enter Comment"
             size="sm"
@@ -37,14 +37,14 @@
             trim
             v-model="comment"
             :state="isCommentValid"
-          ></b-form-textarea>
-        </b-form-group>
+          ></BFormTextarea>
+        </BFormGroup>
 
-        <b-button type="submit" variant="primary" :disabled="!isStatusValid || !isCommentValid">
+        <BButton type="submit" variant="primary" :disabled="!isStatusValid || !isCommentValid">
           Save
-        </b-button>
-      </b-form>
-    </b-tab>
+        </BButton>
+      </BForm>
+    </BTab>
   </div>
 </template>
 
@@ -56,6 +56,7 @@ import SpinnerVue from '@/components/Common/SpinnerVue.vue';
 import type { DetailedFindingRead, FindingStatus } from '@/services/shema-to-types';
 import { computed, ref } from 'vue';
 import { useAuthUserStore } from '@/store';
+import { BButton, BForm, BFormGroup, BFormSelect, BFormTextarea, BTab } from 'bootstrap-vue-next';
 
 const loadedData = ref(false);
 
