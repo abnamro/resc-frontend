@@ -6,22 +6,9 @@ import vue from '@vitejs/plugin-vue';
 import Components from 'unplugin-vue-components/vite';
 import { BootstrapVueNextResolver } from 'bootstrap-vue-next';
 import postcssNesting from 'postcss-nesting';
-import path from 'node:path';
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  build: {
-    lib: {
-      entry: path.resolve(__dirname, 'src/main.ts'),
-      name: 'resc-frontend',
-    },
-    rollupOptions: {
-      external: ['vue'],
-      output: {
-        globals: { vue: 'Vue' },
-      },
-    },
-  },
   server: {
     port: 8080,
     cors: false,
