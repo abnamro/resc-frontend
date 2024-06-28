@@ -512,7 +512,7 @@ export interface paths {
      * - **repository_id**: ID of the repository to toggle
      * - **return**: The output will contain the updated metadata of the repository
      */
-    get: operations['toggle_deleted_at_for_repository_resc_v1_repositories__repository_id__toggle_deleted_get'];
+    patch: operations['toggle_deleted_at_for_repository_resc_v1_repositories__repository_id__toggle_deleted_patch'];
   };
   '/resc/v1/scans': {
     /**
@@ -3064,7 +3064,7 @@ export interface operations {
    * - **repository_id**: ID of the repository to toggle
    * - **return**: The output will contain the updated metadata of the repository
    */
-  toggle_deleted_at_for_repository_resc_v1_repositories__repository_id__toggle_deleted_get: {
+  toggle_deleted_at_for_repository_resc_v1_repositories__repository_id__toggle_deleted_patch: {
     parameters: {
       path: {
         repository_id: number;

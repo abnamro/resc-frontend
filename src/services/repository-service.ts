@@ -120,10 +120,10 @@ const RepositoryService = {
     repositoryId: number,
   ): Promise<
     AxiosResponse<
-      paths['/resc/v1/repositories/{repository_id}/toggle-deleted']['get']['responses']['200']['content']['application/json']
+      paths['/resc/v1/repositories/{repository_id}/toggle-deleted']['patch']['responses']['200']['content']['application/json']
     >
   > {
-    return axios.get(`/repositories/${repositoryId}/toggle-deleted`);
+    return axios.patch(`/repositories/${repositoryId}/toggle-deleted`);
   },
 };
 

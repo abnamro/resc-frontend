@@ -2535,13 +2535,13 @@
       }
     },
     "/resc/v1/repositories/{repository_id}/toggle-deleted": {
-      "get": {
+      "patch": {
         "tags": [
           "resc-repositories"
         ],
         "summary": "Toggle the deleted_at for a repository",
         "description": "Toggle the deleted_at for a repository\n\n    Audit all associated findings as GONE (if not audited).\n\n- **db_connection**: Session of the database connection\n- **repository_id**: ID of the repository to toggle\n- **return**: The output will contain the updated metadata of the repository",
-        "operationId": "toggle_deleted_at_for_repository_resc_v1_repositories__repository_id__toggle_deleted_get",
+        "operationId": "toggle_deleted_at_for_repository_resc_v1_repositories__repository_id__toggle_deleted_patch",
         "parameters": [
           {
             "name": "repository_id",

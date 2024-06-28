@@ -298,7 +298,7 @@ describe('toggleDeletedAtForRepository', () => {
   describe('when API call is successful', () => {
     it('should return deleted_at for repository', async () => {
       vi.resetAllMocks();
-      axios.get.mockResolvedValueOnce(deletedAtResponse);
+      axios.patch.mockResolvedValueOnce(deletedAtResponse);
 
       const response = await RepositoryService.toggleDeletedAtForRepository(repositoryId);
 
@@ -311,7 +311,7 @@ describe('toggleDeletedAtForRepository', () => {
 
   describe('when API call fails', () => {
     it('should return error', async () => {
-      axios.get.mockResolvedValueOnce({});
+      axios.patch.mockResolvedValueOnce({});
 
       await RepositoryService.toggleDeletedAtForRepository('not_valid')
         .then((response) => {
