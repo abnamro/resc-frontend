@@ -16,7 +16,7 @@ describe('Repository Panel', () => {
   };
 
   it('Display dummy data in a Repository Panel', async () => {
-    axios.get.mockResolvedValueOnce({ data: deletedAtResponse });
+    axios.patch.mockResolvedValueOnce({ data: deletedAtResponse });
 
     const wrapper = await mount(App, {
       props: {
