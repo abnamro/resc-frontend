@@ -14,6 +14,7 @@ const RepositoryService = {
     repositoryFilter: string | undefined,
     includeZeroFindingRepos: boolean,
     includeDeletedRepos: boolean,
+    onlyIfHasUntriagedFindings: boolean,
   ): Promise<
     AxiosResponse<
       paths['/resc/v1/repositories/findings-metadata/']['get']['responses']['200']['content']['application/json']
@@ -28,6 +29,12 @@ const RepositoryService = {
     queryParams += QueryUtils.appendBool('only_if_has_findings', includeZeroFindingRepos === false);
     if (includeDeletedRepos) {
       queryParams += QueryUtils.appendBool('include_deleted_repositories', includeDeletedRepos);
+    }
+    if (onlyIfHasUntriagedFindings) {
+      queryParams += QueryUtils.appendBool(
+        'only_if_has_untriaged_findings',
+        onlyIfHasUntriagedFindings,
+      );
     }
     if (queryParams) {
       queryParams = queryParams.slice(1);
@@ -83,6 +90,7 @@ const RepositoryService = {
     projectFilter: string | undefined,
     includeZeroFindingRepos: boolean,
     includeDeletedRepos: boolean,
+    onlyIfHasUntriagedFindings: boolean,
   ): Promise<
     AxiosResponse<
       paths['/resc/v1/repositories/distinct-repositories/']['get']['responses']['200']['content']['application/json']
@@ -95,11 +103,27 @@ const RepositoryService = {
     if (includeDeletedRepos) {
       queryParams += QueryUtils.appendBool('include_deleted_repositories', includeDeletedRepos);
     }
+    if (onlyIfHasUntriagedFindings) {
+      queryParams += QueryUtils.appendBool(
+        'only_if_has_untriaged_findings',
+        onlyIfHasUntriagedFindings,
+      );
+    }
     if (queryParams) {
       queryParams = queryParams.slice(1);
     }
 
     return axios.get(`/repositories/distinct-repositories/?${queryParams}`);
+  },
+
+  async toggleDeletedAtForRepository(
+    repositoryId: number,
+  ): Promise<
+    AxiosResponse<
+      paths['/resc/v1/repositories/{repository_id}/toggle-deleted']['get']['responses']['200']['content']['application/json']
+    >
+  > {
+    return axios.get(`/repositories/${repositoryId}/toggle-deleted`);
   },
 };
 

@@ -30,7 +30,7 @@
           v-model="includeZeroFindingRepos"
           name="check-button"
           switch
-          @change="toggleIncludeZeroFindingRepos"
+          @change="handleFilterChange"
         >
           <small class="text-nowrap">Display repositories with 0 findings.</small>
         </b-form-checkbox>
@@ -40,9 +40,19 @@
           v-model="includeDeletedRepositories"
           name="check-button"
           switch
-          @change="toggleincludeDeletedRepositories"
+          @change="handleFilterChange"
         >
           <small class="text-nowrap">Display repositories marked as deleted.</small>
+        </b-form-checkbox>
+      </div>
+      <div class="col-md-4 text-start">
+        <b-form-checkbox
+          v-model="onlyIfHasUntriagedFindings"
+          name="check-button"
+          switch
+          @change="handleFilterChange"
+        >
+          <small class="text-nowrap">Display only repositories with untriaged findings.</small>
         </b-form-checkbox>
       </div>
     </div>
@@ -73,6 +83,7 @@ const selectedProject = ref(props.projectSelected);
 const selectedRepository = ref(props.repositorySelected);
 const includeZeroFindingRepos = ref(false);
 const includeDeletedRepositories = ref(false);
+const onlyIfHasUntriagedFindings = ref(false);
 
 const emit = defineEmits(['on-filter-change']);
 
@@ -88,12 +99,6 @@ function onVcsProviderChange(vcsProvider: VCSProviders[]) {
   selectedVcsProvider.value = vcsProvider;
   handleFilterChange();
 }
-function toggleIncludeZeroFindingRepos() {
-  handleFilterChange();
-}
-function toggleincludeDeletedRepositories() {
-  handleFilterChange();
-}
 
 function handleFilterChange() {
   // Refresh table data in Repositories page
@@ -104,6 +109,7 @@ function handleFilterChange() {
     selectedRepository.value,
     includeZeroFindingRepos.value,
     includeDeletedRepositories.value,
+    onlyIfHasUntriagedFindings.value,
   );
 }
 </script>
