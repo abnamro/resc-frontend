@@ -32,7 +32,7 @@ const app = createApp(App);
 app.use(PiniaVuePlugin);
 app.use(router);
 app.use(createBootstrap());
-app.use(Vue3Toasity, { multiple: false })
+app.use(Vue3Toasity, { multiple: false });
 importFA();
 app.component('font-awesome-icon', FontAwesomeIcon);
 
