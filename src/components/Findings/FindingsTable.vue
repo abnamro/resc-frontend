@@ -192,12 +192,7 @@ function applyFilter() {
   }
 
   return findingList.value.filter((finding) => {
-    console.log(
-      finding.file_path,
-      filterString.value,
-      finding.file_path.includes(filterString.value),
-    );
-    return finding.file_path.includes(filterString.value);
+    return finding.file_path.includes(token);
   });
 }
 
