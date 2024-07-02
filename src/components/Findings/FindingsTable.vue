@@ -44,8 +44,8 @@
               >Columns</BButton
             >
           </div>
-          <div class="col-md-4 hover-opacity">
-            <BFormInput id="filter-files" placeholder="filename" v-model="filterString" />
+          <div class="col-md-4">
+            <BFormInput class="hover-opacity" id="filter-files" placeholder="filename" v-model="filterString" />
           </div>
         </div>
       </template>
@@ -481,7 +481,7 @@ watch(
 <style>
 .hover-opacity {
   opacity: 0;
-  transition: opacity 0.3s ease-in-out;
+  transition: all 0.2s ease-in-out !important;
 }
 
 .hover-opacity:hover {
