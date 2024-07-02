@@ -1,5 +1,4 @@
 <template>
-  <BToastOrchestrator />
   <BModalOrchestrator />
   <SidebarMenu
     :menu="sidebarNavigationMenu"
@@ -30,7 +29,6 @@ import { SidebarMenu } from 'vue-sidebar-menu';
 import TopBarMenu from '@/components/Navigation/TopBarMenu.vue';
 import { sidebarMenu } from '@/components/Navigation/Navigation';
 import 'vue-sidebar-menu/dist/vue-sidebar-menu.css';
-import BToastOrchestrator from 'bootstrap-vue-next';
 import BModalOrchestrator from 'bootstrap-vue-next';
 import { disableScrollingWithArrowsAndCtrlA } from './utils/keybind-utils';
 

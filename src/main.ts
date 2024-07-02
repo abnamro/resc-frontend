@@ -5,6 +5,7 @@ import { PiniaVuePlugin, createPinia } from 'pinia';
 import piniaPluginPersistedstate from 'pinia-plugin-persistedstate';
 import AxiosConfig from '@/configuration/axios-config';
 import { importFA } from '@/assets/font-awesome';
+import Vue3Toasity from 'vue3-toastify';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 import {
@@ -31,6 +32,7 @@ const app = createApp(App);
 app.use(PiniaVuePlugin);
 app.use(router);
 app.use(createBootstrap());
+app.use(Vue3Toasity, { multiple: false });
 importFA();
 app.component('font-awesome-icon', FontAwesomeIcon);
 
