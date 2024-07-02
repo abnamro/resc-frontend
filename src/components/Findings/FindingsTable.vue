@@ -487,4 +487,8 @@ watch(
 .hover-opacity:hover {
   opacity: 1;
 }
+
+.hover-opacity:focus {
+  opacity: 1;
+}
 </style>
