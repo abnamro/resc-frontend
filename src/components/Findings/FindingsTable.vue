@@ -4,17 +4,14 @@
     :selectedCheckBoxIds="selectedCheckBoxIds"
     @update-audit="updateAudit"
   />
-  <ColumnSelector
-    ref="columnModal"
-    @update-columns="setTableFields"
-  />
+  <ColumnSelector ref="columnModal" @update-columns="setTableFields" />
 
   <div class="py-3">
     <BTable
       ref="auditTable"
       id="rule-analysis-table"
       :items="filteredList"
-      :fields="(fields as TableField[])"
+      :fields="fields as TableField[]"
       :current-page="1"
       :per-page="0"
       :selectable="true"
@@ -30,32 +27,27 @@
         <div class="row">
           <div class="col-md-4">
             <BButton
-                class="d-inline-block me-3"
-                variant="primary"
-                size="sm"
-                id="AuditButton"
-                v-on:click="showAuditModal()"
-                :disabled="auditButtonDisabled"
-                >AUDIT</BButton
-              >
-              <BButton
-                class="d-inline-block"
-                variant="primary"
-                size="sm"
-                id="AuditButton"
-                v-on:click="showColumnSelect()"
-                >Columns</BButton
-              >
+              class="d-inline-block me-3"
+              variant="primary"
+              size="sm"
+              id="AuditButton"
+              v-on:click="showAuditModal()"
+              :disabled="auditButtonDisabled"
+              >AUDIT</BButton
+            >
+            <BButton
+              class="d-inline-block"
+              variant="primary"
+              size="sm"
+              id="AuditButton"
+              v-on:click="showColumnSelect()"
+              >Columns</BButton
+            >
           </div>
           <div class="col-md-4 hover-opacity">
-            <BFormInput
-              id="filter-files"
-              placeholder="filename"
-              v-model="filterString"
-            />
+            <BFormInput id="filter-files" placeholder="filename" v-model="filterString" />
           </div>
         </div>
-
       </template>
 
       <!-- Select all checkboxes -->
@@ -182,7 +174,7 @@ const emit = defineEmits(['refresh-table']);
 // if does not contain * we only check if the needle is in the string.
 function applyFilter() {
   if (filterString.value === '') {
-   return findingList.value;
+    return findingList.value;
   }
 
   const token = filterString.value;
@@ -200,13 +192,16 @@ function applyFilter() {
   }
 
   return findingList.value.filter((finding) => {
-    console.log(finding.file_path, filterString.value, finding.file_path.includes(filterString.value));
+    console.log(
+      finding.file_path,
+      filterString.value,
+      finding.file_path.includes(filterString.value),
+    );
     return finding.file_path.includes(filterString.value);
   });
 }
 
 const filteredList = computed(applyFilter);
-
 
 function setTableFields(selectedColumns: TableColumn[] = []) {
   // @ts-ignore ignore TS2589
@@ -491,7 +486,7 @@ watch(
 <style>
 .hover-opacity {
   opacity: 0;
-  transition: opacity 0.3s ease-in-out
+  transition: opacity 0.3s ease-in-out;
 }
 
 .hover-opacity:hover {
