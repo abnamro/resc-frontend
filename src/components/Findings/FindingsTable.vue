@@ -24,7 +24,7 @@
       :caption-top="true"
     >
       <template #table-caption>
-        <div class="row">
+        <div class="row me-0 mr-0">
           <div class="col-md-4">
             <BButton
               class="d-inline-block me-3"
