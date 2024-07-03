@@ -45,7 +45,7 @@
             >
           </div>
           <div class="col-md-4">
-            <BFormInput class="hover-opacity" id="filter-files" placeholder="filename" v-model="filterString" />
+            <BFormInput class="hover-opacity" id="filter-files" placeholder="filename" v-model="filterString" :required="true" />
           </div>
         </div>
       </template>
@@ -478,17 +478,21 @@ watch(
   },
 );
 </script>
-<style>
+<style lang="scss">
 .hover-opacity {
   opacity: 0;
   transition: all 0.2s ease-in-out !important;
+
+  &:hover {
+    opacity: 1;
+  }
+
+  &:focus {
+    opacity: 1;
+  }
 }
 
-.hover-opacity:hover {
-  opacity: 1;
-}
-
-.hover-opacity:focus {
+input.hover-opacity:valid {
   opacity: 1;
 }
 </style>
