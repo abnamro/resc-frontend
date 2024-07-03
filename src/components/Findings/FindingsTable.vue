@@ -45,7 +45,13 @@
             >
           </div>
           <div class="col-md-4">
-            <BFormInput class="hover-opacity" id="filter-files" placeholder="filename" v-model="filterString" :required="true" />
+            <BFormInput
+              class="hover-opacity"
+              id="filter-files"
+              placeholder="filename"
+              v-model="filterString"
+              :required="true"
+            />
           </div>
         </div>
       </template>
