@@ -16,7 +16,7 @@ importFA();
 vi.mock('axios');
 
 describe('FindingsTable tests', () => {
-  it('Given a FindingsTable in rule findings then FindingsTable will be displayed', () => {
+  it('Given a FindingsTable in rule findings then FindingsTable will be displayed', async () => {
     axios.get.mockResolvedValueOnce({ data: rule_packs });
     axios.get.mockResolvedValueOnce({ data: allProjects });
     axios.get.mockResolvedValueOnce({ data: allRepos });
@@ -94,6 +94,12 @@ describe('FindingsTable tests', () => {
     expect(() => wrapper.vm.markAllAsTruePositive()).not.toThrow();
     expect(() => wrapper.vm.markAllAsGone()).not.toThrow();
     expect(() => wrapper.vm.auditThis()).not.toThrow();
+
+    expect(() => wrapper.find('#filter-files').setValue('file1')).not.toThrow();
+    await wrapper.vm.$nextTick();
+    expect(() => wrapper.find('#filter-files').setValue('fi*')).not.toThrow();
+    await wrapper.vm.$nextTick();
+    expect(() => wrapper.find('#filter-files').setValue('*e1')).not.toThrow();
 
     axios.get.mockResolvedValueOnce({ data: detailed_findings });
     expect(() => wrapper.vm.updateAudit('NOT_ANALYZED', 'Rien a declarer')).not.toThrow();

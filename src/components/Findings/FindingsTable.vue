@@ -1,21 +1,16 @@
 <template>
-  <div class="ml-3">
-    <!-- Button to audit multiple findings -->
-    <!-- Audit Modal -->
-    <AuditModal
-      ref="auditModal"
-      :selectedCheckBoxIds="selectedCheckBoxIds"
-      @update-audit="updateAudit"
-    />
-    <!-- Column Modal -->
-    <ColumnSelector ref="columnModal" @update-columns="setTableFields" />
-  </div>
+  <AuditModal
+    ref="auditModal"
+    :selectedCheckBoxIds="selectedCheckBoxIds"
+    @update-audit="updateAudit"
+  />
+  <ColumnSelector ref="columnModal" @update-columns="setTableFields" />
 
   <div class="py-3">
     <BTable
       ref="auditTable"
       id="rule-analysis-table"
-      :items="findingList"
+      :items="filteredList"
       :fields="fields as TableField[]"
       :current-page="1"
       :per-page="0"
@@ -29,23 +24,36 @@
       :caption-top="true"
     >
       <template #table-caption>
-        <BButton
-          class="d-inline-block me-3"
-          variant="primary"
-          size="sm"
-          id="AuditButton"
-          v-on:click="showAuditModal()"
-          :disabled="auditButtonDisabled"
-          >AUDIT</BButton
-        >
-        <BButton
-          class="d-inline-block"
-          variant="primary"
-          size="sm"
-          id="AuditButton"
-          v-on:click="showColumnSelect()"
-          >Columns</BButton
-        >
+        <div class="row me-0 mr-0">
+          <div class="col-md-4">
+            <BButton
+              class="d-inline-block me-3"
+              variant="primary"
+              size="sm"
+              id="AuditButton"
+              v-on:click="showAuditModal()"
+              :disabled="auditButtonDisabled"
+              >AUDIT</BButton
+            >
+            <BButton
+              class="d-inline-block"
+              variant="primary"
+              size="sm"
+              id="AuditButton"
+              v-on:click="showColumnSelect()"
+              >Columns</BButton
+            >
+          </div>
+          <div class="col-md-4">
+            <BFormInput
+              class="hover-opacity"
+              id="filter-files"
+              placeholder="filename"
+              v-model="filterString"
+              :required="true"
+            />
+          </div>
+        </div>
       </template>
 
       <!-- Select all checkboxes -->
@@ -129,6 +137,7 @@ import {
   BButton,
   type TableField,
   type TableItem,
+  BFormInput,
 } from 'bootstrap-vue-next';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import FindingsService from '@/services/findings-service';
@@ -153,6 +162,7 @@ const props = defineProps<Props>();
 const auditModal = ref();
 const columnModal = ref();
 const auditTable = ref();
+const filterString = ref('');
 
 const findingList = ref(props.findings as TableItemDetailedFindingRead[]);
 const selectedCheckBoxIds = ref([] as number[]);
@@ -163,6 +173,36 @@ const auditButtonDisabled = computed(() => selectedCheckBoxIds.value.length <= 0
 const selectedIndex = ref(undefined as number | undefined);
 const store = useAuthUserStore();
 const emit = defineEmits(['refresh-table']);
+
+// Simple filter function
+// if start with * we check the ending of the file path.
+// if end with * we check the beginning of the file path.
+// if does not contain * we only check if the needle is in the string.
+function applyFilter() {
+  if (filterString.value === '') {
+    return findingList.value;
+  }
+
+  const token = filterString.value;
+
+  if (token.startsWith('*')) {
+    return findingList.value.filter((finding) => {
+      return finding.file_path.endsWith(token.substring(1));
+    });
+  }
+
+  if (token.endsWith('*')) {
+    return findingList.value.filter((finding) => {
+      return finding.file_path.startsWith(token.substring(0, token.length - 1));
+    });
+  }
+
+  return findingList.value.filter((finding) => {
+    return finding.file_path.includes(token);
+  });
+}
+
+const filteredList = computed(applyFilter);
 
 function setTableFields(selectedColumns: TableColumn[] = []) {
   // @ts-ignore ignore TS2589
@@ -178,7 +218,7 @@ function selectSingleCheckbox() {
 function selectAllCheckboxes() {
   selectedCheckBoxIds.value = [];
   if (allSelected.value) {
-    for (const finding of findingList.value) {
+    for (const finding of filteredList.value) {
       selectedCheckBoxIds.value.push(finding.id_);
     }
   }
@@ -188,7 +228,7 @@ function toggleAllCheckboxes() {
   selectedCheckBoxIds.value = [];
   allSelected.value = !allSelected.value;
   if (allSelected.value) {
-    for (const finding of findingList.value) {
+    for (const finding of filteredList.value) {
       selectedCheckBoxIds.value.push(finding.id_);
     }
   }
@@ -243,14 +283,14 @@ function getCurrentFindingSelected(): TableItemDetailedFindingRead | undefined {
     return undefined;
   }
 
-  return findingList.value[selectedIndex.value];
+  return filteredList.value[selectedIndex.value];
 }
 
 function selectDown(): boolean {
   const detailsStatus = getCurrentFindingSelected()?._showDetails;
   closeAllDetails();
 
-  selectedIndex.value = ((selectedIndex.value ?? -1) + 1) % props.findings.length;
+  selectedIndex.value = ((selectedIndex.value ?? -1) + 1) % filteredList.value.length;
   auditTable.value.clearSelected();
   auditTable.value.selectRow(selectedIndex.value);
 
@@ -444,3 +484,21 @@ watch(
   },
 );
 </script>
+<style lang="scss">
+.hover-opacity {
+  opacity: 0;
+  transition: all 0.2s ease-in-out !important;
+
+  &:hover {
+    opacity: 1;
+  }
+
+  &:focus {
+    opacity: 1;
+  }
+}
+
+input.hover-opacity:valid {
+  opacity: 1;
+}
+</style>
