@@ -13,7 +13,6 @@
 export function shouldIgnoreKeystroke(): boolean {
   const skipped = ['TEXTAREA', 'INPUT', 'SELECT'];
   if (document.activeElement !== null && skipped.includes(document.activeElement.nodeName)) {
-    console.log(document.activeElement);
     return true;
   }
   return false;
