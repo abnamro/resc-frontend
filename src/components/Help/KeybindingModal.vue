@@ -61,6 +61,10 @@ const fields = ref([
 ]);
 const keybindings = ref([
   {
+    effect: 'Toggle sidebar.',
+    combination: [['`'], ['§'], ['@']],
+  },
+  {
     effect: 'Highlight next finding.',
     combination: [['j'], ['&darr;']],
   },
@@ -111,6 +115,10 @@ const keybindings = ref([
   {
     effect: 'Toggle select all.',
     combination: [['Ctrl', 'a']],
+  },
+  {
+    effect: 'Refresh the table.',
+    combination: [['r']],
   },
 ] as KeyBinding[]);
 

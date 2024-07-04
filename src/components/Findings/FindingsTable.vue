@@ -472,6 +472,8 @@ onKeyStroke(
   (e: KeyboardEvent) => !shouldIgnoreKeystroke() && e.ctrlKey && toggleAllCheckboxes(),
   { eventName: 'keydown' },
 );
+/* istanbul ignore next @preserve */
+onKeyStroke('r', () => !shouldIgnoreKeystroke() && emit('refresh-table'), { eventName: 'keydown' });
 
 /* istanbul ignore next @preserve */
 watch(

@@ -30,7 +30,8 @@ import TopBarMenu from '@/components/Navigation/TopBarMenu.vue';
 import { sidebarMenu } from '@/components/Navigation/Navigation';
 import 'vue-sidebar-menu/dist/vue-sidebar-menu.css';
 import BModalOrchestrator from 'bootstrap-vue-next';
-import { disableScrollingWithArrowsAndCtrlA } from './utils/keybind-utils';
+import { disableScrollingWithArrowsAndCtrlA, shouldIgnoreKeystroke } from './utils/keybind-utils';
+import { onKeyStroke } from '@vueuse/core';
 
 const route = useRoute();
 
@@ -49,6 +50,15 @@ const showMenu = computed(() => {
   }
   return true;
 });
+
+/* istanbul ignore next @preserve */
+onKeyStroke(
+  ['`', '§', '@'],
+  () => !shouldIgnoreKeystroke() && (sidebarCollapsed.value = !sidebarCollapsed.value),
+  {
+    eventName: 'keydown',
+  },
+);
 
 disableScrollingWithArrowsAndCtrlA();
 </script>
