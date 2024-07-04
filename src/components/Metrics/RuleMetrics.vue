@@ -7,7 +7,7 @@
 
     <SpinnerVue v-if="!loadedData" />
 
-    <div class="row pl-3 mt-4">
+    <div class="row pl-3 mt-4 me-0 mr-0">
       <div class="col-md-4">
         <RulePackFilter
           :rulePackPreSelected="selectedVersionsList"
@@ -24,7 +24,7 @@
         />
       </div>
     </div>
-    <div class="row pl-3 pt-3">
+    <div class="row pl-3 pt-3 me-0 mr-0">
       <div class="col-md-4 text-start">
         <BFormCheckbox
           v-model="includeDeletedRepositories"
@@ -43,7 +43,7 @@
       <br />No Record Found...
     </div>
 
-    <div class="pt-3" v-if="hasRecords">
+    <div class="row pt-3 me-0 mr-0" v-if="hasRecords">
       <BTable
         id="rule-metrics-table"
         :no-border-collapse="true"
