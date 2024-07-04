@@ -475,7 +475,6 @@ onKeyStroke(
 /* istanbul ignore next @preserve */
 onKeyStroke('r', () => !shouldIgnoreKeystroke() && emit('refresh-table'), { eventName: 'keydown' });
 
-
 /* istanbul ignore next @preserve */
 watch(
   () => props.findings,

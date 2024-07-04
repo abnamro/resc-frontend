@@ -119,7 +119,7 @@ const keybindings = ref([
   {
     effect: 'Refresh the table.',
     combination: [['r']],
-  }
+  },
 ] as KeyBinding[]);
 
 function show() {
