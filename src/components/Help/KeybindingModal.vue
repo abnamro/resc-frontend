@@ -116,6 +116,10 @@ const keybindings = ref([
     effect: 'Toggle select all.',
     combination: [['Ctrl', 'a']],
   },
+  {
+    effect: 'Refresh the table.',
+    combination: [['r']],
+  }
 ] as KeyBinding[]);
 
 function show() {
