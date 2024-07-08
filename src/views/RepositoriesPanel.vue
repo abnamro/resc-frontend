@@ -93,6 +93,8 @@ import { computed, onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import type { RepositoryEnrichedRead, VCSProviders } from '@/services/shema-to-types';
 import { BTable, type TableItem } from 'bootstrap-vue-next';
+import { onKeyStroke } from '@vueuse/core';
+import { shouldIgnoreKeystroke } from '@/utils/keybind-utils';
 
 const loadedData = ref(false);
 const router = useRouter();
@@ -280,6 +282,9 @@ function fetchDistinctRepositories() {
       AxiosConfig.handleError(error);
     });
 }
+
+/* istanbul ignore next @preserve */
+onKeyStroke('r', () => !shouldIgnoreKeystroke() && fetchPaginatedRepositories(), { eventName: 'keydown' });
 
 onMounted(() => {
   fetchDistinctProjects();
