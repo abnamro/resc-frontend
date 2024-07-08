@@ -284,7 +284,9 @@ function fetchDistinctRepositories() {
 }
 
 /* istanbul ignore next @preserve */
-onKeyStroke('r', () => !shouldIgnoreKeystroke() && fetchPaginatedRepositories(), { eventName: 'keydown' });
+onKeyStroke('r', () => !shouldIgnoreKeystroke() && fetchPaginatedRepositories(), {
+  eventName: 'keydown',
+});
 
 onMounted(() => {
   fetchDistinctProjects();
