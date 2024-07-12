@@ -153,6 +153,7 @@ function fetchPaginatedDetailedFindings() {
       loadedData.value = true;
     })
     .catch((error) => {
+      /* istanbul ignore next @preserve */
       AxiosConfig.handleError(error);
     });
 }
@@ -189,6 +190,7 @@ function fetchDistinctProjects() {
       }
     })
     .catch((error) => {
+      /* istanbul ignore next @preserve */
       AxiosConfig.handleError(error);
     });
 }
@@ -208,6 +210,7 @@ function fetchDistinctRepositories() {
       }
     })
     .catch((error) => {
+      /* istanbul ignore next @preserve */
       AxiosConfig.handleError(error);
     });
 }
@@ -236,6 +239,7 @@ function fetchRulePackVersionsWhenRedirectedFromRuleMetricsPage() {
       }
     })
     .catch((error) => {
+      /* istanbul ignore next @preserve */
       AxiosConfig.handleError(error);
     });
 }
@@ -258,6 +262,7 @@ function fetchRulePackVersions() {
       fetchPaginatedDetailedFindings();
     })
     .catch((error) => {
+      /* istanbul ignore next @preserve */
       AxiosConfig.handleError(error);
     });
 }

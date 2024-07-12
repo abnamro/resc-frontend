@@ -24,42 +24,45 @@
 
     <div class="p-3" v-if="hasRecords">
       <BTable
+        ref="repositoriesTable"
         id="repositories-table"
         :items="repositoryList"
         :fields="fields"
         :current-page="1"
         :per-page="0"
+        :selectable="true"
+        :select-mode="'single'"
         primary-key="id_"
         v-model="currentItems"
         responsive
         small
         head-variant="light"
         :tbody-tr-class="rowClass"
-        @row-clicked="goToScanFindings"
+        @row-clicked="handleRowClicked"
       >
         <!-- Repository Column -->
         <template #cell(repository_name)="data">
-          {{ (data.item as RepositoryEnrichedRead).repository_name }}
+          {{ data.item.repository_name }}
         </template>
 
         <template #cell(vcs_provider)="data">
-          {{ formatVcsProvider((data.item as RepositoryEnrichedRead).vcs_provider) }}
+          {{ formatVcsProvider(data.item.vcs_provider) }}
         </template>
 
         <template #cell(last_scan_timestamp)="data">
-          {{ formatDate((data.item as RepositoryEnrichedRead).last_scan_timestamp ?? '') }}
+          {{ formatDate(data.item.last_scan_timestamp ?? '') }}
         </template>
 
         <!-- Health Bar Column -->
         <template #cell(findings)="data">
           <HealthBar
-            :truePositive="(data.item as RepositoryEnrichedRead).true_positive"
-            :falsePositive="(data.item as RepositoryEnrichedRead).false_positive"
-            :notAnalyzed="(data.item as RepositoryEnrichedRead).not_analyzed"
-            :notAccessible="(data.item as RepositoryEnrichedRead).not_accessible"
-            :clarificationRequired="(data.item as RepositoryEnrichedRead).clarification_required"
-            :outdated="(data.item as RepositoryEnrichedRead).outdated"
-            :totalCount="(data.item as RepositoryEnrichedRead).total_findings_count"
+            :truePositive="data.item.true_positive"
+            :falsePositive="data.item.false_positive"
+            :notAnalyzed="data.item.not_analyzed"
+            :notAccessible="data.item.not_accessible"
+            :clarificationRequired="data.item.clarification_required"
+            :outdated="data.item.outdated"
+            :totalCount="data.item.total_findings_count"
           />
         </template>
       </BTable>
@@ -97,6 +100,7 @@ import { onKeyStroke } from '@vueuse/core';
 import { shouldIgnoreKeystroke } from '@/utils/keybind-utils';
 
 const loadedData = ref(false);
+const repositoriesTable = ref();
 const router = useRouter();
 
 type TableRepositoryEnrichedRead = RepositoryEnrichedRead & TableItem;
@@ -113,6 +117,7 @@ const repositoryFilter = ref(undefined as string | undefined);
 const projectFilter = ref(undefined as string | undefined);
 const projectNames = ref([] as string[]);
 const repositoryNames = ref([] as string[]);
+const selectedIndex = ref(undefined as number | undefined);
 const includeZeroFindingRepos = ref(false);
 const includeDeletedRepositories = ref(false);
 const onlyIfHasUntriagedFindings = ref(false);
@@ -192,9 +197,13 @@ function handlePageSizeChange(pageSize: number) {
   fetchPaginatedRepositories();
 }
 
-function goToScanFindings(record: TableItem) {
-  // Casting back to RepositoryEnrichedRead
-  const recordItem = record as RepositoryEnrichedRead;
+function handleRowClicked(_row: TableItem, index: number) {
+  selectedIndex.value = index;
+  goToScanFindings();
+}
+
+function goToScanFindings() {
+  const recordItem = getCurrentRepositorySelected() as RepositoryEnrichedRead;
   if (recordItem.last_scan_id) {
     const routeData = router.resolve({
       name: 'ScanFindings',
@@ -243,6 +252,7 @@ function fetchPaginatedRepositories() {
       loadedData.value = true;
     })
     .catch((error) => {
+      /* istanbul ignore next @preserve */
       AxiosConfig.handleError(error);
     });
 }
@@ -261,6 +271,7 @@ function fetchDistinctProjects() {
       }
     })
     .catch((error) => {
+      /* istanbul ignore next @preserve */
       AxiosConfig.handleError(error);
     });
 }
@@ -279,14 +290,48 @@ function fetchDistinctRepositories() {
       }
     })
     .catch((error) => {
+      /* istanbul ignore next @preserve */
       AxiosConfig.handleError(error);
     });
+}
+
+function getCurrentRepositorySelected(): RepositoryEnrichedRead | undefined {
+  if (selectedIndex.value === undefined) {
+    return undefined;
+  }
+
+  return repositoryList.value[selectedIndex.value];
+}
+
+function selectUp(): boolean {
+  selectedIndex.value = Math.max(0, (selectedIndex.value ?? 1) - 1);
+  repositoriesTable.value.clearSelected();
+  repositoriesTable.value.selectRow(selectedIndex.value);
+  return true;
+}
+
+function selectDown(): boolean {
+  selectedIndex.value = ((selectedIndex.value ?? -1) + 1) % repositoryList.value.length;
+  repositoriesTable.value.clearSelected();
+  repositoriesTable.value.selectRow(selectedIndex.value);
+  return true;
 }
 
 /* istanbul ignore next @preserve */
 onKeyStroke('r', () => !shouldIgnoreKeystroke() && fetchPaginatedRepositories(), {
   eventName: 'keydown',
 });
+
+/* istanbul ignore next @preserve */
+onKeyStroke(['ArrowDown', 'j', 'J'], () => !shouldIgnoreKeystroke() && selectDown(), {
+  eventName: 'keydown',
+});
+/* istanbul ignore next @preserve */
+onKeyStroke(['ArrowUp', 'k', 'K'], () => !shouldIgnoreKeystroke() && selectUp(), {
+  eventName: 'keydown',
+});
+/* istanbul ignore next @preserve */
+onKeyStroke('o', () => !shouldIgnoreKeystroke() && goToScanFindings(), { eventName: 'keydown' });
 
 onMounted(() => {
   fetchDistinctProjects();

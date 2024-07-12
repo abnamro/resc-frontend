@@ -27,6 +27,9 @@ vi.mock('vue-router', async () => {
     useRoute: vi.fn(),
     useRouter: vi.fn(() => ({
       push: () => {},
+      resolve: () => {
+        return { href: 'link' };
+      },
     })),
   };
 });
@@ -51,7 +54,7 @@ describe('RepositoriesPanel tests', () => {
     });
   }
 
-  it('Given a RepositoriesPanel then RepositoriesPanel will be displayed', () => {
+  it('Given a RepositoriesPanel then RepositoriesPanel will be displayed', async () => {
     axios.get.mockResolvedValueOnce({ data: allProjects });
     axios.get.mockResolvedValueOnce({ data: allRepos });
     axios.get.mockResolvedValueOnce(vcs_providers);
@@ -72,5 +75,17 @@ describe('RepositoriesPanel tests', () => {
     axios.get.mockResolvedValueOnce({ data: allRepos });
     axios.get.mockResolvedValueOnce({ data: repositories });
     wrapper.vm.handleFilterChange(['AZURE_DEVOPS'], undefined, undefined);
+    expect(wrapper.vm.getCurrentRepositorySelected()).toBe(undefined);
+    await wrapper.vm.$nextTick();
+    await wrapper.vm.$nextTick();
+    await wrapper.vm.$nextTick();
+    await wrapper.vm.$nextTick();
+    expect(() => wrapper.vm.selectUp()).not.toThrow();
+    expect(() => wrapper.vm.selectDown()).not.toThrow();
+    expect(wrapper.vm.selectedIndex).toBe(1);
+    expect(() => wrapper.vm.handleRowClicked('', 0)).not.toThrow();
+    expect(wrapper.vm.selectedIndex).toBe(0);
+    expect(wrapper.vm.getCurrentRepositorySelected()).not.toBe(undefined);
+    expect(() => wrapper.vm.goToScanFindings()).not.toThrow();
   });
 });

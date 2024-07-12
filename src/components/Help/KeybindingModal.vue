@@ -85,7 +85,7 @@ const keybindings = ref([
     combination: [['&UnderBracket;']],
   },
   {
-    effect: 'Open commit url.',
+    effect: 'Open commit url/Open repository.',
     combination: [['o']],
   },
   {

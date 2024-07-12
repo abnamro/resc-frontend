@@ -80,6 +80,7 @@ import { ref, watch, type Ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import type { FindingStatus, RepositoryRead, ScanRead } from '@/services/shema-to-types';
 import { BFormCheckbox, BFormGroup } from 'bootstrap-vue-next';
+import { onKeyStroke } from '@vueuse/core';
 
 const ruleFilterChildComponent = ref();
 const ruleTagsFilterChildComponent = ref();
@@ -351,5 +352,12 @@ watch(
     }
   },
 );
+
+/* istanbul ignore next @preserve */
+onKeyStroke('p', () => {
+  includePreviousScans.value = !includePreviousScans.value;
+  togglePreviousScans();
+  handleToggleButtonClick();
+});
 </script>
 <style src="vue-multiselect/dist/vue-multiselect.css"></style>
