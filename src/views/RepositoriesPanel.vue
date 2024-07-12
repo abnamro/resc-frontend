@@ -38,31 +38,31 @@
         small
         head-variant="light"
         :tbody-tr-class="rowClass"
-        @row-clicked="goToScanFindings"
+        @row-clicked="handleRowClicked"
       >
         <!-- Repository Column -->
         <template #cell(repository_name)="data">
-          {{ (data.item as RepositoryEnrichedRead).repository_name }}
+          {{ data.item.repository_name }}
         </template>
 
         <template #cell(vcs_provider)="data">
-          {{ formatVcsProvider((data.item as RepositoryEnrichedRead).vcs_provider) }}
+          {{ formatVcsProvider(data.item.vcs_provider) }}
         </template>
 
         <template #cell(last_scan_timestamp)="data">
-          {{ formatDate((data.item as RepositoryEnrichedRead).last_scan_timestamp ?? '') }}
+          {{ formatDate(data.item.last_scan_timestamp ?? '') }}
         </template>
 
         <!-- Health Bar Column -->
         <template #cell(findings)="data">
           <HealthBar
-            :truePositive="(data.item as RepositoryEnrichedRead).true_positive"
-            :falsePositive="(data.item as RepositoryEnrichedRead).false_positive"
-            :notAnalyzed="(data.item as RepositoryEnrichedRead).not_analyzed"
-            :notAccessible="(data.item as RepositoryEnrichedRead).not_accessible"
-            :clarificationRequired="(data.item as RepositoryEnrichedRead).clarification_required"
-            :outdated="(data.item as RepositoryEnrichedRead).outdated"
-            :totalCount="(data.item as RepositoryEnrichedRead).total_findings_count"
+            :truePositive="data.item.true_positive"
+            :falsePositive="data.item.false_positive"
+            :notAnalyzed="data.item.not_analyzed"
+            :notAccessible="data.item.not_accessible"
+            :clarificationRequired="data.item.clarification_required"
+            :outdated="data.item.outdated"
+            :totalCount="data.item.total_findings_count"
           />
         </template>
       </BTable>
@@ -197,6 +197,11 @@ function handlePageSizeChange(pageSize: number) {
   fetchPaginatedRepositories();
 }
 
+function handleRowClicked(_row: TableItem, index: number) {
+  selectedIndex.value = index;
+  goToScanFindings();
+}
+
 function goToScanFindings() {
   const recordItem = getCurrentRepositorySelected() as RepositoryEnrichedRead;
   if (recordItem.last_scan_id) {
@@ -247,6 +252,7 @@ function fetchPaginatedRepositories() {
       loadedData.value = true;
     })
     .catch((error) => {
+      /* istanbul ignore next @preserve */
       AxiosConfig.handleError(error);
     });
 }
@@ -265,6 +271,7 @@ function fetchDistinctProjects() {
       }
     })
     .catch((error) => {
+      /* istanbul ignore next @preserve */
       AxiosConfig.handleError(error);
     });
 }
@@ -283,6 +290,7 @@ function fetchDistinctRepositories() {
       }
     })
     .catch((error) => {
+      /* istanbul ignore next @preserve */
       AxiosConfig.handleError(error);
     });
 }
