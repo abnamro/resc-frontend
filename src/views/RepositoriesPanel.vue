@@ -24,11 +24,14 @@
 
     <div class="p-3" v-if="hasRecords">
       <BTable
+        ref="repositoriesTable"
         id="repositories-table"
         :items="repositoryList"
         :fields="fields"
         :current-page="1"
         :per-page="0"
+        :selectable="true"
+        :select-mode="'single'"
         primary-key="id_"
         v-model="currentItems"
         responsive
@@ -97,6 +100,7 @@ import { onKeyStroke } from '@vueuse/core';
 import { shouldIgnoreKeystroke } from '@/utils/keybind-utils';
 
 const loadedData = ref(false);
+const repositoriesTable = ref();
 const router = useRouter();
 
 type TableRepositoryEnrichedRead = RepositoryEnrichedRead & TableItem;
@@ -113,6 +117,7 @@ const repositoryFilter = ref(undefined as string | undefined);
 const projectFilter = ref(undefined as string | undefined);
 const projectNames = ref([] as string[]);
 const repositoryNames = ref([] as string[]);
+const selectedIndex = ref(undefined as number | undefined);
 const includeZeroFindingRepos = ref(false);
 const includeDeletedRepositories = ref(false);
 const onlyIfHasUntriagedFindings = ref(false);
@@ -192,9 +197,8 @@ function handlePageSizeChange(pageSize: number) {
   fetchPaginatedRepositories();
 }
 
-function goToScanFindings(record: TableItem) {
-  // Casting back to RepositoryEnrichedRead
-  const recordItem = record as RepositoryEnrichedRead;
+function goToScanFindings() {
+  const recordItem = getCurrentRepositorySelected() as RepositoryEnrichedRead;
   if (recordItem.last_scan_id) {
     const routeData = router.resolve({
       name: 'ScanFindings',
@@ -283,10 +287,43 @@ function fetchDistinctRepositories() {
     });
 }
 
+function getCurrentRepositorySelected(): RepositoryEnrichedRead | undefined {
+  if (selectedIndex.value === undefined) {
+    return undefined;
+  }
+
+  return repositoryList.value[selectedIndex.value];
+}
+
+function selectUp(): boolean {
+  selectedIndex.value = Math.max(0, (selectedIndex.value ?? 1) - 1);
+  repositoriesTable.value.clearSelected();
+  repositoriesTable.value.selectRow(selectedIndex.value);
+  return true;
+}
+
+function selectDown(): boolean {
+  selectedIndex.value = ((selectedIndex.value ?? -1) + 1) % repositoryList.value.length;
+  repositoriesTable.value.clearSelected();
+  repositoriesTable.value.selectRow(selectedIndex.value);
+  return true;
+}
+
 /* istanbul ignore next @preserve */
 onKeyStroke('r', () => !shouldIgnoreKeystroke() && fetchPaginatedRepositories(), {
   eventName: 'keydown',
 });
+
+/* istanbul ignore next @preserve */
+onKeyStroke(['ArrowDown', 'j', 'J'], () => !shouldIgnoreKeystroke() && selectDown(), {
+  eventName: 'keydown',
+});
+/* istanbul ignore next @preserve */
+onKeyStroke(['ArrowUp', 'k', 'K'], () => !shouldIgnoreKeystroke() && selectUp(), {
+  eventName: 'keydown',
+});
+/* istanbul ignore next @preserve */
+onKeyStroke('o', () => !shouldIgnoreKeystroke() && goToScanFindings(), { eventName: 'keydown' });
 
 onMounted(() => {
   fetchDistinctProjects();
