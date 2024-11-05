@@ -51,7 +51,7 @@
       <BProgressBar
         v-b-popover.hover.bottom="getPopOverContent('Not Analyzed', props.notAnalyzed)"
         :value="props.notAnalyzed"
-        variant="not-analyzed"
+        variant="light"
       >
         <div>
           <small
