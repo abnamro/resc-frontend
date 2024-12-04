@@ -27,38 +27,29 @@
 import CommonUtils, { type StatusOptionType } from '@/utils/common-utils';
 import Multiselect from 'vue-multiselect';
 import { ref } from 'vue';
-import type { FindingStatus } from '@/services/shema-to-types';
 import { useAuthUserStore } from '@/store';
 import { BFormGroup } from 'bootstrap-vue-next';
+import { storeToRefs } from 'pinia';
 
 type Props = {
   statusOptions?: StatusOptionType[];
-  statusSelected?: StatusOptionType[];
 };
 
 const props = withDefaults(defineProps<Props>(), {
   statusOptions: () => [],
-  statusSelected: () => [],
 });
 
+const store = useAuthUserStore();
+const { selectedStatus } = storeToRefs(store);
+
 const optionsStatus = ref(props.statusOptions);
-const selectedStatus = ref(props.statusSelected);
 
 const emit = defineEmits(['on-findings-status-change']);
 
 function onStatusFilterChange() {
-  if (selectedStatus.value.length > 0) {
-    const statusValues: FindingStatus[] = [];
-    for (const status of selectedStatus.value) {
-      statusValues.push(status.value);
-    }
-    emit('on-findings-status-change', statusValues);
-  } else {
-    emit('on-findings-status-change', []);
-  }
+  emit('on-findings-status-change');
 }
 
-const store = useAuthUserStore();
 optionsStatus.value = CommonUtils.parseStatusOptions(store.get_finding_status_list);
 </script>
 <style src="vue-multiselect/dist/vue-multiselect.css"></style>
