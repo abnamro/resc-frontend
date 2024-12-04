@@ -34,7 +34,7 @@
 
       <!-- Status Filter -->
       <div class="col-md-3">
-        <FindingStatusFilter @on-findings-status-change="onStatusFilterChange" />
+        <FindingStatusFilter @on-findings-status-change="handleFilterChange" />
       </div>
 
       <!-- Rule Tags Filter -->
@@ -78,7 +78,7 @@ import RuleTagsFilter from '@/components/Filters/RuleTagsFilter.vue';
 import ScanFindingsService from '@/services/scan-findings-service';
 import { ref, watch, type Ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import type { FindingStatus, RepositoryRead, ScanRead } from '@/services/shema-to-types';
+import type { RepositoryRead, ScanRead } from '@/services/shema-to-types';
 import { BFormCheckbox, BFormGroup } from 'bootstrap-vue-next';
 import { onKeyStroke } from '@vueuse/core';
 
@@ -109,13 +109,13 @@ const ruleTagsList = ref([] as string[]);
 const selectedScan = ref(null) as Ref<null | ScanJson>;
 const selectedRule = ref([] as string[]);
 const selectedRuleTags = ref([] as string[]);
-const selectedStatus = ref([] as FindingStatus[]);
 const includePreviousScans = ref(props.includePreviousScans);
 const skipRecords = ref(Number(`${Config.value('skipRecords')}`));
 const limitRecords = ref(Number(`${Config.value('limitRecords')}`));
 
 const router = useRouter();
 const route = useRoute();
+
 const emit = defineEmits(['previous-scans-checked', 'include-previous-scans', 'on-filter-change']);
 
 function getPreviousScans() {
@@ -146,7 +146,6 @@ function togglePreviousScans() {
       'include-previous-scans',
       selectedRule.value,
       selectedRuleTags.value,
-      selectedStatus.value,
       previousScans.value,
     );
   } else {
@@ -181,10 +180,7 @@ function handleRuleTagsFilterChange(ruleTags: string[]) {
   selectedRuleTags.value = ruleTags;
   handleFilterChange();
 }
-function onStatusFilterChange(status: FindingStatus[]) {
-  selectedStatus.value = status;
-  handleFilterChange();
-}
+
 function handleFilterChange() {
   if (selectedScan.value === null) {
     return;
@@ -196,7 +192,6 @@ function handleFilterChange() {
       'on-filter-change',
       selectedScan.value.scanId,
       selectedRule.value,
-      selectedStatus.value,
       selectedRuleTags.value,
     );
   } else {
