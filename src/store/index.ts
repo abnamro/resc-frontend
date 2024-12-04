@@ -3,6 +3,7 @@ import AxiosConfig from '@/configuration/axios-config';
 import ScanFindingsService from '@/services/scan-findings-service';
 import type { FindingStatus, RulePackRead } from '@/services/shema-to-types';
 import { defineStore, type Store } from 'pinia';
+import type { StatusOptionType } from '@/utils/common-utils';
 
 export type TokenData = {
   id_token: string;
@@ -46,6 +47,7 @@ interface State {
   previousRouteState: null | string | PreviousRouteState;
   findingStatusList: null | FindingStatus[];
   tableColumns: TableColumn[];
+  selectedStatus: StatusOptionType[];
 }
 
 export const useAuthUserStore: () => Store<'authUser', State, GettersStore, ActionsStore> =
@@ -62,6 +64,7 @@ export const useAuthUserStore: () => Store<'authUser', State, GettersStore, Acti
       previousRouteState: null,
       findingStatusList: [],
       tableColumns: [],
+      selectedStatus: [],
     }),
     getters: {
       get_finding_status_list(): FindingStatus[] {

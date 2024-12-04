@@ -47,7 +47,7 @@
           <div class="col-md-4">
             <BFormInput
               class="hover-opacity"
-              id="filter-files"
+              id="filterFiles"
               placeholder="filename"
               v-model="filterString"
               :required="true"
@@ -474,7 +474,16 @@ onKeyStroke(
 );
 /* istanbul ignore next @preserve */
 onKeyStroke('r', () => !shouldIgnoreKeystroke() && emit('refresh-table'), { eventName: 'keydown' });
-
+/* istanbul ignore next @preserve */
+onKeyStroke(
+  '\\',
+  () => shouldIgnoreKeystroke() && document.getElementById('filterFiles')?.focus(),
+  { eventName: 'keydown' },
+);
+/* istanbul ignore next @preserve */
+onKeyStroke('Escape', () => document.getElementById('filterFiles')?.blur(), {
+  eventName: 'keydown',
+});
 /* istanbul ignore next @preserve */
 watch(
   () => props.findings,

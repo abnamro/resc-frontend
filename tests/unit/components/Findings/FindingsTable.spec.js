@@ -95,11 +95,11 @@ describe('FindingsTable tests', () => {
     expect(() => wrapper.vm.markAllAsGone()).not.toThrow();
     expect(() => wrapper.vm.auditThis()).not.toThrow();
 
-    expect(() => wrapper.find('#filter-files').setValue('file1')).not.toThrow();
+    expect(() => wrapper.find('#filterFiles').setValue('file1')).not.toThrow();
     await wrapper.vm.$nextTick();
-    expect(() => wrapper.find('#filter-files').setValue('fi*')).not.toThrow();
+    expect(() => wrapper.find('#filterFiles').setValue('fi*')).not.toThrow();
     await wrapper.vm.$nextTick();
-    expect(() => wrapper.find('#filter-files').setValue('*e1')).not.toThrow();
+    expect(() => wrapper.find('#filterFiles').setValue('*e1')).not.toThrow();
 
     axios.get.mockResolvedValueOnce({ data: detailed_findings });
     expect(() => wrapper.vm.updateAudit('NOT_ANALYZED', 'Rien a declarer')).not.toThrow();

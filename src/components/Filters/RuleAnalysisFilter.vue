@@ -139,6 +139,7 @@ import { shouldIgnoreKeystroke } from '@/utils/keybind-utils';
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
 import { BButton, BCollapse, BFormCheckbox, BFormGroup } from 'bootstrap-vue-next';
+import { storeToRefs } from 'pinia';
 
 type Props = {
   projectOptions?: string[];
@@ -172,8 +173,10 @@ const optionsRuleTags = ref([] as string[]);
 const startDate = ref(undefined) as Ref<Date | string | undefined>;
 const endDate = ref(undefined) as Ref<Date | string | undefined>;
 
+const store = useAuthUserStore();
+const { selectedStatus } = storeToRefs(store);
+
 const selectedVcsProvider = ref([] as VCSProviders[]);
-const selectedStatus = ref([] as FindingStatus[]);
 const selectedProject = ref(undefined as string | undefined);
 const selectedRepository = ref(undefined as string | undefined);
 const selectedRule = ref([] as string[]);
@@ -224,8 +227,7 @@ function onRepositoryChange(repository: string | undefined) {
   handleFilterChange();
 }
 
-function onFindingsStatusChange(status: FindingStatus[]) {
-  selectedStatus.value = status;
+function onFindingsStatusChange() {
   fetchAllDetectedRules();
   handleFilterChange();
 }
@@ -265,7 +267,7 @@ function handleFilterChange() {
     startDate: CommonUtils.stringify_date(startDate.value),
     endDate: CommonUtils.stringify_date(endDate.value),
     vcsProvider: selectedVcsProvider.value,
-    status: selectedStatus.value,
+    status: selectedStatus.value.map((s) => s.value),
     project: selectedProject.value,
     repository: selectedRepository.value,
     rule: selectedRule.value,
@@ -284,7 +286,7 @@ function fetchAllDetectedRules() {
     }
   }
   RuleService.getAllDetectedRules(
-    selectedStatus.value,
+    selectedStatus.value.map((s) => s.value),
     selectedVcsProvider.value,
     selectedProject.value,
     selectedRepository.value,
@@ -345,7 +347,7 @@ function applyRuleFilterInRuleAnalysisPage() {
       startDate: CommonUtils.stringify_date(startDate.value),
       endDate: CommonUtils.stringify_date(endDate.value),
       vcsProvider: selectedVcsProvider.value,
-      status: selectedStatus.value,
+      status: selectedStatus.value.map((s) => s.value),
       project: selectedProject.value,
       repository: selectedRepository.value,
       rule: selectedRules,
