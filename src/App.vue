@@ -1,5 +1,4 @@
 <template>
-  <BModalOrchestrator />
   <SidebarMenu
     :menu="sidebarNavigationMenu"
     v-model:collapsed="sidebarCollapsed"
@@ -29,7 +28,6 @@ import { SidebarMenu } from 'vue-sidebar-menu';
 import TopBarMenu from '@/components/Navigation/TopBarMenu.vue';
 import { sidebarMenu } from '@/components/Navigation/Navigation';
 import 'vue-sidebar-menu/dist/vue-sidebar-menu.css';
-import BModalOrchestrator from 'bootstrap-vue-next';
 import { disableScrollingWithArrowsAndCtrlA, shouldIgnoreKeystroke } from './utils/keybind-utils';
 import { onKeyStroke } from '@vueuse/core';
 

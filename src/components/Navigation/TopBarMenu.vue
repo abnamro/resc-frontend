@@ -20,6 +20,7 @@
 
         <BDropdownItem disabled>
           <table aria-hidden="true">
+            <tbody>
             <tr>
               <td class="user-avatar-badge">
                 <BAvatar
@@ -33,6 +34,7 @@
                 ><br /><span class="profile-menu-email">{{ userEmail }}</span>
               </td>
             </tr>
+            </tbody>
           </table>
         </BDropdownItem>
 
