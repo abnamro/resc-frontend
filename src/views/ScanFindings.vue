@@ -79,6 +79,7 @@ import type { AxiosResponse } from 'axios';
 import type { TableItem } from 'bootstrap-vue-next';
 import { useAuthUserStore } from '@/store';
 import { storeToRefs } from 'pinia';
+import { PAGE_SIZES } from '@/configuration/config';
 
 const loadedData = ref(false);
 const loadedRepoData = ref(false);
@@ -106,7 +107,7 @@ const ruleTagsFilter = ref(undefined) as Ref<string[] | undefined>;
 const totalRows = ref(0);
 const currentPage = ref(1);
 const perPage = ref(Number(`${Config.value('defaultPageSize')}`));
-const pageSizes = ref([20, 50, 100, 500, 1000]);
+const pageSizes = ref(PAGE_SIZES);
 const requestedPageNumber = ref(1);
 
 const hasRecords = computed(() => findingList.value.length > 0);
@@ -215,11 +216,7 @@ function addScanTypeTagForSingleScan() {
   });
 }
 
-function handleFilterChange(
-  scanId: number,
-  rule: string[],
-  ruleTags: string[],
-) {
+function handleFilterChange(scanId: number, rule: string[], ruleTags: string[]) {
   selectedScanID.value = scanId;
   ruleFilter.value = rule;
   ruleTagsFilter.value = ruleTags;

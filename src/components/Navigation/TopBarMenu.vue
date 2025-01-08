@@ -21,19 +21,19 @@
         <BDropdownItem disabled>
           <table aria-hidden="true">
             <tbody>
-            <tr>
-              <td class="user-avatar-badge">
-                <BAvatar
-                  button
-                  v-bind:text="avatarText"
-                  class="align-baseline user-avatar"
-                ></BAvatar>
-              </td>
-              <td>
-                <span class="profile-menu-username">{{ userFullName }}</span
-                ><br /><span class="profile-menu-email">{{ userEmail }}</span>
-              </td>
-            </tr>
+              <tr>
+                <td class="user-avatar-badge">
+                  <BAvatar
+                    button
+                    v-bind:text="avatarText"
+                    class="align-baseline user-avatar"
+                  ></BAvatar>
+                </td>
+                <td>
+                  <span class="profile-menu-username">{{ userFullName }}</span
+                  ><br /><span class="profile-menu-email">{{ userEmail }}</span>
+                </td>
+              </tr>
             </tbody>
           </table>
         </BDropdownItem>

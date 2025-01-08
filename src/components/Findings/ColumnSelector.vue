@@ -2,7 +2,7 @@
   <div>
     <BModal
       id="column_modal"
-      ref="column_modal"
+      ref="columnModal"
       size="sm"
       button-size="sm"
       title="Select columns"
@@ -32,7 +32,7 @@ import ColumnUtils, { type TableColumn } from '@/utils/column-utils';
 import { BButton, BFormCheckbox, BModal } from 'bootstrap-vue-next';
 import { ref } from 'vue';
 
-const column_modal = ref();
+const columnModal = ref();
 const selectableColumns = ref(ColumnUtils.selectableColumns());
 
 const store = useAuthUserStore();
@@ -58,11 +58,11 @@ function reset_if_empty() {
 }
 
 function show() {
-  column_modal.value.show();
+  columnModal.value.show();
 }
 
 function hide() {
-  column_modal.value.hide();
+  columnModal.value.hide();
 }
 
 defineExpose({ show, hide });

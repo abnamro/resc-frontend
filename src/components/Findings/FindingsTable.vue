@@ -247,7 +247,7 @@ function updateAudit(status: FindingStatus, comment: string) {
   emit('refresh-table');
 }
 
-function updateVisualBadge(selectedIds: number[], status: FindingStatus, comment: string = '') {
+function updateVisualBadge(selectedIds: number[], status: FindingStatus, comment: string) {
   findingList.value.forEach((finding: DetailedFindingRead, idx, theArray) => {
     if (selectedIds.includes(finding.id_)) {
       theArray[idx].status = status;
@@ -405,7 +405,7 @@ function auditThis() {
 function sendUpdate(selectedIds: number[], status: FindingStatus) {
   FindingsService.auditFindings(selectedIds, status, '')
     .then(() => {
-      updateVisualBadge(selectedIds, status);
+      updateVisualBadge(selectedIds, status, '');
     })
     .catch((error) => {
       AxiosConfig.handleError(error);

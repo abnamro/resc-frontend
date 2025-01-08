@@ -43,7 +43,7 @@ const FindingsService = {
       paths['/resc/v1/findings/audit/']['post']['responses']['201']['content']['application/json']
     >
   > {
-    const commentVal = comment == null ? '' : comment;
+    const commentVal = comment === null ? '' : comment;
 
     return axios.post(`/findings/audit/`, {
       finding_ids: toRaw(findingIds),

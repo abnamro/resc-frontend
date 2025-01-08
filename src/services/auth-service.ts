@@ -4,6 +4,7 @@ import Router from '@/router/index';
 import { useAuthUserStore, type UserDetails } from '@/store/index';
 import Config from '@/configuration/config';
 import axiosRetry from 'axios-retry';
+import { OK } from '@/configuration/axios-config';
 
 import axios, { type AxiosRequestConfig, type AxiosResponse } from 'axios';
 axiosRetry(axios, { retries: 3 });
@@ -173,7 +174,7 @@ const AuthService = {
 
   async isUserAuthorized(): Promise<boolean> {
     const response = await this.doAuthCheck();
-    return response && response.status && response.status === 200 ? true : false;
+    return response && response.status && response.status === OK ? true : false;
   },
 
   async doAuthCheck(): Promise<AxiosResponse<string> | void> {

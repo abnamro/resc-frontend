@@ -142,12 +142,7 @@ function togglePreviousScans() {
     previousScans.value = [];
     getPreviousScans();
     emit('previous-scans-checked', true);
-    emit(
-      'include-previous-scans',
-      selectedRule.value,
-      selectedRuleTags.value,
-      previousScans.value,
-    );
+    emit('include-previous-scans', selectedRule.value, selectedRuleTags.value, previousScans.value);
   } else {
     previousScans.value = [];
     emit('previous-scans-checked', false);
@@ -188,12 +183,7 @@ function handleFilterChange() {
 
   // Refresh findings
   if (!includePreviousScans.value) {
-    emit(
-      'on-filter-change',
-      selectedScan.value.scanId,
-      selectedRule.value,
-      selectedRuleTags.value,
-    );
+    emit('on-filter-change', selectedScan.value.scanId, selectedRule.value, selectedRuleTags.value);
   } else {
     togglePreviousScans();
   }

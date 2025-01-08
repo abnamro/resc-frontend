@@ -105,3 +105,18 @@ export default class Config {
     }
   }
 }
+
+export const MAX_COMMENT_LENGTH = 255;
+export const PAGE_SIZE_20 = 20;
+export const PAGE_SIZE_50 = 50;
+export const PAGE_SIZE_100 = 100;
+export const PAGE_SIZE_500 = 500;
+export const PAGE_SIZE_1000 = 1000;
+
+export const PAGE_SIZES = [
+  PAGE_SIZE_20,
+  PAGE_SIZE_50,
+  PAGE_SIZE_100,
+  PAGE_SIZE_500,
+  PAGE_SIZE_1000,
+];

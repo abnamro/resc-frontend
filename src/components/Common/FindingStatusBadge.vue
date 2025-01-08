@@ -1,13 +1,13 @@
 <template>
   <div>
-    <BBadge v-if="props.status == 'NOT_ANALYZED'" variant="secondary">Not Analyzed</BBadge>
-    <BBadge v-if="props.status == 'NOT_ACCESSIBLE'" class="badge bg-info">Not Accessible</BBadge>
-    <BBadge v-if="props.status == 'CLARIFICATION_REQUIRED'" variant="warning"
+    <BBadge v-if="props.status === 'NOT_ANALYZED'" variant="secondary">Not Analyzed</BBadge>
+    <BBadge v-if="props.status === 'NOT_ACCESSIBLE'" class="badge bg-info">Not Accessible</BBadge>
+    <BBadge v-if="props.status === 'CLARIFICATION_REQUIRED'" variant="warning"
       >Clarification Required</BBadge
     >
-    <BBadge v-if="props.status == 'TRUE_POSITIVE'" variant="danger">True Positive</BBadge>
-    <BBadge v-if="props.status == 'FALSE_POSITIVE'" variant="success">False Positive</BBadge>
-    <BBadge v-if="props.status == 'OUTDATED'" variant="dark">Outdated</BBadge>
+    <BBadge v-if="props.status === 'TRUE_POSITIVE'" variant="danger">True Positive</BBadge>
+    <BBadge v-if="props.status === 'FALSE_POSITIVE'" variant="success">False Positive</BBadge>
+    <BBadge v-if="props.status === 'OUTDATED'" variant="dark">Outdated</BBadge>
   </div>
 </template>
 <script setup lang="ts">

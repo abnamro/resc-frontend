@@ -60,19 +60,21 @@ describe('ScanFindings tests', () => {
         FontAwesomeIcon,
       },
       global: {
-        plugins: [createTestingPinia({
-          initialState: {
-            authUser: {
-              idToken: null,
-              accessToken: '12345',
-              destinationRoute: 'resc',
-              firstName: 'user',
-              lastName: 'test',
-              email: 'testuser@test.com',
-              selectedStatus: [],
+        plugins: [
+          createTestingPinia({
+            initialState: {
+              authUser: {
+                idToken: null,
+                accessToken: '12345',
+                destinationRoute: 'resc',
+                firstName: 'user',
+                lastName: 'test',
+                email: 'testuser@test.com',
+                selectedStatus: [],
+              },
             },
-          },
-        })],
+          }),
+        ],
         stubs: {
           AuditModal: true,
           ScanFindingsFilter: true,

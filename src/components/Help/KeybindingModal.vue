@@ -1,8 +1,8 @@
 <template>
   <div>
     <BModal
-      id="keybinding_modal"
-      ref="keybinding_modal"
+      id="KeybindingModal"
+      ref="KeybindingModal"
       size="md"
       button-size="sm"
       title="Keyboard shortcuts"
@@ -41,7 +41,7 @@ import { onKeyStroke } from '@vueuse/core';
 import { BBadge, BButton, BModal, BTable } from 'bootstrap-vue-next';
 import { ref } from 'vue';
 
-const keybinding_modal = ref();
+const KeybindingModal = ref();
 
 type KeyBinding = { combination: string[][]; effect: string };
 
@@ -123,11 +123,11 @@ const keybindings = ref([
 ] as KeyBinding[]);
 
 function show() {
-  keybinding_modal.value.show();
+  KeybindingModal.value.show();
 }
 
 function hide(_value: MouseEvent) {
-  keybinding_modal.value.hide();
+  KeybindingModal.value.hide();
 }
 
 defineExpose({ show, hide });

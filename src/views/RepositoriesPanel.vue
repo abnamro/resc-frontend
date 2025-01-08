@@ -98,6 +98,7 @@ import type { RepositoryEnrichedRead, VCSProviders } from '@/services/shema-to-t
 import { BTable, type TableItem } from 'bootstrap-vue-next';
 import { onKeyStroke } from '@vueuse/core';
 import { shouldIgnoreKeystroke } from '@/utils/keybind-utils';
+import { PAGE_SIZES } from '@/configuration/config';
 
 const loadedData = ref(false);
 const repositoriesTable = ref();
@@ -110,7 +111,7 @@ const currentItems = ref([] as TableRepositoryEnrichedRead[]);
 const totalRows = ref(0);
 const currentPage = ref(1);
 const perPage = ref(Number(`${Config.value('defaultPageSize')}`));
-const pageSizes = ref([20, 50, 100, 500, 1000]);
+const pageSizes = ref(PAGE_SIZES);
 const requestedPageNumber = ref(1);
 const vcsFilter = ref([] as VCSProviders[]);
 const repositoryFilter = ref(undefined as string | undefined);

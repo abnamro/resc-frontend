@@ -70,6 +70,7 @@ import type {
 import type { AxiosResponse } from 'axios';
 import type { TableItem } from 'bootstrap-vue-next';
 import CommonUtils from '@/utils/common-utils';
+import { PAGE_SIZES } from '@/configuration/config';
 
 type TableItemDetailedFindingRead = DetailedFindingRead & TableItem;
 
@@ -79,7 +80,7 @@ const findingList = ref([] as TableItemDetailedFindingRead[]);
 const totalRows = ref(0);
 const currentPage = ref(1);
 const perPage = ref(Number(`${Config.value('defaultPageSize')}`));
-const pageSizes = ref([20, 50, 100, 500, 1000]);
+const pageSizes = ref(PAGE_SIZES);
 const requestedPageNumber = ref(1);
 const rulePackVersions = ref([] as RulePackRead[]);
 const ruleTagsList = ref([] as string[]);

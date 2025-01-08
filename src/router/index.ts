@@ -94,35 +94,37 @@ const router = createRouter({
 export const loginGuard =
   () => (to: RouteLocationNormalized, from: RouteLocationNormalized, next: NavigationGuardNext) => {
     /* istanbul ignore else -- @preserve */
-    if (authenticationRequired && authenticationRequired === 'false') {
+    if (authenticationRequired === 'false') {
       const store = useAuthUserStore();
       store.update_source_route(from.fullPath);
       store.update_destination_route(to.fullPath);
       store.update_auth_tokens(null);
       store.update_user_details(null);
       return next();
-    } else if (authenticationRequired && authenticationRequired === 'true') {
+    }
+
+    if (authenticationRequired === 'true') {
       if (to.matched.some((record) => record.meta.noAuth)) {
         return next();
-      } else {
-        (async () => {
-          const isAuthenticated = await AuthService.isUserAuthenticated();
-          const store = useAuthUserStore();
-          store.update_source_route(from.fullPath);
-          store.update_destination_route(to.fullPath);
-          if (!isAuthenticated) {
-            store.update_auth_tokens(null);
-            store.update_user_details(null);
-            return next({
-              path: '/login',
-            });
-          }
-          return next();
-        })();
       }
-    } else {
-      throw new Error('Invalid value provided for VITE_AUTHENTICATION_REQUIRED env variable');
+
+      (async () => {
+        const isAuthenticated = await AuthService.isUserAuthenticated();
+        const store = useAuthUserStore();
+        store.update_source_route(from.fullPath);
+        store.update_destination_route(to.fullPath);
+        if (!isAuthenticated) {
+          store.update_auth_tokens(null);
+          store.update_user_details(null);
+          return next({
+            path: '/login',
+          });
+        }
+        return next();
+      })();
     }
+
+    throw new Error('Invalid value provided for VITE_AUTHENTICATION_REQUIRED env variable');
   };
 
 router.beforeEach(loginGuard());
