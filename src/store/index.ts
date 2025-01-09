@@ -68,7 +68,11 @@ export const useAuthUserStore: () => Store<'authUser', State, GettersStore, Acti
     }),
     getters: {
       get_finding_status_list(): FindingStatus[] {
-        if (this.findingStatusList === null || this.findingStatusList.length === 0) {
+        if (
+          this.findingStatusList === null ||
+          this.findingStatusList === undefined ||
+          this.findingStatusList.length === 0
+        ) {
           ScanFindingsService.getStatusList()
             .then((response) => {
               this.findingStatusList = response.data as FindingStatus[];
