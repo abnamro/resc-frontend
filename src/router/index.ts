@@ -122,6 +122,8 @@ export const loginGuard =
         }
         return next();
       })();
+
+      return;
     }
 
     throw new Error('Invalid value provided for VITE_AUTHENTICATION_REQUIRED env variable');

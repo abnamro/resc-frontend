@@ -11,27 +11,27 @@
         <tr>
           <th>Project</th>
           <td>
-            <span class="badge bg-secondary">{{ repository_data.project_key }}</span>
+            <span class="badge bg-secondary">{{ repositoryData.project_key }}</span>
           </td>
         </tr>
         <tr>
           <th>Repository</th>
           <td>
-            <span class="badge bg-secondary">{{ repository_data.repository_name }}</span>
+            <span class="badge bg-secondary">{{ repositoryData.repository_name }}</span>
           </td>
         </tr>
         <tr>
           <th>Deleted at</th>
           <td>
             <BFormCheckbox
-              v-model="repo_deleted"
+              v-model="repoDeleted"
               name="check-button"
               switch
               :disabled="!loadedData"
               @change="handleDeletedChange"
             >
-              <small class="text-nowrap" v-if="repository_data.deleted_at">{{
-                repository_data.deleted_at.substring(0, 10)
+              <small class="text-nowrap" v-if="repositoryData.deleted_at">{{
+                repositoryData.deleted_at.substring(0, 10)
               }}</small>
             </BFormCheckbox>
           </td>
@@ -56,8 +56,8 @@ type Props = {
 
 const props = defineProps<Props>();
 
-const repository_data = ref(props.repository);
-const repo_deleted = ref(props.repository.deleted_at ? true : false);
+const repositoryData = ref(props.repository);
+const repoDeleted = ref(props.repository.deleted_at ? true : false);
 const loadedData = ref(true);
 
 const emit = defineEmits(['on-delete-at-change']);
@@ -67,14 +67,14 @@ function handleDeletedChange() {
   RepositoryService.toggleDeletedAtForRepository(props.repository.id_)
     .then((response: AxiosResponse<RepositoryRead>) => {
       loadedData.value = true;
-      repository_data.value = response.data;
-      repo_deleted.value = repository_data.value.deleted_at ? true : false;
+      repositoryData.value = response.data;
+      repoDeleted.value = repositoryData.value.deleted_at ? true : false;
       emit('on-delete-at-change');
     })
     /* istanbul ignore next @preserve */
     .catch((error) => {
       AxiosConfig.handleError(error);
-      repo_deleted.value = repository_data.value.deleted_at ? true : false;
+      repoDeleted.value = repositoryData.value.deleted_at ? true : false;
     });
 }
 </script>

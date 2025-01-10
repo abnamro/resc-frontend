@@ -1,8 +1,8 @@
 <template>
   <div>
     <BModal
-      id="audit_modal"
-      ref="audit_modal"
+      id="auditModal"
+      ref="auditModal"
       size="lg"
       button-size="sm"
       :title="getModalTitle"
@@ -77,7 +77,7 @@ import { nextTick } from 'vue';
 import { useAuthUserStore } from '@/store';
 import { MAX_COMMENT_LENGTH } from '@/configuration/config';
 
-const audit_modal = ref();
+const auditModal = ref();
 
 type Props = {
   selectedCheckBoxIds: number[];
@@ -101,11 +101,11 @@ const isCommentValid = computed(() => {
 });
 
 function show() {
-  audit_modal.value.show();
+  auditModal.value.show();
 }
 
 function hide() {
-  audit_modal.value.hide();
+  auditModal.value.hide();
 }
 
 function resetModal() {
@@ -137,7 +137,7 @@ function handleSubmit() {
 
   // Hide the modal manually
   nextTick(() => {
-    audit_modal.value.hide();
+    auditModal.value.hide();
   });
 }
 

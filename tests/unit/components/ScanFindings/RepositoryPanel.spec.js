@@ -35,13 +35,13 @@ describe('Repository Panel', () => {
     expect(wrapper.text()).toContain('project_name');
     expect(wrapper.text()).toContain('repo_name');
     expect(wrapper.text()).toContain('vcs_name');
-    expect(wrapper.vm.repo_deleted).toBe(false);
+    expect(wrapper.vm.repoDeleted).toBe(false);
     expect(async () => await wrapper.vm.handleDeletedChange()).not.toThrow();
     await wrapper.vm.$nextTick();
     await wrapper.vm.$nextTick();
     await wrapper.vm.$nextTick();
     await wrapper.vm.$nextTick();
 
-    expect(wrapper.vm.repo_deleted).toBe(true);
+    expect(wrapper.vm.repoDeleted).toBe(true);
   });
 });

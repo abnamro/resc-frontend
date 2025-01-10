@@ -325,10 +325,10 @@ function fetchRulesWithFindingStatusCount() {
     });
 }
 
-function calculateTruePositiveRate(data: any): string {
+function calculateTruePositiveRate(data: { item: RuleFindingCountModel }): string {
   let truePositiveCount = 0;
   let falsePositiveCount = 0;
-  const item: RuleFindingCountModel = data.item as RuleFindingCountModel;
+  const item: RuleFindingCountModel = data.item;
   if (item.finding_statuses_count === undefined) {
     return 'NAN%';
   }
