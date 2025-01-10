@@ -2,8 +2,8 @@
   <div>
     <SpinnerVue v-if="!loadedData" />
     <BModal
-      id="rule_pack_upload_modal"
-      ref="rule_pack_upload_modal"
+      id="RulePackUploadModal"
+      ref="RulePackUploadModal"
       size="lg"
       button-size="sm"
       title="IMPORT RULEPACK"
@@ -80,9 +80,10 @@ import {
   BModal,
   type BvEvent,
 } from 'bootstrap-vue-next';
+import { OK } from '@/configuration/axios-config';
 
 const loadedData = ref(true);
-const rule_pack_upload_modal = ref();
+const RulePackUploadModal = ref();
 
 const file = ref(undefined) as Ref<File | undefined>;
 const version = ref('');
@@ -90,14 +91,14 @@ const versionState = ref(null) as Ref<boolean | null>;
 const emit = defineEmits(['on-file-upload-suceess']);
 
 function show(): void {
-  rule_pack_upload_modal.value.show();
+  RulePackUploadModal.value.show();
 }
 
 function hide(): void {
   version.value = '';
   file.value = undefined;
   versionState.value = null;
-  rule_pack_upload_modal.value.hide();
+  RulePackUploadModal.value.hide();
 }
 
 function resetModal(): void {
@@ -126,13 +127,13 @@ function submitForm() {
   RulePackService.uploadRulePack(version.value, file.value as File)
     .then((response) => {
       emit('on-file-upload-suceess');
-      if (response && response.status === 200) {
+      if (response && response.status === OK) {
         toast.success('Rulepack uploaded successfully');
       }
       loadedData.value = true;
       // Hide the modal manually
       nextTick(() => {
-        rule_pack_upload_modal.value.hide();
+        RulePackUploadModal.value.hide();
       });
     })
     .catch((error) => {

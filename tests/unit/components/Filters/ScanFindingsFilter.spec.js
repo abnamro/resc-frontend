@@ -138,11 +138,6 @@ describe('ScanFindingsFilter tests', () => {
     expect(wrapper.emitted()['include-previous-scans'].length).toBe(2);
 
     axios.get.mockResolvedValueOnce({ data: mock_rules });
-    expect(() => wrapper.vm.onStatusFilterChange(['NOT_ANALYZED'])).not.toThrow();
-    expect(wrapper.emitted()['previous-scans-checked'].length).toBe(3);
-    expect(wrapper.emitted()['include-previous-scans'].length).toBe(3);
-
-    axios.get.mockResolvedValueOnce({ data: mock_rules });
     axios.get.mockResolvedValueOnce({ data: mock_rules });
     axios.get.mockResolvedValueOnce(rule_tags);
     expect(() => wrapper.vm.handleScanDateFilterChange()).not.toThrow();

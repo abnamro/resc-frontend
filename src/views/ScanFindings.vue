@@ -73,11 +73,13 @@ import type {
   PaginationType,
   RepositoryRead,
   VCSInstanceRead,
-  FindingStatus,
   AugmentedDetailedFindingRead,
 } from '@/services/shema-to-types';
 import type { AxiosResponse } from 'axios';
 import type { TableItem } from 'bootstrap-vue-next';
+import { useAuthUserStore } from '@/store';
+import { storeToRefs } from 'pinia';
+import { PAGE_SIZES } from '@/configuration/config';
 
 const loadedData = ref(false);
 const loadedRepoData = ref(false);
@@ -102,15 +104,17 @@ const findingList = ref([] as TableItemAugmentedDetailedFindingRead[]);
 const selectedScanID = ref(Number(props.scanId));
 const ruleFilter = ref([] as string[]);
 const ruleTagsFilter = ref(undefined) as Ref<string[] | undefined>;
-const statusFilter = ref(undefined) as Ref<FindingStatus[] | undefined>;
 const totalRows = ref(0);
 const currentPage = ref(1);
 const perPage = ref(Number(`${Config.value('defaultPageSize')}`));
-const pageSizes = ref([20, 50, 100, 500, 1000]);
+const pageSizes = ref(PAGE_SIZES);
 const requestedPageNumber = ref(1);
 
 const hasRecords = computed(() => findingList.value.length > 0);
 const skipRowCount = computed(() => (currentPage.value - 1) * perPage.value);
+
+const store = useAuthUserStore();
+const { selectedStatus } = storeToRefs(store);
 
 function onPreviousScanChecked(checked: boolean) {
   previousScanChecked.value = checked;
@@ -184,7 +188,7 @@ function fetchPaginatedFindingsByScanId() {
     skip: skipRowCount.value,
     limit: perPage.value,
     scanIds: [selectedScanID.value],
-    findingStatus: statusFilter.value,
+    findingStatus: (selectedStatus.value ?? []).map((s) => s.value),
     rule: ruleFilter.value,
     ruleTags: ruleTagsFilter.value,
     includeDeletedRepositories: true,
@@ -212,16 +216,10 @@ function addScanTypeTagForSingleScan() {
   });
 }
 
-function handleFilterChange(
-  scanId: number,
-  rule: string[],
-  status: FindingStatus[],
-  ruleTags: string[],
-) {
+function handleFilterChange(scanId: number, rule: string[], ruleTags: string[]) {
   selectedScanID.value = scanId;
   ruleFilter.value = rule;
   ruleTagsFilter.value = ruleTags;
-  statusFilter.value = status;
   currentPage.value = 1;
   allSelected.value = false;
   fetchPaginatedFindingsByScanId();
@@ -230,7 +228,6 @@ function handleFilterChange(
 function displayPreviousScans(
   rule: string[],
   ruleTags: string[],
-  status: FindingStatus[],
   previousScanListUpdate: ScanRead[],
 ) {
   currentPage.value = 1;
@@ -238,7 +235,6 @@ function displayPreviousScans(
   previousScanList.value = previousScanListUpdate;
   ruleFilter.value = rule;
   ruleTagsFilter.value = ruleTags;
-  statusFilter.value = status;
   fetchPreviousScanFindings();
 }
 
@@ -254,7 +250,7 @@ function fetchPreviousScanFindings() {
     skip: skipRowCount.value,
     limit: perPage.value,
     scanIds: previousScanIds,
-    findingStatus: statusFilter.value,
+    findingStatus: (selectedStatus.value ?? []).map((s) => s.value),
     rule: ruleFilter.value,
     ruleTags: ruleTagsFilter.value,
     includeDeletedRepositories: true,

@@ -1,7 +1,7 @@
 <template>
   <div>
-    <BBadge v-if="props.scanType == 'BASE'" variant="success">{{ baseScanTag }}</BBadge>
-    <BBadge v-if="props.scanType == 'INCREMENTAL'" variant="info"
+    <BBadge v-if="props.scanType === 'BASE'" variant="success">{{ baseScanTag }}</BBadge>
+    <BBadge v-if="props.scanType === 'INCREMENTAL'" variant="info"
       >INC: {{ props.incrementNumber }}</BBadge
     >
   </div>

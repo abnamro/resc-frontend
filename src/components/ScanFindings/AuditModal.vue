@@ -75,6 +75,7 @@ import {
 } from 'bootstrap-vue-next';
 import { nextTick } from 'vue';
 import { useAuthUserStore } from '@/store';
+import { MAX_COMMENT_LENGTH } from '@/configuration/config';
 
 const audit_modal = ref();
 
@@ -96,7 +97,7 @@ const isStatusValid = computed(() => {
   return status.value !== '';
 });
 const isCommentValid = computed(() => {
-  return comment.value !== '' && comment.value.length > 255 ? false : true;
+  return comment.value !== '' && comment.value.length > MAX_COMMENT_LENGTH ? false : true;
 });
 
 function show() {

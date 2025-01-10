@@ -320,7 +320,6 @@ function fetchRuleTags() {
 }
 
 function applyRuleFilterInRuleAnalysisPage() {
-  const store = useAuthUserStore();
   const selectedRules = [];
   const selectedVersions = [];
   const storePreviousRouteState = store.previousRouteState as PreviousRouteState;

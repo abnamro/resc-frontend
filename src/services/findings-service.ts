@@ -43,7 +43,7 @@ const FindingsService = {
       paths['/resc/v1/findings/audit/']['post']['responses']['201']['content']['application/json']
     >
   > {
-    const commentVal = comment == null ? '' : comment;
+    const commentVal = comment === null ? '' : comment;
 
     return axios.post(`/findings/audit/`, {
       finding_ids: toRaw(findingIds),
@@ -62,7 +62,7 @@ const FindingsService = {
     let queryString: string | null = '';
     queryString += QueryUtils.appendArrayIf('scan_ids', filter.scanIds);
     queryString += QueryUtils.appendArrayIf('rule_names', filter.rule);
-    queryString += QueryUtils.appendArrayIf('finding_statuses', filter.findingStatus);
+    // queryString += QueryUtils.appendArrayIf('finding_statuses', filter.findingStatus);
     queryString += QueryUtils.appendArrayIf('vcs_providers', filter.vcsProvider);
     queryString += QueryUtils.appendIf('project_name', filter.project);
     queryString += QueryUtils.appendIf('repository_name', filter.repository);

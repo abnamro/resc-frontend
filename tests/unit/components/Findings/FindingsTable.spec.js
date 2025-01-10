@@ -54,14 +54,15 @@ describe('FindingsTable tests', () => {
       wrapper.vm.updateVisualBadge(
         [detailed_findings.data[0].id_, detailed_findings.data[1].id_],
         'TRUE_POSITIVE',
+        '',
       ),
     ).not.toThrow();
     expect(() => wrapper.vm.toggleAllCheckboxes()).not.toThrow();
     expect(() =>
-      wrapper.vm.updateVisualBadge([detailed_findings.data[0].id_], 'FALSE_POSITIVE'),
+      wrapper.vm.updateVisualBadge([detailed_findings.data[0].id_], 'FALSE_POSITIVE', ''),
     ).not.toThrow();
     expect(() =>
-      wrapper.vm.updateVisualBadge([detailed_findings.data[0].id_], 'NOT_ACCESSIBLE'),
+      wrapper.vm.updateVisualBadge([detailed_findings.data[0].id_], 'NOT_ACCESSIBLE', ''),
     ).not.toThrow();
 
     expect(() => wrapper.vm.selectSingleCheckbox()).not.toThrow();

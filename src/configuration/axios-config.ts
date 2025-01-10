@@ -12,6 +12,11 @@ import axios, {
 } from 'axios';
 import type { Swr } from '@/services/shema-to-types';
 
+const TIMEOUT = 5000;
+export const OK = 200;
+const CREATED = 201;
+const FORBIDDEN = 403;
+
 const AxiosConfig = {
   axiosSetUp() {
     axios.defaults.baseURL = `${Config.value('rescWebServiceUrl')}/v1`;
@@ -27,7 +32,7 @@ const AxiosConfig = {
             });
             setTimeout(function () {
               AuthService.doLogOut();
-            }, 5000);
+            }, TIMEOUT);
 
             return {
               config,
@@ -49,7 +54,7 @@ const AxiosConfig = {
 
     axios.interceptors.response.use(
       function (response: AxiosResponse): AxiosResponse {
-        if (response && response.status === 201) {
+        if (response && response.status === CREATED) {
           toast('Record saved successfully.', {
             type: 'success',
           });
@@ -58,7 +63,7 @@ const AxiosConfig = {
       },
       function (error: Swr): Promise<never> {
         if (error.response && error.response.status && !isNaN(error.response.status)) {
-          if (error.response.status === 403) {
+          if (error.response.status === FORBIDDEN) {
             toast(
               'You do not have permission to access this resource. You will be redirected to the Login page.',
               {
@@ -67,7 +72,7 @@ const AxiosConfig = {
             );
             setTimeout(function () {
               AuthService.doLogOut();
-            }, 5000);
+            }, TIMEOUT);
           } else {
             let errorMsg = '';
             if (error.response.data.detail && error.response.status) {

@@ -66,7 +66,7 @@
             v-for="(item, i) in (data.item as RuleFindingCountModel).finding_statuses_count"
             :key="i"
           >
-            <span v-if="item.status == 'TRUE_POSITIVE'">
+            <span v-if="item.status === 'TRUE_POSITIVE'">
               {{ item.count }}
             </span>
           </span>
@@ -75,7 +75,7 @@
         <!-- False Positive Count Column -->
         <template #cell(false_positive)="data">
           <span v-for="(item, i) in data.item.finding_statuses_count" :key="i">
-            <span v-if="(item as StatusCount).status == 'FALSE_POSITIVE'">
+            <span v-if="(item as StatusCount).status === 'FALSE_POSITIVE'">
               {{ (item as StatusCount).count }}
             </span>
           </span>
@@ -84,7 +84,7 @@
         <!-- Clarification Required Count Column -->
         <template #cell(clarification_required)="data">
           <span v-for="(item, i) in data.item.finding_statuses_count" :key="i">
-            <span v-if="(item as StatusCount).status == 'CLARIFICATION_REQUIRED'">
+            <span v-if="(item as StatusCount).status === 'CLARIFICATION_REQUIRED'">
               {{ (item as StatusCount).count }}
             </span>
           </span>
@@ -93,7 +93,7 @@
         <!-- Outdated Count Column -->
         <template #cell(outdated)="data">
           <span v-for="(item, i) in data.item.finding_statuses_count" :key="i">
-            <span v-if="(item as StatusCount).status == 'OUTDATED'">
+            <span v-if="(item as StatusCount).status === 'OUTDATED'">
               {{ (item as StatusCount).count }}
             </span>
           </span>
@@ -102,7 +102,7 @@
         <!-- Not Accessible Count Column -->
         <template #cell(not_accessible)="data">
           <span v-for="(item, i) in data.item.finding_statuses_count" :key="i">
-            <span v-if="(item as StatusCount).status == 'NOT_ACCESSIBLE'">
+            <span v-if="(item as StatusCount).status === 'NOT_ACCESSIBLE'">
               {{ (item as StatusCount).count }}
             </span>
           </span>
@@ -111,7 +111,7 @@
         <!-- Not Accessible Count Column -->
         <template #cell(not_analyzed)="data">
           <span v-for="(item, i) in data.item.finding_statuses_count" :key="i">
-            <span v-if="(item as StatusCount).status == 'NOT_ANALYZED'">
+            <span v-if="(item as StatusCount).status === 'NOT_ANALYZED'">
               {{ (item as StatusCount).count }}
             </span>
           </span>
