@@ -106,6 +106,7 @@ export const useAuthUserStore: () => Store<'authUser', State, GettersStore, Acti
       },
       clear_finding_status_list() {
         this.findingStatusList = null;
+        this.selectedStatus = [];
       },
       update_table_column(columns: TableColumn[]) {
         this.tableColumns = columns;

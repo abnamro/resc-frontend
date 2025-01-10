@@ -85,6 +85,8 @@ describe('RuleAnalysis tests', () => {
                 sourceRoute: '/metrics/rule-metrics',
                 destinationRoute: '/rule-analysis',
                 previousRouteState: { rulePackVersions: '0.0.1' },
+                findingStatusList: ['NOT_ANALYZED', 'NOT_ACCESSIBLE', 'CLARIFICATION_REQUIRED', 'FALSE_POSITIVE', 'TRUE_POSITIVE', 'OUTDATED'],
+                selectedStatus: [],
               },
             },
           }),

@@ -134,7 +134,7 @@ function fetchPaginatedDetailedFindings() {
     startDate: selectedStartDate.value,
     endDate: selectedEndDate.value,
     vcsProvider: selectedVcsProvider.value,
-    findingStatus: selectedStatus.value,
+    findingStatus: selectedStatus.value.map((s) => s.value),
     project: selectedProject.value,
     repository: selectedRepository.value,
     rule: selectedRule.value,
@@ -163,7 +163,6 @@ function handleFilterChange(filterObj: RuleAnalysisFilter) {
   selectedStartDate.value = filterObj.startDate;
   selectedEndDate.value = filterObj.endDate;
   selectedVcsProvider.value = filterObj.vcsProvider ?? [];
-  selectedStatus.value = filterObj.status;
   selectedProject.value = filterObj.project;
   selectedRepository.value = filterObj.repository;
   selectedRule.value = filterObj.rule;

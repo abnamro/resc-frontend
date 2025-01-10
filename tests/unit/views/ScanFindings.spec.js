@@ -4,7 +4,7 @@ import { describe, expect, it, vi } from 'vitest';
 import App from '@/views/ScanFindings.vue';
 import repositories from '@/../tests/resources/mock_repositories.json';
 import vcs_providers from '@/../tests/resources/mock_vcs_providers.json';
-// import detailed_findings from '@/../tests/resources/mock_detailed_findings.json';
+import detailed_findings from '@/../tests/resources/mock_detailed_findings.json';
 import Pagination from '@/components/Common/PaginationVue.vue';
 import FindingStatusBadge from '@/components/Common/FindingStatusBadge.vue';
 import RepositoryPanel from '@/components/ScanFindings/RepositoryPanel.vue';
@@ -70,7 +70,7 @@ describe('ScanFindings tests', () => {
                 firstName: 'user',
                 lastName: 'test',
                 email: 'testuser@test.com',
-                findingStatusList: [],
+                findingStatusList: ['NOT_ANALYZED', 'NOT_ACCESSIBLE', 'CLARIFICATION_REQUIRED', 'FALSE_POSITIVE', 'TRUE_POSITIVE', 'OUTDATED'],
                 selectedStatus: [],
               },
             },
@@ -96,23 +96,23 @@ describe('ScanFindings tests', () => {
     expect(wrapper.exists()).toBe(true);
     expect(() => wrapper.vm.onPreviousScanChecked(true)).not.toThrow();
 
-    // axios.get.mockResolvedValueOnce({ data: detailed_findings });
-    // expect(() => wrapper.vm.displayPreviousScans([], [], [])).not.toThrow();
-    // expect(() => wrapper.vm.onPreviousScanChecked(false)).not.toThrow();
+    axios.get.mockResolvedValueOnce({ data: detailed_findings });
+    expect(() => wrapper.vm.displayPreviousScans([], [], [])).not.toThrow();
+    expect(() => wrapper.vm.onPreviousScanChecked(false)).not.toThrow();
 
-    // axios.get.mockResolvedValueOnce({ data: scan });
-    // axios.get.mockResolvedValueOnce({ data: detailed_findings });
-    // expect(() => wrapper.vm.handlePageSizeChange(10)).not.toThrow();
+    axios.get.mockResolvedValueOnce({ data: scan });
+    axios.get.mockResolvedValueOnce({ data: detailed_findings });
+    expect(() => wrapper.vm.handlePageSizeChange(10)).not.toThrow();
 
-    // axios.get.mockResolvedValueOnce({ data: scan });
-    // axios.get.mockResolvedValueOnce({ data: detailed_findings });
-    // expect(() => wrapper.vm.handlePageClick(1)).not.toThrow();
+    axios.get.mockResolvedValueOnce({ data: scan });
+    axios.get.mockResolvedValueOnce({ data: detailed_findings });
+    expect(() => wrapper.vm.handlePageClick(1)).not.toThrow();
 
-    // axios.get.mockResolvedValueOnce({ data: scan });
-    // axios.get.mockResolvedValueOnce({ data: detailed_findings });
-    // expect(() => wrapper.vm.handleFilterChange(1, ['rule1'], [])).not.toThrow();
+    axios.get.mockResolvedValueOnce({ data: scan });
+    axios.get.mockResolvedValueOnce({ data: detailed_findings });
+    expect(() => wrapper.vm.handleFilterChange(1, ['rule1'], [])).not.toThrow();
 
-    // axios.get.mockResolvedValueOnce({ data: scan });
-    // axios.get.mockResolvedValueOnce({ data: detailed_findings });
+    axios.get.mockResolvedValueOnce({ data: scan });
+    axios.get.mockResolvedValueOnce({ data: detailed_findings });
   });
 });
