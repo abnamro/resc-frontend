@@ -75,8 +75,8 @@ const CommonUtils = {
     return 0;
   },
 
-  compareRulePackRead(rulepack_a: RulePackRead, rulepack_b: RulePackRead): 0 | 1 | -1 {
-    return CommonUtils.compareVersions(rulepack_a.version, rulepack_b.version);
+  compareRulePackRead(rulepackA: RulePackRead, rulepackB: RulePackRead): 0 | 1 | -1 {
+    return CommonUtils.compareVersions(rulepackA.version, rulepackB.version);
   },
 
   stringify_date(val: undefined | Date | string): undefined | string {
