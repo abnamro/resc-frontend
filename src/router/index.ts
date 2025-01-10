@@ -93,7 +93,6 @@ const router = createRouter({
 
 export const loginGuard =
   () => (to: RouteLocationNormalized, from: RouteLocationNormalized, next: NavigationGuardNext) => {
-    /* istanbul ignore else -- @preserve */
     if (authenticationRequired === 'false') {
       const store = useAuthUserStore();
       store.update_source_route(from.fullPath);
@@ -103,6 +102,7 @@ export const loginGuard =
       return next();
     }
 
+    /* istanbul ignore if -- @preserve */
     if (authenticationRequired === 'true') {
       if (to.matched.some((record) => record.meta.noAuth)) {
         return next();
@@ -122,6 +122,8 @@ export const loginGuard =
         }
         return next();
       })();
+
+      return;
     }
 
     throw new Error('Invalid value provided for VITE_AUTHENTICATION_REQUIRED env variable');

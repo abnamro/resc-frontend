@@ -199,7 +199,7 @@ function formatWeeklyRankLabel(rank: number): string {
 }
 
 function calculateAuditTrendInPercentage(): string {
-  let percentageChange: number = 0;
+  let percentageChange = 0;
   if (!currentWeekAuditCount.value && !lastWeekAuditCount.value) {
     percentageChange = 0;
   } else if (!lastWeekAuditCount.value && currentWeekAuditCount.value) {

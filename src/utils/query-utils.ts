@@ -23,7 +23,7 @@ const QueryUtils = {
     return params;
   },
 
-  appendIf(queryArg: string, arg: number | string | undefined | null, suffix: string = ''): string {
+  appendIf(queryArg: string, arg: number | string | undefined | null, suffix = ''): string {
     if (arg === undefined || arg === '' || arg === null) {
       return '';
     }

@@ -61,22 +61,22 @@ const CommonUtils = {
     return 10000 * parseInt(parts[0]) + 100 * parseInt(parts[1] ?? '0') + parseInt(parts[2] ?? '0');
   },
 
-  compareVersions(version_a: string, version_b: string): 0 | 1 | -1 {
-    const version_a_int = CommonUtils.parseVersion(version_a);
-    const version_b_int = CommonUtils.parseVersion(version_b);
-    if (version_a_int < version_b_int) {
+  compareVersions(versionA: string, versionB: string): 0 | 1 | -1 {
+    const versionAint = CommonUtils.parseVersion(versionA);
+    const versionBint = CommonUtils.parseVersion(versionB);
+    if (versionAint < versionBint) {
       return -1;
     }
 
-    if (version_a_int > version_b_int) {
+    if (versionAint > versionBint) {
       return 1;
     }
 
     return 0;
   },
 
-  compareRulePackRead(rulepack_a: RulePackRead, rulepack_b: RulePackRead): 0 | 1 | -1 {
-    return CommonUtils.compareVersions(rulepack_a.version, rulepack_b.version);
+  compareRulePackRead(rulepackA: RulePackRead, rulepackB: RulePackRead): 0 | 1 | -1 {
+    return CommonUtils.compareVersions(rulepackA.version, rulepackB.version);
   },
 
   stringify_date(val: undefined | Date | string): undefined | string {
@@ -84,7 +84,7 @@ const CommonUtils = {
       return undefined;
     }
 
-    let ret: string = '';
+    let ret = '';
 
     if (typeof val === 'string') {
       ret = val;

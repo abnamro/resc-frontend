@@ -128,7 +128,7 @@
 
 <script setup lang="ts">
 import AxiosConfig from '@/configuration/axios-config';
-import Config from '@/configuration/config';
+import Config, { PAGE_SIZES } from '@/configuration/config';
 import DateUtils from '@/utils/date-utils';
 import CommonUtils from '@/utils/common-utils';
 import SpinnerVue from '@/components/Common/SpinnerVue.vue';
@@ -150,7 +150,7 @@ const currentItems = ref([] as TableItem[]);
 const totalRows = ref(0);
 const currentPage = ref(1);
 const perPage = ref(Number(`${Config.value('defaultPageSize')}`));
-const pageSizes = ref([20, 50, 100, 500, 1000]);
+const pageSizes = ref(PAGE_SIZES);
 const requestedPageNumber = ref(1);
 const fields = ref([
   {
@@ -251,10 +251,8 @@ function formatDate(timestamp: string) {
 }
 
 function openMarkAsOutdated(rulePack: RulePackRead): void {
-  console.log('click');
   rulePackSelected.value = rulePack;
   if (rulePackSelected.value.active === true) {
-    console.log('rulepack is active');
     rulePackSelected.value = null;
     return;
   }
