@@ -9,6 +9,7 @@ import { importFA } from '@/assets/font-awesome';
 import Vue3Toasity from 'vue3-toastify';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import PrimeVue from 'primevue/config';
+import ToastService from 'primevue/toastservice';
 import Aura from '@primevue/themes/aura';
 import Tooltip from 'primevue/tooltip';
 
@@ -46,6 +47,7 @@ chartJsSetup();
 
 const pinia = createPinia();
 pinia.use(piniaPluginPersistedstate);
+app.use(ToastService);
 
 app.use(pinia);
 app.mount('#app');

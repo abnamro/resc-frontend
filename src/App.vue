@@ -1,5 +1,7 @@
 <template>
-  <SidebarMenu
+    <ErrorView />
+    <Toast />
+    <SidebarMenu
     :menu="sidebarNavigationMenu"
     v-model:collapsed="sidebarCollapsed"
     :show-one-child="true"
@@ -30,6 +32,8 @@ import { sidebarMenu } from '@/components/Navigation/Navigation';
 import 'vue-sidebar-menu/dist/vue-sidebar-menu.css';
 import { disableScrollingWithArrowsAndCtrlA, shouldIgnoreKeystroke } from './utils/keybind-utils';
 import { onKeyStroke } from '@vueuse/core';
+import ErrorView from './views/ErrorView.vue';
+import Toast from 'primevue/toast';
 
 const route = useRoute();
 

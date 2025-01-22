@@ -63,6 +63,7 @@ import FindingsService from '@/services/findings-service';
 import type { AuditRead, DetailedFindingRead, FindingStatus } from '@/services/shema-to-types';
 import { computed, ref } from 'vue';
 import { BTab, BTable } from 'bootstrap-vue-next';
+import ProgressSpinner from 'primevue/progressspinner';
 
 const loadedData = ref(false);
 
