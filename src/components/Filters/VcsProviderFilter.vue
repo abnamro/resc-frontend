@@ -1,36 +1,27 @@
 <template>
-  <div>
-    <BFormGroup class="label-title text-start" label="VCS Provider" label-for="vcs-filter">
-      <multiselect
-        v-model="selectedVcsProviders"
-        :options="optionsVcsProviders"
-        :multiple="true"
-        :show-labels="true"
-        :close-on-select="true"
-        :clear-on-select="false"
-        :searchable="true"
-        :preserve-search="true"
-        :select-label="'Select'"
-        :deselect-label="'Remove'"
-        placeholder="Select VCS Provider"
-        label="label"
-        track-by="id"
-        :preselect-first="false"
-        @update:modelValue="onVcsFilterChange"
-      >
-        <template v-slot:noResult><span>No vcs provider found</span></template>
-      </multiselect>
-    </BFormGroup>
+  <div class="flex flex-col justify-start">
+    <label for="vcs" class="font-bold text-lg text-left text-muted-color-emphasis">VCS Providers</label>
+    <MultiSelect
+      v-model:model-value="selectedVcsProviders"
+      :options="optionsVcsProviders"
+      display="chip"
+      class="w-full"
+      option-label="label"
+      placeholder="Select VCS Provider"
+      :show-toggle-all="false"
+      id="vcs"
+      @update:model-value="onVcsFilterChange"
+    >
+      </MultiSelect>
   </div>
 </template>
 <script setup lang="ts">
 import AxiosConfig from '@/configuration/axios-config';
-import Multiselect from 'vue-multiselect';
 import CommonUtils from '@/utils/common-utils';
 import RepositoryService from '@/services/repository-service';
 import { ref } from 'vue';
 import type { VCSProviders } from '@/services/shema-to-types';
-import { BFormGroup } from 'bootstrap-vue-next';
+import MultiSelect from 'primevue/multiselect';
 
 type VcsProvider = {
   id: number;

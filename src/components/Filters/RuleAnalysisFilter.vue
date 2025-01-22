@@ -21,7 +21,7 @@
     </div>
 
     <div class="ml-3 mt-2 mb-1">
-      <BCollapse id="advance-search-collapse" v-model="advancedSearchVisible">
+      <!-- <BCollapse id="advance-search-collapse" v-model="advancedSearchVisible"> -->
         <div class="row pt-1">
           <!-- VCS Filter -->
           <div class="col-md-3">
@@ -113,7 +113,7 @@
             </BFormCheckbox>
           </div>
         </div>
-      </BCollapse>
+      <!-- </BCollapse> -->
     </div>
   </div>
 </template>

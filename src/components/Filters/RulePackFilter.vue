@@ -1,41 +1,29 @@
 <template>
-  <div>
-    <BFormGroup class="label-title text-start" label="RulePack" label-for="rule-pack-filter">
-      <multiselect
-        v-model="selectedRulePack"
-        :options="props.rulePackOptions"
-        :custom-label="customLabelForVersions"
-        :multiple="true"
-        :show-labels="false"
-        :close-on-select="true"
-        :clear-on-select="false"
-        :searchable="true"
-        :preserve-search="true"
-        :select-label="'Select'"
-        :deselect-label="'Remove'"
-        placeholder="Select RulePack"
-        label="version"
-        track-by="version"
-        :preselect-first="false"
-        @update:modelValue="onRulePackVersionFilterChange"
-      >
-        <template v-slot:option="proposition">
-          <div>
-            <span>{{ proposition.option.version }}</span
-            ><span v-if="proposition.option.active"> (active)</span>
-          </div>
-        </template>
-        <template v-slot:noResult><span>No RulePack found</span></template>
-      </multiselect>
-    </BFormGroup>
+  <div class="flex flex-col justify-start">
+    <label for="rulePack" class="font-bold text-lg text-left text-muted-color-emphasis">Rule Pack</label>
+    <MultiSelect v-model:model-value="selectedRulePack" :options="props.rulePackOptions" display="chip"
+      optionLabel="version" class="w-full" placeholder="Select RulePack" :show-toggle-all="false" id="rulePack"
+      @update:model-value="onRulePackVersionFilterChange">
+      <template #option="slotProps">
+        <div class="flex items-center">
+          <div :class="{
+            'line-through text-muted-color': slotProps.option.outdated
+          }">{{ slotProps.option.version }}</div>
+          <Tag v-if="slotProps.option.active" class="text-xs px-2 py-0.5 ml-4 font-bold bg-emerald-600 text-surface-0"
+            value="active" />
+          <Tag severity="danger" v-if="slotProps.option.outdated" class="text-xs px-2 py-0.5 ml-4 font-bold "
+            value="Outdated" />
+        </div>
+      </template>
+    </MultiSelect>
   </div>
 </template>
 <script setup lang="ts">
-import Multiselect from 'vue-multiselect';
 import { useAuthUserStore } from '@/store/index';
 import { onUpdated, ref } from 'vue';
 import type { RulePackRead } from '@/services/shema-to-types';
-import { BFormGroup } from 'bootstrap-vue-next';
+import MultiSelect from 'primevue/multiselect';
+import Tag from 'primevue/tag';
 
 type Props = {
   rulePackOptions?: RulePackRead[];
@@ -51,14 +39,6 @@ const props = withDefaults(defineProps<Props>(), {
 
 const selectedRulePack = ref(props.rulePackSelected);
 const initialized = ref(false);
-
-type LabelForVersion = {
-  version: string;
-  active: boolean;
-};
-function customLabelForVersions({ version, active }: LabelForVersion) {
-  return active ? `${version} (active)` : version;
-}
 
 function isRedirectedFromRuleMetricsPage() {
   const store = useAuthUserStore();

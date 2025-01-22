@@ -1,30 +1,22 @@
 <template>
-  <div>
-    <BFormGroup class="label-title text-start" label="Tags" label-for="rule-tags-filter">
-      <multiselect
-        v-model="selectedRuleTags"
-        :options="props.ruleTagsOptions"
-        :multiple="true"
-        :show-labels="true"
-        :close-on-select="true"
-        :clear-on-select="false"
-        :searchable="true"
-        :preserve-search="true"
-        :select-label="'Select'"
-        :deselect-label="'Remove'"
-        placeholder="Select Tag"
-        :preselect-first="false"
-        @update:modelValue="onRuleTagFilterChange"
-      >
-        <template v-slot:noResult><span>No tag found</span></template>
-      </multiselect>
-    </BFormGroup>
+  <div class="flex flex-col justify-start">
+    <label for="tag" class="font-bold text-lg text-left text-muted-color-emphasis">Tags</label>
+    <MultiSelect
+      v-model:model-value="selectedRuleTags"
+      :options="props.ruleTagsOptions"
+      display="chip"
+      class="w-full"
+      placeholder="Select Tag"
+      :show-toggle-all="false"
+      id="tag"
+      @update:model-value="onRuleTagFilterChange"
+    >
+    </MultiSelect>
   </div>
 </template>
 <script setup lang="ts">
-import { BFormGroup } from 'bootstrap-vue-next';
+import MultiSelect from 'primevue/multiselect';
 import { ref, watch } from 'vue';
-import Multiselect from 'vue-multiselect';
 
 type Props = {
   ruleTagsOptions: string[];
