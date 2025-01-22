@@ -1,30 +1,30 @@
 <template>
   <div>
-    <div class="row">
+    <div class=" grid grid-cols-12 gap-x-2 gap-y-4">
       <!-- Scan Date Filter -->
-      <div class="col-md-3 ml-3">
-        <BFormGroup class="label-title text-start" label="Scan Date" label-for="scan-date-filter">
-          <multiselect
-            v-model="selectedScan"
+      <div class="col-span-3">
+        <div class="flex flex-col justify-start">
+          <label for="scanDate" class="font-bold text-lg text-left text-muted-color-emphasis">Scan Date</label>
+          <Select
+            v-model:model-value="selectedScan"
             :options="scanDateList"
-            :multiple="false"
-            :searchable="false"
-            :allow-empty="false"
-            :show-labels="false"
-            :custom-label="formatScanDateFilterOptions"
-            track-by="scanId"
-            :preselect-first="false"
-            @update:modelValue="handleScanDateFilterChange"
+            display="chip"
+            class="w-full"
+            :option-label="'scanDate'"
+            placeholder="Select VCS Provider"
+            :show-toggle-all="false"
+            id="scanDate"
+            @update:model-value="handleScanDateFilterChange"
           >
-            <template v-slot:singleLabel="{ option }"
-              ><span>{{ formatScanDateFilterOptions(option) }}</span></template
-            >
-          </multiselect>
-        </BFormGroup>
+            <template #option="slotProps">
+              {{slotProps.option.scanDate}}: {{slotProps.option.scanType}}
+            </template>
+          </Select>
+        </div>
       </div>
 
       <!-- Rule Filter -->
-      <div class="col-md-3">
+      <div class="col-span-3">
         <RuleFilter
           ref="ruleFilterChildComponent"
           :rulesOptions="ruleList"
@@ -33,12 +33,12 @@
       </div>
 
       <!-- Status Filter -->
-      <div class="col-md-3">
+      <div class="col-span-3">
         <FindingStatusFilter @on-findings-status-change="handleFilterChange" />
       </div>
 
       <!-- Rule Tags Filter -->
-      <div class="col-md-2">
+      <div class="col-span-3">
         <RuleTagsFilter
           ref="ruleTagsFilterChildComponent"
           :ruleTagsOptions="ruleTagsList"
@@ -46,22 +46,19 @@
           @on-rule-tags-change="handleRuleTagsFilterChange"
         />
       </div>
-    </div>
 
-    <!-- Include previous scan findings -->
-    <div class="row">
-      <div class="col-md-2 ml-3 pt-3">
-        <BFormCheckbox
-          v-model="includePreviousScans"
-          name="check-button"
-          switch
-          @change="togglePreviousScans"
-          v-on:click="handleToggleButtonClick"
-        >
-          <small class="text-nowrap">Include previous scan findings</small>
-        </BFormCheckbox>
+      <!-- Include previous scan findings -->
+      <div class="col-span-12 text-left flex items-center">
+          <ToggleSwitch
+            size="small"
+            v-model="includePreviousScans"
+            inputId="includePreviousScans"
+            @change="togglePreviousScans"
+            v-on:click="handleToggleButtonClick"
+            >
+          </ToggleSwitch>
+          <label for="includePreviousScans" class=" ml-2">Include previous scan findings.</label>
       </div>
-      <div class="col-md-1"></div>
     </div>
   </div>
 </template>
@@ -71,7 +68,6 @@ import AxiosConfig from '@/configuration/axios-config';
 import Config from '@/configuration/config';
 import DateUtils from '@/utils/date-utils';
 import FindingStatusFilter from '@/components/Filters/FindingStatusFilter.vue';
-import Multiselect from 'vue-multiselect';
 import RuleFilter from '@/components/Filters/RuleFilter.vue';
 import RulePackService from '@/services/rule-pack-service';
 import RuleTagsFilter from '@/components/Filters/RuleTagsFilter.vue';
@@ -79,8 +75,9 @@ import ScanFindingsService from '@/services/scan-findings-service';
 import { ref, watch, type Ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import type { RepositoryRead, ScanRead } from '@/services/shema-to-types';
-import { BFormCheckbox, BFormGroup } from 'bootstrap-vue-next';
 import { onKeyStroke } from '@vueuse/core';
+import Select from 'primevue/select';
+import ToggleSwitch from 'primevue/toggleswitch';
 
 const ruleFilterChildComponent = ref();
 const ruleTagsFilterChildComponent = ref();

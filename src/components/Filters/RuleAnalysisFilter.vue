@@ -1,5 +1,5 @@
 <template>
-  <div class="grid grid-cols-10 gap-2 mb-2">
+  <div class="grid grid-cols-10 gap-2">
     <!--Rule Filter -->
     <div class="col-span-4">
       <RuleFilter :rulesOptions="optionsRules" :rulesSelected="selectedRule" @on-rule-change="onRuleChange" />
@@ -14,7 +14,7 @@
   </div>
 
   <Collapse :when="advancedSearchVisible">
-    <div class="grid grid-cols-10 gap-x-2 gap-y-4">
+    <div class="grid grid-cols-10 gap-x-2 gap-y-4 mt-4">
       <!-- VCS Filter -->
       <div class="col-span-3">
         <VcsProviderFilter @on-vcs-change="onVcsProviderChange" />
@@ -58,10 +58,15 @@
           @on-rule-tags-change="onRuleTagsChange" />
       </div>
 
-      <div class="col-span-4 text-start">
-        <BFormCheckbox v-model="includeDeletedRepositories" name="check-button" switch @change="handleFilterChange">
-          <small class="text-nowrap">Display findings for repositories marked as deleted.</small>
-        </BFormCheckbox>
+      <div class="col-span-12 text-left flex items-center">
+          <ToggleSwitch
+            size="small"
+            v-model="includeDeletedRepositories"
+            inputId="includeDeletedRepositories"
+            @change="handleFilterChange"
+            >
+          </ToggleSwitch>
+          <label for="includeDeletedRepositories" class=" ml-2">Display findings for repositories marked as deleted.</label>
       </div>
     </div>
   </Collapse>
@@ -87,10 +92,11 @@ import { onKeyStroke } from '@vueuse/core';
 import { shouldIgnoreKeystroke } from '@/utils/keybind-utils';
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
-import { BFormCheckbox, BFormGroup } from 'bootstrap-vue-next';
+import { BFormGroup } from 'bootstrap-vue-next';
 import { storeToRefs } from 'pinia';
 import { Collapse } from 'vue-collapsed';
 import Button from 'primevue/button';
+import ToggleSwitch from 'primevue/toggleswitch';
 
 type Props = {
   projectOptions?: string[];
