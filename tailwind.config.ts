@@ -4,6 +4,10 @@ export default {
   content: ['./public/index.html', './src/**/*.{js,ts,jsx,tsx,vue}'],
   theme: {
     extend: {
+      fontSize: {
+        '3xs': ['0.55rem', '0.7rem'],
+        '2xs': ['0.65rem', '0.8rem'],
+      },
       colors: {
         gray: {
           0: '#FFFFFF', // (White)

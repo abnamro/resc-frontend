@@ -1,80 +1,27 @@
 <template>
-  <div>
-    <BProgress class="mt-2" :max="props.totalCount" height="0.8rem" show-value>
-      <BProgressBar
-        v-b-popover.hover.bottom="getPopOverContent('True Positive', props.truePositive)"
-        :value="props.truePositive"
-        variant="danger"
+  <MeterGroup
+    :value="value"
+    :max="props.totalCount"
+    :pt:meters:class="'rounded-lg h-3 overflow-hidden'"
+    :pt:labelList:class="'hidden'"
+  >
+    <template #meter="slotProps">
+      <span
+        :class="slotProps.value.color"
+        class="text-xs font-bold flex items-center justify-center"
+        :style="{ width: slotProps.size }"
+        v-tooltip.top="getPopOverContent(slotProps.value.label, slotProps.value.value)"
       >
-        <div>
-          <small>
-            <strong>{{ showFindingsInPercentage(props.truePositive) }}</strong></small
-          >
-        </div>
-      </BProgressBar>
-      <BProgressBar
-        v-b-popover.hover.bottom="getPopOverContent('False Positive', props.falsePositive)"
-        :value="props.falsePositive"
-        variant="success"
-      >
-        <div>
-          <small
-            ><strong>{{ showFindingsInPercentage(props.falsePositive) }}</strong></small
-          >
-        </div>
-      </BProgressBar>
-      <BProgressBar
-        v-b-popover.hover.bottom="
-          getPopOverContent('Clarification Required', props.clarificationRequired)
-        "
-        :value="props.clarificationRequired"
-        variant="warning"
-      >
-        <div>
-          <small
-            ><strong>{{ showFindingsInPercentage(props.clarificationRequired) }}</strong></small
-          >
-        </div>
-      </BProgressBar>
-      <BProgressBar
-        v-b-popover.hover.bottom="getPopOverContent('Not Accessible', props.notAccessible)"
-        :value="props.notAccessible"
-        variant="info"
-      >
-        <div>
-          <small
-            ><strong>{{ showFindingsInPercentage(props.notAccessible) }}</strong></small
-          >
-        </div>
-      </BProgressBar>
-      <!-- @vue-ignore -->
-      <BProgressBar
-        v-b-popover.hover.bottom="getPopOverContent('Not Analyzed', props.notAnalyzed)"
-        :value="props.notAnalyzed"
-        variant="light"
-      >
-        <div>
-          <small
-            ><strong>{{ showFindingsInPercentage(props.notAnalyzed) }}</strong></small
-          >
-        </div>
-      </BProgressBar>
-      <BProgressBar
-        v-b-popover.hover.bottom="getPopOverContent('Outdated', props.outdated)"
-        :value="props.outdated"
-        variant="dark"
-      >
-        <div>
-          <small
-            ><strong>{{ showFindingsInPercentage(props.outdated) }}</strong></small
-          >
-        </div>
-      </BProgressBar>
-    </BProgress>
-  </div>
+        {{ showFindingsInPercentage(slotProps.value.value) }}
+      </span>
+    </template>
+  </MeterGroup>
 </template>
 <script setup lang="ts">
-import { BProgress, BProgressBar } from 'bootstrap-vue-next';
+import MeterGroup from 'primevue/metergroup';
+import { computed } from 'vue';
+import { $dt } from '@primevue/themes';
+import {} from 'primevue/tag';
 type Props = {
   truePositive: number;
   falsePositive: number;
@@ -86,13 +33,33 @@ type Props = {
 };
 const props = defineProps<Props>();
 
-const percent = 100;
+const value = computed(() => [
+  { value: props.truePositive, label: 'True Positive', color: 'bg-red-100 text-red-700' },
+  { value: props.falsePositive, label: 'False Positive', color: 'bg-green-100 text-green-700' },
+  {
+    value: props.clarificationRequired,
+    label: 'Clarification Required',
+    color: 'bg-orange-100 text-orange-700',
+  },
+  { value: props.notAccessible, label: 'Not Accessible', color: 'bg-sky-100 text-sky-700' },
+  { value: props.notAnalyzed, label: 'Not Analyzed', color: 'bg-surface-100 text-surface-600' },
+  { value: props.outdated, label: 'Outdated', color: 'bg-surface-800 text-surface-0' },
+]);
+
+console.log($dt('sematic.danger.color'));
+const PERCENT = 100;
 function showFindingsInPercentage(count: number) {
-  return String(Math.round((count / props.totalCount) * percent));
+  return String(Math.round((count / props.totalCount) * PERCENT));
 }
 
 function getPopOverContent(title: string, count: number) {
   const percentage = showFindingsInPercentage(count);
-  return `${title}<hr>count: ${count}, percentage: ${percentage}%`;
+  return `${title}: ${count}, percentage: ${percentage}%`;
 }
 </script>
+
+<style lang="css">
+.p-metergroup-label-list {
+  display: none;
+}
+</style>
