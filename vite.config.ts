@@ -1,5 +1,6 @@
 import { fileURLToPath, URL } from 'node:url';
 
+import tailwindcss from 'tailwindcss'
 import { defineConfig, HttpProxy, loadEnv, type ProxyOptions, type UserConfig } from 'vite';
 import { nodePolyfills } from 'vite-plugin-node-polyfills';
 import vue from '@vitejs/plugin-vue';
@@ -15,7 +16,7 @@ const baseConfig = {
   },
   css: {
     postcss: {
-      plugins: [postcssNesting],
+      plugins: [tailwindcss(), postcssNesting],
     },
   },
   plugins: [

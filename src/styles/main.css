@@ -1,6 +1,20 @@
 @import 'vsm.scss';
-@import 'card.scss';
+/* @import 'card.scss'; */
 @import 'table.scss';
+
+@import 'primeicons/primeicons.css';
+
+@layer tailwind-base, primevue, tailwind-utilities;
+
+@layer tailwind-base {
+	@import 'tailwindcss/base';
+}
+
+@layer tailwind-utilities {
+	@import 'tailwindcss/components';
+	@import 'tailwindcss/utilities';
+}
+
 
 :root {
   --bs-primary: #ffd200;

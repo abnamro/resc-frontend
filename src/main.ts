@@ -4,24 +4,13 @@ import router from './router';
 import { PiniaVuePlugin, createPinia } from 'pinia';
 import piniaPluginPersistedstate from 'pinia-plugin-persistedstate';
 import AxiosConfig from '@/configuration/axios-config';
+import { chartJsSetup } from '@/configuration/chartjs';
 import { importFA } from '@/assets/font-awesome';
 import Vue3Toasity from 'vue3-toastify';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import PrimeVue from 'primevue/config';
 import Aura from '@primevue/themes/aura';
-
-import {
-  Chart as ChartJS,
-  Title,
-  Tooltip,
-  Legend,
-  LineElement,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-} from 'chart.js';
-
-ChartJS.register(Title, Tooltip, Legend, LineElement, LinearScale, CategoryScale, PointElement);
+import Tooltip from 'primevue/tooltip';
 
 import { createBootstrap } from 'bootstrap-vue-next';
 
@@ -37,9 +26,11 @@ app.use(PrimeVue, {
   theme: {
       preset: Aura,
       options: {
-          prefix: 'p',
           darkModeSelector: 'system',
-          cssLayer: false
+          cssLayer: {
+            name: 'primevue',
+            order: 'tailwind-base, primevue, tailwind-utilities'
+          },
       }
   }
 });
@@ -47,9 +38,11 @@ app.use(PrimeVue, {
 app.use(createBootstrap());
 app.use(Vue3Toasity, { multiple: false });
 importFA();
+app.directive('tooltip', Tooltip);
 app.component('font-awesome-icon', FontAwesomeIcon);
 
 AxiosConfig.axiosSetUp();
+chartJsSetup();
 
 const pinia = createPinia();
 pinia.use(piniaPluginPersistedstate);

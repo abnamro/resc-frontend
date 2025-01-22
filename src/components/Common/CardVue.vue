@@ -1,43 +1,40 @@
 <template>
-  <div>
-    <BCard class="card-box">
-      <template #header>
-        <div class="d-flex align-items-center justify-content-center fw-bold">
-          <p class="mb-0 me-2">{{ title }}</p>
-          <template v-if="titleIconDefinition">
+  <!-- <div> -->
+    <Card
+      :pt:body:class="'p-0 min-w-[200px]'"
+      :pt:caption:class="'px-4 py-2 bg-emerald-200/50 rounded-t-xl'"
+      :pt:title:class="'flex items-center justify-center'"
+      :pt:content:class="'px-4 pb-2 flex items-center justify-center font-bold'">
+      <template #title>
+        <p class="p-0 m-0 font-bold text-sm">{{ title }}</p>
+        <template v-if="titleIconDefinition">
             <FontAwesomeIcon
               :id="titleIconTooltipId"
-              class="mb-0 me-2"
+              class="ml-2"
               :style="titleIconStyle"
               :icon="titleIconDefinition"
+              v-tooltip.right="titleIconTooltip"
             />
-            <BTooltip :target="titleIconTooltipId" placement="right">
-              {{ titleIconTooltip }}
-            </BTooltip>
-          </template>
-        </div>
+        </template>
       </template>
-
-      <template #default>
-        <div class="d-flex align-items-center justify-content-center fw-bold">
-          <h5 class="mb-0 me-2 mt-2 justify-content-center text-center" :style="contentStyle">
+      <template #content>
+          <h5 class="mb-0" :style="contentStyle">
             {{ formatCardBodyContent }}
           </h5>
           <FontAwesomeIcon
             v-if="contentIconDefinition"
-            class="mb-0 me-2 mt-2 ml-1"
+            class="ml-2"
             :style="contentIconStyle"
             :icon="contentIconDefinition"
           />
-        </div>
       </template>
-    </BCard>
-  </div>
+
+    </Card>
 </template>
 <script setup lang="ts">
 import { ref } from 'vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import { BCard, BTooltip } from 'bootstrap-vue-next';
+import Card from 'primevue/card';
 
 export type CardIcon =
   | 'info-circle'
