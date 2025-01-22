@@ -7,8 +7,8 @@ import vcs_providers from '@/../tests/resources/mock_vcs_providers.json';
 import HealthBar from '@/components/Common/HealthBar.vue';
 import Pagination from '@/components/Common/PaginationVue.vue';
 import RepositoriesPageFilter from '@/components/Filters/RepositoriesPageFilter.vue';
-import SpinnerVue from '@/components/Common/SpinnerVue.vue';
 import { BTable } from 'bootstrap-vue-next';
+import ProgressSpinner from 'primevue/progressspinner';
 
 vi.mock('axios');
 const allRepos = ['bb_repo1', 'bb_repo2', 'ado_repo1', 'ado_repo2'];
@@ -40,7 +40,7 @@ describe('RepositoriesPanel tests', () => {
   function initMountApp() {
     wrapper = mount(App, {
       components: {
-        SpinnerVue,
+        ProgressSpinner,
         HealthBar,
         Pagination,
         RepositoriesPageFilter,
@@ -76,6 +76,7 @@ describe('RepositoriesPanel tests', () => {
     axios.get.mockResolvedValueOnce({ data: repositories });
     wrapper.vm.handleFilterChange(['AZURE_DEVOPS'], undefined, undefined);
     expect(wrapper.vm.getCurrentRepositorySelected()).toBe(undefined);
+    await wrapper.vm.$nextTick();
     await wrapper.vm.$nextTick();
     await wrapper.vm.$nextTick();
     await wrapper.vm.$nextTick();

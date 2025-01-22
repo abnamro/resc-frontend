@@ -1,6 +1,6 @@
 <template>
   <!-- Spinner -->
-  <SpinnerVue v-if="!loadedData" />
+  <ProgressSpinner v-if="!loadedData" />
 
   <!-- Audit Activity Over Time -->
   <div v-if="loadedData">
@@ -152,11 +152,11 @@ import CardVue, { type CardIcon } from '@/components/Common/CardVue.vue';
 import DateUtils from '@/utils/date-utils';
 import CommonUtils from '@/utils/common-utils';
 import MetricsService from '@/services/metrics-service';
-import SpinnerVue from '@/components/Common/SpinnerVue.vue';
 import { ref, type Ref } from 'vue';
 import type { AxiosResponse } from 'axios';
 import type { PersonalAuditMetrics, Swr } from '@/services/shema-to-types';
 import { BCardGroup } from 'bootstrap-vue-next';
+import ProgressSpinner from 'primevue/progressspinner';
 
 const loadedData = ref(false);
 

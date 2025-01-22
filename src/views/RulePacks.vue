@@ -5,7 +5,7 @@
       <h3><small class="text-nowrap">RULEPACKS</small></h3>
     </div>
 
-    <SpinnerVue v-if="!loadedData" />
+    <ProgressSpinner v-if="!loadedData" />
 
     <div class="ml-3">
       <!-- Import button to upload rulepack -->
@@ -131,7 +131,6 @@ import AxiosConfig from '@/configuration/axios-config';
 import Config, { PAGE_SIZES } from '@/configuration/config';
 import DateUtils from '@/utils/date-utils';
 import CommonUtils from '@/utils/common-utils';
-import SpinnerVue from '@/components/Common/SpinnerVue.vue';
 import RulePackUploadModal from '@/components/RulePack/RulePackUploadModal.vue';
 import Pagination from '@/components/Common/PaginationVue.vue';
 import RulePackService from '@/services/rule-pack-service';
@@ -140,6 +139,7 @@ import type { AxiosResponse } from 'axios';
 import type { PaginationType, RulePackRead } from '@/services/shema-to-types';
 import { BButton, BModal, BTable, type TableItem } from 'bootstrap-vue-next';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import ProgressSpinner from 'primevue/progressspinner';
 
 const loadedData = ref(false);
 const rulePackUploadModal = ref();

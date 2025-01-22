@@ -5,7 +5,7 @@
       <h3><small class="text-nowrap">RULE ANALYSIS</small></h3>
     </div>
 
-    <SpinnerVue v-if="!loadedData" />
+    <ProgressSpinner v-if="!loadedData" />
 
     <!-- Filters -->
     <div class="mt-4">
@@ -54,7 +54,6 @@ import AxiosConfig from '@/configuration/axios-config';
 import FindingsTable from '@/components/Findings/FindingsTable.vue';
 import FindingsService, { type QueryFilterType } from '@/services/findings-service';
 import RepositoryService from '@/services/repository-service';
-import SpinnerVue from '@/components/Common/SpinnerVue.vue';
 import Pagination from '@/components/Common/PaginationVue.vue';
 import { type RuleAnalysisFilter } from '@/components/Filters/RuleAnalysisFilter.vue';
 import RulePackService from '@/services/rule-pack-service';
@@ -71,6 +70,7 @@ import type { TableItem } from 'bootstrap-vue-next';
 import CommonUtils from '@/utils/common-utils';
 import { PAGE_SIZES } from '@/configuration/config';
 import { storeToRefs } from 'pinia';
+import ProgressSpinner from 'primevue/progressspinner';
 
 type TableItemDetailedFindingRead = DetailedFindingRead & TableItem;
 

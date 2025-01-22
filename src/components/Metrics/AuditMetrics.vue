@@ -5,7 +5,7 @@
     </div>
     <div class="pl-2">
       <h5><small class="text-nowrap">Audits by Auditor per week</small></h5>
-      <SpinnerVue v-if="!loadedAuditCounts" />
+      <ProgressSpinner v-if="!loadedAuditCounts" />
       <MultiLineChartVue
         v-if="loadedAuditCounts"
         :chart-data="chartDataForAuditCountsGraph"
@@ -19,9 +19,9 @@
 import AxiosConfig from '@/configuration/axios-config';
 import FindingsService from '@/services/findings-service';
 import MultiLineChartVue from '@/components/Charts/MultiLineChartVue.vue';
-import SpinnerVue from '@/components/Common/SpinnerVue.vue';
 import { ref, type Ref } from 'vue';
 import type { DataSetObject, DataSetObjectCollection, AuditData } from './types';
+import ProgressSpinner from 'primevue/progressspinner';
 
 const loadedAuditCounts = ref(false);
 const loadedAuditCountsAuditors = ref(false);

@@ -1,7 +1,7 @@
 <template>
   <div>
     <BTab title="RULE" title-item-class="tab-pills" v-on:click="fetchRuleForRulePack">
-      <SpinnerVue v-if="!loadedData" />
+      <ProgressSpinner v-if="!loadedData" />
 
       <div class="pr-1" v-if="loadedData && rule">
         <BCardText v-if="rule?.description"
@@ -23,10 +23,10 @@
 <script setup lang="ts">
 import AxiosConfig from '@/configuration/axios-config';
 import RulePackService from '@/services/rule-pack-service';
-import SpinnerVue from '@/components/Common/SpinnerVue.vue';
 import type { RuleRead } from '@/services/shema-to-types';
 import { ref } from 'vue';
 import { BCardText, BTab } from 'bootstrap-vue-next';
+import ProgressSpinner from 'primevue/progressspinner';
 
 const loadedData = ref(false);
 

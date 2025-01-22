@@ -1,7 +1,7 @@
 <template>
   <div>
     <BTab title="AUDIT" title-item-class="tab-pills">
-      <SpinnerVue v-if="!loadedData" />
+      <ProgressSpinner v-if="!loadedData" />
       <BForm class="pl-1 pr-4" @submit="onSubmit" @reset="onReset" v-if="loadedData" novalidate>
         <BFormGroup
           label="Status"
@@ -52,12 +52,12 @@
 import AxiosConfig from '@/configuration/axios-config';
 import CommonUtils, { type StatusOptionType } from '@/utils/common-utils';
 import FindingsService from '@/services/findings-service';
-import SpinnerVue from '@/components/Common/SpinnerVue.vue';
 import type { DetailedFindingRead, FindingStatus } from '@/services/shema-to-types';
 import { computed, ref } from 'vue';
 import { useAuthUserStore } from '@/store';
 import { BButton, BForm, BFormGroup, BFormSelect, BFormTextarea, BTab } from 'bootstrap-vue-next';
 import { MAX_COMMENT_LENGTH } from '@/configuration/config';
+import ProgressSpinner from 'primevue/progressspinner';
 
 const loadedData = ref(false);
 

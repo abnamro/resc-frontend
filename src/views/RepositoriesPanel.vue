@@ -5,7 +5,7 @@
       <h3><small class="text-nowrap">REPOSITORIES</small></h3>
     </div>
 
-    <SpinnerVue v-if="!loadedData" />
+    <ProgressSpinner v-if="!loadedData" />
 
     <!--Repository Filters -->
     <div class="ml-3 mt-4">
@@ -91,7 +91,6 @@ import HealthBar from '@/components/Common/HealthBar.vue';
 import Pagination from '@/components/Common/PaginationVue.vue';
 import RepositoryService from '@/services/repository-service';
 import RepositoriesPageFilter from '@/components/Filters/RepositoriesPageFilter.vue';
-import SpinnerVue from '@/components/Common/SpinnerVue.vue';
 import { computed, onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import type { RepositoryEnrichedRead, VCSProviders } from '@/services/shema-to-types';
@@ -99,6 +98,7 @@ import { BTable, type TableItem } from 'bootstrap-vue-next';
 import { onKeyStroke } from '@vueuse/core';
 import { shouldIgnoreKeystroke } from '@/utils/keybind-utils';
 import { PAGE_SIZES } from '@/configuration/config';
+import ProgressSpinner from 'primevue/progressspinner';
 
 const loadedData = ref(false);
 const repositoriesTable = ref();

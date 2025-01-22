@@ -1,7 +1,7 @@
 <template>
   <div>
     <BTab title="HISTORY" title-item-class="tab-pills" v-on:click="fetchAuditsForFinding">
-      <SpinnerVue v-if="!loadedData" />
+      <ProgressSpinner v-if="!loadedData" />
 
       <!--Audit History Table -->
       <div v-if="!hasRecords && loadedData" class="text-center cursor-default">
@@ -60,7 +60,6 @@ import AxiosConfig from '@/configuration/axios-config';
 import DateUtils from '@/utils/date-utils';
 import CommonUtils from '@/utils/common-utils';
 import FindingsService from '@/services/findings-service';
-import SpinnerVue from '@/components/Common/SpinnerVue.vue';
 import type { AuditRead, DetailedFindingRead, FindingStatus } from '@/services/shema-to-types';
 import { computed, ref } from 'vue';
 import { BTab, BTable } from 'bootstrap-vue-next';

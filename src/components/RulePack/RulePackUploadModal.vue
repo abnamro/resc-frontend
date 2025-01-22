@@ -1,6 +1,6 @@
 <template>
   <div>
-    <SpinnerVue v-if="!loadedData" />
+    <ProgressSpinner v-if="!loadedData" />
     <BModal
       id="RulePackUploadModal"
       ref="RulePackUploadModal"
@@ -68,7 +68,6 @@
 
 <script setup lang="ts">
 import AxiosConfig from '@/configuration/axios-config';
-import SpinnerVue from '@/components/Common/SpinnerVue.vue';
 import { toast } from 'vue3-toastify';
 import RulePackService from '@/services/rule-pack-service';
 import { nextTick, ref, type Ref } from 'vue';
@@ -81,6 +80,7 @@ import {
   type BvEvent,
 } from 'bootstrap-vue-next';
 import { OK } from '@/configuration/axios-config';
+import ProgressSpinner from 'primevue/progressspinner';
 
 const loadedData = ref(true);
 const RulePackUploadModal = ref();

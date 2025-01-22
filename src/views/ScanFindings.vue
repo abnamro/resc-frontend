@@ -5,7 +5,7 @@
       <h3><small class="text-nowrap">SCAN FINDINGS</small></h3>
     </div>
 
-    <SpinnerVue v-if="!loadedData" />
+    <ProgressSpinner v-if="!loadedData" />
 
     <!-- Repository Panel -->
     <div class="col-md-6 ms-2 mt-4 text-start" v-if="loadedRepoData">
@@ -63,7 +63,6 @@ import Pagination from '@/components/Common/PaginationVue.vue';
 import RepositoryPanel from '@/components/ScanFindings/RepositoryPanel.vue';
 import ScanFindingsFilter from '@/components/Filters/ScanFindingsFilter.vue';
 import ScanFindingsService from '@/services/scan-findings-service';
-import SpinnerVue from '@/components/Common/SpinnerVue.vue';
 import FindingsService, { type QueryFilterType } from '@/services/findings-service';
 import VCSInstanceService from '@/services/vcs-instance-service';
 import { computed, ref, type Ref } from 'vue';
@@ -80,6 +79,7 @@ import type { TableItem } from 'bootstrap-vue-next';
 import { useAuthUserStore } from '@/store';
 import { storeToRefs } from 'pinia';
 import { PAGE_SIZES } from '@/configuration/config';
+import ProgressSpinner from 'primevue/progressspinner';
 
 const loadedData = ref(false);
 const loadedRepoData = ref(false);

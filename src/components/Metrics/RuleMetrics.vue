@@ -5,7 +5,7 @@
       <h3><small class="text-nowrap">RULE METRICS</small></h3>
     </div>
 
-    <SpinnerVue v-if="!loadedData" />
+    <ProgressSpinner v-if="!loadedData" />
 
     <div class="row pl-3 mt-4 me-0 mr-0">
       <div class="col-md-4">
@@ -157,7 +157,6 @@ import RulePackService from '@/services/rule-pack-service';
 import RuleService from '@/services/rule-service';
 import RuleTagsFilter from '@/components/Filters/RuleTagsFilter.vue';
 import { useAuthUserStore, type PreviousRouteState } from '@/store/index';
-import SpinnerVue from '@/components/Common/SpinnerVue.vue';
 import { computed, ref } from 'vue';
 import type {
   FindingStatus,

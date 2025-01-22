@@ -7,13 +7,13 @@
       <div class="row">
         <div class="col-md-5 pt-2">
           <h5><small class="text-nowrap">Findings per week</small></h5>
-          <SpinnerVue v-if="!loadedTotal" />
+          <ProgressSpinner v-if="!loadedTotal" />
           <MultiLineChart v-if="loadedTotal" :chart-data="chartDataForTotalFindingsCountGraph" />
         </div>
         <div class="col-md-1"></div>
         <div class="col-md-5 pt-2">
           <h5><small class="text-nowrap">True positive findings per week</small></h5>
-          <SpinnerVue v-if="!loadedTruePositive" />
+          <ProgressSpinner v-if="!loadedTruePositive" />
           <MultiLineChart
             v-if="loadedTruePositive"
             :chart-data="chartDataForTruePositiveFindingsCountGraph"
@@ -24,7 +24,7 @@
       <div class="row mt-5">
         <div class="col-md-5 pt-2">
           <h5><small class="text-nowrap">UnTriaged findings per week</small></h5>
-          <SpinnerVue v-if="!loadedUnTriaged" />
+          <ProgressSpinner v-if="!loadedUnTriaged" />
           <MultiLineChart
             v-if="loadedUnTriaged"
             :chart-data="chartDataForUnTriagedFindingsCountGraph"
@@ -33,7 +33,7 @@
         <div class="col-md-1"></div>
         <div class="col-md-5 pt-2">
           <h5><small class="text-nowrap">Percent of untriaged findings per week</small></h5>
-          <SpinnerVue v-if="!loadedUnTriaged || !loadedTotal" />
+          <ProgressSpinner v-if="!loadedUnTriaged || !loadedTotal" />
           <MultiLineChart
             v-if="loadedUnTriaged && loadedTotal"
             :chart-data="chartDataForPercentTriagedFindingGraph"
@@ -49,10 +49,10 @@ import AxiosConfig from '@/configuration/axios-config';
 import Config from '@/configuration/config';
 import FindingsService from '@/services/findings-service';
 import MultiLineChart from '@/components/Charts/MultiLineChartVue.vue';
-import SpinnerVue from '@/components/Common/SpinnerVue.vue';
 import { ref } from 'vue';
 import type { FindingCountOverTime } from '@/services/shema-to-types';
 import type { DataSetObject } from './types';
+import ProgressSpinner from 'primevue/progressspinner';
 
 const loadedTotal = ref(false);
 const loadedTruePositive = ref(false);
