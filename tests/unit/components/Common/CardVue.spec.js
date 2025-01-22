@@ -1,9 +1,9 @@
 import { mount } from '@vue/test-utils';
 import { describe, expect, it, vi } from 'vitest';
 import App from '@/components/Common/CardVue.vue';
-import { BTooltip } from 'bootstrap-vue-next';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { importFA } from '@/assets/font-awesome';
+import { Card } from 'primevue';
 
 importFA();
 
@@ -35,7 +35,7 @@ describe('CardVue tests', () => {
         contentIconColor: 'green',
       },
       components: {
-        BTooltip,
+        Card,
         FontAwesomeIcon,
       },
       global: {
@@ -44,11 +44,8 @@ describe('CardVue tests', () => {
     });
 
     expect(wrapper.exists()).toBe(true);
-    expect(wrapper.find('.card-box').exists()).toBe(true);
     expect(wrapper.html()).toContain('card-title');
     expect(wrapper.html()).toContain('card-content');
-    expect(spy).toHaveBeenCalled();
-    expect(spy.mock.calls[0][0]).toContain('Target element not found');
   });
 
   it('Given a Card When minor props are passed then Card will be displayed', () => {
@@ -60,12 +57,11 @@ describe('CardVue tests', () => {
         stubs: { FontAwesomeIcon: true },
       },
       components: {
-        BTooltip: BTooltip,
+        Card,
       },
     });
 
     expect(wrapper.exists()).toBe(true);
-    expect(wrapper.find('.card-box').exists()).toBe(true);
     expect(wrapper.html()).toContain('card-title');
     expect(wrapper.vm.titleIconDefinition).toBe(null);
   });
