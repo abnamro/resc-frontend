@@ -3,10 +3,9 @@ import axios from 'axios';
 import { describe, expect, it, vi } from 'vitest';
 import App from '@/components/Filters/FindingStatusFilter.vue';
 import mock_statuses from '@/../tests/resources/mock_status.json';
-import { BFormGroup } from 'bootstrap-vue-next';
-import Multiselect from 'vue-multiselect';
 import CommonUtils from '@/utils/common-utils';
 import { createTestingPinia } from '@pinia/testing';
+import MultiSelect from 'primevue/multiselect';
 
 vi.mock('axios');
 
@@ -17,15 +16,21 @@ describe('FindingStatusFilter tests', () => {
     const wrapper = mount(App, {
       props: {},
       components: {
-        BFormGroup: BFormGroup,
-        Multiselect: Multiselect,
+        MultiSelect,
       },
       global: {
         plugins: [
           createTestingPinia({
             stubActions: false,
             initialState: {
-              findingStatusList: [],
+              findingStatusList: [
+                'NOT_ANALYZED',
+                'NOT_ACCESSIBLE',
+                'CLARIFICATION_REQUIRED',
+                'FALSE_POSITIVE',
+                'TRUE_POSITIVE',
+                'OUTDATED',
+              ],
             },
           }),
         ],
@@ -33,7 +38,7 @@ describe('FindingStatusFilter tests', () => {
     });
 
     expect(wrapper.exists()).toBe(true);
-    expect(wrapper.findComponent(Multiselect).exists()).toBe(true);
+    expect(wrapper.findComponent(MultiSelect).exists()).toBe(true);
     expect(() => wrapper.vm.onStatusFilterChange()).not.toThrow();
     expect(wrapper.emitted()).toHaveProperty('on-findings-status-change');
   });
@@ -52,8 +57,7 @@ describe('FindingStatusFilter tests', () => {
         ],
       },
       components: {
-        BFormGroup: BFormGroup,
-        Multiselect: Multiselect,
+        MultiSelect,
       },
       global: {
         plugins: [

@@ -7,6 +7,7 @@ export default defineConfig((configEnv) =>
     viteConfig(configEnv),
     defineConfig({
       test: {
+        setupFiles: 'tests/setup.ts',
         environment: 'jsdom',
         exclude: [...configDefaults.exclude, 'e2e/*', 'resc-repository-scanner/components/*'],
         root: fileURLToPath(new URL('./', import.meta.url)),
