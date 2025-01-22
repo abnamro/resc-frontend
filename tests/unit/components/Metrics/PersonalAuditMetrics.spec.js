@@ -10,7 +10,6 @@ import personal_audit5 from '@/../tests/resources/mock_personal_audits5.json';
 import personal_audit6 from '@/../tests/resources/mock_personal_audits6.json';
 import MultiLineChartVue from '@/components/Charts/MultiLineChartVue.vue';
 import CardVue from '@/components/Common/CardVue.vue';
-import SpinnerVue from '@/components/Common/SpinnerVue.vue';
 
 vi.mock('axios');
 
@@ -19,7 +18,6 @@ describe('PersonalAuditMetrics tests', () => {
     const wrapper = shallowMount(App, {
       props: {},
       components: {
-        SpinnerVue: SpinnerVue,
         MultiLineChartVue: MultiLineChartVue,
         CardVue: CardVue,
       },

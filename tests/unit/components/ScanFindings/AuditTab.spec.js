@@ -2,7 +2,6 @@ import { mount } from '@vue/test-utils';
 import axios from 'axios';
 import { describe, expect, it, vi } from 'vitest';
 import App from '@/components/ScanFindings/AuditTab.vue';
-import SpinnerVue from '@/components/Common/SpinnerVue.vue';
 import status from '@/../tests/resources/mock_status.json';
 import findings from '@/../tests/resources/mock_findings.json';
 import { BTab, BFormGroup, BFormSelect, BFormTextarea, BButton } from 'bootstrap-vue-next';
@@ -26,7 +25,6 @@ describe('Audit Tab', () => {
         BFormSelect,
         BFormTextarea,
         BButton,
-        SpinnerVue,
       },
       global: {
         plugins: [

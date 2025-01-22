@@ -6,7 +6,6 @@ import { BTable } from 'bootstrap-vue-next';
 import rule_packs from '@/../tests/resources/mock_rule_packs.json';
 import rule_tags from '@/../tests/resources/mock_rule_tags.json';
 import rules_with_findings_status_count from '@/../tests/resources/mock_rules_with_findings_status_count.json';
-import SpinnerVue from '@/components/Common/SpinnerVue.vue';
 import { createApp } from 'vue';
 import { PiniaVuePlugin, createPinia, setActivePinia } from 'pinia';
 
@@ -37,7 +36,6 @@ describe('RuleMetrics tests', () => {
       props: {},
       components: {
         BTable: BTable,
-        SpinnerVue: SpinnerVue,
       },
       global: {
         stubs: {
@@ -77,7 +75,6 @@ describe('RuleMetrics tests', () => {
       },
       components: {
         BTable: BTable,
-        SpinnerVue: SpinnerVue,
       },
       global: {
         stubs: {

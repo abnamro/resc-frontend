@@ -2,7 +2,6 @@ import { mount } from '@vue/test-utils';
 import axios from 'axios';
 import { describe, expect, it, vi } from 'vitest';
 import App from '@/components/RulePack/RulePackUploadModal.vue';
-import SpinnerVue from '@/components/Common/SpinnerVue.vue';
 import { BFormGroup, BModal, BFormInput, BFormFile, BButton } from 'bootstrap-vue-next';
 
 vi.mock('axios');
@@ -17,7 +16,6 @@ describe('RulePackUploadModal tests', () => {
         BFormInput,
         BFormFile,
         BButton,
-        SpinnerVue,
       },
     });
 

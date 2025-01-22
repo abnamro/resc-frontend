@@ -1,66 +1,64 @@
 <template>
-  <div>
-    <div class="row">
-      <!-- Page size -->
-      <div class="col-md-3 small">
-        <small class="mr-1" v-if="itemPerPageDropdownEnabled">Items per page</small>
-        <select
-          v-if="itemPerPageDropdownEnabled"
-          class="mt-1 custom-select-sm"
-          v-model="selectedPageSize"
-          @change="onPageSizeChange($event)"
-        >
-          <option v-for="size in pageSizes" :key="size" :value="size">
-            {{ size }}
-          </option>
-        </select>
-      </div>
-      <div class="col-md-5 small">
-        <!-- Pagination -->
-        <BPagination
-          v-model="currentPageNumber"
-          :per-page="props.perPage"
-          :total-rows="props.totalRows"
-          :align="'end'"
-          first-number
-          last-number
-          first-text="First"
-          prev-text="Prev"
-          next-text="Next"
-          last-text="Last"
-          pills
-          @page-click="onPageClick"
-        />
-      </div>
+  <div class="grid grid-cols-12">
+    <!-- Page size -->
+    <div class="col-span-3">
+      <span class="mr-1 text-sm" v-if="itemPerPageDropdownEnabled">Items per page</span>
+      <select
+        v-if="itemPerPageDropdownEnabled"
+        class="mt-1 custom-select-sm"
+        v-model="selectedPageSize"
+        @change="onPageSizeChange($event)"
+      >
+        <option v-for="size in pageSizes" :key="size" :value="size">
+          {{ size }}
+        </option>
+      </select>
+    </div>
+    <div class="col-span-5">
+      <!-- Pagination -->
+      <BPagination
+        v-model="currentPageNumber"
+        :per-page="props.perPage"
+        :total-rows="props.totalRows"
+        :align="'end'"
+        first-number
+        last-number
+        first-text="First"
+        prev-text="Prev"
+        next-text="Next"
+        last-text="Last"
+        pills
+        @page-click="onPageClick"
+      />
+    </div>
 
-      <!-- Total Record Count -->
-      <div class="col-md-2 small">
-        <ul class="pagination">
-          <li class="page-item active">
-            <a class="page-link">Total {{ props.totalRows }}</a>
-          </li>
-        </ul>
-      </div>
+    <!-- Total Record Count -->
+    <div class="col-span-2">
+      <ul class="pagination">
+        <li class="page-item active">
+          <a class="page-link">Total {{ props.totalRows }}</a>
+        </li>
+      </ul>
+    </div>
 
-      <!-- Go to page -->
-      <div class="col-md-2 form-group mt-1 small" v-if="displayGoToPage">
-        <label class="mr-1" for="go-to-page"><small>Go to page</small></label>
-        <input
-          type="number"
-          class="go-to-page-input"
-          name="go-to-page"
-          v-model="goToPageNumber"
-          min="1"
-          :max="getTotalPageCount"
-        />
-        <input
-          type="button"
-          class="go-to-page-btn ml-1"
-          value="Go"
-          :disabled="goToPageButtonEnabled"
-          v-on:click="handleGoToPage"
-        />
-      </div>
+    <!-- Go to page -->
+    <div class="col-span-2 form-group mt-1" v-if="displayGoToPage">
+      <label class="mr-1" for="go-to-page"><small>Go to page</small></label>
+      <input
+        type="number"
+        class="go-to-page-input"
+        name="go-to-page"
+        v-model="goToPageNumber"
+        min="1"
+        :max="getTotalPageCount"
+      />
+      <input
+        type="button"
+        class="go-to-page-btn ml-1"
+        value="Go"
+        :disabled="goToPageButtonEnabled"
+        v-on:click="handleGoToPage"
+      />
     </div>
   </div>
 </template>

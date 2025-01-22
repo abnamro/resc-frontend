@@ -1,21 +1,14 @@
 import { mount } from '@vue/test-utils';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import App from '@/components/Common/CardVue.vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { importFA } from '@/assets/font-awesome';
 import { Card } from 'primevue';
 
 importFA();
+const tooltip = vi.fn();
 
 describe('CardVue tests', () => {
-  afterAll(() => {
-    console.warn.mockRestore();
-  });
-
-  afterEach(() => {
-    console.warn.mockClear();
-  });
-
   it('Given a Card When props are passed then Card will be displayed', async () => {
     const wrapper = mount(App, {
       props: {
@@ -34,6 +27,10 @@ describe('CardVue tests', () => {
       },
       global: {
         stubs: {},
+
+        directives: {
+          tooltip,
+        },
       },
     });
 

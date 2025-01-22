@@ -2,7 +2,6 @@ import { mount } from '@vue/test-utils';
 import axios from 'axios';
 import { describe, expect, it, vi } from 'vitest';
 import App from '@/components/ScanFindings/RuleTab.vue';
-import SpinnerVue from '@/components/Common/SpinnerVue.vue';
 import rule from '@/../tests/resources/mock_rule.json';
 import { BTab, BCardText } from 'bootstrap-vue-next';
 
@@ -21,7 +20,6 @@ describe('Rule Tab', () => {
       components: {
         BTab,
         BCardText,
-        SpinnerVue,
       },
     });
 

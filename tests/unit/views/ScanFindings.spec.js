@@ -10,7 +10,6 @@ import FindingStatusBadge from '@/components/Common/FindingStatusBadge.vue';
 import RepositoryPanel from '@/components/ScanFindings/RepositoryPanel.vue';
 import ScanFindingsService from '@/services/scan-findings-service';
 import ScanTypeBadge from '@/components/Common/ScanTypeBadge.vue';
-import SpinnerVue from '@/components/Common/SpinnerVue.vue';
 import { BFormCheckbox, BButton } from 'bootstrap-vue-next';
 import { importFA } from '@/assets/font-awesome';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
@@ -49,7 +48,6 @@ describe('ScanFindings tests', () => {
         scanId: '1',
       },
       components: {
-        SpinnerVue,
         FindingStatusBadge,
         RepositoryPanel,
         ScanFindingsService,

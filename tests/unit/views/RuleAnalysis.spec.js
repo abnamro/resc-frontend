@@ -6,7 +6,6 @@ import { importFA } from '@/assets/font-awesome';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { createTestingPinia } from '@pinia/testing';
 import { BFormCheckbox, BButton } from 'bootstrap-vue-next';
-import SpinnerVue from '@/components/Common/SpinnerVue.vue';
 import Pagination from '@/components/Common/PaginationVue.vue';
 import rule_packs from '@/../tests/resources/mock_rule_packs.json';
 import detailed_findings from '@/../tests/resources/mock_detailed_findings.json';
@@ -27,7 +26,6 @@ describe('RuleAnalysis tests', () => {
 
     const wrapper = shallowMount(App, {
       components: {
-        SpinnerVue,
         Pagination,
         BButton,
         BFormCheckbox,
@@ -66,7 +64,6 @@ describe('RuleAnalysis tests', () => {
 
     const wrapper = shallowMount(App, {
       components: {
-        SpinnerVue,
         Pagination,
         BButton,
         BFormCheckbox,
