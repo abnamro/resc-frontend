@@ -1,18 +1,48 @@
 <template>
-  <div>
-    <BBadge v-if="props.status === 'NOT_ANALYZED'" variant="secondary">Not Analyzed</BBadge>
-    <BBadge v-if="props.status === 'NOT_ACCESSIBLE'" class="badge bg-info">Not Accessible</BBadge>
-    <BBadge v-if="props.status === 'CLARIFICATION_REQUIRED'" variant="warning"
-      >Clarification Required</BBadge
-    >
-    <BBadge v-if="props.status === 'TRUE_POSITIVE'" variant="danger">True Positive</BBadge>
-    <BBadge v-if="props.status === 'FALSE_POSITIVE'" variant="success">False Positive</BBadge>
-    <BBadge v-if="props.status === 'OUTDATED'" variant="dark">Outdated</BBadge>
-  </div>
+  <Tag :severity="severity" :value="val" class="text-xs"></Tag>
 </template>
 <script setup lang="ts">
 import type { FindingStatus } from '@/services/shema-to-types';
-import { BBadge } from 'bootstrap-vue-next';
+import Tag from 'primevue/tag';
+import { computed } from 'vue';
 type Props = { status: FindingStatus };
 const props = defineProps<Props>();
+
+const severity = computed(() => {
+  switch (props.status) {
+    case 'NOT_ANALYZED':
+      return 'secondary';
+    case 'NOT_ACCESSIBLE':
+      return 'info';
+    case 'CLARIFICATION_REQUIRED':
+      return 'warning';
+    case 'TRUE_POSITIVE':
+      return 'danger';
+    case 'FALSE_POSITIVE':
+      return 'success';
+    case 'OUTDATED':
+      return 'contrast';
+    default:
+      return 'danger';
+  }
+});
+
+const val = computed(() => {
+  switch (props.status) {
+    case 'NOT_ANALYZED':
+      return 'Not Analyzed';
+    case 'NOT_ACCESSIBLE':
+      return 'Not Accessible';
+    case 'CLARIFICATION_REQUIRED':
+      return 'Clarification Required';
+    case 'TRUE_POSITIVE':
+      return 'True Positive';
+    case 'FALSE_POSITIVE':
+      return 'False Positive';
+    case 'OUTDATED':
+      return 'Outdated';
+    default:
+      return 'Undefined';
+  }
+});
 </script>

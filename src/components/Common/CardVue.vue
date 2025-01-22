@@ -1,7 +1,7 @@
 <template>
   <Card
     :pt:body:class="'p-0 min-w-[200px]'"
-    :pt:caption:class="'px-4 py-2 bg-emerald-200/50 rounded-t-xl'"
+    :pt:caption:class="'px-4 py-2 bg-emerald-100/50 rounded-t-xl'"
     :pt:title:class="'flex items-center justify-center'"
     :pt:content:class="'px-4 pb-2 flex items-center justify-center font-bold'"
   >
