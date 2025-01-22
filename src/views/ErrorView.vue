@@ -125,7 +125,7 @@ function openOrToast() {
     }
 }
 
-onKeyStroke('`', () => !shouldIgnoreKeystroke() && openOrToast());
+onKeyStroke('~', () => !shouldIgnoreKeystroke() && openOrToast());
 </script>
 
 <style lang="css">

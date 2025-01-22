@@ -1,121 +1,70 @@
 <template>
-  <div>
-    <div class="row">
-      <!--Rule Filter -->
-      <div class="col-md-4 ml-3">
-        <RuleFilter
-          :rulesOptions="optionsRules"
-          :rulesSelected="selectedRule"
-          @on-rule-change="onRuleChange"
-        />
-      </div>
-      <!-- Status Filter -->
-      <div class="col-md-4">
-        <FindingStatusFilter @on-findings-status-change="onFindingsStatusChange" />
-      </div>
-      <div class="col-md-2 mt-1 ml-1 pt-1">
-        <BButton variant="primary" class="mt-4 w-100" size="sm" @click="toggleAdvancedSearch">
-          Advanced Search
-        </BButton>
-      </div>
+  <div class="grid grid-cols-10 gap-2 mb-2">
+    <!--Rule Filter -->
+    <div class="col-span-4">
+      <RuleFilter :rulesOptions="optionsRules" :rulesSelected="selectedRule" @on-rule-change="onRuleChange" />
     </div>
-
-    <div class="ml-3 mt-2 mb-1">
-      <!-- <BCollapse id="advance-search-collapse" v-model="advancedSearchVisible"> -->
-        <div class="row pt-1">
-          <!-- VCS Filter -->
-          <div class="col-md-3">
-            <VcsProviderFilter @on-vcs-change="onVcsProviderChange" />
-          </div>
-          <!--Project Filter -->
-          <div class="col-md-3">
-            <ProjectFilter
-              :projectOptions="props.projectOptions"
-              @on-project-change="onProjectChange"
-            />
-          </div>
-          <!--Repository Filter -->
-          <div class="col-md-4">
-            <RepositoryFilter
-              :repositoryOptions="props.repositoryOptions"
-              @on-repository-change="onRepositoryChange"
-            />
-          </div>
-        </div>
-
-        <div class="row pt-1">
-          <!-- Start Date Filter -->
-          <div class="col-md-2">
-            <BFormGroup class="label-title text-start" label="From Date" label-for="start-date">
-              <VueDatePicker
-                id="start-date"
-                placeholder="Enter Scan Start Date"
-                :enable-time-picker="false"
-                v-model="startDate"
-                format="dd/MM/yyyy"
-                @update:model-value="onStartDateChange"
-                :max-date="todaysDate"
-                auto-apply
-                no-today
-              ></VueDatePicker>
-            </BFormGroup>
-          </div>
-
-          <!-- End Date Filter -->
-          <div class="col-md-2">
-            <BFormGroup class="label-title text-start" label="To Date" label-for="end-date">
-              <VueDatePicker
-                id="end-date"
-                placeholder="Enter Scan End Date"
-                :enable-time-picker="false"
-                v-model="startDate"
-                format="dd/MM/yyyy"
-                @update:model-value="onEndDateChange"
-                :min-date="minEndDate"
-                :max-date="todaysDate"
-                :disabled="endDateDisabled"
-                auto-apply
-                no-today
-              >
-              </VueDatePicker>
-            </BFormGroup>
-          </div>
-
-          <div class="col-md-3">
-            <RulePackFilter
-              :rulePackPreSelected="props.rulePackPreSelected"
-              :rulePackOptions="props.rulePackOptions"
-              @on-rule-pack-version-change="onRulePackVersionChange"
-              @set-rule-pack-versions-on-rule-pack-filter="setRulePackVersionsOnRulePackFilter"
-            />
-          </div>
-          <!-- Rule Tags Filter -->
-          <div class="col-md-3">
-            <RuleTagsFilter
-              :ruleTagsOptions="optionsRuleTags"
-              :ruleTagsSelected="selectedRuleTags"
-              @on-rule-tags-change="onRuleTagsChange"
-            />
-          </div>
-        </div>
-
-        <div class="row pt-3">
-          <div class="col-md-4 text-start">
-            <BFormCheckbox
-              v-model="includeDeletedRepositories"
-              name="check-button"
-              switch
-              @change="handleFilterChange"
-            >
-              <small class="text-nowrap"
-                >Display findings for repositories marked as deleted.</small
-              >
-            </BFormCheckbox>
-          </div>
-        </div>
-      <!-- </BCollapse> -->
+    <!-- Status Filter -->
+    <div class="col-span-4">
+      <FindingStatusFilter @on-findings-status-change="onFindingsStatusChange" />
+    </div>
+    <div class="col-span-2 mt-1 ml-1">
+      <Button severity="primary" class="mt-4 w-100" @click="toggleAdvancedSearch">Advanced Search</Button>
     </div>
   </div>
+
+  <Collapse :when="advancedSearchVisible">
+    <div class="grid grid-cols-10 gap-x-2 gap-y-4">
+      <!-- VCS Filter -->
+      <div class="col-span-3">
+        <VcsProviderFilter @on-vcs-change="onVcsProviderChange" />
+      </div>
+      <!--Project Filter -->
+      <div class="col-span-3">
+        <ProjectFilter :projectOptions="props.projectOptions" @on-project-change="onProjectChange" />
+      </div>
+      <!--Repository Filter -->
+      <div class="col-span-4">
+        <RepositoryFilter :repositoryOptions="props.repositoryOptions" @on-repository-change="onRepositoryChange" />
+      </div>
+
+      <!-- Start Date Filter -->
+      <div class="col-span-2">
+        <BFormGroup class="label-title text-start" label="From Date" label-for="start-date">
+          <VueDatePicker id="start-date" placeholder="Enter Scan Start Date" :enable-time-picker="false"
+            v-model="startDate" format="dd/MM/yyyy" @update:model-value="onStartDateChange" :max-date="todaysDate"
+            auto-apply no-today></VueDatePicker>
+        </BFormGroup>
+      </div>
+
+      <!-- End Date Filter -->
+      <div class="col-span-2">
+        <BFormGroup class="label-title text-start" label="To Date" label-for="end-date">
+          <VueDatePicker id="end-date" placeholder="Enter Scan End Date" :enable-time-picker="false" v-model="startDate"
+            format="dd/MM/yyyy" @update:model-value="onEndDateChange" :min-date="minEndDate" :max-date="todaysDate"
+            :disabled="endDateDisabled" auto-apply no-today>
+          </VueDatePicker>
+        </BFormGroup>
+      </div>
+
+      <div class="col-span-3">
+        <RulePackFilter :rulePackPreSelected="props.rulePackPreSelected" :rulePackOptions="props.rulePackOptions"
+          @on-rule-pack-version-change="onRulePackVersionChange"
+          @set-rule-pack-versions-on-rule-pack-filter="setRulePackVersionsOnRulePackFilter" />
+      </div>
+      <!-- Rule Tags Filter -->
+      <div class="col-span-3">
+        <RuleTagsFilter :ruleTagsOptions="optionsRuleTags" :ruleTagsSelected="selectedRuleTags"
+          @on-rule-tags-change="onRuleTagsChange" />
+      </div>
+
+      <div class="col-span-4 text-start">
+        <BFormCheckbox v-model="includeDeletedRepositories" name="check-button" switch @change="handleFilterChange">
+          <small class="text-nowrap">Display findings for repositories marked as deleted.</small>
+        </BFormCheckbox>
+      </div>
+    </div>
+  </Collapse>
 </template>
 
 <script setup lang="ts">
@@ -138,8 +87,10 @@ import { onKeyStroke } from '@vueuse/core';
 import { shouldIgnoreKeystroke } from '@/utils/keybind-utils';
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
-import { BButton, BCollapse, BFormCheckbox, BFormGroup } from 'bootstrap-vue-next';
+import { BFormCheckbox, BFormGroup } from 'bootstrap-vue-next';
 import { storeToRefs } from 'pinia';
+import { Collapse } from 'vue-collapsed';
+import Button from 'primevue/button';
 
 type Props = {
   projectOptions?: string[];

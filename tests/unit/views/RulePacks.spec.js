@@ -31,14 +31,6 @@ describe('RulePacks tests', () => {
     });
   }
 
-  // afterAll(() => {
-  //   console.log.mockRestore();
-  // });
-
-  // afterEach(() => {
-  //   console.log.mockClear();
-  // });
-
   it('Given a RulePacks then RulePacks will be displayed', async () => {
     initMountApp();
     expect(wrapper.exists()).toBe(true);
@@ -55,13 +47,11 @@ describe('RulePacks tests', () => {
 
     const buffer = new ArrayBuffer();
     axios.get.mockResolvedValueOnce(buffer);
-    // const spy = vi.spyOn(console, 'log').mockImplementation(() => {});
     expect(() => wrapper.vm.downloadRulePack('0.0.6')).not.toThrow();
     await wrapper.vm.$nextTick();
     await wrapper.vm.$nextTick();
     await wrapper.vm.$nextTick();
     await wrapper.vm.$nextTick();
-    // expect(spy).toHaveBeenCalledTimes(2);
 
     axios.post.mockResolvedValueOnce({});
     expect(() => wrapper.vm.markAsOutdated(rule_packs.data[6])).not.toThrow();

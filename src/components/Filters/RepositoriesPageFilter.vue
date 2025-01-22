@@ -1,13 +1,13 @@
 <template>
   <div>
-    <div class="row">
+    <div class="grid grid-cols-10 gap-x-2 gap-y-4">
       <!--VCS Filter -->
-      <div class="col-md-3">
+      <div class="col-span-3">
         <VcsProviderFilter @on-vcs-change="onVcsProviderChange" />
       </div>
 
       <!--Project Filter -->
-      <div class="col-md-4">
+      <div class="col-span-3">
         <ProjectFilter
           :projectOptions="props.projectOptions"
           @on-project-change="onProjectChange"
@@ -15,45 +15,43 @@
       </div>
 
       <!--Repository Search Filter -->
-      <div class="col-md-4">
+      <div class="col-span-3">
         <RepositoryFilter
           :repositoryOptions="props.repositoryOptions"
           @on-repository-change="onRepositoryChange"
         />
       </div>
-    </div>
 
     <!-- Include zero finding repos -->
-    <div class="row pt-3">
-      <div class="col-md-3 text-start">
-        <BFormCheckbox
+      <div class="col-span-3 text-left flex items-center">
+        <ToggleSwitch
+          size="small"
           v-model="includeZeroFindingRepos"
-          name="check-button"
-          switch
+          inputId="includeZeroFindingRepos"
           @change="handleFilterChange"
         >
-          <small class="text-nowrap">Display repositories with 0 findings.</small>
-        </BFormCheckbox>
+        </ToggleSwitch>
+        <label for="includeZeroFindingRepos" class=" ml-2">Display repositories with 0 findings.</label>
       </div>
-      <div class="col-md-4 text-start">
-        <BFormCheckbox
+      <div class="col-span-3 text-left flex items-center">
+        <ToggleSwitch
+          size="small"
           v-model="includeDeletedRepositories"
-          name="check-button"
-          switch
+          inputId="includeDeletedRepositories"
           @change="handleFilterChange"
         >
-          <small class="text-nowrap">Display repositories marked as deleted.</small>
-        </BFormCheckbox>
+        </ToggleSwitch>
+        <label for="includeDeletedRepositories" class=" ml-2">Display repositories marked as deleted.</label>
       </div>
-      <div class="col-md-4 text-start">
-        <BFormCheckbox
+      <div class="col-span-3 text-left flex items-center">
+        <ToggleSwitch
+          size="small"
           v-model="onlyIfHasUntriagedFindings"
-          name="check-button"
-          switch
+          inputId="onlyIfHasUntriagedFindings"
           @change="handleFilterChange"
         >
-          <small class="text-nowrap">Display only repositories with untriaged findings.</small>
-        </BFormCheckbox>
+        </ToggleSwitch>
+        <label for="onlyIfHasUntriagedFindings" class=" ml-2">Display only repositories with untriaged findings.</label>
       </div>
     </div>
   </div>
@@ -64,7 +62,7 @@ import ProjectFilter from '@/components/Filters/ProjectFilter.vue';
 import RepositoryFilter from '@/components/Filters/RepositoryFilter.vue';
 import VcsProviderFilter from '@/components/Filters/VcsProviderFilter.vue';
 import type { VCSProviders } from '@/services/shema-to-types';
-import { BFormCheckbox } from 'bootstrap-vue-next';
+import ToggleSwitch from 'primevue/toggleswitch';
 import { ref } from 'vue';
 
 type Props = {

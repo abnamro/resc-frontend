@@ -82,7 +82,7 @@ export const useAuthUserStore: () => Store<'authUser', State, GettersStore, Acti
             });
         }
 
-        return this.findingStatusList as FindingStatus[];
+        return this.findingStatusList ?? [] as FindingStatus[];
       },
     },
     actions: {
