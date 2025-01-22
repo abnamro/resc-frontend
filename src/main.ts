@@ -7,6 +7,8 @@ import AxiosConfig from '@/configuration/axios-config';
 import { importFA } from '@/assets/font-awesome';
 import Vue3Toasity from 'vue3-toastify';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import PrimeVue from 'primevue/config';
+import Aura from '@primevue/themes/aura';
 
 import {
   Chart as ChartJS,
@@ -31,6 +33,17 @@ import './styles/main.css';
 const app = createApp(App);
 app.use(PiniaVuePlugin);
 app.use(router);
+app.use(PrimeVue, {
+  theme: {
+      preset: Aura,
+      options: {
+          prefix: 'p',
+          darkModeSelector: 'system',
+          cssLayer: false
+      }
+  }
+});
+
 app.use(createBootstrap());
 app.use(Vue3Toasity, { multiple: false });
 importFA();
