@@ -15,7 +15,7 @@ const severity = computed(() => {
     case 'NOT_ACCESSIBLE':
       return 'info';
     case 'CLARIFICATION_REQUIRED':
-      return 'warning';
+      return 'warn';
     case 'TRUE_POSITIVE':
       return 'danger';
     case 'FALSE_POSITIVE':
