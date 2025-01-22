@@ -1,7 +1,7 @@
 <template>
-    <ErrorView />
-    <Toast />
-    <SidebarMenu
+  <ErrorView />
+  <Toast />
+  <SidebarMenu
     :menu="sidebarNavigationMenu"
     v-model:collapsed="sidebarCollapsed"
     :show-one-child="true"

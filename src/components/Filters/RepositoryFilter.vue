@@ -1,6 +1,8 @@
 <template>
   <div class="flex flex-col justify-start">
-    <label for="repositories" class="font-bold text-lg text-left text-muted-color-emphasis">Repositories</label>
+    <label for="repositories" class="font-bold text-lg text-left text-muted-color-emphasis"
+      >Repositories</label
+    >
     <MultiSelect
       v-model:model-value="selectedRepository"
       :options="props.repositoryOptions"
@@ -13,7 +15,7 @@
       id="repositories"
       @update:model-value="onRepositoryFilterChange"
     >
-      </MultiSelect>
+    </MultiSelect>
   </div>
 </template>
 <script setup lang="ts">

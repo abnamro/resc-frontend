@@ -3,7 +3,6 @@ import Config, { dispatchError } from '@/configuration/config';
 import AuthService from '@/services/auth-service';
 
 // import PushNotification from '@/utils/push-notification';
-import { toast } from 'vue3-toastify';
 import axios, {
   type AxiosRequestConfig,
   type AxiosRequestHeaders,
@@ -14,7 +13,6 @@ import type { Swr } from '@/services/shema-to-types';
 
 const TIMEOUT = 5000;
 export const OK = 200;
-const CREATED = 201;
 const FORBIDDEN = 403;
 
 const AxiosConfig = {
@@ -60,16 +58,6 @@ const AxiosConfig = {
             setTimeout(function () {
               AuthService.doLogOut();
             }, TIMEOUT);
-            // } else {
-            //   let errorMsg = '';
-            //   if (error.response.data.detail && error.response.status) {
-            //     errorMsg = `Status: ${error.response.status}, ${error.response.data.detail}`;
-            //   } else {
-            //     errorMsg = error.message;
-            //   }
-            //   toast(errorMsg, {
-            //     type: 'error',
-            //   });
           }
         } else {
           dispatchError({
@@ -86,17 +74,7 @@ const AxiosConfig = {
     );
   },
   handleError(error: Swr) {
-    dispatchError(error)
-    // if (error.response) {
-    //   console.log(error.response.data);
-    //   console.log(error.response.status);
-    //   console.log(error.response.headers);
-    // } else if (error.request) {
-    //   console.log(error.request);
-    // } else {
-    //   console.log('Error', error.message);
-    //   console.log(error);
-    // }
+    dispatchError(error);
   },
 };
 

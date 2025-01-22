@@ -12,7 +12,7 @@
       id="rules"
       @update:model-value="onRuleFilterChange"
     >
-      </MultiSelect>
+    </MultiSelect>
   </div>
 </template>
 <script setup lang="ts">

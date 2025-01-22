@@ -123,14 +123,14 @@ export const PAGE_SIZES = [
 
 export function dispatchError(error: any) {
   const event = new CustomEvent('error', {
-      detail: error
+    detail: error,
   });
   window.dispatchEvent(event);
 }
 
 export function dispatchMessage(message: string) {
   const event = new CustomEvent('error', {
-      detail: { type: 'message', message }
+    detail: { type: 'message', message },
   });
   window.dispatchEvent(event);
 }

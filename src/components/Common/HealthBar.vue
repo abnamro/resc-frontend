@@ -6,7 +6,8 @@
     :pt:labelList:class="'hidden'"
   >
     <template #meter="slotProps">
-      <span v-if="slotProps.value.value > 0"
+      <span
+        v-if="slotProps.value.value > 0"
         :class="slotProps.value.color"
         class="text-xs font-bold flex items-center justify-center"
         :style="{ width: slotProps.size }"

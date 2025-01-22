@@ -1,18 +1,39 @@
 <template>
   <div class="flex flex-col justify-start">
-    <label for="rulePack" class="font-bold text-lg text-left text-muted-color-emphasis">Rule Pack</label>
-    <MultiSelect v-model:model-value="selectedRulePack" :options="props.rulePackOptions" display="chip"
-      optionLabel="version" class="w-full" placeholder="Select RulePack" :show-toggle-all="false" id="rulePack"
-      @update:model-value="onRulePackVersionFilterChange">
+    <label for="rulePack" class="font-bold text-lg text-left text-muted-color-emphasis"
+      >Rule Pack</label
+    >
+    <MultiSelect
+      v-model:model-value="selectedRulePack"
+      :options="props.rulePackOptions"
+      display="chip"
+      optionLabel="version"
+      class="w-full"
+      placeholder="Select RulePack"
+      :show-toggle-all="false"
+      id="rulePack"
+      @update:model-value="onRulePackVersionFilterChange"
+    >
       <template #option="slotProps">
         <div class="flex items-center">
-          <div :class="{
-            'line-through text-muted-color': slotProps.option.outdated
-          }">{{ slotProps.option.version }}</div>
-          <Tag v-if="slotProps.option.active" class="text-xs px-2 py-0.5 ml-4 font-bold bg-emerald-600 text-surface-0"
-            value="active" />
-          <Tag severity="danger" v-if="slotProps.option.outdated" class="text-xs px-2 py-0.5 ml-4 font-bold "
-            value="Outdated" />
+          <div
+            :class="{
+              'line-through text-muted-color': slotProps.option.outdated,
+            }"
+          >
+            {{ slotProps.option.version }}
+          </div>
+          <Tag
+            v-if="slotProps.option.active"
+            class="text-xs px-2 py-0.5 ml-4 font-bold bg-emerald-600 text-surface-0"
+            value="active"
+          />
+          <Tag
+            severity="danger"
+            v-if="slotProps.option.outdated"
+            class="text-xs px-2 py-0.5 ml-4 font-bold"
+            value="Outdated"
+          />
         </div>
       </template>
     </MultiSelect>

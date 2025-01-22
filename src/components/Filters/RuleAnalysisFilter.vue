@@ -2,14 +2,20 @@
   <div class="grid grid-cols-10 gap-2">
     <!--Rule Filter -->
     <div class="col-span-4">
-      <RuleFilter :rulesOptions="optionsRules" :rulesSelected="selectedRule" @on-rule-change="onRuleChange" />
+      <RuleFilter
+        :rulesOptions="optionsRules"
+        :rulesSelected="selectedRule"
+        @on-rule-change="onRuleChange"
+      />
     </div>
     <!-- Status Filter -->
     <div class="col-span-4">
       <FindingStatusFilter @on-findings-status-change="onFindingsStatusChange" />
     </div>
     <div class="col-span-2 mt-1 ml-1">
-      <Button severity="primary" class="mt-4 w-100" @click="toggleAdvancedSearch">Advanced Search</Button>
+      <Button severity="primary" class="mt-4 w-100" @click="toggleAdvancedSearch"
+        >Advanced Search</Button
+      >
     </div>
   </div>
 
@@ -21,52 +27,84 @@
       </div>
       <!--Project Filter -->
       <div class="col-span-3">
-        <ProjectFilter :projectOptions="props.projectOptions" @on-project-change="onProjectChange" />
+        <ProjectFilter
+          :projectOptions="props.projectOptions"
+          @on-project-change="onProjectChange"
+        />
       </div>
       <!--Repository Filter -->
       <div class="col-span-4">
-        <RepositoryFilter :repositoryOptions="props.repositoryOptions" @on-repository-change="onRepositoryChange" />
+        <RepositoryFilter
+          :repositoryOptions="props.repositoryOptions"
+          @on-repository-change="onRepositoryChange"
+        />
       </div>
 
       <!-- Start Date Filter -->
       <div class="col-span-2">
         <BFormGroup class="label-title text-start" label="From Date" label-for="start-date">
-          <VueDatePicker id="start-date" placeholder="Enter Scan Start Date" :enable-time-picker="false"
-            v-model="startDate" format="dd/MM/yyyy" @update:model-value="onStartDateChange" :max-date="todaysDate"
-            auto-apply no-today></VueDatePicker>
+          <VueDatePicker
+            id="start-date"
+            placeholder="Enter Scan Start Date"
+            :enable-time-picker="false"
+            v-model="startDate"
+            format="dd/MM/yyyy"
+            @update:model-value="onStartDateChange"
+            :max-date="todaysDate"
+            auto-apply
+            no-today
+          ></VueDatePicker>
         </BFormGroup>
       </div>
 
       <!-- End Date Filter -->
       <div class="col-span-2">
         <BFormGroup class="label-title text-start" label="To Date" label-for="end-date">
-          <VueDatePicker id="end-date" placeholder="Enter Scan End Date" :enable-time-picker="false" v-model="startDate"
-            format="dd/MM/yyyy" @update:model-value="onEndDateChange" :min-date="minEndDate" :max-date="todaysDate"
-            :disabled="endDateDisabled" auto-apply no-today>
+          <VueDatePicker
+            id="end-date"
+            placeholder="Enter Scan End Date"
+            :enable-time-picker="false"
+            v-model="startDate"
+            format="dd/MM/yyyy"
+            @update:model-value="onEndDateChange"
+            :min-date="minEndDate"
+            :max-date="todaysDate"
+            :disabled="endDateDisabled"
+            auto-apply
+            no-today
+          >
           </VueDatePicker>
         </BFormGroup>
       </div>
 
       <div class="col-span-3">
-        <RulePackFilter :rulePackPreSelected="props.rulePackPreSelected" :rulePackOptions="props.rulePackOptions"
+        <RulePackFilter
+          :rulePackPreSelected="props.rulePackPreSelected"
+          :rulePackOptions="props.rulePackOptions"
           @on-rule-pack-version-change="onRulePackVersionChange"
-          @set-rule-pack-versions-on-rule-pack-filter="setRulePackVersionsOnRulePackFilter" />
+          @set-rule-pack-versions-on-rule-pack-filter="setRulePackVersionsOnRulePackFilter"
+        />
       </div>
       <!-- Rule Tags Filter -->
       <div class="col-span-3">
-        <RuleTagsFilter :ruleTagsOptions="optionsRuleTags" :ruleTagsSelected="selectedRuleTags"
-          @on-rule-tags-change="onRuleTagsChange" />
+        <RuleTagsFilter
+          :ruleTagsOptions="optionsRuleTags"
+          :ruleTagsSelected="selectedRuleTags"
+          @on-rule-tags-change="onRuleTagsChange"
+        />
       </div>
 
       <div class="col-span-12 text-left flex items-center">
-          <ToggleSwitch
-            size="small"
-            v-model="includeDeletedRepositories"
-            inputId="includeDeletedRepositories"
-            @change="handleFilterChange"
-            >
-          </ToggleSwitch>
-          <label for="includeDeletedRepositories" class=" ml-2">Display findings for repositories marked as deleted.</label>
+        <ToggleSwitch
+          size="small"
+          v-model="includeDeletedRepositories"
+          inputId="includeDeletedRepositories"
+          @change="handleFilterChange"
+        >
+        </ToggleSwitch>
+        <label for="includeDeletedRepositories" class="ml-2"
+          >Display findings for repositories marked as deleted.</label
+        >
       </div>
     </div>
   </Collapse>

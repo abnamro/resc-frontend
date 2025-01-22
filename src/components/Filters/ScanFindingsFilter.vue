@@ -1,10 +1,12 @@
 <template>
   <div>
-    <div class=" grid grid-cols-12 gap-x-2 gap-y-4">
+    <div class="grid grid-cols-12 gap-x-2 gap-y-4">
       <!-- Scan Date Filter -->
       <div class="col-span-3">
         <div class="flex flex-col justify-start">
-          <label for="scanDate" class="font-bold text-lg text-left text-muted-color-emphasis">Scan Date</label>
+          <label for="scanDate" class="font-bold text-lg text-left text-muted-color-emphasis"
+            >Scan Date</label
+          >
           <Select
             v-model:model-value="selectedScan"
             :options="scanDateList"
@@ -17,7 +19,7 @@
             @update:model-value="handleScanDateFilterChange"
           >
             <template #option="slotProps">
-              {{slotProps.option.scanDate}}: {{slotProps.option.scanType}}
+              {{ slotProps.option.scanDate }}: {{ slotProps.option.scanType }}
             </template>
           </Select>
         </div>
@@ -49,15 +51,15 @@
 
       <!-- Include previous scan findings -->
       <div class="col-span-12 text-left flex items-center">
-          <ToggleSwitch
-            size="small"
-            v-model="includePreviousScans"
-            inputId="includePreviousScans"
-            @change="togglePreviousScans"
-            v-on:click="handleToggleButtonClick"
-            >
-          </ToggleSwitch>
-          <label for="includePreviousScans" class=" ml-2">Include previous scan findings.</label>
+        <ToggleSwitch
+          size="small"
+          v-model="includePreviousScans"
+          inputId="includePreviousScans"
+          @change="togglePreviousScans"
+          v-on:click="handleToggleButtonClick"
+        >
+        </ToggleSwitch>
+        <label for="includePreviousScans" class="ml-2">Include previous scan findings.</label>
       </div>
     </div>
   </div>
@@ -148,10 +150,6 @@ function togglePreviousScans() {
 
   // Refresh rules in filter based on scan ids
   refreshRuleFilter();
-}
-
-function formatScanDateFilterOptions(scan: ScanJson) {
-  return `${scan.scanDate}: ${scan.scanType}`;
 }
 
 function handleScanDateFilterChange() {

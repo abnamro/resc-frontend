@@ -1,6 +1,8 @@
 <template>
   <div class="flex flex-col justify-start">
-    <label for="vcs" class="font-bold text-lg text-left text-muted-color-emphasis">VCS Providers</label>
+    <label for="vcs" class="font-bold text-lg text-left text-muted-color-emphasis"
+      >VCS Providers</label
+    >
     <MultiSelect
       v-model:model-value="selectedVcsProviders"
       :options="optionsVcsProviders"
@@ -12,7 +14,7 @@
       id="vcs"
       @update:model-value="onVcsFilterChange"
     >
-      </MultiSelect>
+    </MultiSelect>
   </div>
 </template>
 <script setup lang="ts">

@@ -1,6 +1,8 @@
 <template>
   <div class="flex flex-col justify-start">
-    <label for="projects" class="font-bold text-lg text-left text-muted-color-emphasis">Projects</label>
+    <label for="projects" class="font-bold text-lg text-left text-muted-color-emphasis"
+      >Projects</label
+    >
     <MultiSelect
       v-model:model-value="selectedProject"
       :options="props.projectOptions"
@@ -13,7 +15,7 @@
       id="projects"
       @update:model-value="onProjectFilterChange"
     >
-      </MultiSelect>
+    </MultiSelect>
   </div>
 </template>
 <script setup lang="ts">

@@ -22,7 +22,7 @@
         />
       </div>
 
-    <!-- Include zero finding repos -->
+      <!-- Include zero finding repos -->
       <div class="col-span-3 text-left flex items-center">
         <ToggleSwitch
           size="small"
@@ -31,7 +31,9 @@
           @change="handleFilterChange"
         >
         </ToggleSwitch>
-        <label for="includeZeroFindingRepos" class=" ml-2">Display repositories with 0 findings.</label>
+        <label for="includeZeroFindingRepos" class="ml-2"
+          >Display repositories with 0 findings.</label
+        >
       </div>
       <div class="col-span-3 text-left flex items-center">
         <ToggleSwitch
@@ -41,7 +43,9 @@
           @change="handleFilterChange"
         >
         </ToggleSwitch>
-        <label for="includeDeletedRepositories" class=" ml-2">Display repositories marked as deleted.</label>
+        <label for="includeDeletedRepositories" class="ml-2"
+          >Display repositories marked as deleted.</label
+        >
       </div>
       <div class="col-span-3 text-left flex items-center">
         <ToggleSwitch
@@ -51,7 +55,9 @@
           @change="handleFilterChange"
         >
         </ToggleSwitch>
-        <label for="onlyIfHasUntriagedFindings" class=" ml-2">Display only repositories with untriaged findings.</label>
+        <label for="onlyIfHasUntriagedFindings" class="ml-2"
+          >Display only repositories with untriaged findings.</label
+        >
       </div>
     </div>
   </div>
