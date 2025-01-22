@@ -1,7 +1,7 @@
 <template>
   <div>
     <BFormGroup class="label-title text-start" label="Status" label-for="status-filter">
-      <multiselect
+      <Multiselect
         v-model="selectedStatus"
         :options="optionsStatus"
         :multiple="true"
@@ -19,14 +19,14 @@
         @update:modelValue="onStatusFilterChange"
       >
         <template v-slot:noResult><span>No status found</span></template>
-      </multiselect>
+      </Multiselect>
     </BFormGroup>
   </div>
 </template>
 <script setup lang="ts">
 import CommonUtils, { type StatusOptionType } from '@/utils/common-utils';
 import Multiselect from 'vue-multiselect';
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import { useAuthUserStore } from '@/store';
 import { BFormGroup } from 'bootstrap-vue-next';
 import { storeToRefs } from 'pinia';
@@ -46,10 +46,16 @@ const optionsStatus = ref(props.statusOptions);
 
 const emit = defineEmits(['on-findings-status-change']);
 
-function onStatusFilterChange() {
+function onStatusFilterChange(newValue: StatusOptionType[]) {
+  selectedStatus.value = newValue;
   emit('on-findings-status-change');
 }
 
 optionsStatus.value = CommonUtils.parseStatusOptions(store.get_finding_status_list);
+
+watch(
+  () => props.statusOptions,
+  (newStatusOption) => (optionsStatus.value = newStatusOption),
+);
 </script>
 <style src="vue-multiselect/dist/vue-multiselect.css"></style>

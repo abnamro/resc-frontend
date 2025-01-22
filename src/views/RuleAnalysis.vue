@@ -62,7 +62,6 @@ import { useAuthUserStore, type PreviousRouteState } from '@/store/index';
 import { computed, onMounted, ref, type Ref } from 'vue';
 import type {
   DetailedFindingRead,
-  FindingStatus,
   PaginationType,
   RulePackRead,
   VCSProviders,
@@ -71,10 +70,12 @@ import type { AxiosResponse } from 'axios';
 import type { TableItem } from 'bootstrap-vue-next';
 import CommonUtils from '@/utils/common-utils';
 import { PAGE_SIZES } from '@/configuration/config';
+import { storeToRefs } from 'pinia';
 
 type TableItemDetailedFindingRead = DetailedFindingRead & TableItem;
 
 const loadedData = ref(false);
+const store = useAuthUserStore();
 
 const findingList = ref([] as TableItemDetailedFindingRead[]);
 const totalRows = ref(0);
@@ -89,7 +90,7 @@ const repositoryNames = ref([] as string[]);
 const selectedStartDate = ref(undefined) as Ref<string | undefined>;
 const selectedEndDate = ref(undefined) as Ref<string | undefined>;
 const selectedVcsProvider = ref([] as VCSProviders[]);
-const selectedStatus = ref(undefined) as Ref<FindingStatus[] | undefined>;
+const { selectedStatus } = storeToRefs(store);
 const selectedProject = ref(undefined) as Ref<string | undefined>;
 const selectedRepository = ref(undefined) as Ref<string | undefined>;
 const selectedRule = ref(undefined) as Ref<string[] | undefined>;
@@ -104,7 +105,6 @@ const hasRecords = computed(() => findingList.value.length > 0);
 const skipRowCount = computed(() => (currentPage.value - 1) * perPage.value);
 
 function isRedirectedFromRuleMetricsPage() {
-  const store = useAuthUserStore();
   const sourceRoute = store.sourceRoute;
   const destinationRoute = store.destinationRoute;
   return sourceRoute === '/metrics/rule-metrics' &&
@@ -134,7 +134,7 @@ function fetchPaginatedDetailedFindings() {
     startDate: selectedStartDate.value,
     endDate: selectedEndDate.value,
     vcsProvider: selectedVcsProvider.value,
-    findingStatus: selectedStatus.value,
+    findingStatus: selectedStatus.value.map((s) => s.value),
     project: selectedProject.value,
     repository: selectedRepository.value,
     rule: selectedRule.value,
@@ -163,7 +163,6 @@ function handleFilterChange(filterObj: RuleAnalysisFilter) {
   selectedStartDate.value = filterObj.startDate;
   selectedEndDate.value = filterObj.endDate;
   selectedVcsProvider.value = filterObj.vcsProvider ?? [];
-  selectedStatus.value = filterObj.status;
   selectedProject.value = filterObj.project;
   selectedRepository.value = filterObj.repository;
   selectedRule.value = filterObj.rule;
@@ -217,7 +216,6 @@ function fetchDistinctRepositories() {
 }
 
 function fetchRulePackVersionsWhenRedirectedFromRuleMetricsPage() {
-  const store = useAuthUserStore();
   RulePackService.getRulePackVersions(10000, 0)
     .then((response: AxiosResponse<PaginationType<RulePackRead>>) => {
       rulePackVersions.value = [];
@@ -283,7 +281,6 @@ onMounted(() => {
   if (isRedirectedFromRuleMetricsPage()) {
     fetchRulePackVersionsWhenRedirectedFromRuleMetricsPage();
   } else {
-    const store = useAuthUserStore();
     store.update_previous_route_state(null);
     fetchRulePackVersions();
     fetchDistinctProjects();
