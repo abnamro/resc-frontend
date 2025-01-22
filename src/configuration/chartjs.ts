@@ -10,5 +10,5 @@ import {
 } from 'chart.js';
 
 export function chartJsSetup() {
-    ChartJS.register(Title, Tooltip, Legend, LineElement, LinearScale, CategoryScale, PointElement);
+  ChartJS.register(Title, Tooltip, Legend, LineElement, LinearScale, CategoryScale, PointElement);
 }

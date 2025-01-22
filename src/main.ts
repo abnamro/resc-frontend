@@ -24,15 +24,15 @@ app.use(PiniaVuePlugin);
 app.use(router);
 app.use(PrimeVue, {
   theme: {
-      preset: Aura,
-      options: {
-          darkModeSelector: 'system',
-          cssLayer: {
-            name: 'primevue',
-            order: 'tailwind-base, primevue, tailwind-utilities'
-          },
-      }
-  }
+    preset: Aura,
+    options: {
+      darkModeSelector: 'system',
+      cssLayer: {
+        name: 'primevue',
+        order: 'tailwind-base, primevue, tailwind-utilities',
+      },
+    },
+  },
 });
 
 app.use(createBootstrap());

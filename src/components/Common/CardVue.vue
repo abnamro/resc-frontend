@@ -1,35 +1,34 @@
 <template>
-  <!-- <div> -->
-    <Card
-      :pt:body:class="'p-0 min-w-[200px]'"
-      :pt:caption:class="'px-4 py-2 bg-emerald-200/50 rounded-t-xl'"
-      :pt:title:class="'flex items-center justify-center'"
-      :pt:content:class="'px-4 pb-2 flex items-center justify-center font-bold'">
-      <template #title>
-        <p class="p-0 m-0 font-bold text-sm">{{ title }}</p>
-        <template v-if="titleIconDefinition">
-            <FontAwesomeIcon
-              :id="titleIconTooltipId"
-              class="ml-2"
-              :style="titleIconStyle"
-              :icon="titleIconDefinition"
-              v-tooltip.right="titleIconTooltip"
-            />
-        </template>
+  <Card
+    :pt:body:class="'p-0 min-w-[200px]'"
+    :pt:caption:class="'px-4 py-2 bg-emerald-200/50 rounded-t-xl'"
+    :pt:title:class="'flex items-center justify-center'"
+    :pt:content:class="'px-4 pb-2 flex items-center justify-center font-bold'"
+  >
+    <template #title>
+      <p class="p-0 m-0 font-bold text-sm">{{ title }}</p>
+      <template v-if="titleIconDefinition">
+        <FontAwesomeIcon
+          :id="titleIconTooltipId"
+          class="ml-2"
+          :style="titleIconStyle"
+          :icon="titleIconDefinition"
+          v-tooltip.right="titleIconTooltip"
+        />
       </template>
-      <template #content>
-          <h5 class="mb-0" :style="contentStyle">
-            {{ formatCardBodyContent }}
-          </h5>
-          <FontAwesomeIcon
-            v-if="contentIconDefinition"
-            class="ml-2"
-            :style="contentIconStyle"
-            :icon="contentIconDefinition"
-          />
-      </template>
-
-    </Card>
+    </template>
+    <template #content>
+      <h5 class="mb-0" :style="contentStyle">
+        {{ formatCardBodyContent }}
+      </h5>
+      <FontAwesomeIcon
+        v-if="contentIconDefinition"
+        class="ml-2"
+        :style="contentIconStyle"
+        :icon="contentIconDefinition"
+      />
+    </template>
+  </Card>
 </template>
 <script setup lang="ts">
 import { ref } from 'vue';
