@@ -1,6 +1,6 @@
 <template>
   <div class="p-4">
-    <h3 class="text-left">RULEPACKS</h3>
+    <h1 class="text-left text-3xl mb-10">RULEPACKS</h1>
 
     <!-- Import button to upload rulepack -->
     <div class="flex justify-start">
@@ -16,16 +16,6 @@
       v-model:visible="isRulePackUploadOpen"
       @on-file-upload-suceess="onRulePackUploadSuccess"
     />
-
-    <Paginator
-      v-model:first="currentPage"
-      v-model:rows="perPage"
-      :totalRecords="totalRows"
-      :rowsPerPageOptions="PAGE_SIZES"
-      @update:first="handlePageChange"
-      @update:rows="handlePageSizeChange"
-    >
-    </Paginator>
 
     <DataTable
       :value="rulePackList"
@@ -94,6 +84,15 @@
         </template>
       </Column>
     </DataTable>
+
+    <Paginator
+      v-model:first="currentPage"
+      v-model:rows="perPage"
+      :totalRecords="totalRows"
+      :rowsPerPageOptions="PAGE_SIZES"
+      @update:first="handlePageChange"
+      @update:rows="handlePageSizeChange"
+    />
   </div>
   <Dialog v-model:visible="isConfirmOpen" header="Mark findings as outdated?">
     <div>

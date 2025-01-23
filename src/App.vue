@@ -1,4 +1,5 @@
 <template>
+  <SessionTimout />
   <ErrorView />
   <Toast />
   <SidebarMenu
@@ -14,6 +15,7 @@
   <div
     id="content-wrapper"
     :class="{
+      'overflow-x-hidden': true,
       'sidebar-closed': sidebarCollapsed,
       'sidebar-opened': !sidebarCollapsed,
     }"
@@ -34,6 +36,7 @@ import { disableScrollingWithArrowsAndCtrlA, shouldIgnoreKeystroke } from './uti
 import { onKeyStroke } from '@vueuse/core';
 import ErrorView from './views/ErrorView.vue';
 import Toast from 'primevue/toast';
+import SessionTimout from './components/Login/SessionTimout.vue';
 
 const route = useRoute();
 

@@ -1,5 +1,4 @@
 @import 'vsm.scss';
-@import 'table.scss';
 
 @import 'primeicons/primeicons.css';
 
@@ -12,29 +11,6 @@
 @layer tailwind-utilities {
 	@import 'tailwindcss/components';
 	@import 'tailwindcss/utilities';
-}
-
-
-:root {
-  --bs-primary: #ffd200;
-  --bs-secondary-lighter: #00857a;
-  --bs-secondary-light: #00716b;
-  --bs-secondary: #005e5d;
-  --bs-secondary-rgb: 1, 92, 91;
-  --bs-secondary-dark: #004d4b;
-  --bs-secondary-darker: ;
-  --bs-info: #17a2b8;
-  --bs-success: #28a745;
-  --bs-info-rgb: 23, 162, 184;
-  --font-family-sans-serif: -apple-system, BlinkMacSystemFont, 'Segoe UI',
-    Roboto, 'Helvetica Neue', Arial, 'Noto Sans', 'Liberation Sans', sans-serif,
-    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
-  --font-family-monospace: SFMono-Regular, Menlo, Monaco, Consolas,
-    'Liberation Mono', 'Courier New', monospace;
-}
-
-.container-fluid {
-  --bs-gutter-x: 0;
 }
 
 html {
@@ -50,53 +26,81 @@ html {
   color: #2c3e50;
 }
 
-/* Table */
-.table .thead-light th {
-  background-color: #e4f9f5;
-}
-
-#rule-analysis-table th,
-#scan-findings-table th,
-#repositories-table th {
-  cursor: pointer !important;
-}
-
-#rule-analysis-table tr,
-#scan-findings-table tr,
-#rule-metrics-table tr {
-  cursor: pointer !important;
-}
-
-#rule-analysis-table .tabs,
-#scan-findings-table .tabs {
-  cursor: default !important;
-}
-
-#audit-history-table tr {
-  cursor: auto !important;
-}
-
-.b-table-details {
-  border-left: 2px solid #b3daeb !important;
-  border-right: 2px solid #b3daeb !important;
-  border-bottom: 2px solid #b3daeb !important;
-}
-
-.b-table-details td {
-  padding: 0;
-}
-
-.b-table-has-details {
-  border-top: 2px solid #b3daeb !important;
-  border-left: 2px solid #b3daeb !important;
-  border-right: 2px solid #b3daeb !important;
-  background-color: #e4f9f5;
-}
-
 /* Tabs */
 .tab-content {
   height: 250px;
   overflow: hidden;
+}
+
+.nav-pills .nav-link {
+  padding: 0.2rem 0.7rem !important;
+  font-size: smaller !important;
+}
+
+.nav-pills .tab-pills .nav-link {
+  background-color: #38aba1 !important;
+  font-weight: bold;
+}
+
+.nav-pills .tab-pills .nav-link:not(.active) {
+  background-color: transparent !important;
+  color: var(--bs-secondary);
+  font-weight: bold;
+}
+
+/* Select all checkbox */
+.checkbox label:hover {
+  cursor: pointer !important;
+}
+
+.cursor-default {
+  cursor: default !important;
+}
+
+/* Go to page option in pagination */
+.go-to-page-input {
+  width: 30%;
+  height: calc(1.5em + 0.5rem + 2px);
+  font-size: small;
+}
+
+.go-to-page-btn,
+.go-to-page-btn:hover,
+.go-to-page-btn:active,
+.go-to-page-btn:visited {
+  font-size: 16px;
+  background-color: var(--bs-primary) !important;
+  color: #222;
+  font-family: inherit;
+  border: 1px solid transparent;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  font-weight: 400;
+  text-align: center;
+  cursor: pointer;
+  transition: color 0.15s ease-in-out 0s, background-color 0.15s ease-in-out 0s,
+    border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
+}
+
+.go-to-page-btn:focus,
+.go-to-page-btn.focus {
+  color: #222;
+  background-color: var(--bs-primary);
+  border: 1px solid transparent;
+}
+
+.go-to-page-btn.disabled,
+.go-to-page-btn:disabled {
+  color: gray;
+  background-color: #ccc !important;
+  cursor: not-allowed;
+  border: 1px solid transparent;
+}
+
+.disabled-button {
+  opacity: 0.5;
+  pointer-events: none;
 }
 
 .download-button {
@@ -112,8 +116,21 @@ html {
   cursor: pointer !important;
 }
 
+.card-box {
+  height: 100px;
+  width: 200px;
+}
+
+.card-box .card-header {
+  background-color: #e4f9f5;
+}
+
 .fade:not(.show) {
   display: none;
+}
+
+.bg-secondary {
+  --bs-bg-opacity: 0.75;
 }
 
 .rtl {

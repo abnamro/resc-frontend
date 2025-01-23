@@ -1,17 +1,13 @@
 <template>
-  <div class="ms-4">
-    <div class="col-md-2 pt-2 text-start page-title">
-      <h3><small class="text-nowrap">Audit Metrics</small></h3>
-    </div>
-    <div class="pl-2">
-      <h5><small class="text-nowrap">Audits by Auditor per week</small></h5>
-      <ProgressSpinner v-if="!loadedAuditCounts" />
-      <MultiLineChartVue
-        v-if="loadedAuditCounts"
-        :chart-data="chartDataForAuditCountsGraph"
-        :height="600"
-      />
-    </div>
+  <div class="p-4">
+    <h1 class="text-left text-3xl mb-10">Audit Metrics</h1>
+    <h5 class="text-xl">Audits by Auditor per week</h5>
+    <ProgressSpinner v-if="!loadedAuditCounts" />
+    <MultiLineChartVue
+      v-if="loadedAuditCounts"
+      :chart-data="chartDataForAuditCountsGraph"
+      :height="600"
+    />
   </div>
 </template>
 

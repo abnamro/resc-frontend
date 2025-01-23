@@ -1,11 +1,8 @@
 <template>
-  <!-- Page Title -->
-  <div class="mx-4 col-md-2 pt-2 text-start page-title">
-    <h3><small class="text-nowrap">ANALYTICS</small></h3>
+  <div class="p-4">
+    <h1 class="text-left text-3xl mb-10">ANALYTICS</h1>
+    <PersonalAuditMetrics></PersonalAuditMetrics>
   </div>
-
-  <!-- Personal Audit Metrics -->
-  <PersonalAuditMetrics></PersonalAuditMetrics>
 </template>
 <script setup lang="ts">
 import PersonalAuditMetrics from '@/components/Metrics/PersonalAuditMetrics.vue';

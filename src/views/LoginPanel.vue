@@ -27,7 +27,7 @@ import { useRouter } from 'vue-router';
 import { onKeyStroke } from '@vueuse/core';
 import Panel from 'primevue/panel';
 import Button from 'primevue/button';
-import BatView from './BatView.vue';
+import BatView from '../components/Login/BatView.vue';
 
 const ssoLoginPageMessage = `${Config.value('ssoLoginPageMessage')}`;
 const router = useRouter();

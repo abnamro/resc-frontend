@@ -1,44 +1,38 @@
 <template>
-  <div class="ms-4">
-    <div class="col-md-2 pt-2 text-start page-title">
-      <h3><small class="text-nowrap">Finding Metrics</small></h3>
-    </div>
-    <div class="pl-2 container">
-      <div class="row">
-        <div class="col-md-5 pt-2">
-          <h5><small class="text-nowrap">Findings per week</small></h5>
-          <ProgressSpinner v-if="!loadedTotal" />
-          <MultiLineChart v-if="loadedTotal" :chart-data="chartDataForTotalFindingsCountGraph" />
-        </div>
-        <div class="col-md-1"></div>
-        <div class="col-md-5 pt-2">
-          <h5><small class="text-nowrap">True positive findings per week</small></h5>
-          <ProgressSpinner v-if="!loadedTruePositive" />
-          <MultiLineChart
-            v-if="loadedTruePositive"
-            :chart-data="chartDataForTruePositiveFindingsCountGraph"
-          />
-        </div>
+  <div class="p-4 h-screen">
+    <h1 class="text-left text-3xl mb-10">Findings Metrics</h1>
+    <div class="flex mb-20 gap-8">
+      <div class="w-full">
+        <h5 class="text-lg mb-2">Findings per week</h5>
+        <ProgressSpinner v-if="!loadedTotal" />
+        <MultiLineChart v-if="loadedTotal" :chart-data="chartDataForTotalFindingsCountGraph" />
       </div>
+      <div class="w-full">
+        <h5 class="text-lg mb-2">True positive findings per week</h5>
+        <ProgressSpinner v-if="!loadedTruePositive" />
+        <MultiLineChart
+          v-if="loadedTruePositive"
+          :chart-data="chartDataForTruePositiveFindingsCountGraph"
+        />
+      </div>
+    </div>
 
-      <div class="row mt-5">
-        <div class="col-md-5 pt-2">
-          <h5><small class="text-nowrap">UnTriaged findings per week</small></h5>
-          <ProgressSpinner v-if="!loadedUnTriaged" />
-          <MultiLineChart
-            v-if="loadedUnTriaged"
-            :chart-data="chartDataForUnTriagedFindingsCountGraph"
-          />
-        </div>
-        <div class="col-md-1"></div>
-        <div class="col-md-5 pt-2">
-          <h5><small class="text-nowrap">Percent of untriaged findings per week</small></h5>
-          <ProgressSpinner v-if="!loadedUnTriaged || !loadedTotal" />
-          <MultiLineChart
-            v-if="loadedUnTriaged && loadedTotal"
-            :chart-data="chartDataForPercentTriagedFindingGraph"
-          />
-        </div>
+    <div class="flex gap-8">
+      <div class="w-full">
+        <h5 class="text-lg mb-2">UnTriaged findings per week</h5>
+        <ProgressSpinner v-if="!loadedUnTriaged" />
+        <MultiLineChart
+          v-if="loadedUnTriaged"
+          :chart-data="chartDataForUnTriagedFindingsCountGraph"
+        />
+      </div>
+      <div class="w-full">
+        <h5 class="text-lg mb-2">Percent of untriaged findings per week</h5>
+        <ProgressSpinner v-if="!loadedUnTriaged || !loadedTotal" />
+        <MultiLineChart
+          v-if="loadedUnTriaged && loadedTotal"
+          :chart-data="chartDataForPercentTriagedFindingGraph"
+        />
       </div>
     </div>
   </div>

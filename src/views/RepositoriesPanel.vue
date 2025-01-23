@@ -1,6 +1,6 @@
 <template>
   <div class="p-4">
-    <h1 class="text-left">REPOSITORIES</h1>
+    <h1 class="text-left text-3xl mb-10">REPOSITORIES</h1>
 
     <RepositoriesPageFilter
       v-model:projectOptions="projectNames"
@@ -57,16 +57,14 @@
       </Column>
     </DataTable>
     <!-- Pagination -->
-    <Pagination
-      :currentPage="currentPage"
-      :perPage="perPage"
-      :totalRows="totalRows"
-      :pageSizes="pageSizes"
-      :requestedPageNumber="requestedPageNumber"
-      @page-click="handlePageClick"
-      @page-size-change="handlePageSizeChange"
-    >
-    </Pagination>
+    <Paginator
+      v-model:first="currentPage"
+      v-model:rows="perPage"
+      :totalRecords="totalRows"
+      :rowsPerPageOptions="PAGE_SIZES"
+      @update:first="handlePageClick"
+      @update:rows="handlePageSizeChange"
+    />
   </div>
 </template>
 
@@ -76,10 +74,9 @@ import Config from '@/configuration/config';
 import CommonUtils from '@/utils/common-utils';
 import DateUtils from '@/utils/date-utils';
 import HealthBar from '@/components/Common/HealthBar.vue';
-import Pagination from '@/components/Common/PaginationVue.vue';
 import RepositoryService from '@/services/repository-service';
 import RepositoriesPageFilter from '@/components/Filters/RepositoriesPageFilter.vue';
-import { computed, onMounted, ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import type { RepositoryEnrichedRead, VCSProviders } from '@/services/shema-to-types';
 import { onKeyStroke } from '@vueuse/core';
@@ -87,6 +84,7 @@ import { shouldIgnoreKeystroke } from '@/utils/keybind-utils';
 import { PAGE_SIZES } from '@/configuration/config';
 import DataTable, { type DataTableRowClickEvent } from 'primevue/datatable';
 import Column from 'primevue/column';
+import Paginator from 'primevue/paginator';
 
 const loadedData = ref(false);
 const repositoriesTable = ref();
@@ -95,10 +93,8 @@ const router = useRouter();
 const repositoryList = ref([] as RepositoryEnrichedRead[]);
 const currentSelection = ref<RepositoryEnrichedRead | undefined>(undefined);
 const totalRows = ref(0);
-const currentPage = ref(1);
+const currentPage = ref(0);
 const perPage = ref(Number(`${Config.value('defaultPageSize')}`));
-const pageSizes = ref(PAGE_SIZES);
-const requestedPageNumber = ref(1);
 const vcsFilter = ref([] as VCSProviders[]);
 const repositoryFilter = ref(undefined as string | undefined);
 const projectFilter = ref(undefined as string | undefined);
@@ -108,10 +104,6 @@ const selectedIndex = ref(undefined as number | undefined);
 const includeZeroFindingRepos = ref(false);
 const includeDeletedRepositories = ref(false);
 const onlyIfHasUntriagedFindings = ref(false);
-
-const skipRowCount = computed(() => {
-  return (currentPage.value - 1) * perPage.value;
-});
 
 function formatDate(timestamp: string) {
   const date = DateUtils.formatDate(timestamp);
@@ -129,7 +121,7 @@ function handlePageClick(page: number) {
 
 function handlePageSizeChange(pageSize: number) {
   perPage.value = Number(pageSize);
-  currentPage.value = 1;
+  currentPage.value = 0;
   fetchPaginatedRepositories();
 }
 
@@ -163,7 +155,7 @@ function handleFilterChange(
   includeZeroFindingRepos.value = includeZeroFindingReposArg;
   includeDeletedRepositories.value = includeDeletedRepositoriesArg;
   onlyIfHasUntriagedFindings.value = onlyIfHasUntriagedFindingsArg;
-  currentPage.value = 1;
+  currentPage.value = 0;
   fetchDistinctProjects();
   fetchDistinctRepositories();
   fetchPaginatedRepositories();
@@ -174,7 +166,7 @@ function fetchPaginatedRepositories() {
   loadedData.value = false;
   RepositoryService.getRepositoriesWithFindingsMetadata(
     perPage.value,
-    skipRowCount.value,
+    currentPage.value,
     vcsFilter.value,
     projectFilter.value,
     repositoryFilter.value,

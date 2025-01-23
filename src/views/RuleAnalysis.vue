@@ -1,11 +1,7 @@
 <template>
   <div class="mx-4">
-    <!-- Page Title -->
-    <div class="col-md-2 pt-2 text-start page-title">
-      <h3><small class="text-nowrap">RULE ANALYSIS</small></h3>
-    </div>
+    <h1 class="text-left text-3xl mb-10">RULE ANALYSIS</h1>
 
-    <!-- Filters -->
     <div class="mt-4">
       <RuleAnalysisFilter
         :projectOptions="projectNames"
@@ -14,12 +10,6 @@
         :rulePackOptions="rulePackVersions"
         @on-filter-change="handleFilterChange"
       ></RuleAnalysisFilter>
-    </div>
-
-    <!--Scan Findings Table -->
-    <div v-if="!hasRecords && loadedData" class="text-center cursor-default">
-      <br />
-      <br />No Record Found...
     </div>
 
     <FindingsTable

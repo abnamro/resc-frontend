@@ -14,6 +14,8 @@
 }
 
 .v-sidebar-menu {
+  --bs-secondary-lighter: #00857a;
+  --bs-secondary: #005e5d;
   --vsm-item-color: #fff;
   --vsm-base-bg: var(--bs-secondary);
   --vsm-icon-active-bg: var(--bs-secondary);

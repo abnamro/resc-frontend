@@ -1,21 +1,16 @@
 <template>
-  <div class="ms-4">
-    <!-- Page Title -->
-    <div class="col-md-2 pt-2 text-start page-title">
-      <h3><small class="text-nowrap">RULE METRICS</small></h3>
-    </div>
+  <div class="p-4">
+    <h1 class="text-left text-3xl mb-10">RULE METRICS</h1>
 
-    <ProgressSpinner v-if="!loadedData" />
-
-    <div class="row pl-3 mt-4 me-0 mr-0">
-      <div class="col-md-4">
+    <div class="flex gap-4 mb-2">
+      <div class="w-1/4">
         <RulePackFilter
           :rulePackPreSelected="selectedVersionsList"
           :rulePackOptions="allRulePackVersions"
           @on-rule-pack-version-change="onRulePackVersionChange"
         />
       </div>
-      <div class="col-md-4">
+      <div class="w-1/4">
         <RuleTagsFilter
           ref="ruleTagsFilterChildComponent"
           :ruleTagsOptions="ruleTagsList"
@@ -24,152 +19,131 @@
         />
       </div>
     </div>
-    <div class="row pl-3 pt-3 me-0 mr-0">
-      <div class="col-md-4 text-start">
-        <BFormCheckbox
-          v-model="includeDeletedRepositories"
-          name="check-button"
-          switch
-          @change="fetchRulesWithFindingStatusCount"
-        >
-          <small class="text-nowrap">Include data from repositories marked as deleted.</small>
-        </BFormCheckbox>
-      </div>
-    </div>
-
-    <!--Rule Metrics Table -->
-    <div v-if="!hasRecords && loadedData" class="text-center cursor-default">
-      <br />
-      <br />No Record Found...
-    </div>
-
-    <div class="row pt-3 me-0 mr-0" v-if="hasRecords">
-      <BTable
-        id="rule-metrics-table"
-        :no-border-collapse="true"
-        :items="ruleList"
-        :fields="fields"
-        primary-key="rule_name"
-        responsive
-        small
-        head-variant="light"
-        @row-clicked="goToRuleAnalysisPage"
+    <div class="text-left flex items-center">
+      <ToggleSwitch
+        size="small"
+        v-model="includeDeletedRepositories"
+        inputId="includeDeletedRepositories"
+        @change="fetchRulesWithFindingStatusCount"
       >
-        <!-- True Positive Rate Column -->
-        <template #cell(true_positive_rate)="data">
-          {{ calculateTruePositiveRate(data) }}
-        </template>
+      </ToggleSwitch>
+      <label for="includeDeletedRepositories" class="ml-2"
+        >Include data from repositories marked as deleted.</label
+      >
+    </div>
 
-        <!-- True Positive Count Column -->
-        <template #cell(true_positive)="data">
-          <span
-            v-for="(item, i) in (data.item as RuleFindingCountModel).finding_statuses_count"
-            :key="i"
-          >
-            <span v-if="item.status === 'TRUE_POSITIVE'">
-              {{ item.count }}
-            </span>
-          </span>
-        </template>
+    <DataTable
+      :value="ruleList"
+      size="small"
+      :loading="!loadedData"
+      dataKey="_id"
+      :highlight-on-select="true"
+      selection-mode="single"
+      :virtual-scroller-options="{ itemSize: 36 }"
+      @row-click="goToRuleAnalysisPage"
+      class="mt-8"
+    >
+      <Column field="rule_name" header="Rule" sortable header-class="bg-teal-500/20"></Column>
+      <Column
+        field="true_positive_rate"
+        header="True Positive Rate"
+        sortable
+        header-class="bg-teal-500/20"
+      >
+      </Column>
+      <!-- True Positive Count Column -->
+      <Column field="tpCount" header="True Positive" header-class="bg-teal-500/20"></Column>
+      <!-- False Positive Count Column -->
+      <Column field="fpCount" header="False Positive" header-class="bg-teal-500/20"></Column>
+      <!-- Clarification Required Count Column -->
+      <Column
+        field="crCount"
+        header="Clarification Required"
+        header-class="bg-teal-500/20"
+      ></Column>
+      <!-- Not Accessible Count Column -->
+      <Column field="urCount" header="Not Accessible" header-class="bg-teal-500/20"></Column>
+      <!-- Not Accessible Count Column -->
+      <Column field="naCount" header="Not Analyzed" header-class="bg-teal-500/20"></Column>
+      <!-- Outdated Count Column -->
+      <Column field="odCount" header="Outdated" header-class="bg-teal-500/20"></Column>
 
-        <!-- False Positive Count Column -->
-        <template #cell(false_positive)="data">
-          <span v-for="(item, i) in data.item.finding_statuses_count" :key="i">
-            <span v-if="(item as StatusCount).status === 'FALSE_POSITIVE'">
-              {{ (item as StatusCount).count }}
-            </span>
-          </span>
-        </template>
+      <Column field="finding_count" header="Total Count" sortable header-class="bg-teal-500/20">
+      </Column>
 
-        <!-- Clarification Required Count Column -->
-        <template #cell(clarification_required)="data">
-          <span v-for="(item, i) in data.item.finding_statuses_count" :key="i">
-            <span v-if="(item as StatusCount).status === 'CLARIFICATION_REQUIRED'">
-              {{ (item as StatusCount).count }}
-            </span>
-          </span>
-        </template>
-
-        <!-- Outdated Count Column -->
-        <template #cell(outdated)="data">
-          <span v-for="(item, i) in data.item.finding_statuses_count" :key="i">
-            <span v-if="(item as StatusCount).status === 'OUTDATED'">
-              {{ (item as StatusCount).count }}
-            </span>
-          </span>
-        </template>
-
-        <!-- Not Accessible Count Column -->
-        <template #cell(not_accessible)="data">
-          <span v-for="(item, i) in data.item.finding_statuses_count" :key="i">
-            <span v-if="(item as StatusCount).status === 'NOT_ACCESSIBLE'">
-              {{ (item as StatusCount).count }}
-            </span>
-          </span>
-        </template>
-
-        <!-- Not Accessible Count Column -->
-        <template #cell(not_analyzed)="data">
-          <span v-for="(item, i) in data.item.finding_statuses_count" :key="i">
-            <span v-if="(item as StatusCount).status === 'NOT_ANALYZED'">
-              {{ (item as StatusCount).count }}
-            </span>
-          </span>
-        </template>
-
-        <!-- Health Bar Column -->
-        <template #cell(health)="data">
+      <Column header="Findings (%)" header-class="bg-teal-500/20" body-class="w-96">
+        <template #body="slotProps">
           <HealthBar
-            :truePositive="(data.item as RuleFindingCountModelAugmented).tpCount"
-            :falsePositive="(data.item as RuleFindingCountModelAugmented).fpCount"
-            :notAnalyzed="(data.item as RuleFindingCountModelAugmented).naCount"
-            :notAccessible="(data.item as RuleFindingCountModelAugmented).urCount"
-            :clarificationRequired="(data.item as RuleFindingCountModelAugmented).crCount"
-            :outdated="(data.item as RuleFindingCountModelAugmented).odCount"
-            :totalCount="(data.item as RuleFindingCountModelAugmented).finding_count ?? 0"
+            :truePositive="slotProps.data.tpCount"
+            :falsePositive="slotProps.data.fpCount"
+            :notAnalyzed="slotProps.data.naCount"
+            :notAccessible="slotProps.data.urCount"
+            :clarificationRequired="slotProps.data.crCount"
+            :outdated="slotProps.data.odCount"
+            :totalCount="slotProps.data.finding_count ?? 0"
           />
         </template>
-
-        <!-- Total Calculation Row-->
-        <tr name="bottomRow">
-          <td :class="ruleTotalRowClass">Sum</td>
-          <td :class="ruleTotalRowClass">Avg:{{ avgTruePosiitveRate }}%</td>
-          <td :class="ruleTotalRowClass">{{ truePositiveTotalCount }}</td>
-          <td :class="ruleTotalRowClass">{{ falsePositiveTotalCount }}</td>
-          <td :class="ruleTotalRowClass">{{ clarificationRequiredTotalCount }}</td>
-          <td :class="ruleTotalRowClass">{{ notAccessibleTotalCount }}</td>
-          <td :class="ruleTotalRowClass">{{ notAnalyzedTotalCount }}</td>
-          <td :class="ruleTotalRowClass">{{ outdatedTotalCount }}</td>
-          <td :class="ruleTotalRowClass">{{ totalFindingsCountForAllRules }}</td>
-          <td :class="ruleTotalRowClass"></td>
-        </tr>
-      </BTable>
-    </div>
+      </Column>
+      <template #footer>
+        <div v-if="loadedData" class="flex flex-col">
+          <h5 class="text-left font-bold text-lg mt-8">Totals</h5>
+          <div class="text-left">
+            <FindingStatusBadge status="TRUE_POSITIVE" /> :
+            <span class="ml-4">{{ truePositiveTotalCount }}</span>
+          </div>
+          <div class="text-left">
+            <FindingStatusBadge status="FALSE_POSITIVE" /> :
+            <span class="ml-4">{{ falsePositiveTotalCount }}</span>
+          </div>
+          <div class="text-left">
+            <FindingStatusBadge status="CLARIFICATION_REQUIRED" /> :
+            <span class="ml-4">{{ clarificationRequiredTotalCount }}</span>
+          </div>
+          <div class="text-left">
+            <FindingStatusBadge status="NOT_ACCESSIBLE" /> :
+            <span class="ml-4">{{ notAccessibleTotalCount }}</span>
+          </div>
+          <div class="text-left">
+            <FindingStatusBadge status="NOT_ANALYZED" /> :
+            <span class="ml-4">{{ notAnalyzedTotalCount }}</span>
+          </div>
+          <div class="text-left">
+            <FindingStatusBadge status="OUTDATED" /> :
+            <span class="ml-4">{{ outdatedTotalCount }}</span>
+          </div>
+          <div class="text-left">
+            Total number of Findings: <span class="ml-4">{{ totalFindingsCountForAllRules }}</span>
+          </div>
+        </div>
+      </template>
+    </DataTable>
   </div>
 </template>
 
 <script setup lang="ts">
 import AxiosConfig from '@/configuration/axios-config';
-import Config from '@/configuration/config';
 import HealthBar from '@/components/Common/HealthBar.vue';
 import RulePackFilter from '@/components/Filters/RulePackFilter.vue';
 import RulePackService from '@/services/rule-pack-service';
 import RuleService from '@/services/rule-service';
 import RuleTagsFilter from '@/components/Filters/RuleTagsFilter.vue';
 import { useAuthUserStore, type PreviousRouteState } from '@/store/index';
-import { computed, ref } from 'vue';
+import { ref } from 'vue';
 import type {
   FindingStatus,
   PaginationType,
   RuleFindingCountModel,
   RulePackRead,
-  StatusCount,
   Swr,
 } from '@/services/shema-to-types';
 import { useRouter } from 'vue-router';
 import type { AxiosResponse } from 'axios';
-import { type TableItem, type BFormCheckbox, BTable } from 'bootstrap-vue-next';
 import CommonUtils from '@/utils/common-utils';
+import ToggleSwitch from 'primevue/toggleswitch';
+import type { DataTableRowClickEvent } from 'primevue/datatable';
+import Column from 'primevue/column';
+import DataTable from 'primevue/datatable';
+import FindingStatusBadge from '../Common/FindingStatusBadge.vue';
 
 const loadedData = ref(false);
 
@@ -180,6 +154,7 @@ type Stats = {
   urCount: number;
   crCount: number;
   odCount: number;
+  true_positive_rate: string;
 };
 
 function getTruePositiveRate(stat: Stats): number {
@@ -205,92 +180,7 @@ const allRulePackVersions = ref([] as RulePackRead[]);
 const selectedRuleTags = ref([] as string[]);
 const selectedVersionsList = ref([] as RulePackRead[]);
 const selectedVersions = ref([] as string[]);
-const ruleTotalRowClass = ref(['text-start', 'fw-bold']);
 const includeDeletedRepositories = ref(false);
-
-type FieldType = {
-  key: string;
-  sortable?: boolean;
-  label: string;
-  class: string;
-  thStyle: { borderTop: string; width?: string };
-  tdClass?: string;
-};
-
-const fields = ref([
-  {
-    key: 'rule_name',
-    sortable: true,
-    label: 'Rule',
-    class: 'text-start position-sticky',
-    thStyle: { borderTop: '0px' },
-  },
-  {
-    key: 'true_positive_rate',
-    sortable: false,
-    label: 'True Positive Rate',
-    class: 'text-start position-sticky',
-    thStyle: { borderTop: '0px' },
-  },
-  {
-    key: 'true_positive',
-    sortable: false,
-    label: 'True Positive',
-    class: 'text-start position-sticky',
-    thStyle: { borderTop: '0px' },
-  },
-  {
-    key: 'false_positive',
-    sortable: false,
-    label: 'False Positive',
-    class: 'text-start position-sticky',
-    thStyle: { borderTop: '0px' },
-  },
-  {
-    key: 'clarification_required',
-    sortable: false,
-    label: 'Clarification Required',
-    class: 'text-start position-sticky',
-    thStyle: { borderTop: '0px' },
-  },
-  {
-    key: 'not_accessible',
-    sortable: false,
-    label: 'Not Accessible',
-    class: 'text-start position-sticky',
-    thStyle: { borderTop: '0px' },
-  },
-  {
-    key: 'not_analyzed',
-    sortable: false,
-    label: 'Not Analyzed',
-    class: 'text-start position-sticky',
-    thStyle: { borderTop: '0px' },
-  },
-  {
-    key: 'outdated',
-    sortable: false,
-    label: 'Outdated',
-    class: 'text-start position-sticky',
-    thStyle: { borderTop: '0px' },
-  },
-  {
-    key: 'finding_count',
-    sortable: true,
-    label: 'Total Count',
-    class: 'text-start position-sticky',
-    thStyle: { borderTop: '0px' },
-    tdClass: 'fw-bold',
-  },
-  {
-    key: 'health',
-    label: 'Findings(%)',
-    class: 'text-start position-sticky',
-    thStyle: { borderTop: '0px', width: '25%' },
-  },
-] as FieldType[]);
-
-const hasRecords = computed(() => ruleList.value.length > 0);
 
 function onRuleTagsFilterChange(ruleTags: string[]) {
   selectedRuleTags.value = ruleTags;
@@ -322,28 +212,6 @@ function fetchRulesWithFindingStatusCount() {
     .catch((error) => {
       AxiosConfig.handleError(error);
     });
-}
-
-function calculateTruePositiveRate(data: { item: RuleFindingCountModel }): string {
-  let truePositiveCount = 0;
-  let falsePositiveCount = 0;
-  const item: RuleFindingCountModel = data.item;
-  if (item.finding_statuses_count === undefined) {
-    return 'NAN%';
-  }
-  item.finding_statuses_count.forEach((findingStatus) => {
-    if (findingStatus.status === `${Config.value('truePostiveStatusVal')}`) {
-      truePositiveCount = findingStatus.count ?? 0;
-    }
-    if (findingStatus.status === `${Config.value('falsePositiveStatusVal')}`) {
-      falsePositiveCount = findingStatus.count ?? 0;
-    }
-  });
-  let truePositiveRate = Math.round(
-    (truePositiveCount / (truePositiveCount + falsePositiveCount)) * 100,
-  );
-  truePositiveRate = truePositiveRate || 0;
-  return `${truePositiveRate}%`;
 }
 
 function getTotalCountRowValuesForRuleMetricsTable(ruleListCounts: RuleFindingCountModel[]) {
@@ -394,6 +262,7 @@ function getRuleFindingCountAugmented(rule: RuleFindingCountModel): RuleFindingC
     rule_name: rule.rule_name,
     finding_count: rule.finding_count,
     finding_statuses_count: rule.finding_statuses_count,
+    true_positive_rate: `${Math.round((counts['TRUE_POSITIVE'] / (counts['TRUE_POSITIVE'] + counts['FALSE_POSITIVE'] || 1)) * 100)}%`,
     tpCount: counts['TRUE_POSITIVE'],
     fpCount: counts['FALSE_POSITIVE'],
     naCount: counts['NOT_ANALYZED'],
@@ -412,8 +281,8 @@ function calculateAverageTruePositiveRatePercentage() {
   }
 }
 
-function goToRuleAnalysisPage(recordItem: TableItem) {
-  const record = recordItem as RuleFindingCountModelAugmented;
+function goToRuleAnalysisPage(event: DataTableRowClickEvent) {
+  const record = event.data as RuleFindingCountModelAugmented;
   const store = useAuthUserStore();
   const updateState: PreviousRouteState = {
     ruleName: record.rule_name,

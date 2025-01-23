@@ -115,6 +115,7 @@ const AuthService = {
       });
     } else {
       dispatchError('authCode && codeVerifier are null!');
+      return Promise.reject('authCode && codeVerifier are null!');
     }
   },
 

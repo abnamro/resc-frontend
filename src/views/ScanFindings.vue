@@ -1,9 +1,6 @@
 <template>
   <div class="mx-4">
-    <!-- Page Title -->
-    <div class="col-md-2 pt-2 text-start page-title">
-      <h3><small class="text-nowrap">SCAN FINDINGS</small></h3>
-    </div>
+    <h1 class="text-left text-3xl mb-10">SCAN FINDINGS</h1>
 
     <ProgressSpinner v-if="!loadedData" />
 
@@ -41,6 +38,16 @@
     >
     </FindingsTable>
 
+    <Paginator
+      v-model:first="currentPage"
+      v-model:rows="perPage"
+      :totalRecords="totalRows"
+      :rowsPerPageOptions="PAGE_SIZES"
+      @update:first="handlePageClick"
+      @update:rows="handlePageSizeChange"
+    />
+
+    <Paginator> </Paginator>
     <div class="p-3" v-if="hasRecords">
       <!-- Pagination -->
       <Pagination
@@ -80,6 +87,7 @@ import { useAuthUserStore } from '@/store';
 import { storeToRefs } from 'pinia';
 import { PAGE_SIZES } from '@/configuration/config';
 import ProgressSpinner from 'primevue/progressspinner';
+import Paginator from 'primevue/paginator';
 
 const loadedData = ref(false);
 const loadedRepoData = ref(false);

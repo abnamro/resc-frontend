@@ -1,6 +1,6 @@
 <template>
   <KeybindingModal v-model:visible="isKeybindingModalOpen" />
-  <div class="float-right flex gap-2 mr-4 mt-2">
+  <div class="absolute right-4 top-2 flex gap-2">
     <div
       class="aspect-square float-start px-3 flex items-center cursor-help justify-center rounded-full bg-yellow-520 text-white font-bold text-sm"
       @click="isKeybindingModalOpen = true"
