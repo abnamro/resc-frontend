@@ -29,12 +29,10 @@ describe('ColumnSelector tests', () => {
     });
 
     expect(wrapper.exists()).toBe(true);
-    expect(() => wrapper.vm.loadModal()).not.toThrow();
-    expect(() => wrapper.vm.show()).not.toThrow();
-    expect(() => wrapper.vm.hide()).not.toThrow();
+    expect(() => wrapper.vm.reset_if_empty()).not.toThrow();
     expect(() => wrapper.vm.updateColumns()).not.toThrow();
     expect(wrapper.emitted()).toHaveProperty('update-columns');
-    expect(wrapper.emitted()['update-columns']).toStrictEqual([[['file_path']]]);
+    expect(wrapper.emitted()['update-columns']).toStrictEqual([[]]);
   });
 
   it('Given a ColumnSelector without PreSelection then ColumnSelector will be displayed', () => {
@@ -56,13 +54,9 @@ describe('ColumnSelector tests', () => {
     });
 
     expect(wrapper.exists()).toBe(true);
-    expect(() => wrapper.vm.loadModal()).not.toThrow();
-    expect(() => wrapper.vm.show()).not.toThrow();
-    expect(() => wrapper.vm.hide()).not.toThrow();
+    expect(() => wrapper.vm.reset_if_empty()).not.toThrow();
     expect(() => wrapper.vm.updateColumns()).not.toThrow();
     expect(wrapper.emitted()).toHaveProperty('update-columns');
-    expect(wrapper.emitted()['update-columns']).toStrictEqual([
-      [['project_key', 'repository_name', 'rule_name', 'file_path', 'line_number']],
-    ]);
+    expect(wrapper.emitted()['update-columns']).toStrictEqual([[]]);
   });
 });

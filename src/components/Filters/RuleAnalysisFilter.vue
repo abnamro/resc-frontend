@@ -13,20 +13,22 @@
       <FindingStatusFilter @on-findings-status-change="onFindingsStatusChange" />
     </div>
     <div class="col-span-2 mt-1 ml-1">
-      <Button severity="primary" class="mt-4 w-100" @click="toggleAdvancedSearch"
+      <Button
+        class="mt-4 w-100 bg-yellow-520 border-none text-surface-950"
+        @click="toggleAdvancedSearch"
         >Advanced Search</Button
       >
     </div>
   </div>
 
   <Collapse :when="advancedSearchVisible">
-    <div class="grid grid-cols-10 gap-x-2 gap-y-4 mt-4">
+    <div class="grid grid-cols-12 gap-x-2 gap-y-4 mt-4">
       <!-- VCS Filter -->
-      <div class="col-span-3">
+      <div class="col-span-4">
         <VcsProviderFilter @on-vcs-change="onVcsProviderChange" />
       </div>
       <!--Project Filter -->
-      <div class="col-span-3">
+      <div class="col-span-4">
         <ProjectFilter
           :projectOptions="props.projectOptions"
           @on-project-change="onProjectChange"
@@ -42,7 +44,10 @@
 
       <!-- Start Date Filter -->
       <div class="col-span-2">
-        <BFormGroup class="label-title text-start" label="From Date" label-for="start-date">
+        <div class="flex flex-col justify-start">
+          <label for="start-date" class="font-bold text-lg text-left text-muted-color-emphasis"
+            >From Date</label
+          >
           <VueDatePicker
             id="start-date"
             placeholder="Enter Scan Start Date"
@@ -54,12 +59,15 @@
             auto-apply
             no-today
           ></VueDatePicker>
-        </BFormGroup>
+        </div>
       </div>
 
       <!-- End Date Filter -->
       <div class="col-span-2">
-        <BFormGroup class="label-title text-start" label="To Date" label-for="end-date">
+        <div class="flex flex-col justify-start">
+          <label for="end-date" class="font-bold text-lg text-left text-muted-color-emphasis"
+            >To Date</label
+          >
           <VueDatePicker
             id="end-date"
             placeholder="Enter Scan End Date"
@@ -74,10 +82,10 @@
             no-today
           >
           </VueDatePicker>
-        </BFormGroup>
+        </div>
       </div>
 
-      <div class="col-span-3">
+      <div class="col-span-4">
         <RulePackFilter
           :rulePackPreSelected="props.rulePackPreSelected"
           :rulePackOptions="props.rulePackOptions"
@@ -86,7 +94,7 @@
         />
       </div>
       <!-- Rule Tags Filter -->
-      <div class="col-span-3">
+      <div class="col-span-4">
         <RuleTagsFilter
           :ruleTagsOptions="optionsRuleTags"
           :ruleTagsSelected="selectedRuleTags"
@@ -130,7 +138,6 @@ import { onKeyStroke } from '@vueuse/core';
 import { shouldIgnoreKeystroke } from '@/utils/keybind-utils';
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
-import { BFormGroup } from 'bootstrap-vue-next';
 import { storeToRefs } from 'pinia';
 import { Collapse } from 'vue-collapsed';
 import Button from 'primevue/button';

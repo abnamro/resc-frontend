@@ -1,8 +1,6 @@
 import { useAuthUserStore } from '@/store/index';
 import Config, { dispatchError } from '@/configuration/config';
 import AuthService from '@/services/auth-service';
-
-// import PushNotification from '@/utils/push-notification';
 import axios, {
   type AxiosRequestConfig,
   type AxiosRequestHeaders,

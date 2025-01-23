@@ -73,7 +73,9 @@ type ERAEvent = ErrorEvent | ResponseEvent | AxiosEvent | MessageEvent;
 const isOpen = ref(false);
 const errors = ref<ERAEvent[]>([]);
 
-window.addEventListener('error', function (e: Event | CustomEvent) {
+window.addEventListener('error', errorHandler);
+
+function errorHandler(e: Event | CustomEvent) {
   // @ts-expect-error
   if (e.detail !== undefined) {
     // @ts-expect-error
@@ -90,7 +92,7 @@ window.addEventListener('error', function (e: Event | CustomEvent) {
     // @ts-expect-error
     errors.value.push(e as ErrorEvent);
   }
-});
+}
 
 function isJsError(e: ERAEvent): e is ErrorEvent {
   // @ts-expect-error

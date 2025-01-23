@@ -165,32 +165,6 @@ html {
 }
 
 /* User Account */
-.profile-menu-username,
-.profile-menu-email {
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--bs-secondary-light);
-}
-
-.user-avatar-badge {
-  padding-right: 12px;
-}
-
-.user-avatar {
-  color: #732659;
-  background-color: #f2d9ea;
-}
-
-.sign-out-icon {
-  color: var(--bs-secondary-light);
-  margin-left: 15px;
-}
-
-.sign-out-text {
-  color: var(--bs-secondary-light);
-  margin-left: 25px;
-}
-
 .custom-control-input:checked~.custom-control-label::before {
   color: #fff;
   border-color: var(--bs-secondary) !important;

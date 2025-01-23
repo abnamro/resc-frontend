@@ -61,7 +61,7 @@ describe('TopBarMenu.vue unit tests', () => {
     expect(wrapper.vm.userFullName).toBe('user test');
     expect(wrapper.vm.userEmail).toBe('testuser@test.com');
     expect(wrapper.vm.avatarText).toBe('ut');
-    wrapper.find('.sign-out-text').trigger('click');
+    wrapper.vm.logout();
     await wrapper.vm.$nextTick();
     const store = useAuthUserStore();
     expect(store.idToken).toBe(null);

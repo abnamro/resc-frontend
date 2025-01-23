@@ -1,52 +1,34 @@
 <template>
-  <KeybindingModal ref="keybindingModal"></KeybindingModal>
-  <div class="topbar-menu-group me-4 mt-2">
+  <KeybindingModal v-model:visible="isKeybindingModalOpen" />
+  <div class="float-right flex gap-2 mr-4 mt-2">
     <div
-      class="square float-start px-3 d-flex align-items-center cursor-help justify-content-center rounded-circle bg-warning text-white font-weight-bold"
-      @click="showKeybindingHelp"
+      class="aspect-square float-start px-3 flex items-center cursor-help justify-center rounded-full bg-yellow-500 text-white font-bold text-sm"
+      @click="isKeybindingModalOpen = true"
     >
-      ?
+      <i class="pi pi-question"></i>
     </div>
-
-    <BButtonToolbar
-      aria-label="Toolbar with button groups and dropdown menu"
-      class="float-end"
+    <div
+      class="aspect-square float-start px-3 flex items-center cursor-pointer justify-center rounded-full bg-surface-500 text-white font-bold text-xs"
+      @click="toggle"
       v-if="displayLoggedInUser"
     >
-      <BDropdown class="mx-1" right toggle-class="rounded-circle" no-caret>
-        <template #button-content>
-          <FontAwesomeIcon icon="user" />
-        </template>
-
-        <BDropdownItem disabled>
-          <table aria-hidden="true">
-            <tbody>
-              <tr>
-                <td class="user-avatar-badge">
-                  <BAvatar
-                    button
-                    v-bind:text="avatarText"
-                    class="align-baseline user-avatar"
-                  ></BAvatar>
-                </td>
-                <td>
-                  <span class="profile-menu-username">{{ userFullName }}</span
-                  ><br /><span class="profile-menu-email">{{ userEmail }}</span>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </BDropdownItem>
-
-        <div>
-          <BDropdownDivider />
-          <BDropdownItem v-on:click="logout">
-            <FontAwesomeIcon class="sign-out-icon" icon="sign-out-alt" />
-            <span class="sign-out-text">Logout</span></BDropdownItem
-          >
+      <i class="pi pi-user"></i>
+    </div>
+    <Popover ref="op" v-if="displayLoggedInUser">
+      <div class="flex flex-col gap-4 w-[25rem]">
+        <div class="flex gap-2">
+          <Avatar :label="avatarText" size="large" />
+          <div>
+            <span class="font-bold">{{ userFullName }}</span
+            ><br />
+            <span class="text-sm">{{ userEmail }}</span>
+          </div>
         </div>
-      </BDropdown>
-    </BButtonToolbar>
+        <div class="flex justify-end">
+          <Button text icon="pi pi-sign-out" @click="logout" label="Logout"></Button>
+        </div>
+      </div>
+    </Popover>
   </div>
 </template>
 
@@ -56,16 +38,12 @@ import AuthService from '@/services/auth-service';
 import Config from '@/configuration/config';
 import { useAuthUserStore } from '@/store/index';
 import { computed, ref } from 'vue';
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import {
-  BAvatar,
-  BButtonToolbar,
-  BDropdown,
-  BDropdownDivider,
-  BDropdownItem,
-} from 'bootstrap-vue-next';
+import Popover from 'primevue/popover';
+import Button from 'primevue/button';
+import Avatar from 'primevue/avatar';
 
-const keybindingModal = ref();
+const isKeybindingModalOpen = ref(false);
+const op = ref();
 
 const displayLoggedInUser = computed(() => {
   const authenticationRequired = `${Config.value('authenticationRequired')}`;
@@ -89,25 +67,11 @@ const userEmail = computed(() => {
   return store.email ? `${store.email}` : null;
 });
 
+function toggle(event: Event) {
+  op.value.toggle(event);
+}
+
 function logout() {
   AuthService.doLogOut();
 }
-
-function showKeybindingHelp() {
-  keybindingModal.value.show();
-}
 </script>
-<style scoped>
-.topbar-menu-group {
-  float: right;
-}
-
-.square {
-  height: 38px;
-  width: 40px;
-}
-
-.cursor-help {
-  cursor: help;
-}
-</style>

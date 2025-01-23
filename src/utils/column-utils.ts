@@ -113,17 +113,10 @@ const ColumnUtils = {
     return columns;
   },
 
-  getColumns(
-    selectedColumns: TableColumn[] = [],
-    memoryColumns: TableColumn[] = [],
-    isRuleFinding: boolean,
-  ): SimpleTableField[] {
+  getColumns(selectedColumns: TableColumn[] = [], isRuleFinding: boolean): SimpleTableField[] {
     const defaultColumns = _defaultColumns;
 
     // Get default selected Columns if the selection is empty.
-    if (selectedColumns.length === 0) {
-      selectedColumns = memoryColumns;
-    }
     if (selectedColumns.length === 0) {
       selectedColumns = ColumnUtils.defaultSelectableColumns();
     }

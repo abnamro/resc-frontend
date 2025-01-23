@@ -1,69 +1,44 @@
 <template>
-  <div>
-    <BModal
-      id="column_modal"
-      ref="columnModal"
-      size="sm"
-      button-size="sm"
-      title="Select columns"
-      :cancelDisabled="true"
-      @show="loadModal"
-    >
-      <template v-for="column in selectableColumns" v-bind:key="column">
-        <BFormCheckbox
-          class="checkbox"
-          v-model="selectedColumn"
-          :value="column"
-          @change="updateColumns"
-          >{{ ColumnUtils.formatColumnLabel(column) }}</BFormCheckbox
-        >
-      </template>
-      <template #footer="">
-        <div class="w-100 text-end">
-          <BButton variant="secondary" class="float-right" v-on:click="hide">CLOSE</BButton>
-        </div>
-      </template>
-    </BModal>
-  </div>
+  <Dialog v-model:visible="visible" modal header="Select columns">
+    <Listbox
+      v-model="tableColumns"
+      checkmark
+      :options="selectableColumns"
+      multiple
+      class="w-full"
+      @change="updateColumns"
+    />
+    <div class="flex justify-end pt-4">
+      <Button type="button" label="Close" severity="secondary" @click="visible = false"></Button>
+    </div>
+  </Dialog>
 </template>
 <script lang="ts" setup>
 import { useAuthUserStore } from '@/store';
-import ColumnUtils, { type TableColumn } from '@/utils/column-utils';
-import { BButton, BFormCheckbox, BModal } from 'bootstrap-vue-next';
-import { ref } from 'vue';
+import ColumnUtils from '@/utils/column-utils';
+import { storeToRefs } from 'pinia';
+import Button from 'primevue/button';
+import Dialog from 'primevue/dialog';
+import Listbox from 'primevue/listbox';
+import { onMounted, ref, type Ref } from 'vue';
 
-const columnModal = ref();
+const visible = defineModel('visible') as Ref<boolean>;
 const selectableColumns = ref(ColumnUtils.selectableColumns());
 
 const store = useAuthUserStore();
+const { tableColumns } = storeToRefs(store);
 const emit = defineEmits(['update-columns']);
-
-const selectedColumn = ref([] as string[]);
 
 function updateColumns(): void {
   reset_if_empty();
-  store.update_table_column(selectedColumn.value as TableColumn[]);
-  emit('update-columns', selectedColumn.value);
-}
-
-function loadModal() {
-  selectedColumn.value = store.tableColumns;
-  reset_if_empty();
+  emit('update-columns');
 }
 
 function reset_if_empty() {
-  if (selectedColumn.value.length === 0) {
-    selectedColumn.value = ColumnUtils.defaultSelectableColumns();
+  if (tableColumns.value.length === 0) {
+    tableColumns.value = ColumnUtils.defaultSelectableColumns();
   }
 }
 
-function show() {
-  columnModal.value.show();
-}
-
-function hide() {
-  columnModal.value.hide();
-}
-
-defineExpose({ show, hide });
+onMounted(reset_if_empty);
 </script>

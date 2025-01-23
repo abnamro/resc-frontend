@@ -4,7 +4,7 @@
     :selectedCheckBoxIds="selectedCheckBoxIds"
     @update-audit="updateAudit"
   />
-  <ColumnSelector ref="columnModal" @update-columns="setTableFields" />
+  <ColumnSelector v-model:visible="isColumnSelectorVisible" @update-columns="setTableFields" />
 
   <div class="py-3">
     <BTable
@@ -40,7 +40,7 @@
               variant="primary"
               size="sm"
               id="AuditButton"
-              v-on:click="showColumnSelect()"
+              v-on:click="isColumnSelectorVisible = true"
               >Columns</BButton
             >
           </div>
@@ -146,9 +146,10 @@ import { onKeyStroke } from '@vueuse/core';
 import { shouldIgnoreKeystroke } from '@/utils/keybind-utils';
 import { computed, ref } from 'vue';
 import { watch } from 'vue';
-import ColumnUtils, { type SimpleTableField, type TableColumn } from '@/utils/column-utils';
+import ColumnUtils, { type SimpleTableField } from '@/utils/column-utils';
 import { useAuthUserStore } from '@/store';
 import ColumnSelector from '@/components/Findings/ColumnSelector.vue';
+import { storeToRefs } from 'pinia';
 
 type TableItemDetailedFindingRead = DetailedFindingRead & TableItem;
 
@@ -160,7 +161,7 @@ type Props = {
 const props = defineProps<Props>();
 
 const auditModal = ref();
-const columnModal = ref();
+const isColumnSelectorVisible = ref(false);
 const auditTable = ref();
 const filterString = ref('');
 
@@ -172,6 +173,7 @@ const fields = ref([] as SimpleTableField[]);
 const auditButtonDisabled = computed(() => selectedCheckBoxIds.value.length <= 0);
 const selectedIndex = ref(undefined as number | undefined);
 const store = useAuthUserStore();
+const { tableColumns } = storeToRefs(store);
 const emit = defineEmits(['refresh-table']);
 
 // Simple filter function
@@ -204,9 +206,9 @@ function applyFilter() {
 
 const filteredList = computed(applyFilter);
 
-function setTableFields(selectedColumns: TableColumn[] = []) {
+function setTableFields() {
   // @ts-ignore ignore TS2589
-  fields.value = ColumnUtils.getColumns(selectedColumns, store.tableColumns, props.is_rule_finding);
+  fields.value = ColumnUtils.getColumns(tableColumns.value, props.is_rule_finding);
 }
 
 setTableFields();
@@ -236,10 +238,6 @@ function toggleAllCheckboxes() {
 
 function showAuditModal() {
   auditModal.value.show();
-}
-
-function showColumnSelect() {
-  columnModal.value.show();
 }
 
 function updateAudit(status: FindingStatus, comment: string) {

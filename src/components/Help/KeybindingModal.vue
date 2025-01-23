@@ -1,64 +1,45 @@
 <template>
-  <div>
-    <BModal
-      id="KeybindingModal"
-      ref="KeybindingModal"
-      size="md"
-      button-size="sm"
-      title="Keyboard shortcuts"
-    >
-      <BTable id="keybindings-table" :items="keybindings" :fields="fields" small>
-        <!-- Select all checkboxes -->
-        <template #cell(effect)="data">
-          {{ data.item.effect }}
-        </template>
-        <template #cell(combination)="data">
-          <template
-            v-for="combinations in data.item.combination"
-            v-bind:key="'_' + combinations[0].combination"
+  <Dialog id="keybindings-table" v-model:visible="visible" modal header="Keyboard shortcuts">
+    <DataTable :value="keybindings" size="small" :pt:thead:class="'hidden'">
+      <Column field="effect"></Column>
+      <Column field="combination" class="text-right">
+        <template #body="slotProps">
+          <span
+            class="kb"
+            v-for="combinations in slotProps.data.combination"
+            v-bind:key="combinations.effect"
           >
-            <span class="kb">
-              <template v-for="combination in combinations" v-bind:key="combination">
-                <BBadge variant="light"><span v-html="combination"></span></BBadge>
-              </template>
-            </span>
-          </template>
+            <template v-for="combination in combinations" v-bind:key="combination">
+              <Chip
+                class="rounded px-1 py-0.5 shadow-sm border border-surface-800 text-xs font-bold min-w-8 text-center"
+              >
+                <span v-html="combination" class="w-full"></span>
+              </Chip>
+            </template>
+          </span>
         </template>
-      </BTable>
-
-      <template #footer="">
-        <div class="w-100 text-end">
-          <BButton variant="secondary" class="float-right" v-on:click="hide">CLOSE</BButton>
-        </div>
-      </template>
-    </BModal>
-  </div>
+      </Column>
+    </DataTable>
+    <div class="flex justify-end pt-4">
+      <Button type="button" label="Close" severity="secondary" @click="visible = false"></Button>
+    </div>
+  </Dialog>
 </template>
 
 <script setup lang="ts">
 import { shouldIgnoreKeystroke } from '@/utils/keybind-utils';
 import { onKeyStroke } from '@vueuse/core';
-import { BBadge, BButton, BModal, BTable } from 'bootstrap-vue-next';
-import { ref } from 'vue';
+import Button from 'primevue/button';
+import Dialog from 'primevue/dialog';
+import DataTable from 'primevue/datatable';
+import Column from 'primevue/column';
+import Chip from 'primevue/chip';
+import { ref, type Ref } from 'vue';
 
-const KeybindingModal = ref();
+const visible = defineModel('visible') as Ref<boolean>;
 
 type KeyBinding = { combination: string[][]; effect: string };
 
-const fields = ref([
-  {
-    key: 'effect',
-    label: '',
-    class: 'text-start position-sticky',
-    thStyle: { borderTop: '0px' },
-  },
-  {
-    key: 'combination',
-    label: '',
-    class: 'text-end position-sticky',
-    thStyle: { borderTop: '0px' },
-  },
-]);
 const keybindings = ref([
   {
     effect: 'Toggle sidebar.',
@@ -122,29 +103,13 @@ const keybindings = ref([
   },
 ] as KeyBinding[]);
 
-function show() {
-  KeybindingModal.value.show();
-}
-
-function hide(_value: MouseEvent) {
-  KeybindingModal.value.hide();
-}
-
-defineExpose({ show, hide });
-
-onKeyStroke('?', () => !shouldIgnoreKeystroke() && show(), { eventName: 'keydown' });
+onKeyStroke('?', () => !shouldIgnoreKeystroke() && (visible.value = true), {
+  eventName: 'keydown',
+});
 </script>
 
 <style>
-#keybindings-table .badge {
-  box-shadow: 2px 2px 2px 0px rgba(0, 0, 0, 0.5);
-  border: 1px solid #cccccc;
-  box-sizing: border-box;
-  min-width: 2rem;
-  display: inline-block;
-}
-
-#keybindings-table .badge + .badge {
+#keybindings-table .p-chip + .p-chip {
   margin-left: 0.5rem;
 }
 
