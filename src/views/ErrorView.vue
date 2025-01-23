@@ -2,12 +2,12 @@
   <div v-if="errors.length > 0" class="absolute p-2 bottom-0 right-0">
     <Button
       icon="pi pi-exclamation-triangle"
-      class="rounded-full"
+      class="rounded-full z-50"
       @click="isOpen = !isOpen"
     ></Button>
   </div>
   <Collapse
-    class="v-collapse w-full flex flex-col z-50 justify-center absolute bg-black/90"
+    class="v-collapse w-full flex flex-col z-50 justify-center absolute bg-black/90 text-left"
     :when="isOpen && errors.length > 0"
   >
     <h1 class="font-bold text-green-400 text-xl px-4 pt-4 pb-2 underline">Error logs:</h1>
@@ -85,6 +85,11 @@ function errorHandler(e: Event | CustomEvent) {
       errors.value.push(details.axios);
     } else if (details.response !== undefined) {
       errors.value.push(details.response);
+      toast.add({
+        severity: 'error',
+        summary: details.response.data,
+        life: 3000,
+      });
     } else {
       errors.value.push(details);
     }

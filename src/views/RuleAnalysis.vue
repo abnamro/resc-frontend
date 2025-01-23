@@ -5,8 +5,6 @@
       <h3><small class="text-nowrap">RULE ANALYSIS</small></h3>
     </div>
 
-    <ProgressSpinner v-if="!loadedData" />
-
     <!-- Filters -->
     <div class="mt-4">
       <RuleAnalysisFilter
@@ -70,7 +68,6 @@ import type { TableItem } from 'bootstrap-vue-next';
 import CommonUtils from '@/utils/common-utils';
 import { PAGE_SIZES } from '@/configuration/config';
 import { storeToRefs } from 'pinia';
-import ProgressSpinner from 'primevue/progressspinner';
 
 type TableItemDetailedFindingRead = DetailedFindingRead & TableItem;
 

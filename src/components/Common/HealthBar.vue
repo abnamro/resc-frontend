@@ -21,8 +21,6 @@
 <script setup lang="ts">
 import MeterGroup from 'primevue/metergroup';
 import { computed } from 'vue';
-import { $dt } from '@primevue/themes';
-import {} from 'primevue/tag';
 type Props = {
   truePositive: number;
   falsePositive: number;
@@ -47,7 +45,6 @@ const value = computed(() => [
   { value: props.outdated, label: 'Outdated', color: 'bg-surface-800 text-surface-0' },
 ]);
 
-console.log($dt('sematic.danger.color'));
 const PERCENT = 100;
 function showFindingsInPercentage(count: number) {
   return String(Math.round((count / props.totalCount) * PERCENT));

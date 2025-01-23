@@ -1,6 +1,6 @@
 <template>
   <Dialog id="keybindings-table" v-model:visible="visible" modal header="Keyboard shortcuts">
-    <DataTable :value="keybindings" size="small" :pt:thead:class="'hidden'">
+    <DataTable :value="keybindings" size="small">
       <Column field="effect"></Column>
       <Column field="combination" class="text-right">
         <template #body="slotProps">

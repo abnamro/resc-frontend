@@ -2,7 +2,7 @@ import AuthUtils from '@/utils/auth-utils';
 import AxiosConfig from '@/configuration/axios-config';
 import Router from '@/router/index';
 import { useAuthUserStore, type UserDetails } from '@/store/index';
-import Config from '@/configuration/config';
+import Config, { dispatchError } from '@/configuration/config';
 import axiosRetry from 'axios-retry';
 import { OK } from '@/configuration/axios-config';
 
@@ -114,7 +114,7 @@ const AuthService = {
           });
       });
     } else {
-      throw new Error('authCode && codeVerifier are null!');
+      dispatchError('authCode && codeVerifier are null!');
     }
   },
 

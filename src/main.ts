@@ -15,8 +15,8 @@ import Tooltip from 'primevue/tooltip';
 
 import { createBootstrap } from 'bootstrap-vue-next';
 
-import 'bootstrap/dist/css/bootstrap.css';
-import 'vue3-toastify/dist/index.css';
+// import 'bootstrap/dist/css/bootstrap.css';
+// import 'vue3-toastify/dist/index.css';
 import 'bootstrap-vue-next/dist/bootstrap-vue-next.css';
 import './styles/main.css';
 

@@ -1,84 +1,72 @@
 <template>
-  <div class="mx-4">
-    <!-- Page Title -->
-    <div class="col-md-2 pt-2 text-start page-title">
-      <h3><small class="text-nowrap">REPOSITORIES</small></h3>
-    </div>
+  <div class="p-4">
+    <h1 class="text-left">REPOSITORIES</h1>
 
-    <ProgressSpinner v-if="!loadedData" />
-
-    <!--Repository Filters -->
-    <div class="ml-3 mt-4">
-      <RepositoriesPageFilter
-        v-model:projectOptions="projectNames"
-        v-model:repositoryOptions="repositoryNames"
-        @on-filter-change="handleFilterChange"
-      ></RepositoriesPageFilter>
-    </div>
+    <RepositoriesPageFilter
+      v-model:projectOptions="projectNames"
+      v-model:repositoryOptions="repositoryNames"
+      @on-filter-change="handleFilterChange"
+    />
 
     <!--Repository Table -->
-    <div v-if="!hasRecords && loadedData" class="text-center cursor-default">
-      <br />
-      <br />No Record Found...
-    </div>
-
-    <div class="p-3" v-if="hasRecords">
-      <BTable
-        ref="repositoriesTable"
-        id="repositories-table"
-        :items="repositoryList"
-        :fields="fields"
-        :current-page="1"
-        :per-page="0"
-        :selectable="true"
-        :select-mode="'single'"
-        primary-key="id_"
-        v-model="currentItems"
-        responsive
-        small
-        head-variant="light"
-        :tbody-tr-class="rowClass"
-        @row-clicked="handleRowClicked"
-      >
-        <!-- Repository Column -->
-        <template #cell(repository_name)="data">
-          {{ data.item.repository_name }}
+    <DataTable
+      :value="repositoryList"
+      size="small"
+      :loading="!loadedData"
+      dataKey="_id"
+      v-model:selection="currentSelection"
+      :highlight-on-select="true"
+      selection-mode="single"
+      :virtual-scroller-options="{ itemSize: 36 }"
+      @row-dblclick="handleRowClicked"
+      class="mt-8"
+    >
+      <Column field="project_key" header="Project" headerClass="bg-teal-500/20"></Column>
+      <Column field="repository_name" header="Repository" headerClass="bg-teal-500/20">
+        <template #body="slotProps">
+          {{ slotProps.data.repository_name.slice(0, 20) }}
         </template>
-
-        <template #cell(vcs_provider)="data">
-          {{ formatVcsProvider(data.item.vcs_provider) }}
+      </Column>
+      <Column field="vcs_provider" header="VCS Provider" headerClass="bg-teal-500/20">
+        <template #body="slotProps">
+          {{ formatVcsProvider(slotProps.data.vcs_provider) }}
         </template>
-
-        <template #cell(last_scan_timestamp)="data">
-          {{ formatDate(data.item.last_scan_timestamp ?? '') }}
+      </Column>
+      <Column field="last_scan_timestamp" header="Last Scan Date" headerClass="bg-teal-500/20">
+        <template #body="slotProps">
+          {{ formatDate(slotProps.data.last_scan_timestamp) }}
         </template>
-
-        <!-- Health Bar Column -->
-        <template #cell(findings)="data">
+      </Column>
+      <Column
+        field="total_findings_count"
+        header="Finding Counts"
+        headerClass="bg-teal-500/20"
+      ></Column>
+      <Column field="findings" header="Findings(%)" bodyClass="w-96" headerClass="bg-teal-500/20">
+        <template #body="slotProps">
           <HealthBar
-            :truePositive="data.item.true_positive"
-            :falsePositive="data.item.false_positive"
-            :notAnalyzed="data.item.not_analyzed"
-            :notAccessible="data.item.not_accessible"
-            :clarificationRequired="data.item.clarification_required"
-            :outdated="data.item.outdated"
-            :totalCount="data.item.total_findings_count"
+            :truePositive="slotProps.data.true_positive"
+            :falsePositive="slotProps.data.false_positive"
+            :notAnalyzed="slotProps.data.not_analyzed"
+            :notAccessible="slotProps.data.not_accessible"
+            :clarificationRequired="slotProps.data.clarification_required"
+            :outdated="slotProps.data.outdated"
+            :totalCount="slotProps.data.total_findings_count"
           />
         </template>
-      </BTable>
-
-      <!-- Pagination -->
-      <Pagination
-        :currentPage="currentPage"
-        :perPage="perPage"
-        :totalRows="totalRows"
-        :pageSizes="pageSizes"
-        :requestedPageNumber="requestedPageNumber"
-        @page-click="handlePageClick"
-        @page-size-change="handlePageSizeChange"
-      >
-      </Pagination>
-    </div>
+      </Column>
+    </DataTable>
+    <!-- Pagination -->
+    <Pagination
+      :currentPage="currentPage"
+      :perPage="perPage"
+      :totalRows="totalRows"
+      :pageSizes="pageSizes"
+      :requestedPageNumber="requestedPageNumber"
+      @page-click="handlePageClick"
+      @page-size-change="handlePageSizeChange"
+    >
+    </Pagination>
   </div>
 </template>
 
@@ -94,20 +82,18 @@ import RepositoriesPageFilter from '@/components/Filters/RepositoriesPageFilter.
 import { computed, onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import type { RepositoryEnrichedRead, VCSProviders } from '@/services/shema-to-types';
-import { BTable, type TableItem } from 'bootstrap-vue-next';
 import { onKeyStroke } from '@vueuse/core';
 import { shouldIgnoreKeystroke } from '@/utils/keybind-utils';
 import { PAGE_SIZES } from '@/configuration/config';
-import ProgressSpinner from 'primevue/progressspinner';
+import DataTable, { type DataTableRowClickEvent } from 'primevue/datatable';
+import Column from 'primevue/column';
 
 const loadedData = ref(false);
 const repositoriesTable = ref();
 const router = useRouter();
 
-type TableRepositoryEnrichedRead = RepositoryEnrichedRead & TableItem;
-
-const repositoryList = ref([] as TableRepositoryEnrichedRead[]);
-const currentItems = ref([] as TableRepositoryEnrichedRead[]);
+const repositoryList = ref([] as RepositoryEnrichedRead[]);
+const currentSelection = ref<RepositoryEnrichedRead | undefined>(undefined);
 const totalRows = ref(0);
 const currentPage = ref(1);
 const perPage = ref(Number(`${Config.value('defaultPageSize')}`));
@@ -122,61 +108,10 @@ const selectedIndex = ref(undefined as number | undefined);
 const includeZeroFindingRepos = ref(false);
 const includeDeletedRepositories = ref(false);
 const onlyIfHasUntriagedFindings = ref(false);
-const fields = ref([
-  {
-    key: 'project_key',
-    sortable: false,
-    label: 'Project',
-    class: 'text-start position-sticky',
-    thStyle: { borderTop: '0px', width: '10%' },
-  },
-  {
-    key: 'repository_name',
-    sortable: false,
-    label: 'Repository',
-    class: 'text-start position-sticky text-truncate',
-    thStyle: { borderTop: '0px', width: '20%' },
-  },
-  {
-    key: 'vcs_provider',
-    sortable: false,
-    label: 'VCS Provider',
-    class: 'text-start position-sticky',
-    thStyle: { borderTop: '0px', width: '10%' },
-  },
-  {
-    key: 'last_scan_timestamp',
-    sortable: false,
-    label: 'Last Scan Date',
-    class: 'text-start position-sticky',
-    thStyle: { borderTop: '0px', width: '20%' },
-  },
-  {
-    key: 'total_findings_count',
-    sortable: false,
-    label: 'Findings Count',
-    class: 'text-start position-sticky',
-    thStyle: { borderTop: '0px', width: '15%' },
-  },
-  {
-    key: 'findings',
-    label: 'Findings(%)',
-    class: 'text-start position-sticky',
-    thStyle: { borderTop: '0px', width: '25%' },
-  },
-]);
-
-const hasRecords = computed(() => {
-  return repositoryList.value.length > 0;
-});
 
 const skipRowCount = computed(() => {
   return (currentPage.value - 1) * perPage.value;
 });
-
-function rowClass(item: RepositoryEnrichedRead) {
-  return item.last_scan_id ? 'row-clickable' : 'row-unclickable';
-}
 
 function formatDate(timestamp: string) {
   const date = DateUtils.formatDate(timestamp);
@@ -198,8 +133,8 @@ function handlePageSizeChange(pageSize: number) {
   fetchPaginatedRepositories();
 }
 
-function handleRowClicked(_row: TableItem, index: number) {
-  selectedIndex.value = index;
+function handleRowClicked(event: DataTableRowClickEvent) {
+  selectedIndex.value = event.index;
   goToScanFindings();
 }
 

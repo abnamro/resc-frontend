@@ -1,129 +1,114 @@
 <template>
-  <div class="mx-4">
-    <!-- Page Title -->
-    <div class="col-md-2 pt-2 text-start page-title">
-      <h3><small class="text-nowrap">RULEPACKS</small></h3>
-    </div>
+  <div class="p-4">
+    <h3 class="text-left">RULEPACKS</h3>
 
-    <ProgressSpinner v-if="!loadedData" />
-
-    <div class="ml-3">
-      <!-- Import button to upload rulepack -->
-      <BButton
-        class="float-left mt-2 mb-2"
-        variant="primary"
-        size="sm"
+    <!-- Import button to upload rulepack -->
+    <div class="flex justify-start">
+      <Button
+        class="mt-2 mb-2 bg-yellow-520 border-none text-surface-950"
         v-on:click="showRulePackUploadModal()"
-        >IMPORT</BButton
       >
-      <!-- RulePackUpload Modal -->
-      <RulePackUploadModal
-        ref="rulePackUploadModal"
-        @on-file-upload-suceess="onRulePackUploadSuccess"
-      />
+        IMPORT
+      </Button>
     </div>
+    <!-- RulePackUpload Modal -->
+    <RulePackUploadModal
+      v-model:visible="isRulePackUploadOpen"
+      @on-file-upload-suceess="onRulePackUploadSuccess"
+    />
 
-    <!--Rule Packs Table -->
-    <div v-if="!hasRecords && loadedData" class="text-center cursor-default">
-      <br />
-      <br />No Record Found...
-    </div>
+    <Paginator
+      v-model:first="currentPage"
+      v-model:rows="perPage"
+      :totalRecords="totalRows"
+      :rowsPerPageOptions="PAGE_SIZES"
+      @update:first="handlePageChange"
+      @update:rows="handlePageSizeChange"
+    >
+    </Paginator>
 
-    <div class="p-3" v-if="hasRecords">
-      <BTable
-        id="rule-packs-table"
-        :items="rulePackList"
-        :fields="fields"
-        :current-page="1"
-        :per-page="0"
-        primary-key="version"
-        v-model="currentItems"
-        responsive
-        small
-        head-variant="light"
-      >
-        <!-- Version Column -->
-        <template #cell(version)="data">
-          {{ (data.item as RulePackRead).version }}
+    <DataTable
+      :value="rulePackList"
+      size="small"
+      :loading="!loadedData"
+      dataKey="_id"
+      :highlight-on-select="true"
+      selection-mode="single"
+      class="mt-8"
+    >
+      <Column field="version" header="Version" headerClass="bg-teal-500/20"> </Column>
+      <Column headerClass="bg-teal-500/20" bodyClass="text-center">
+        <template #header>
+          <span class="font-bold text-center w-full">Active</span>
         </template>
-
-        <!-- Active Column -->
-        <template #cell(active)="data">
+        <template #body="slotProps">
           <FontAwesomeIcon
-            v-if="(data.item as RulePackRead).active"
+            v-if="slotProps.data.active"
             :icon="['fas', 'circle-check']"
             :style="{ color: 'green' }"
           />
           <FontAwesomeIcon
-            v-if="!(data.item as RulePackRead).active"
+            v-if="!slotProps.data.active"
             :icon="['fas', 'circle-check']"
             class="disabled-button"
           />
         </template>
-
-        <!-- Outdated Column -->
-        <template #cell(outdated)="data">
+      </Column>
+      <Column headerClass="bg-teal-500/20" bodyClass="text-center">
+        <template #header>
+          <span class="font-bold text-center w-full">Outdated</span>
+        </template>
+        <template #body="slotProps">
           <FontAwesomeIcon
-            v-if="(data.item as RulePackRead).outdated"
+            v-if="slotProps.data.outdated"
             :icon="['fas', 'circle-check']"
             :style="{ color: '#d2042d', cursor: 'pointer' }"
-            v-on:click="openMarkAsOutdated(data.item)"
-            :class="(data.item as RulePackRead).active ? 'disabled-button' : ''"
+            v-on:click="openMarkAsOutdated(slotProps.data)"
+            :class="slotProps.data.active ? 'disabled-button' : ''"
           />
           <FontAwesomeIcon
-            v-if="!(data.item as RulePackRead).outdated"
+            v-if="!slotProps.data.outdated"
             :icon="['fas', 'circle-check']"
             :style="{ color: 'rgba(0,0,0,0.5)', cursor: 'pointer' }"
-            v-on:click="openMarkAsOutdated(data.item)"
-            :class="(data.item as RulePackRead).active ? 'disabled-button' : ''"
+            @click="openMarkAsOutdated(slotProps.data)"
+            :class="slotProps.data.active ? 'disabled-button' : ''"
           />
         </template>
-
-        <template #cell(created)="data">
-          {{ formatDate((data.item as RulePackRead).created) }}
+      </Column>
+      <Column field="created" header="Created" headerClass="bg-teal-500/20">
+        <template #body="slotProps">
+          {{ formatDate(slotProps.data.created) }}
         </template>
-
-        <!-- Download Column -->
-        <template #cell(download)="data">
+      </Column>
+      <Column
+        header="Download"
+        headerClass="bg-teal-500/20 text-center flex justify-center"
+        bodyClass="text-center"
+      >
+        <template #body="slotProps">
           <FontAwesomeIcon
             icon="download"
             class="download-button"
-            v-on:click="downloadRulePack((data.item as RulePackRead).version)"
+            @click="downloadRulePack(slotProps.data.version)"
           />
         </template>
-      </BTable>
-
-      <!-- Pagination -->
-      <Pagination
-        :currentPage="currentPage"
-        :perPage="perPage"
-        :totalRows="totalRows"
-        :pageSizes="pageSizes"
-        :requestedPageNumber="requestedPageNumber"
-        @page-click="handlePageClick"
-        @page-size-change="handlePageSizeChange"
-      ></Pagination>
-    </div>
+      </Column>
+    </DataTable>
   </div>
-  <BModal
-    ref="confirmMarkOutdated"
-    hide-footer
-    header-bg-variant="warning"
-    title="Mark findings as outdated?"
-  >
+  <Dialog v-model:visible="isConfirmOpen" header="Mark findings as outdated?">
     <div>
       This will mark all findings from rule pack {{ rulePackSelected?.version }} and older as
       outdated.
     </div>
-    <div class="float-right">
-      <BButton class="mt-3 float-end" variant="outline-danger" block @click="markAsOutdated"
-        >Confirm</BButton
+    <div class="flex gap-2 justify-end">
+      <Button class="mt-3 float-end" severity="danger" block @click="markAsOutdated"
+        >Confirm</Button
       >
-      <BButton class="mt-3 float-end me-2" variant="outline-secondary" block @click="cancelAction"
-        >Cancel</BButton
+      <Button class="mt-3 float-end me-2" severity="secondary" block @click="cancelAction"
+        >Cancel</Button
       >
     </div>
-  </BModal>
+  </Dialog>
 </template>
 
 <script setup lang="ts">
@@ -132,79 +117,39 @@ import Config, { PAGE_SIZES } from '@/configuration/config';
 import DateUtils from '@/utils/date-utils';
 import CommonUtils from '@/utils/common-utils';
 import RulePackUploadModal from '@/components/RulePack/RulePackUploadModal.vue';
-import Pagination from '@/components/Common/PaginationVue.vue';
 import RulePackService from '@/services/rule-pack-service';
-import { computed, ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import type { AxiosResponse } from 'axios';
 import type { PaginationType, RulePackRead } from '@/services/shema-to-types';
-import { BButton, BModal, BTable, type TableItem } from 'bootstrap-vue-next';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import ProgressSpinner from 'primevue/progressspinner';
+import Button from 'primevue/button';
+import DataTable from 'primevue/datatable';
+import Column from 'primevue/column';
+import Paginator from 'primevue/paginator';
+import Dialog from 'primevue/dialog';
 
 const loadedData = ref(false);
-const rulePackUploadModal = ref();
-const confirmMarkOutdated = ref();
+const isRulePackUploadOpen = ref(false);
 
 const rulePackList = ref([] as RulePackRead[]);
-const currentItems = ref([] as TableItem[]);
 const totalRows = ref(0);
-const currentPage = ref(1);
+const currentPage = ref(0);
 const perPage = ref(Number(`${Config.value('defaultPageSize')}`));
-const pageSizes = ref(PAGE_SIZES);
-const requestedPageNumber = ref(1);
-const fields = ref([
-  {
-    key: 'version',
-    sortable: false,
-    label: 'Version',
-    class: 'text-start position-sticky',
-    thStyle: { borderTop: '0px' },
-  },
-  {
-    key: 'active',
-    sortable: false,
-    label: 'Active',
-    class: 'text-center position-sticky',
-    thStyle: { borderTop: '0px' },
-  },
-  {
-    key: 'outdated',
-    sortable: false,
-    label: 'Outdated',
-    class: 'text-center position-sticky',
-    thStyle: { borderTop: '0px' },
-  },
-  {
-    key: 'created',
-    sortable: false,
-    label: 'Created',
-    class: 'text-start position-sticky',
-    thStyle: { borderTop: '0px' },
-  },
-  {
-    key: 'download',
-    sortable: false,
-    label: 'Download',
-    class: 'text-center position-sticky',
-    thStyle: { borderTop: '0px' },
-  },
-]);
+
+const isConfirmOpen = ref(false);
 const rulePackSelected = ref(null as RulePackRead | null);
 
-const hasRecords = computed(() => rulePackList.value.length > 0);
-
-function handlePageClick(page: number) {
-  currentPage.value = page;
+function handlePageSizeChange() {
+  currentPage.value = 0;
+  fetchPaginatedRulePacks();
+}
+function handlePageChange(val: number) {
+  currentPage.value = val;
   fetchPaginatedRulePacks();
 }
 
-function handlePageSizeChange(pageSize: number) {
-  perPage.value = pageSize;
-  currentPage.value = 1;
-  fetchPaginatedRulePacks();
-}
 function showRulePackUploadModal() {
-  rulePackUploadModal.value.show();
+  isRulePackUploadOpen.value = true;
 }
 function onRulePackUploadSuccess() {
   fetchPaginatedRulePacks();
@@ -212,7 +157,7 @@ function onRulePackUploadSuccess() {
 
 function fetchPaginatedRulePacks() {
   loadedData.value = false;
-  RulePackService.getRulePackVersions()
+  RulePackService.getRulePackVersions(perPage.value, currentPage.value)
     .then((response: AxiosResponse<PaginationType<RulePackRead>>) => {
       rulePackList.value = response.data.data.sort(CommonUtils.compareRulePackRead).reverse();
       totalRows.value = response.data.total;
@@ -257,15 +202,16 @@ function openMarkAsOutdated(rulePack: RulePackRead): void {
     return;
   }
 
-  confirmMarkOutdated.value.show();
+  isConfirmOpen.value = true;
 }
 
 function cancelAction() {
-  confirmMarkOutdated.value.hide();
+  rulePackSelected.value = null;
+  isConfirmOpen.value = false;
 }
 
 function markAsOutdated() {
-  confirmMarkOutdated.value.hide();
+  isConfirmOpen.value = false;
   if (rulePackSelected.value === null) {
     return;
   }
@@ -275,7 +221,9 @@ function markAsOutdated() {
     .catch((error) => {
       AxiosConfig.handleError(error);
     });
+
+  rulePackSelected.value = null;
 }
 
-fetchPaginatedRulePacks();
+onMounted(fetchPaginatedRulePacks);
 </script>

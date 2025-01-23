@@ -47,9 +47,7 @@
         />
       </BCardGroup>
     </div>
-  </div>
 
-  <div v-if="loadedData">
     <div class="row mx-4 pt-1 card-deck">
       <!-- Audit Trend -->
       <div class="w-auto px-0">
@@ -91,9 +89,7 @@
         </BCardGroup>
       </div>
     </div>
-  </div>
 
-  <div v-if="loadedData">
     <div class="mx-4 pt-4 text-start page-title">
       <h5 class="pt-5 text-nowrap">Audit Statistics</h5>
     </div>
