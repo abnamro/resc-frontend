@@ -5,8 +5,6 @@ import App from '@/views/RuleAnalysis.vue';
 import { importFA } from '@/assets/font-awesome';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { createTestingPinia } from '@pinia/testing';
-import { BFormCheckbox, BButton } from 'bootstrap-vue-next';
-import Pagination from '@/components/Common/PaginationVue.vue';
 import rule_packs from '@/../tests/resources/mock_rule_packs.json';
 import detailed_findings from '@/../tests/resources/mock_detailed_findings.json';
 
@@ -26,9 +24,6 @@ describe('RuleAnalysis tests', () => {
 
     const wrapper = shallowMount(App, {
       components: {
-        Pagination,
-        BButton,
-        BFormCheckbox,
         FontAwesomeIcon,
       },
       global: {

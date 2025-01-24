@@ -2,7 +2,6 @@ import { mount } from '@vue/test-utils';
 import axios from 'axios';
 import { describe, expect, it, vi } from 'vitest';
 import App from '@/components/RulePack/RulePackUploadModal.vue';
-import { BFormGroup, BModal, BFormInput, BFormFile, BButton } from 'bootstrap-vue-next';
 
 vi.mock('axios');
 
@@ -10,13 +9,7 @@ describe('RulePackUploadModal tests', () => {
   it('Given a RulePackUploadModal then RulePackUploadModal will be initiated', async () => {
     const wrapper = mount(App, {
       props: {},
-      components: {
-        BFormGroup,
-        BModal,
-        BFormInput,
-        BFormFile,
-        BButton,
-      },
+      components: {},
     });
 
     expect(wrapper.exists()).toBe(true);

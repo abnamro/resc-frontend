@@ -2,13 +2,6 @@ import { mount } from '@vue/test-utils';
 import { describe, expect, it, vi } from 'vitest';
 import App from '@/components/Navigation/TopBarMenu.vue';
 import { useAuthUserStore } from '@/store';
-import {
-  BAvatar,
-  BButtonToolbar,
-  BDropdown,
-  BDropdownDivider,
-  BDropdownItem,
-} from 'bootstrap-vue-next';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { createRouter, createWebHistory } from 'vue-router';
 import Config from '@/configuration/config';
@@ -32,12 +25,7 @@ describe('TopBarMenu.vue unit tests', () => {
       global: {
         router,
         components: {
-          BButtonToolbar,
-          BDropdown,
           FontAwesomeIcon,
-          BDropdownItem,
-          BAvatar,
-          BDropdownDivider,
         },
         plugins: [
           createTestingPinia({

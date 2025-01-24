@@ -4,7 +4,6 @@ import { describe, expect, it, vi } from 'vitest';
 import App from '@/components/ScanFindings/AuditTab.vue';
 import status from '@/../tests/resources/mock_status.json';
 import findings from '@/../tests/resources/mock_findings.json';
-import { BTab, BFormGroup, BFormSelect, BFormTextarea, BButton } from 'bootstrap-vue-next';
 import { createTestingPinia } from '@pinia/testing';
 
 vi.mock('axios');
@@ -19,13 +18,7 @@ describe('Audit Tab', () => {
       props: {
         finding: findings.data[0],
       },
-      components: {
-        BTab,
-        BFormGroup,
-        BFormSelect,
-        BFormTextarea,
-        BButton,
-      },
+      components: {},
       global: {
         plugins: [
           createTestingPinia({

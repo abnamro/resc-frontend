@@ -6,7 +6,6 @@ import App from '@/components/Findings/FindingsTable.vue';
 import { importFA } from '@/assets/font-awesome';
 import rule_packs from '@/../tests/resources/mock_rule_packs.json';
 import detailed_findings from '@/../tests/resources/mock_detailed_findings2.json';
-import bootstrapVue from 'bootstrap-vue-next';
 
 let allProjects = ['ABC', 'XYZ', 'GRD0000001', 'GRD0000002'];
 let allRepos = ['bb_repo1', 'bb_repo2', 'ado_repo1', 'ado_repo2'];
@@ -29,7 +28,7 @@ describe('FindingsTable tests', () => {
       },
       components: {},
       global: {
-        plugins: [createTestingPinia(), bootstrapVue({ plugins: { modalController: true } })],
+        plugins: [createTestingPinia()],
         stubs: {},
       },
     });
@@ -119,7 +118,7 @@ describe('FindingsTable tests', () => {
       },
       components: {},
       global: {
-        plugins: [createTestingPinia(), bootstrapVue({ plugins: { modalController: true } })],
+        plugins: [createTestingPinia()],
         stubs: {},
       },
     });

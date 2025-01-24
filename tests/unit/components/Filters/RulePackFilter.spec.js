@@ -1,7 +1,6 @@
 import { mount } from '@vue/test-utils';
 import { describe, expect, it } from 'vitest';
 import App from '@/components/Filters/RulePackFilter.vue';
-import { BFormGroup } from 'bootstrap-vue-next';
 import Multiselect from 'vue-multiselect';
 import rule_packs from '@/../tests/resources/mock_rule_packs.json';
 import { createTestingPinia } from '@pinia/testing';

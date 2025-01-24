@@ -5,9 +5,7 @@ import App from '@/views/RepositoriesPanel.vue';
 import repositories from '@/../tests/resources/mock_repositories.json';
 import vcs_providers from '@/../tests/resources/mock_vcs_providers.json';
 import HealthBar from '@/components/Common/HealthBar.vue';
-import Pagination from '@/components/Common/PaginationVue.vue';
 import RepositoriesPageFilter from '@/components/Filters/RepositoriesPageFilter.vue';
-import { BTable } from 'bootstrap-vue-next';
 import ProgressSpinner from 'primevue/progressspinner';
 
 vi.mock('axios');
@@ -42,9 +40,7 @@ describe('RepositoriesPanel tests', () => {
       components: {
         ProgressSpinner,
         HealthBar,
-        Pagination,
         RepositoriesPageFilter,
-        BTable,
       },
       global: {
         stubs: {

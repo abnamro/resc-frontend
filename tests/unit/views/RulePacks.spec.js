@@ -2,8 +2,6 @@ import { mount } from '@vue/test-utils';
 import axios from 'axios';
 import { describe, expect, it, vi } from 'vitest';
 import App from '@/views/RulePacks.vue';
-import Pagination from '@/components/Common/PaginationVue.vue';
-import { BTable, BButton } from 'bootstrap-vue-next';
 import RulePackUploadModal from '@/components/RulePack/RulePackUploadModal.vue';
 import rule_packs from '@/../tests/resources/mock_rule_packs.json';
 import { importFA } from '@/assets/font-awesome';
@@ -22,9 +20,6 @@ describe('RulePacks tests', () => {
     wrapper = mount(App, {
       props: {},
       components: {
-        Pagination,
-        BTable,
-        BButton,
         FontAwesomeIcon,
         RulePackUploadModal,
       },

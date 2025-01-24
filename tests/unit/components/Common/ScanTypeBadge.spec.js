@@ -1,7 +1,6 @@
 import { mount } from '@vue/test-utils';
 import { describe, expect, it } from 'vitest';
 import App from '@/components/Common/ScanTypeBadge.vue';
-import { BBadge } from 'bootstrap-vue-next';
 
 describe('ScanTypeBadge data-line tests', () => {
   let wrapper;
@@ -11,9 +10,7 @@ describe('ScanTypeBadge data-line tests', () => {
 
   function initMountApp(scan_Type, increment_Number) {
     wrapper = mount(App, {
-      components: {
-        BBadge: BBadge,
-      },
+      components: {},
       props: {
         scanType: scan_Type,
         incrementNumber: increment_Number,

@@ -5,7 +5,6 @@ import { defineConfig, HttpProxy, loadEnv, type ProxyOptions, type UserConfig } 
 import { nodePolyfills } from 'vite-plugin-node-polyfills';
 import vue from '@vitejs/plugin-vue';
 import Components from 'unplugin-vue-components/vite';
-import { BootstrapVueNextResolver } from 'bootstrap-vue-next';
 import postcssNesting from 'postcss-nesting';
 
 // https://vitejs.dev/config/
@@ -21,9 +20,7 @@ const baseConfig = {
   },
   plugins: [
     vue(),
-    Components({
-      resolvers: [BootstrapVueNextResolver()],
-    }),
+    Components({ resolvers: [],}),
     nodePolyfills({
       // To add only specific polyfills, add them here. If no option is passed, adds all polyfills
       include: ['buffer', 'crypto', 'stream', 'util'],

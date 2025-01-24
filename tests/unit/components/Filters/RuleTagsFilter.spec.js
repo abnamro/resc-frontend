@@ -1,7 +1,6 @@
 import { mount } from '@vue/test-utils';
 import { describe, expect, it } from 'vitest';
 import App from '@/components/Filters/RuleTagsFilter.vue';
-import { BFormGroup } from 'bootstrap-vue-next';
 import Multiselect from 'vue-multiselect';
 
 describe('RuleTagsFilter tests', () => {

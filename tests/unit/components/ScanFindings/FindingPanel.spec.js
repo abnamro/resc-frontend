@@ -2,7 +2,6 @@ import { mount } from '@vue/test-utils';
 import { describe, expect, it } from 'vitest';
 import App from '@/components/ScanFindings/FindingPanel.vue';
 import finding from '@/../tests/resources/mock_detailed_findings.json';
-import { BTab, BCardText } from 'bootstrap-vue-next';
 import { createTestingPinia } from '@pinia/testing';
 
 describe('FindingPanel Tab', () => {
@@ -11,10 +10,7 @@ describe('FindingPanel Tab', () => {
       props: {
         finding: finding.data[0],
       },
-      components: {
-        BTab,
-        BCardText,
-      },
+      components: {},
       global: {
         stubs: {
           AuditTab: true,

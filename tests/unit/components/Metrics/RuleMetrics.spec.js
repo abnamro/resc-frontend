@@ -2,7 +2,6 @@ import { mount } from '@vue/test-utils';
 import axios from 'axios';
 import { describe, expect, it, vi } from 'vitest';
 import App from '@/components/Metrics/RuleMetrics.vue';
-import { BTable } from 'bootstrap-vue-next';
 import rule_packs from '@/../tests/resources/mock_rule_packs.json';
 import rule_tags from '@/../tests/resources/mock_rule_tags.json';
 import rules_with_findings_status_count from '@/../tests/resources/mock_rules_with_findings_status_count.json';

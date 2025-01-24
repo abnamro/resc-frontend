@@ -4,7 +4,6 @@ import { describe, expect, it, vi } from 'vitest';
 import App from '@/components/ScanFindings/HistoryTab.vue';
 import audits from '@/../tests/resources/mock_finding_audits.json';
 import findings from '@/../tests/resources/mock_findings.json';
-import { BTab, BTable, BFormGroup, BFormSelect, BFormTextarea, BButton } from 'bootstrap-vue-next';
 
 vi.mock('axios');
 
@@ -17,14 +16,7 @@ describe('History Tab', () => {
       props: {
         finding: findings.data[0],
       },
-      components: {
-        BTab,
-        BFormGroup,
-        BFormSelect,
-        BFormTextarea,
-        BTable,
-        BButton,
-      },
+      components: {},
     });
 
     expect(wrapper.vm.loadedData).toBe(false);

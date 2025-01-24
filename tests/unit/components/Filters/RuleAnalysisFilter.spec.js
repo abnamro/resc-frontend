@@ -3,7 +3,6 @@ import axios from 'axios';
 import { describe, expect, it, vi } from 'vitest';
 import App from '@/components/Filters/RuleAnalysisFilter.vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import { BCollapse, BButton } from 'bootstrap-vue-next';
 import { createTestingPinia } from '@pinia/testing';
 import rules from '@/../tests/resources/mock_rules.json';
 import rule_tags from '@/../tests/resources/mock_rule_tags.json';

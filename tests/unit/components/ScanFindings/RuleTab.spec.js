@@ -3,7 +3,6 @@ import axios from 'axios';
 import { describe, expect, it, vi } from 'vitest';
 import App from '@/components/ScanFindings/RuleTab.vue';
 import rule from '@/../tests/resources/mock_rule.json';
-import { BTab, BCardText } from 'bootstrap-vue-next';
 
 vi.mock('axios');
 
@@ -17,10 +16,7 @@ describe('Rule Tab', () => {
         ruleName: 'rule_1',
         rulePack: 'rule_pack_1',
       },
-      components: {
-        BTab,
-        BCardText,
-      },
+      components: {},
     });
 
     expect(wrapper.vm.loadedData).toBe(false);

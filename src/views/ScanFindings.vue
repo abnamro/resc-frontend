@@ -57,7 +57,6 @@ import type {
   AugmentedDetailedFindingRead,
 } from '@/services/shema-to-types';
 import type { AxiosResponse } from 'axios';
-import type { TableItem } from 'bootstrap-vue-next';
 import { useAuthUserStore } from '@/store';
 import { storeToRefs } from 'pinia';
 import { PAGE_SIZES } from '@/configuration/config';
@@ -70,8 +69,6 @@ type Props = {
   scanId: string;
 };
 
-type TableItemAugmentedDetailedFindingRead = AugmentedDetailedFindingRead & TableItem;
-
 const props = defineProps<Props>();
 const previousScanChecked = ref(false);
 const scanType = ref(undefined) as Ref<string | undefined>;
@@ -82,7 +79,7 @@ const repository = ref({} as RepositoryRead);
 const vcsInstance = ref({} as VCSInstanceRead);
 const selectedCheckBoxIds = ref([] as number[]);
 const allSelected = ref(false);
-const findingList = ref([] as TableItemAugmentedDetailedFindingRead[]);
+const findingList = ref([] as AugmentedDetailedFindingRead[]);
 const selectedScanID = ref(Number(props.scanId));
 const ruleFilter = ref([] as string[]);
 const ruleTagsFilter = ref(undefined) as Ref<string[] | undefined>;

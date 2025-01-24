@@ -13,8 +13,6 @@ import ToastService from 'primevue/toastservice';
 import Aura from '@primevue/themes/aura';
 import Tooltip from 'primevue/tooltip';
 
-import { createBootstrap } from 'bootstrap-vue-next';
-
 import './styles/main.css';
 
 const app = createApp(App);
@@ -33,7 +31,6 @@ app.use(PrimeVue, {
   },
 });
 
-app.use(createBootstrap());
 app.use(Vue3Toasity, { multiple: false });
 importFA();
 app.directive('tooltip', Tooltip);

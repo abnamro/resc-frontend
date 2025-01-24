@@ -1,7 +1,6 @@
 import { mount } from '@vue/test-utils';
 import { describe, expect, it } from 'vitest';
 import App from '@/components/Common/HealthBar.vue';
-import { BPopover } from 'bootstrap-vue-next';
 
 describe('HealthBar tests', () => {
   it('Given a HealthBar When props are passed then HealthBar will be displayed', () => {
@@ -15,9 +14,7 @@ describe('HealthBar tests', () => {
         outdated: 0,
         totalCount: 15,
       },
-      components: {
-        BPopover: BPopover,
-      },
+      components: {},
     });
 
     expect(wrapper.exists()).toBe(true);

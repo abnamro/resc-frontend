@@ -3,7 +3,6 @@ import { describe, expect, it, vi } from 'vitest';
 import { createTestingPinia } from '@pinia/testing';
 import App from '@/components/Findings/ColumnSelector.vue';
 import { importFA } from '@/assets/font-awesome';
-import bootstrapVue from 'bootstrap-vue-next';
 
 importFA();
 
@@ -23,7 +22,6 @@ describe('ColumnSelector tests', () => {
               },
             },
           }),
-          bootstrapVue({ plugins: { modalController: true } }),
         ],
       },
     });
@@ -48,7 +46,6 @@ describe('ColumnSelector tests', () => {
               },
             },
           }),
-          bootstrapVue({ plugins: { modalController: true } }),
         ],
       },
     });
