@@ -30,7 +30,6 @@
 
 <script setup lang="ts">
 import AxiosConfig from '@/configuration/axios-config';
-import { toast } from 'vue3-toastify';
 import RulePackService from '@/services/rule-pack-service';
 import { nextTick, ref, type Ref } from 'vue';
 import { OK } from '@/configuration/axios-config';
@@ -39,6 +38,7 @@ import Dialog from 'primevue/dialog';
 import Button from 'primevue/button';
 import InputText from 'primevue/inputtext';
 import FileUpload, { type FileUploadSelectEvent } from 'primevue/fileupload';
+import { useToast } from 'primevue/usetoast';
 
 const loadedData = ref(true);
 const visible = defineModel('visible') as Ref<boolean>;
@@ -49,6 +49,8 @@ const file = ref(undefined) as Ref<File | undefined>;
 const version = ref('');
 const versionState = ref(null) as Ref<boolean | null>;
 const emit = defineEmits(['on-file-upload-suceess']);
+
+const toast = useToast();
 
 function hide(): void {
   version.value = '';
@@ -88,7 +90,11 @@ function submitForm() {
     .then((response) => {
       emit('on-file-upload-suceess');
       if (response && response.status === OK) {
-        toast.success('Rulepack uploaded successfully');
+        toast.add({
+          severity: 'success',
+          summary: 'Rulepack uploaded successfully',
+          life: 3000,
+        });
       }
       loadedData.value = true;
       // Hide the modal manually

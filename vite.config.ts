@@ -20,7 +20,7 @@ const baseConfig = {
   },
   plugins: [
     vue(),
-    Components({ resolvers: [],}),
+    Components({ resolvers: [] }),
     nodePolyfills({
       // To add only specific polyfills, add them here. If no option is passed, adds all polyfills
       include: ['buffer', 'crypto', 'stream', 'util'],

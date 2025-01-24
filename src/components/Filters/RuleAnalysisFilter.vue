@@ -48,17 +48,13 @@
           <label for="start-date" class="font-bold text-lg text-left text-muted-color-emphasis"
             >From Date</label
           >
-          <VueDatePicker
-            id="start-date"
-            placeholder="Enter Scan Start Date"
-            :enable-time-picker="false"
+          <DatePicker
             v-model="startDate"
-            format="dd/MM/yyyy"
-            @update:model-value="onStartDateChange"
+            placeholder="Enter Scan Start Date"
+            date-format="dd/mm/yyyy"
             :max-date="todaysDate"
-            auto-apply
-            no-today
-          ></VueDatePicker>
+            @update:model-value="onStartDateChange"
+          />
         </div>
       </div>
 
@@ -68,20 +64,15 @@
           <label for="end-date" class="font-bold text-lg text-left text-muted-color-emphasis"
             >To Date</label
           >
-          <VueDatePicker
-            id="end-date"
-            placeholder="Enter Scan End Date"
-            :enable-time-picker="false"
+          <DatePicker
             v-model="startDate"
-            format="dd/MM/yyyy"
-            @update:model-value="onEndDateChange"
+            placeholder="Enter Scan End Date"
+            date-format="dd/mm/yyyy"
             :min-date="minEndDate"
             :max-date="todaysDate"
             :disabled="endDateDisabled"
-            auto-apply
-            no-today
-          >
-          </VueDatePicker>
+            @update:model-value="onEndDateChange"
+          />
         </div>
       </div>
 
@@ -136,8 +127,7 @@ import type { FindingStatus, RulePackRead, VCSProviders } from '@/services/shema
 import type { Ref } from 'vue';
 import { onKeyStroke } from '@vueuse/core';
 import { shouldIgnoreKeystroke } from '@/utils/keybind-utils';
-import VueDatePicker from '@vuepic/vue-datepicker';
-import '@vuepic/vue-datepicker/dist/main.css';
+import DatePicker from 'primevue/datepicker';
 import { storeToRefs } from 'pinia';
 import { Collapse } from 'vue-collapsed';
 import Button from 'primevue/button';
@@ -172,8 +162,8 @@ export type RuleAnalysisFilter = {
 
 const optionsRules = ref([] as string[]);
 const optionsRuleTags = ref([] as string[]);
-const startDate = ref(undefined) as Ref<Date | string | undefined>;
-const endDate = ref(undefined) as Ref<Date | string | undefined>;
+const startDate = ref(undefined) as Ref<Date | undefined>;
+const endDate = ref(undefined) as Ref<Date | undefined>;
 
 const store = useAuthUserStore();
 const { selectedStatus } = storeToRefs(store);
@@ -192,10 +182,10 @@ const emit = defineEmits(['on-filter-change']);
 const todaysDate = computed(() => {
   const now = new Date();
   const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-  return new Date(today).toISOString();
+  return new Date(today);
 });
 const minEndDate = computed(() => {
-  return startDate.value ?? '';
+  return startDate.value;
 });
 const endDateDisabled = computed(() => {
   return startDate.value ? false : true;

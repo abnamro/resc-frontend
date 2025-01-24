@@ -6,7 +6,6 @@ import piniaPluginPersistedstate from 'pinia-plugin-persistedstate';
 import AxiosConfig from '@/configuration/axios-config';
 import { chartJsSetup } from '@/configuration/chartjs';
 import { importFA } from '@/assets/font-awesome';
-import Vue3Toasity from 'vue3-toastify';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import PrimeVue from 'primevue/config';
 import ToastService from 'primevue/toastservice';
@@ -31,7 +30,6 @@ app.use(PrimeVue, {
   },
 });
 
-app.use(Vue3Toasity, { multiple: false });
 importFA();
 app.directive('tooltip', Tooltip);
 app.component('font-awesome-icon', FontAwesomeIcon);

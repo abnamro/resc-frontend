@@ -33,8 +33,7 @@ describe('RuleMetrics tests', () => {
 
     const wrapper = mount(App, {
       props: {},
-      components: {
-      },
+      components: {},
       global: {
         stubs: {
           HealthBar: true,
@@ -71,8 +70,7 @@ describe('RuleMetrics tests', () => {
       props: {
         rulePackVersion: [{ version: '0.0.6', active: true, created: 'today' }],
       },
-      components: {
-      },
+      components: {},
       global: {
         stubs: {
           HealthBar: true,
