@@ -4,7 +4,6 @@ import { describe, expect, it, vi } from 'vitest';
 import App from '@/components/Filters/ScanFindingsFilter.vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import scans_for_a_repository from '@/../tests/resources/mock_scans_for_a_repository.json';
-import Multiselect from 'vue-multiselect';
 import mock_statuses from '@/../tests/resources/mock_status.json';
 import rule_tags from '@/../tests/resources/mock_rule_tags.json';
 import RuleTagsFilter from '@/components/Filters/RuleTagsFilter.vue';
@@ -49,11 +48,7 @@ const repository = {
 };
 
 const components = {
-  BTooltip,
-  BFormGroup,
   FontAwesomeIcon,
-  BFormCheckbox,
-  Multiselect,
   RuleTagsFilter,
   RuleFilter,
 };

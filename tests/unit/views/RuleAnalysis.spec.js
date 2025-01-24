@@ -33,7 +33,6 @@ describe('RuleAnalysis tests', () => {
           RuleAnalysisFilter: true,
           RepositoriesPageFilter: true,
           FindingPanel: true,
-          BTable: true,
           FindingStatusBadge: true,
         },
       },
@@ -59,9 +58,6 @@ describe('RuleAnalysis tests', () => {
 
     const wrapper = shallowMount(App, {
       components: {
-        Pagination,
-        BButton,
-        BFormCheckbox,
         FontAwesomeIcon,
       },
       global: {
@@ -95,7 +91,6 @@ describe('RuleAnalysis tests', () => {
           RuleAnalysisFilter: true,
           RepositoriesPageFilter: true,
           FindingPanel: true,
-          BTable: true,
         },
       },
     });

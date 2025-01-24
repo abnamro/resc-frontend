@@ -1,7 +1,7 @@
 import { mount } from '@vue/test-utils';
 import axios from 'axios';
 import { describe, expect, it, vi } from 'vitest';
-import App from '@/components/ScanFindings/RuleTab.vue';
+import App from '@/components/ScanFindings/Tabs/RuleTab.vue';
 import rule from '@/../tests/resources/mock_rule.json';
 
 vi.mock('axios');

@@ -16,8 +16,6 @@ describe('RuleAnalysisFilter tests', () => {
     return shallowMount(App, {
       props: {},
       components: {
-        BButton: BButton,
-        BCollapse: BCollapse,
         FontAwesomeIcon: FontAwesomeIcon,
       },
       global: {

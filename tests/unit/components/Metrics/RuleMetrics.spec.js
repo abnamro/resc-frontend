@@ -34,7 +34,6 @@ describe('RuleMetrics tests', () => {
     const wrapper = mount(App, {
       props: {},
       components: {
-        BTable: BTable,
       },
       global: {
         stubs: {
@@ -73,7 +72,6 @@ describe('RuleMetrics tests', () => {
         rulePackVersion: [{ version: '0.0.6', active: true, created: 'today' }],
       },
       components: {
-        BTable: BTable,
       },
       global: {
         stubs: {

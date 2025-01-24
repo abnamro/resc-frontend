@@ -1,7 +1,6 @@
 import { mount } from '@vue/test-utils';
 import { describe, expect, it } from 'vitest';
 import App from '@/components/Filters/RulePackFilter.vue';
-import Multiselect from 'vue-multiselect';
 import rule_packs from '@/../tests/resources/mock_rule_packs.json';
 import { createTestingPinia } from '@pinia/testing';
 
@@ -20,10 +19,7 @@ describe('RulePackFilter tests', () => {
         rulePackPreSelected: rule_pack_selected,
         rulePackOptions: rule_packs.data,
       },
-      components: {
-        BFormGroup,
-        Multiselect,
-      },
+      components: {},
       global: {
         plugins: [createTestingPinia()],
       },
@@ -41,10 +37,7 @@ describe('RulePackFilter tests', () => {
         rulePackPreSelected: [],
         rulePackOptions: rule_packs.data,
       },
-      components: {
-        BFormGroup,
-        Multiselect,
-      },
+      components: {},
       global: {
         plugins: [createTestingPinia()],
       },
@@ -62,10 +55,7 @@ describe('RulePackFilter tests', () => {
         rulePackPreSelected: rule_pack_selected,
         rulePackOptions: rule_packs.data,
       },
-      components: {
-        BFormGroup,
-        Multiselect,
-      },
+      components: {},
       global: {
         plugins: [
           createTestingPinia({

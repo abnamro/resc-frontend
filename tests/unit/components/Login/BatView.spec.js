@@ -1,6 +1,6 @@
 import { shallowMount } from '@vue/test-utils';
 import { describe, expect, it } from 'vitest';
-import App from '@/views/BatView.vue';
+import App from '@/components/Login/BatView.vue';
 
 describe('BatView tests', () => {
   let wrapper;

@@ -1,7 +1,6 @@
 import { mount } from '@vue/test-utils';
 import { describe, expect, it } from 'vitest';
 import App from '@/components/Filters/RuleFilter.vue';
-import Multiselect from 'vue-multiselect';
 
 describe('RuleFilter tests', () => {
   function getApp() {
@@ -10,10 +9,7 @@ describe('RuleFilter tests', () => {
         rulesOptions: ['rule1', 'rule2'],
         rulesSelected: [],
       },
-      components: {
-        BFormGroup: BFormGroup,
-        Multiselect: Multiselect,
-      },
+      components: {},
     });
   }
 

@@ -1,7 +1,7 @@
 import { mount } from '@vue/test-utils';
 import axios from 'axios';
 import { describe, expect, it, vi } from 'vitest';
-import App from '@/components/ScanFindings/HistoryTab.vue';
+import App from '@/components/ScanFindings/Tabs/HistoryTab.vue';
 import audits from '@/../tests/resources/mock_finding_audits.json';
 import findings from '@/../tests/resources/mock_findings.json';
 

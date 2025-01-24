@@ -1,7 +1,7 @@
 import { mount } from '@vue/test-utils';
 import axios from 'axios';
 import { describe, expect, it, vi } from 'vitest';
-import App from '@/components/ScanFindings/AuditTab.vue';
+import App from '@/components/ScanFindings/Tabs/AuditTab.vue';
 import status from '@/../tests/resources/mock_status.json';
 import findings from '@/../tests/resources/mock_findings.json';
 import { createTestingPinia } from '@pinia/testing';

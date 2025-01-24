@@ -1,7 +1,6 @@
 import { mount } from '@vue/test-utils';
 import { describe, expect, it } from 'vitest';
 import App from '@/components/Filters/RuleTagsFilter.vue';
-import Multiselect from 'vue-multiselect';
 
 describe('RuleTagsFilter tests', () => {
   it('Given a RuleTagsFilter When props are passed then RuleTagsFilter will be displayed', () => {
@@ -9,10 +8,7 @@ describe('RuleTagsFilter tests', () => {
       props: {
         ruleTagsOptions: ['tag1', 'tag2'],
       },
-      components: {
-        BFormGroup: BFormGroup,
-        Multiselect: Multiselect,
-      },
+      components: {},
     });
 
     expect(wrapper.exists()).toBe(true);
@@ -27,10 +23,7 @@ describe('RuleTagsFilter tests', () => {
         ruleTagsOptions: ['tag1', 'tag2'],
         ruleTagsSelected: ['tag1'],
       },
-      components: {
-        BFormGroup: BFormGroup,
-        Multiselect: Multiselect,
-      },
+      components: {},
     });
 
     expect(wrapper.exists()).toBe(true);

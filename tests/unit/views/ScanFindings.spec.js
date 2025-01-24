@@ -81,7 +81,6 @@ describe('ScanFindings tests', () => {
           ScanFindingsFilter: true,
           RepositoriesPageFilter: true,
           FindingPanel: true,
-          BTable: true,
         },
       },
     });
