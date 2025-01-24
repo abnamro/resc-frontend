@@ -1,10 +1,6 @@
 <template>
-  <div v-if="errors.length > 0" class="absolute p-2 bottom-0 right-0">
-    <Button
-      icon="pi pi-exclamation-triangle"
-      class="rounded-full z-50"
-      @click="isOpen = !isOpen"
-    ></Button>
+  <div v-if="errors.length > 0" class="fixed z-20 p-2 bottom-0 right-0">
+    <Button icon="pi pi-exclamation-triangle" rounded @click="isOpen = !isOpen"></Button>
   </div>
   <Collapse
     class="v-collapse w-full flex flex-col z-50 justify-center absolute bg-black/90 text-left"

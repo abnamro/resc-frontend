@@ -1,18 +1,14 @@
 <template>
-  <div class="mx-4">
+  <div class="p-4">
     <h1 class="text-left text-3xl mb-10">SCAN FINDINGS</h1>
 
-    <ProgressSpinner v-if="!loadedData" />
-
-    <!-- Repository Panel -->
-    <div class="col-md-6 ms-2 mt-4 text-start" v-if="loadedRepoData">
-      <RepositoryPanel
-        :repository="repository"
-        :vcs_instance="vcsInstance"
-        @on-delete-at-change="fetchPaginatedFindingsByScanId"
-      >
-      </RepositoryPanel>
-    </div>
+    <RepositoryPanel
+      v-if="loadedRepoData"
+      :repository="repository"
+      :vcs_instance="vcsInstance"
+      @on-delete-at-change="fetchPaginatedFindingsByScanId"
+    >
+    </RepositoryPanel>
 
     <div>
       <!-- Filters -->
@@ -24,16 +20,10 @@
       ></ScanFindingsFilter>
     </div>
 
-    <!--Scan Findings Table -->
-    <div v-if="!hasRecords && loadedData" class="text-center cursor-default">
-      <br />
-      <br />No Record Found...
-    </div>
-
     <FindingsTable
       :findings="findingList"
-      :is_rule_finding="false"
-      v-if="hasRecords"
+      :is-rule-finding="false"
+      :has-records="hasRecords"
       @refresh-table="fetchPaginatedFindingsByScanId"
     >
     </FindingsTable>
@@ -46,17 +36,6 @@
       @update:first="handlePageClick"
       @update:rows="handlePageSizeChange"
     />
-
-    <div class="p-3" v-if="hasRecords">
-      <Paginator
-        v-model:first="currentPage"
-        v-model:rows="perPage"
-        :totalRecords="totalRows"
-        :rowsPerPageOptions="PAGE_SIZES"
-        @update:first="handlePageClick"
-        @update:rows="handlePageSizeChange"
-      />
-    </div>
   </div>
 </template>
 
@@ -82,7 +61,6 @@ import type { TableItem } from 'bootstrap-vue-next';
 import { useAuthUserStore } from '@/store';
 import { storeToRefs } from 'pinia';
 import { PAGE_SIZES } from '@/configuration/config';
-import ProgressSpinner from 'primevue/progressspinner';
 import Paginator from 'primevue/paginator';
 
 const loadedData = ref(false);

@@ -9,7 +9,7 @@
       src="/bat.gif"
       :class="{
         'h-10': true,
-        invert: false,
+        'dark:invert': true,
         'animate-pulse': true,
       }"
     />

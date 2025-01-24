@@ -24,7 +24,7 @@
       dataKey="_id"
       :highlight-on-select="true"
       selection-mode="single"
-      class="mt-8"
+      class="mt-2"
     >
       <Column field="version" header="Version" headerClass="bg-teal-500/20"> </Column>
       <Column headerClass="bg-teal-500/20" bodyClass="text-center">

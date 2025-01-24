@@ -1,35 +1,31 @@
 <template>
-  <div class="mx-4">
+  <div class="p-4">
     <h1 class="text-left text-3xl mb-10">RULE ANALYSIS</h1>
 
-    <div class="mt-4">
-      <RuleAnalysisFilter
-        :projectOptions="projectNames"
-        :repositoryOptions="repositoryNames"
-        :rulePackPreSelected="selectedRulePackVersionsList"
-        :rulePackOptions="rulePackVersions"
-        @on-filter-change="handleFilterChange"
-      ></RuleAnalysisFilter>
-    </div>
+    <RuleAnalysisFilter
+      :projectOptions="projectNames"
+      :repositoryOptions="repositoryNames"
+      :rulePackPreSelected="selectedRulePackVersionsList"
+      :rulePackOptions="rulePackVersions"
+      @on-filter-change="handleFilterChange"
+    ></RuleAnalysisFilter>
 
     <FindingsTable
       :findings="findingList"
-      :is_rule_finding="true"
-      v-if="hasRecords"
+      :is-rule-finding="true"
+      :has-records="hasRecords"
       @refresh-table="fetchPaginatedDetailedFindings"
     >
     </FindingsTable>
 
-    <div class="p-3" v-if="hasRecords">
-      <Paginator
-        v-model:first="currentPage"
-        v-model:rows="perPage"
-        :totalRecords="totalRows"
-        :rowsPerPageOptions="PAGE_SIZES"
-        @update:first="handlePageClick"
-        @update:rows="handlePageSizeChange"
-      />
-    </div>
+    <Paginator
+      v-model:first="currentPage"
+      v-model:rows="perPage"
+      :totalRecords="totalRows"
+      :rowsPerPageOptions="PAGE_SIZES"
+      @update:first="handlePageClick"
+      @update:rows="handlePageSizeChange"
+    />
   </div>
 </template>
 

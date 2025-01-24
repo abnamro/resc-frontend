@@ -1,5 +1,3 @@
-import type { StyleValue } from 'vue';
-
 const _defaultColumns = [
   'select',
   'toggle_row',
@@ -22,7 +20,6 @@ export type SimpleTableField = {
   sortable?: boolean;
   label: string;
   class: string;
-  thStyle: StyleValue;
 };
 
 const ColumnUtils = {
@@ -32,7 +29,6 @@ const ColumnUtils = {
       sortable: false,
       label: ColumnUtils.formatColumnLabel(column),
       class: ColumnUtils._class(column),
-      thStyle: { borderTop: '0px' },
     };
   },
 

@@ -1,5 +1,4 @@
 import AuthUtils from '@/utils/auth-utils';
-import AxiosConfig from '@/configuration/axios-config';
 import Router from '@/router/index';
 import { useAuthUserStore, type UserDetails } from '@/store/index';
 import Config, { dispatchError } from '@/configuration/config';
@@ -84,6 +83,7 @@ const AuthService = {
             store.update_auth_tokens({
               id_token: response.data.id_token,
               access_token: response.data.access_token,
+              token_length: this.getTokenLength(response.data.id_token),
             });
 
             (async () => {
@@ -92,11 +92,11 @@ const AuthService = {
                 this.updateUserDetailsInStore();
                 if (store.destinationRoute) {
                   Router.push(store.destinationRoute).catch((error) => {
-                    AxiosConfig.handleError(error);
+                    dispatchError(error);
                   });
                 } else {
                   Router.push('/').catch((error) => {
-                    AxiosConfig.handleError(error);
+                    dispatchError(error);
                   });
                 }
               } else {
@@ -115,7 +115,11 @@ const AuthService = {
       });
     } else {
       dispatchError('authCode && codeVerifier are null!');
-      return Promise.reject('authCode && codeVerifier are null!');
+      return new Promise((_resolve, _reject) => {
+        Router.push(store.destinationRoute ?? '/').catch((error) => {
+          dispatchError(error);
+        });
+      });
     }
   },
 
@@ -128,7 +132,7 @@ const AuthService = {
     store.clear_finding_status_list();
     this.removeCodeVerifier();
     Router.push('/login').catch((error) => {
-      AxiosConfig.handleError(error);
+      dispatchError(error);
     });
   },
 
@@ -180,7 +184,7 @@ const AuthService = {
 
   async doAuthCheck(): Promise<AxiosResponse<string> | void> {
     return axios.get(`/auth-check`).catch((error) => {
-      AxiosConfig.handleError(error);
+      dispatchError(error);
     });
   },
 
@@ -198,16 +202,21 @@ const AuthService = {
     };
   },
 
-  isTokenExpired(token: string): boolean {
+  getTokenLength(token: string): number {
     try {
       const claims = jose.decodeJwt(token);
       if (claims.exp === undefined) {
-        return true;
+        return -1;
       }
-      return Math.floor(Date.now() / 1000) >= claims.exp ? true : false;
+
+      return claims.exp - Math.floor(Date.now() / 1000);
     } catch (_error) {
-      return true;
+      return -1;
     }
+  },
+
+  isTokenExpired(token: string): boolean {
+    return this.getTokenLength(token) <= 0;
   },
 
   updateUserDetailsInStore(): void {

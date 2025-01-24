@@ -21,11 +21,13 @@ import MultiSelect from 'primevue/multiselect';
 import { onMounted, ref, watch } from 'vue';
 import { useAuthUserStore } from '@/store';
 import { storeToRefs } from 'pinia';
+import { useStatus } from '@/composables/useStatus';
 
 type Props = {
   statusOptions?: StatusOptionType[];
 };
 
+const { allStatuses } = useStatus();
 const props = withDefaults(defineProps<Props>(), {
   statusOptions: () => [],
 });
@@ -42,7 +44,7 @@ function onStatusFilterChange() {
 }
 
 onMounted(() => {
-  optionsStatus.value = CommonUtils.parseStatusOptions(store.get_finding_status_list);
+  optionsStatus.value = CommonUtils.parseStatusOptions(allStatuses);
 });
 
 watch(

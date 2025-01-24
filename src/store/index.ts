@@ -8,6 +8,7 @@ import type { StatusOptionType } from '@/utils/common-utils';
 export type TokenData = {
   id_token: string;
   access_token: string;
+  token_length: number;
 };
 
 export type UserDetails = {
@@ -38,6 +39,7 @@ export type PreviousRouteState = {
 interface State {
   idToken: null | string;
   accessToken: null | string;
+  tokenLength: null | number;
   sourceRoute: null | string;
   destinationRoute: null | string;
   firstName: null | string;
@@ -55,6 +57,7 @@ export const useAuthUserStore: () => Store<'authUser', State, GettersStore, Acti
     state: (): State => ({
       idToken: null,
       accessToken: null,
+      tokenLength: null,
       sourceRoute: null,
       destinationRoute: null,
       firstName: null,
@@ -88,6 +91,7 @@ export const useAuthUserStore: () => Store<'authUser', State, GettersStore, Acti
       update_auth_tokens(tokenData: TokenData | null) {
         this.idToken = tokenData?.id_token ?? null;
         this.accessToken = tokenData?.access_token ?? null;
+        this.tokenLength = tokenData?.token_length ?? null;
       },
       update_source_route(sourceRoute: string | null) {
         this.sourceRoute = sourceRoute;
