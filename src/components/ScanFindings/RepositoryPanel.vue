@@ -1,53 +1,38 @@
 <template>
-  <div class="row">
-    <table class="table table-sm table-borderless" aria-hidden="true">
-      <tbody>
-        <tr>
-          <th>VCS Instance</th>
-          <td>
-            <span class="badge bg-secondary">{{ props.vcs_instance.name }}</span>
-          </td>
-        </tr>
-        <tr>
-          <th>Project</th>
-          <td>
-            <span class="badge bg-secondary">{{ repositoryData.project_key }}</span>
-          </td>
-        </tr>
-        <tr>
-          <th>Repository</th>
-          <td>
-            <span class="badge bg-secondary">{{ repositoryData.repository_name }}</span>
-          </td>
-        </tr>
-        <tr>
-          <th>Deleted at</th>
-          <td>
-            <BFormCheckbox
-              v-model="repoDeleted"
-              name="check-button"
-              switch
-              :disabled="!loadedData"
-              @change="handleDeletedChange"
-            >
-              <small class="text-nowrap" v-if="repositoryData.deleted_at">{{
-                repositoryData.deleted_at.substring(0, 10)
-              }}</small>
-            </BFormCheckbox>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+  <DataTable :value="data" class="w-1/4" size="small">
+    <Column field="field" body-class="font-bold border-none" header-class="border-none"></Column>
+    <Column field="value" body-class=" border-none" header-class="border-none">
+      <template #body="slotProps">
+        <div v-if="slotProps.data.field === 'Deleted at'" class="flex gap-2 items-center">
+          <ToggleSwitch
+            size="small"
+            v-model="repoDeleted"
+            inputId="onlyIfHasUntriagedFindings"
+            :disabled="!loadedData"
+            @change="handleDeletedChange"
+          >
+          </ToggleSwitch>
+          <small class="text-nowrap" v-if="repositoryData.deleted_at">{{
+            repositoryData.deleted_at.substring(0, 10)
+          }}</small>
+        </div>
+        <template v-else>
+          {{ slotProps.data.value }}
+        </template>
+      </template>
+    </Column>
+  </DataTable>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import AxiosConfig from '@/configuration/axios-config';
 import RepositoryService from '@/services/repository-service';
 import type { RepositoryRead, VCSInstanceRead } from '@/services/shema-to-types';
 import type { AxiosResponse } from 'axios';
-import { BFormCheckbox } from 'bootstrap-vue-next';
+import ToggleSwitch from 'primevue/toggleswitch';
+import DataTable from 'primevue/datatable';
+import Column from 'primevue/column';
 
 type Props = {
   repository: RepositoryRead;
@@ -59,6 +44,25 @@ const props = defineProps<Props>();
 const repositoryData = ref(props.repository);
 const repoDeleted = ref(props.repository.deleted_at ? true : false);
 const loadedData = ref(true);
+
+const data = computed(() => [
+  {
+    field: 'VCS Instance',
+    value: props.vcs_instance.name,
+  },
+  {
+    field: 'Project',
+    value: repositoryData.value.project_key,
+  },
+  {
+    field: 'VCS Instance',
+    value: repositoryData.value.repository_name,
+  },
+  {
+    field: 'Deleted at',
+    value: repositoryData.value.repository_name,
+  },
+]);
 
 const emit = defineEmits(['on-delete-at-change']);
 

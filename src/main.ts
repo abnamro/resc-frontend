@@ -15,8 +15,6 @@ import Tooltip from 'primevue/tooltip';
 
 import { createBootstrap } from 'bootstrap-vue-next';
 
-// import 'bootstrap/dist/css/bootstrap.css';
-// import 'vue3-toastify/dist/index.css';
 import 'bootstrap-vue-next/dist/bootstrap-vue-next.css';
 import './styles/main.css';
 
@@ -27,7 +25,7 @@ app.use(PrimeVue, {
   theme: {
     preset: Aura,
     options: {
-      darkModeSelector: 'system',
+      darkModeSelector: '.darkMode',
       cssLayer: {
         name: 'primevue',
         order: 'tailwind-base, primevue, tailwind-utilities',

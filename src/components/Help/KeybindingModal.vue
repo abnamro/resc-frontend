@@ -11,7 +11,7 @@
           >
             <template v-for="combination in combinations" v-bind:key="combination">
               <Chip
-                class="rounded px-1 py-0.5 shadow-sm border border-surface-800 text-xs font-bold min-w-8 text-center"
+                class="rounded px-1 py-0.5 shadow-[1px_1px_1px_rgba(0,0,0,0.15)] border border-surface-800 text-xs font-bold min-w-8 text-center"
               >
                 <span v-html="combination" class="w-full"></span>
               </Chip>

@@ -37,4 +37,3 @@ function onProjectFilterChange() {
   emit('on-project-change', selectedProject.value ?? undefined);
 }
 </script>
-<style src="vue-multiselect/dist/vue-multiselect.css"></style>

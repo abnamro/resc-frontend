@@ -2,6 +2,12 @@
   <KeybindingModal v-model:visible="isKeybindingModalOpen" />
   <div class="absolute right-4 top-2 flex gap-2">
     <div
+      class="aspect-square float-start px-3 flex items-center cursor-pointer justify-center rounded-full bg-slate-700 text-white font-bold text-sm"
+      @click="toggleDarkMode"
+    >
+      <i class="pi pi-moon"></i>
+    </div>
+    <div
       class="aspect-square float-start px-3 flex items-center cursor-help justify-center rounded-full bg-yellow-520 text-white font-bold text-sm"
       @click="isKeybindingModalOpen = true"
     >
@@ -73,5 +79,9 @@ function toggle(event: Event) {
 
 function logout() {
   AuthService.doLogOut();
+}
+
+function toggleDarkMode() {
+  document.getElementById('app')?.classList.toggle('darkMode');
 }
 </script>

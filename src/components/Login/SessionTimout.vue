@@ -1,5 +1,19 @@
 <template>
   <!-- Easter Egg -->
+  <!-- Show the bat only at night ;p ? -->
+  <div
+    class="fixed bottom-0.5 z-20 -translate-x-1/2 landingIntroPopIn"
+    :style="`left: ${100 - timeLeft}%`"
+  >
+    <img
+      src="/bat.gif"
+      :class="{
+        'h-10': true,
+        invert: false,
+        'animate-pulse': true,
+      }"
+    />
+  </div>
   <ProgressBar
     v-if="idToken"
     :value="timeLeft"
@@ -32,7 +46,7 @@ function updateTimer(): void {
       return;
     }
 
-    timeLeft.value = Math.floor(((claims.exp - Math.floor(Date.now() / 1000)) * 100) / 3600);
+    timeLeft.value = ((claims.exp - Math.floor(Date.now() / 1000)) * 100) / 3600;
   } catch (error) {
     dispatchError(error);
   }

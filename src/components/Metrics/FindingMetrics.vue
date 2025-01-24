@@ -1,7 +1,7 @@
 <template>
   <div class="p-4 h-screen">
     <h1 class="text-left text-3xl mb-10">Findings Metrics</h1>
-    <div class="flex mb-20 gap-8">
+    <div class="flex mb-20 gap-20 mx-28">
       <div class="w-full">
         <h5 class="text-lg mb-2">Findings per week</h5>
         <ProgressSpinner v-if="!loadedTotal" />
@@ -17,7 +17,7 @@
       </div>
     </div>
 
-    <div class="flex gap-8">
+    <div class="flex gap-20 mx-28">
       <div class="w-full">
         <h5 class="text-lg mb-2">UnTriaged findings per week</h5>
         <ProgressSpinner v-if="!loadedUnTriaged" />

@@ -37,4 +37,3 @@ function onRepositoryFilterChange() {
   emit('on-repository-change', selectedRepository.value ?? undefined);
 }
 </script>
-<style src="vue-multiselect/dist/vue-multiselect.css"></style>

@@ -50,4 +50,3 @@ watch(
   (newStatusOption) => (optionsStatus.value = newStatusOption),
 );
 </script>
-<style src="vue-multiselect/dist/vue-multiselect.css"></style>

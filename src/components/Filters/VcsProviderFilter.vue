@@ -74,4 +74,3 @@ RepositoryService.getVCSProviders()
     AxiosConfig.handleError(error);
   });
 </script>
-<style src="vue-multiselect/dist/vue-multiselect.css"></style>

@@ -47,18 +47,15 @@
       @update:rows="handlePageSizeChange"
     />
 
-    <Paginator> </Paginator>
     <div class="p-3" v-if="hasRecords">
-      <!-- Pagination -->
-      <Pagination
-        :currentPage="currentPage"
-        :perPage="perPage"
-        :totalRows="totalRows"
-        :pageSizes="pageSizes"
-        :requestedPageNumber="requestedPageNumber"
-        @page-click="handlePageClick"
-        @page-size-change="handlePageSizeChange"
-      ></Pagination>
+      <Paginator
+        v-model:first="currentPage"
+        v-model:rows="perPage"
+        :totalRecords="totalRows"
+        :rowsPerPageOptions="PAGE_SIZES"
+        @update:first="handlePageClick"
+        @update:rows="handlePageSizeChange"
+      />
     </div>
   </div>
 </template>
@@ -66,7 +63,6 @@
 <script setup lang="ts">
 import AxiosConfig from '@/configuration/axios-config';
 import Config from '@/configuration/config';
-import Pagination from '@/components/Common/PaginationVue.vue';
 import RepositoryPanel from '@/components/ScanFindings/RepositoryPanel.vue';
 import ScanFindingsFilter from '@/components/Filters/ScanFindingsFilter.vue';
 import ScanFindingsService from '@/services/scan-findings-service';
@@ -115,11 +111,8 @@ const ruleTagsFilter = ref(undefined) as Ref<string[] | undefined>;
 const totalRows = ref(0);
 const currentPage = ref(1);
 const perPage = ref(Number(`${Config.value('defaultPageSize')}`));
-const pageSizes = ref(PAGE_SIZES);
-const requestedPageNumber = ref(1);
 
 const hasRecords = computed(() => findingList.value.length > 0);
-const skipRowCount = computed(() => (currentPage.value - 1) * perPage.value);
 
 const store = useAuthUserStore();
 const { selectedStatus } = storeToRefs(store);
@@ -136,7 +129,7 @@ function handlePageClick(page: number) {
 
 function handlePageSizeChange(pageSize: number) {
   perPage.value = pageSize;
-  currentPage.value = 1;
+  currentPage.value = 0;
   previousScanChecked.value ? fetchPreviousScanFindings() : fetchPaginatedFindingsByScanId();
 }
 
@@ -193,7 +186,7 @@ function fetchPaginatedFindingsByScanId() {
     });
 
   const filterObj: QueryFilterType = {
-    skip: skipRowCount.value,
+    skip: currentPage.value,
     limit: perPage.value,
     scanIds: [selectedScanID.value],
     findingStatus: selectedStatus.value.map((s) => s.value),
@@ -228,7 +221,7 @@ function handleFilterChange(scanId: number, rule: string[], ruleTags: string[]) 
   selectedScanID.value = scanId;
   ruleFilter.value = rule;
   ruleTagsFilter.value = ruleTags;
-  currentPage.value = 1;
+  currentPage.value = 0;
   allSelected.value = false;
   fetchPaginatedFindingsByScanId();
 }
@@ -238,7 +231,7 @@ function displayPreviousScans(
   ruleTags: string[],
   previousScanListUpdate: ScanRead[],
 ) {
-  currentPage.value = 1;
+  currentPage.value = 0;
   allSelected.value = false;
   previousScanList.value = previousScanListUpdate;
   ruleFilter.value = rule;
@@ -255,7 +248,7 @@ function fetchPreviousScanFindings() {
   loadedData.value = false;
 
   const filterObj: QueryFilterType = {
-    skip: skipRowCount.value,
+    skip: currentPage.value,
     limit: perPage.value,
     scanIds: previousScanIds,
     findingStatus: selectedStatus.value.map((s) => s.value),

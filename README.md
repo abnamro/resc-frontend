@@ -1,6 +1,6 @@
 # Repository Scanner Frontend (RESC-Frontend)
 [![Vue.js][vuejs-shield]][vuejs-url]
-[![BootstrapVue][bootstrapvue-shield]][bootstrapvue-url]
+[![PrimeVue][primevue-shield]][primevuevue-url]
 [![Chart.js][chartjs-shield]][chartjs-url]
 [![CI][ci-shield]][ci-url]
 [![OpenSSF Scorecard][ossf-shield]][ossf-url]
@@ -24,12 +24,12 @@
 
 <!-- ABOUT THE COMPONENT -->
 ## About the component
-Repository Scanner (RESC) Frontend is a fully responsive dashboard application developed using Vue.js 2 and BootstrapVue framework. It includes such screens as Analytics, Repositories, Scan Findings, Rule Analytics, and Rule Pack.
+Repository Scanner (RESC) Frontend is a fully responsive dashboard application developed using Vue.js 3 and PrimeVue framework. It includes such screens as Analytics, Repositories, Scan Findings, Rule Analytics, and Rule Pack.
 
 <!-- TECHNOLOGY STACK -->
 ## Technology stack
-- [Vue js 2](https://v2.vuejs.org/)
-- [Bootstrap Vue](https://bootstrap-vue.org/)
+- [Vue js 3](https://vuejs.org/)
+- [PrimeVue Vue](https://primevue.org/)
 - [Docker](https://www.docker.com/)
 
 <!-- GETTING STARTED -->
@@ -107,8 +107,8 @@ Compiles and minifies for production: ```npm run build```
 <!-- MARKDOWN LINKS & IMAGES -->
 [vuejs-shield]: https://img.shields.io/badge/VueJS-%2335495e.svg?style=flat&logo=vuedotjs&logoColor=%234FC08D
 [vuejs-url]: https://vuejs.org
-[bootstrapvue-shield]: https://img.shields.io/badge/BootstrapVue-%238511FA.svg?style=flat&logo=bootstrap&logoColor=white
-[bootstrapvue-url]: https://bootstrap-vue.org
+[primevue-shield]: https://img.shields.io/badge/PrimeVue-%25238511FA.svg?style=flat&logo=primevue&logoColor=white
+[primevue-url]: https://primevue.org/
 [chartjs-shield]: https://img.shields.io/badge/Chart.js-F5788D.svg?style=flat&logo=chart.js&logoColor=white
 [chartjs-url]: https://www.chartjs.org
 [ci-shield]: https://img.shields.io/github/actions/workflow/status/abnamro/repository-scanner/frontend-ci.yaml?logo=github

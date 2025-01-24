@@ -106,4 +106,3 @@ function update() {
 }
 onUpdated(() => update());
 </script>
-<style src="vue-multiselect/dist/vue-multiselect.css"></style>

@@ -5,7 +5,7 @@
   <!-- Audit Activity Over Time -->
   <div v-if="loadedData">
     <h5 class="text-left text-xl mb-2">Audit Activity Over Time</h5>
-    <div class="flex gap-4">
+    <div class="flex gap-4 flex-wrap">
       <CardVue
         cardTitle="Today"
         :cardBodyContent="todayAuditCount"
@@ -43,7 +43,7 @@
       />
     </div>
 
-    <div class="flex gap-4 mt-8">
+    <div class="flex gap-4 mt-8 flex-wrap">
       <div>
         <h5 class="text-left text-xl mb-2">Audit Trend</h5>
         <CardVue
@@ -73,7 +73,7 @@
     </div>
 
     <h5 class="text-left text-xl mb-2 mt-8">Audit Statistics</h5>
-    <div class="flex gap-4">
+    <div class="flex gap-4 flex-wrap">
       <CardVue
         :cardTitle="CommonUtils.formatStatusLabels('TRUE_POSITIVE')"
         :cardBodyContent="truePositive"

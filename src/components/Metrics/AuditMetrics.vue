@@ -3,11 +3,13 @@
     <h1 class="text-left text-3xl mb-10">Audit Metrics</h1>
     <h5 class="text-xl">Audits by Auditor per week</h5>
     <ProgressSpinner v-if="!loadedAuditCounts" />
-    <MultiLineChartVue
-      v-if="loadedAuditCounts"
-      :chart-data="chartDataForAuditCountsGraph"
-      :height="600"
-    />
+    <div class="mx-20">
+      <MultiLineChartVue
+        v-if="loadedAuditCounts"
+        :chart-data="chartDataForAuditCountsGraph"
+        :height="600"
+      />
+    </div>
   </div>
 </template>
 

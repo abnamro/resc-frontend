@@ -21,17 +21,14 @@
     </FindingsTable>
 
     <div class="p-3" v-if="hasRecords">
-      <!-- Pagination -->
-      <Pagination
-        :currentPage="currentPage"
-        :perPage="perPage"
-        :totalRows="totalRows"
-        :pageSizes="pageSizes"
-        :requestedPageNumber="requestedPageNumber"
-        @page-click="handlePageClick"
-        @page-size-change="handlePageSizeChange"
-      >
-      </Pagination>
+      <Paginator
+        v-model:first="currentPage"
+        v-model:rows="perPage"
+        :totalRecords="totalRows"
+        :rowsPerPageOptions="PAGE_SIZES"
+        @update:first="handlePageClick"
+        @update:rows="handlePageSizeChange"
+      />
     </div>
   </div>
 </template>
@@ -42,7 +39,6 @@ import AxiosConfig from '@/configuration/axios-config';
 import FindingsTable from '@/components/Findings/FindingsTable.vue';
 import FindingsService, { type QueryFilterType } from '@/services/findings-service';
 import RepositoryService from '@/services/repository-service';
-import Pagination from '@/components/Common/PaginationVue.vue';
 import { type RuleAnalysisFilter } from '@/components/Filters/RuleAnalysisFilter.vue';
 import RulePackService from '@/services/rule-pack-service';
 import { useAuthUserStore, type PreviousRouteState } from '@/store/index';
@@ -54,22 +50,18 @@ import type {
   VCSProviders,
 } from '@/services/shema-to-types';
 import type { AxiosResponse } from 'axios';
-import type { TableItem } from 'bootstrap-vue-next';
 import CommonUtils from '@/utils/common-utils';
 import { PAGE_SIZES } from '@/configuration/config';
 import { storeToRefs } from 'pinia';
-
-type TableItemDetailedFindingRead = DetailedFindingRead & TableItem;
+import Paginator from 'primevue/paginator';
 
 const loadedData = ref(false);
 const store = useAuthUserStore();
 
-const findingList = ref([] as TableItemDetailedFindingRead[]);
+const findingList = ref([] as DetailedFindingRead[]);
 const totalRows = ref(0);
 const currentPage = ref(1);
 const perPage = ref(Number(`${Config.value('defaultPageSize')}`));
-const pageSizes = ref(PAGE_SIZES);
-const requestedPageNumber = ref(1);
 const rulePackVersions = ref([] as RulePackRead[]);
 const ruleTagsList = ref([] as string[]);
 const projectNames = ref([] as string[]);
@@ -89,7 +81,6 @@ const allSelected = ref(false);
 const includeDeletedRepositories = ref(false);
 
 const hasRecords = computed(() => findingList.value.length > 0);
-const skipRowCount = computed(() => (currentPage.value - 1) * perPage.value);
 
 function isRedirectedFromRuleMetricsPage() {
   const sourceRoute = store.sourceRoute;
@@ -109,14 +100,14 @@ function handlePageClick(page: number) {
 
 function handlePageSizeChange(pageSize: number) {
   perPage.value = pageSize;
-  currentPage.value = 1;
+  currentPage.value = 0;
   fetchPaginatedDetailedFindings();
 }
 
 function fetchPaginatedDetailedFindings() {
   loadedData.value = false;
   const filterObj: QueryFilterType = {
-    skip: skipRowCount.value,
+    skip: currentPage.value,
     limit: perPage.value,
     startDate: selectedStartDate.value,
     endDate: selectedEndDate.value,
@@ -156,7 +147,7 @@ function handleFilterChange(filterObj: RuleAnalysisFilter) {
   selectedRuleTags.value = filterObj.ruleTags;
   selectedRulePackVersions.value = filterObj.rulePackVersions ?? [];
   includeDeletedRepositories.value = filterObj.includeDeletedRepositories ?? false;
-  currentPage.value = 1;
+  currentPage.value = 0;
   allSelected.value = false;
   fetchDistinctProjects();
   fetchDistinctRepositories();

@@ -56,7 +56,6 @@
         </template>
       </Column>
     </DataTable>
-    <!-- Pagination -->
     <Paginator
       v-model:first="currentPage"
       v-model:rows="perPage"
