@@ -1,10 +1,9 @@
 <template>
   <AuditModal
     v-model:visible="isAuditModalVisible"
-    v-model:expandedRows="expandedRows"
-    v-model:selectedCheckBoxIds="selectedCheckBoxIds"
+    :selectedCheckBoxIds="selectedCheckBoxIds"
+    @update-audit="updateAudit"
   />
-  <!-- @update-audit="updateAudit" -->
   <ColumnSelector v-model:visible="isColumnSelectorVisible" @update-columns="setTableFields" />
 
   <DataTable
@@ -13,9 +12,12 @@
     class="w-full"
     v-model:selection="selection"
     selection-mode="multiple"
+    :rowHover="false"
     v-model:expanded-rows="expandedRows"
     :loading="filteredList === undefined"
     :dataKey="(data) => `${data.id_}`"
+    :rowClass="rowClass"
+    @row-click="(e) => (selectedIndex = e.index)"
   >
     <template #header>
       <FindingTableHeader
@@ -60,7 +62,7 @@
 <script lang="ts" setup>
 import AuditModal from '@/components/ScanFindings/AuditModal.vue';
 import FindingPanel from '@/components/ScanFindings/FindingPanel.vue';
-import type { DetailedFindingRead } from '@/services/shema-to-types';
+import type { DetailedFindingRead, FindingStatus } from '@/services/shema-to-types';
 import FindingsService from '@/services/findings-service';
 import { onKeyStroke } from '@vueuse/core';
 import { shouldIgnoreKeystroke } from '@/utils/keybind-utils';
@@ -72,6 +74,7 @@ import DataTable from 'primevue/datatable';
 import FindingTableHeader from './FindingTableHeader.vue';
 import { useFiltering } from '@/composables/useFiltering';
 import { useColumnFiltering } from '@/composables/useColumnFiltering';
+import { dispatchError, dispatchMessage } from '@/configuration/config';
 
 type Props = {
   findings: DetailedFindingRead[] | undefined;
@@ -82,15 +85,15 @@ const props = defineProps<Props>();
 
 const isAuditModalVisible = ref(false);
 const isColumnSelectorVisible = ref(false);
+
 const selection = ref<DetailedFindingRead[]>([]);
 const expandedRows = ref<Record<string, boolean>>({});
 
 const findingList = ref<DetailedFindingRead[] | undefined>(props.findings);
-const selectedCheckBoxIds = ref<number[]>([]);
-const allSelected = ref(false);
+const selectedCheckBoxIds = computed(() => selection.value.map((s) => s.id_));
 
-const auditButtonDisabled = computed(() => selectedCheckBoxIds.value.length <= 0);
-const selectedIndex = ref<number | undefined>(undefined);
+const auditButtonDisabled = computed(() => selection.value.length == 0);
+const selectedIndex = ref<number>(0);
 const emit = defineEmits(['refresh-table']);
 
 const { fields, setTableFields } = useColumnFiltering(props.isRuleFinding);
@@ -98,251 +101,246 @@ const { filterString, filteredList } = useFiltering(findingList);
 
 setTableFields();
 
-// function toggleAllCheckboxes() {
-//   selectedCheckBoxIds.value = [];
-//   allSelected.value = !allSelected.value;
-//   if (allSelected.value) {
-//     for (const finding of filteredList.value) {
-//       selectedCheckBoxIds.value.push(finding.id_);
-//     }
-//   }
-// }
-
-function showAuditModal() {
-  isAuditModalVisible.value = true;
+function rowClass(data: DetailedFindingRead) {
+  if (filteredList.value === undefined) {
+    return '';
+  }
+  return data.id_ === filteredList.value[selectedIndex.value].id_ ? 'bg-emerald-200/20' : '';
 }
 
-// function updateAudit(status: FindingStatus, comment: string) {
-//   updateVisualBadge(selectedCheckBoxIds.value, status, comment);
-//   emit('refresh-table');
-// }
+function toggleAllCheckboxes() {
+  if (filteredList.value === undefined) {
+    return;
+  }
 
-// function updateVisualBadge(selectedIds: number[], status: FindingStatus, comment: string) {
-//   findingList.value.forEach((finding: DetailedFindingRead, idx, theArray) => {
-//     if (selectedIds.includes(finding.id_)) {
-//       theArray[idx].status = status;
-//       theArray[idx].comment = comment;
-//     }
-//   });
+  if (selection.value.length < filteredList.value.length) {
+    selection.value = filteredList.value;
+  } else {
+    selection.value = [];
+  }
+}
 
-//   if (selectedIds.length > 1) {
-//     selectedCheckBoxIds.value = [];
-//     allSelected.value = false;
-//     return;
-//   }
+function updateAudit(status: FindingStatus, comment: string) {
+  updateVisualBadge(selectedCheckBoxIds.value, status, comment);
+  emit('refresh-table');
+}
 
-//   const index = selectedCheckBoxIds.value.indexOf(selectedIds[0]);
-//   if (index !== -1) {
-//     selectedCheckBoxIds.value.splice(index, 1);
-//   }
-// }
+function updateVisualBadge(selectedIds: number[], status: FindingStatus, comment: string) {
+  if (findingList.value === undefined) {
+    return;
+  }
 
-// function getCurrentFindingSelected(): DetailedFindingRead | undefined {
-//   if (selectedIndex.value === undefined) {
-//     return undefined;
-//   }
+  findingList.value.forEach((finding: DetailedFindingRead, idx, theArray) => {
+    if (selectedIds.includes(finding.id_)) {
+      theArray[idx].status = status;
+      theArray[idx].comment = comment;
+    }
+  });
 
-//   return filteredList.value[selectedIndex.value];
-// }
+  if (selectedIds.length > 1) {
+    selection.value = [];
+    return;
+  }
 
-// function selectDown(): boolean {
-//   const detailsStatus = getCurrentFindingSelected()?._showDetails;
-//   closeAllDetails();
+  selection.value = selection.value.filter((s) => s.id_ !== selectedIds[0]);
+}
 
-//   selectedIndex.value = ((selectedIndex.value ?? -1) + 1) % filteredList.value.length;
-//   auditTable.value.clearSelected();
-//   auditTable.value.selectRow(selectedIndex.value);
+function getCurrentFindingSelected(): DetailedFindingRead {
+  if (filteredList.value === undefined) {
+    dispatchMessage('List is empty');
+    throw new Error('oups!');
+  }
 
-//   (getCurrentFindingSelected() as DetailedFindingRead)._showDetails = detailsStatus;
+  return filteredList.value[selectedIndex.value];
+}
 
-//   return true;
-// }
+function selectDown(): boolean {
+  if (filteredList.value === undefined) {
+    return false;
+  }
 
-// function selectUp(): boolean {
-//   const detailsStatus = getCurrentFindingSelected()?._showDetails;
-//   closeAllDetails();
+  const s = getCurrentFindingSelected();
+  const detailsStatus = expandedRows.value[s.id_];
+  expandedRows.value = {};
+  selectedIndex.value = ((selectedIndex.value ?? -1) + 1) % filteredList.value.length;
 
-//   selectedIndex.value = Math.max(0, (selectedIndex.value ?? 1) - 1);
-//   auditTable.value.clearSelected();
-//   auditTable.value.selectRow(selectedIndex.value);
+  const c = getCurrentFindingSelected();
+  if (c !== undefined) {
+    expandedRows.value[c.id_] = detailsStatus;
+  }
 
-//   (getCurrentFindingSelected() as DetailedFindingRead)._showDetails = detailsStatus;
+  return true;
+}
 
-//   return true;
-// }
+function selectUp(): boolean {
+  if (filteredList.value === undefined) {
+    return false;
+  }
 
-// function closeAllDetails() {
-//   findingList.value.forEach((_item, idx, theArray) => {
-//     theArray[idx]._showDetails = false;
-//   });
-// }
+  const s = getCurrentFindingSelected();
+  const detailsStatus = expandedRows.value[s.id_];
+  expandedRows.value = {};
+  selectedIndex.value =
+    (selectedIndex.value + filteredList.value.length - 1) % filteredList.value.length;
 
-// function openDetails() {
-//   const item = getCurrentFindingSelected();
-//   if (item === undefined) {
-//     return;
-//   }
-//   item._showDetails = true;
-// }
+  const c = getCurrentFindingSelected();
+  if (c !== undefined) {
+    expandedRows.value[c.id_] = detailsStatus;
+  }
 
-// function closeDetails() {
-//   const item = getCurrentFindingSelected();
-//   if (item === undefined) {
-//     return;
-//   }
-//   item._showDetails = false;
-// }
+  return true;
+}
 
-// function openCommitUrl() {
-//   const url = getCurrentFindingSelected()?.commit_url;
-//   if (url !== undefined && url !== null) {
-//     window.open(url, '_blank')?.focus();
-//   }
-// }
+function openDetails() {
+  const item = getCurrentFindingSelected();
+  if (item === undefined) {
+    return;
+  }
+  expandedRows.value = {};
+  expandedRows.value[item.id_] = true;
+}
 
-// function toggleSelect() {
-//   const item = getCurrentFindingSelected();
-//   if (item === undefined) {
-//     return;
-//   }
-//   const index = selectedCheckBoxIds.value.indexOf(item.id_);
-//   if (index === -1) {
-//     selectedCheckBoxIds.value.push(item.id_);
-//   } else {
-//     selectedCheckBoxIds.value.splice(index, 1);
-//   }
-// }
+function closeDetails() {
+  expandedRows.value = {};
+}
 
-// function markAsFalsePositive() {
-//   const item = getCurrentFindingSelected();
-//   if (item === undefined) {
-//     return;
-//   }
-//   sendUpdate([item.id_], 'FALSE_POSITIVE');
-//   selectDown();
-// }
+function openCommitUrl() {
+  const url = getCurrentFindingSelected()?.commit_url;
+  if (url !== undefined && url !== null) {
+    window.open(url, '_blank')?.focus();
+  }
+}
 
-// function markAsTruePositive() {
-//   const item = getCurrentFindingSelected();
-//   if (item === undefined) {
-//     return;
-//   }
-//   sendUpdate([item.id_], 'TRUE_POSITIVE');
-//   selectDown();
-// }
+function toggleSelect() {
+  const item = getCurrentFindingSelected();
+  if (selection.value.filter((p) => p.id_ === item.id_).length > 0) {
+    selection.value = selection.value.filter((p) => p.id_ !== item.id_);
+  } else {
+    selection.value.push(item);
+  }
+}
 
-// function markAsGone() {
-//   const item = getCurrentFindingSelected();
-//   if (item === undefined) {
-//     return;
-//   }
-//   sendUpdate([item.id_], 'NOT_ACCESSIBLE');
-//   selectDown();
-// }
+function markAsFalsePositive() {
+  const item = getCurrentFindingSelected();
+  sendUpdate([item.id_], 'FALSE_POSITIVE');
+  selectDown();
+}
 
-// function markAllAsFalsePositive() {
-//   sendUpdate(selectedCheckBoxIds.value, 'FALSE_POSITIVE');
-// }
+function markAsTruePositive() {
+  const item = getCurrentFindingSelected();
+  sendUpdate([item.id_], 'TRUE_POSITIVE');
+  selectDown();
+}
 
-// function markAllAsTruePositive() {
-//   sendUpdate(selectedCheckBoxIds.value, 'TRUE_POSITIVE');
-// }
+function markAsGone() {
+  const item = getCurrentFindingSelected();
+  sendUpdate([item.id_], 'NOT_ACCESSIBLE');
+  selectDown();
+}
 
-// function markAllAsGone() {
-//   sendUpdate(selectedCheckBoxIds.value, 'NOT_ACCESSIBLE');
-// }
+function markAllAsFalsePositive() {
+  sendUpdate(selectedCheckBoxIds.value, 'FALSE_POSITIVE');
+}
 
-// function auditThis() {
-//   if (selectedCheckBoxIds.value.length > 0) {
-//     showAuditModal();
-//     return;
-//   }
+function markAllAsTruePositive() {
+  sendUpdate(selectedCheckBoxIds.value, 'TRUE_POSITIVE');
+}
 
-//   openDetails();
-// }
+function markAllAsGone() {
+  sendUpdate(selectedCheckBoxIds.value, 'NOT_ACCESSIBLE');
+}
 
-// function sendUpdate(selectedIds: number[], status: FindingStatus) {
-//   FindingsService.auditFindings(selectedIds, status, '')
-//     .then(() => {
-//       updateVisualBadge(selectedIds, status, '');
-//     })
-//     .catch((error) => {
-//       AxiosConfig.handleError(error);
-//       return false;
-//     });
-// }
+function auditThis() {
+  if (selection.value.length > 0) {
+    isAuditModalVisible.value = true;
+    return;
+  }
 
-// /* istanbul ignore next @preserve */
-// onKeyStroke(['ArrowLeft', 'h', 'H'], () => !shouldIgnoreKeystroke() && closeDetails(), {
-//   eventName: 'keydown',
-// });
-// /* istanbul ignore next @preserve */
-// onKeyStroke(['ArrowRight', 'l', 'L'], () => !shouldIgnoreKeystroke() && openDetails(), {
-//   eventName: 'keydown',
-// });
-// /* istanbul ignore next @preserve */
-// onKeyStroke(
-//   ['ArrowDown', 'j', 'J'],
-//   (e: KeyboardEvent) => !shouldIgnoreKeystroke() && selectDown() && e.shiftKey && toggleSelect(),
-//   { eventName: 'keydown' },
-// );
-// /* istanbul ignore next @preserve */
-// onKeyStroke(
-//   ['ArrowUp', 'k', 'K'],
-//   (e: KeyboardEvent) => !shouldIgnoreKeystroke() && selectUp() && e.shiftKey && toggleSelect(),
-//   { eventName: 'keydown' },
-// );
+  openDetails();
+}
 
-// /* istanbul ignore next @preserve */
-// onKeyStroke('o', () => !shouldIgnoreKeystroke() && openCommitUrl(), { eventName: 'keydown' });
-// /* istanbul ignore next @preserve */
-// onKeyStroke('f', () => !shouldIgnoreKeystroke() && markAsFalsePositive(), {
-//   eventName: 'keydown',
-// });
-// /* istanbul ignore next @preserve */
-// onKeyStroke('F', () => !shouldIgnoreKeystroke() && markAllAsFalsePositive(), {
-//   eventName: 'keydown',
-// });
-// /* istanbul ignore next @preserve */
-// onKeyStroke('t', () => !shouldIgnoreKeystroke() && markAsTruePositive(), {
-//   eventName: 'keydown',
-// });
-// /* istanbul ignore next @preserve */
-// onKeyStroke('T', () => !shouldIgnoreKeystroke() && markAllAsTruePositive(), {
-//   eventName: 'keydown',
-// });
-// /* istanbul ignore next @preserve */
-// onKeyStroke('g', () => !shouldIgnoreKeystroke() && markAsGone(), {
-//   eventName: 'keydown',
-// });
-// /* istanbul ignore next @preserve */
-// onKeyStroke('G', () => !shouldIgnoreKeystroke() && markAllAsGone(), {
-//   eventName: 'keydown',
-// });
-// /* istanbul ignore next @preserve */
-// onKeyStroke('a', (e: KeyboardEvent) => !shouldIgnoreKeystroke() && !e.ctrlKey && auditThis(), {
-//   eventName: 'keydown',
-// });
-// /* istanbul ignore next @preserve */
-// onKeyStroke(' ', () => !shouldIgnoreKeystroke() && toggleSelect(), { eventName: 'keydown' });
-// /* istanbul ignore next @preserve */
-// onKeyStroke(
-//   'a',
-//   (e: KeyboardEvent) => !shouldIgnoreKeystroke() && e.ctrlKey && toggleAllCheckboxes(),
-//   { eventName: 'keydown' },
-// );
-// /* istanbul ignore next @preserve */
-// onKeyStroke('r', () => !shouldIgnoreKeystroke() && emit('refresh-table'), { eventName: 'keydown' });
-// /* istanbul ignore next @preserve */
-// onKeyStroke(
-//   '\\',
-//   () => shouldIgnoreKeystroke() && document.getElementById('filterFiles')?.focus(),
-//   { eventName: 'keydown' },
-// );
-// /* istanbul ignore next @preserve */
-// onKeyStroke('Escape', () => document.getElementById('filterFiles')?.blur(), {
-//   eventName: 'keydown',
-// });
+function sendUpdate(selectedIds: number[], status: FindingStatus) {
+  FindingsService.auditFindings(selectedIds, status, '')
+    .then(() => {
+      updateVisualBadge(selectedIds, status, '');
+    })
+    .catch((error) => {
+      dispatchError(error);
+      return false;
+    });
+}
+
+/* istanbul ignore next @preserve */
+onKeyStroke(['ArrowLeft', 'h', 'H'], () => !shouldIgnoreKeystroke() && closeDetails(), {
+  eventName: 'keydown',
+});
+/* istanbul ignore next @preserve */
+onKeyStroke(['ArrowRight', 'l', 'L'], () => !shouldIgnoreKeystroke() && openDetails(), {
+  eventName: 'keydown',
+});
+/* istanbul ignore next @preserve */
+onKeyStroke(
+  ['ArrowDown', 'j', 'J'],
+  (e: KeyboardEvent) => !shouldIgnoreKeystroke() && selectDown() && e.shiftKey && toggleSelect(),
+  { eventName: 'keydown' },
+);
+/* istanbul ignore next @preserve */
+onKeyStroke(
+  ['ArrowUp', 'k', 'K'],
+  (e: KeyboardEvent) => !shouldIgnoreKeystroke() && selectUp() && e.shiftKey && toggleSelect(),
+  { eventName: 'keydown' },
+);
+
+/* istanbul ignore next @preserve */
+onKeyStroke('o', () => !shouldIgnoreKeystroke() && openCommitUrl(), { eventName: 'keydown' });
+/* istanbul ignore next @preserve */
+onKeyStroke('f', () => !shouldIgnoreKeystroke() && markAsFalsePositive(), {
+  eventName: 'keydown',
+});
+/* istanbul ignore next @preserve */
+onKeyStroke('F', () => !shouldIgnoreKeystroke() && markAllAsFalsePositive(), {
+  eventName: 'keydown',
+});
+/* istanbul ignore next @preserve */
+onKeyStroke('t', () => !shouldIgnoreKeystroke() && markAsTruePositive(), {
+  eventName: 'keydown',
+});
+/* istanbul ignore next @preserve */
+onKeyStroke('T', () => !shouldIgnoreKeystroke() && markAllAsTruePositive(), {
+  eventName: 'keydown',
+});
+/* istanbul ignore next @preserve */
+onKeyStroke('g', () => !shouldIgnoreKeystroke() && markAsGone(), {
+  eventName: 'keydown',
+});
+/* istanbul ignore next @preserve */
+onKeyStroke('G', () => !shouldIgnoreKeystroke() && markAllAsGone(), {
+  eventName: 'keydown',
+});
+/* istanbul ignore next @preserve */
+onKeyStroke('a', (e: KeyboardEvent) => !shouldIgnoreKeystroke() && !e.ctrlKey && auditThis(), {
+  eventName: 'keydown',
+});
+/* istanbul ignore next @preserve */
+onKeyStroke(' ', () => !shouldIgnoreKeystroke() && toggleSelect(), { eventName: 'keydown' });
+/* istanbul ignore next @preserve */
+onKeyStroke(
+  'a',
+  (e: KeyboardEvent) => !shouldIgnoreKeystroke() && e.ctrlKey && toggleAllCheckboxes(),
+  { eventName: 'keydown' },
+);
+/* istanbul ignore next @preserve */
+onKeyStroke('r', () => !shouldIgnoreKeystroke() && emit('refresh-table'), { eventName: 'keydown' });
+/* istanbul ignore next @preserve */
+onKeyStroke(
+  '\\',
+  () => shouldIgnoreKeystroke() && document.getElementById('filterFiles')?.focus(),
+  { eventName: 'keydown' },
+);
+/* istanbul ignore next @preserve */
+onKeyStroke('Escape', () => document.getElementById('filterFiles')?.blur(), {
+  eventName: 'keydown',
+});
 
 onMounted(setTableFields);
 
@@ -351,9 +349,8 @@ watch(
   () => props.findings,
   (findings, _prevFindings) => {
     findingList.value = findings;
-    selectedCheckBoxIds.value = [];
-    allSelected.value = false;
-    selectedIndex.value = undefined;
+    selection.value = [];
+    selectedIndex.value = 0;
   },
 );
 </script>

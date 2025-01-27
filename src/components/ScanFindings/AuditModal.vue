@@ -30,7 +30,6 @@ import SelectStatus from './Form/SelectStatus.vue';
 import SetComment from './Form/SetComment.vue';
 
 const visible = defineModel('visible') as Ref<boolean>;
-
 type Props = {
   selectedCheckBoxIds: number[];
 };

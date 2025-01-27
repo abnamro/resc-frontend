@@ -1,6 +1,8 @@
 import { computed, ref, type Ref } from 'vue';
 
-export function useFiltering(findingList: Ref<{ file_path: string }[] | undefined>) {
+type Filtered<T> = T & { file_path: string };
+
+export function useFiltering<T>(findingList: Ref<Filtered<T>[] | undefined>) {
   const filterString = ref('');
 
   // Simple filter function
@@ -9,7 +11,7 @@ export function useFiltering(findingList: Ref<{ file_path: string }[] | undefine
   // if does not contain * we only check if the needle is in the string.
   function applyFilter() {
     if (findingList.value === undefined) {
-      return [];
+      return undefined;
     }
     if (
       filterString.value === '' ||
