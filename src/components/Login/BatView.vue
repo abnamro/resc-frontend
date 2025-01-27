@@ -3,8 +3,8 @@
     id="intro"
     class="w-full h-svh absolute top-0 left-0 bg-black z-30 flex justify-center overflow-hidden items-center pointer-events-none animate-landingIntroFadeOut"
   >
-    <div class="h-1/2 w-1/2 flex justify-center">
-      <img src="/RESC.png" class="max-w-full max-h-full shimmer" />
+  <div class="h-1/2 w-1/2 flex justify-center">
+      <img src="/RESC-sm.png" class="max-w-full max-h-full shimmer" />
     </div>
   </div>
 </template>
