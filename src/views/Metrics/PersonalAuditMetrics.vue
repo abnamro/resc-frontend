@@ -1,121 +1,125 @@
 <template>
-  <!-- Spinner -->
-  <ProgressSpinner v-if="!loadedData" />
+  <div class="p-4">
+    <h1 class="text-left text-3xl mb-10">ANALYTICS</h1>
 
-  <!-- Audit Activity Over Time -->
-  <div v-if="loadedData">
-    <h5 class="text-left text-xl mb-2">Audit Activity Over Time</h5>
-    <div class="flex gap-4 flex-wrap">
-      <CardVue
-        cardTitle="Today"
-        :cardBodyContent="todayAuditCount"
-        titleIcon="info-circle"
-        titleIconColor="#948C8C"
-        titleIconTooltip="Total number of findings you triaged today"
-      />
-      <CardVue
-        cardTitle="Current Week"
-        :cardBodyContent="currentWeekAuditCount"
-        titleIcon="info-circle"
-        titleIconColor="#948C8C"
-        titleIconTooltip="Total number of findings you triaged this week"
-      />
-      <CardVue
-        :cardTitle="`${DateUtils.getCurrentMonth()}-${DateUtils.getCurrentYear()}`"
-        :cardBodyContent="currentMonthAuditCount"
-        titleIcon="info-circle"
-        titleIconColor="#948C8C"
-        titleIconTooltip="Total number of findings you triaged this month"
-      />
-      <CardVue
-        :cardTitle="`Year-${DateUtils.getCurrentYear()}`"
-        :cardBodyContent="currentYearAuditCount"
-        titleIcon="info-circle"
-        titleIconColor="#948C8C"
-        titleIconTooltip="Total number of findings you triaged this year"
-      />
-      <CardVue
-        cardTitle="All Time"
-        :cardBodyContent="allTimeAuditCount"
-        titleIcon="info-circle"
-        titleIconColor="#948C8C"
-        titleIconTooltip="Total number of findings you triaged till today"
-      />
-    </div>
+    <!-- Spinner -->
+    <ProgressSpinner v-if="!loadedData" />
 
-    <div class="flex gap-4 mt-8 flex-wrap">
-      <div>
-        <h5 class="text-left text-xl mb-2">Audit Trend</h5>
+    <!-- Audit Activity Over Time -->
+    <div v-if="loadedData">
+      <h5 class="text-left text-xl mb-2">Audit Activity Over Time</h5>
+      <div class="flex gap-4 flex-wrap">
         <CardVue
-          cardTitle="Current Week"
-          :cardBodyContent="currentWeekAuditTrendPercentageCount"
-          :contentColor="currentWeekAuditTrendContentColor"
-          :contentIcon="currentWeekAuditTrendIcon"
-          :contentIconColor="currentWeekAuditTrendIconColor"
+          cardTitle="Today"
+          :cardBodyContent="todayAuditCount"
           titleIcon="info-circle"
           titleIconColor="#948C8C"
-          titleIconTooltip="Your audit trend this week in comparison to last week"
+          titleIconTooltip="Total number of findings you triaged today"
         />
-      </div>
-      <div>
-        <h5 class="text-left text-xl mb-2">Audit Rank</h5>
         <CardVue
           cardTitle="Current Week"
-          :cardBodyContent="weeklyRankLabel"
-          :contentColor="weeklyRankContentColor"
-          :contentIcon="weeklyRankIcon"
-          :contentIconColor="weeklyRankIconColor"
+          :cardBodyContent="currentWeekAuditCount"
           titleIcon="info-circle"
           titleIconColor="#948C8C"
-          titleIconTooltip="Your rank based on number of findings you triaged in current week"
+          titleIconTooltip="Total number of findings you triaged this week"
+        />
+        <CardVue
+          :cardTitle="`${DateUtils.getCurrentMonth()}-${DateUtils.getCurrentYear()}`"
+          :cardBodyContent="currentMonthAuditCount"
+          titleIcon="info-circle"
+          titleIconColor="#948C8C"
+          titleIconTooltip="Total number of findings you triaged this month"
+        />
+        <CardVue
+          :cardTitle="`Year-${DateUtils.getCurrentYear()}`"
+          :cardBodyContent="currentYearAuditCount"
+          titleIcon="info-circle"
+          titleIconColor="#948C8C"
+          titleIconTooltip="Total number of findings you triaged this year"
+        />
+        <CardVue
+          cardTitle="All Time"
+          :cardBodyContent="allTimeAuditCount"
+          titleIcon="info-circle"
+          titleIconColor="#948C8C"
+          titleIconTooltip="Total number of findings you triaged till today"
         />
       </div>
-    </div>
 
-    <h5 class="text-left text-xl mb-2 mt-8">Audit Statistics</h5>
-    <div class="flex gap-4 flex-wrap">
-      <CardVue
-        :cardTitle="CommonUtils.formatStatusLabels('TRUE_POSITIVE')"
-        :cardBodyContent="truePositive"
-        titleIcon="info-circle"
-        titleIconColor="#948C8C"
-        :titleIconTooltip="`Number of ${CommonUtils.formatStatusLabels('TRUE_POSITIVE')} audited.`"
-      />
-      <CardVue
-        :cardTitle="CommonUtils.formatStatusLabels('FALSE_POSITIVE')"
-        :cardBodyContent="falsePositive"
-        titleIcon="info-circle"
-        titleIconColor="#948C8C"
-        :titleIconTooltip="`Number of ${CommonUtils.formatStatusLabels('FALSE_POSITIVE')} audited.`"
-      />
-      <CardVue
-        :cardTitle="CommonUtils.formatStatusLabels('NOT_ACCESSIBLE')"
-        :cardBodyContent="notAccessible"
-        titleIcon="info-circle"
-        titleIconColor="#948C8C"
-        :titleIconTooltip="`Number of ${CommonUtils.formatStatusLabels('NOT_ACCESSIBLE')} audited.`"
-      />
-      <CardVue
-        :cardTitle="CommonUtils.formatStatusLabels('NOT_ANALYZED')"
-        :cardBodyContent="notAnalyzed"
-        titleIcon="info-circle"
-        titleIconColor="#948C8C"
-        :titleIconTooltip="`Number of ${CommonUtils.formatStatusLabels('NOT_ANALYZED')} audited.`"
-      />
-      <CardVue
-        :cardTitle="CommonUtils.formatStatusLabels('CLARIFICATION_REQUIRED')"
-        :cardBodyContent="clarificationRequired"
-        titleIcon="info-circle"
-        titleIconColor="#948C8C"
-        :titleIconTooltip="`Number of ${CommonUtils.formatStatusLabels('CLARIFICATION_REQUIRED')} audited.`"
-      />
-      <CardVue
-        :cardTitle="CommonUtils.formatStatusLabels('OUTDATED')"
-        :cardBodyContent="outdated"
-        titleIcon="info-circle"
-        titleIconColor="#948C8C"
-        :titleIconTooltip="`Number of ${CommonUtils.formatStatusLabels('OUTDATED')} audited.`"
-      />
+      <div class="flex gap-4 mt-8 flex-wrap">
+        <div>
+          <h5 class="text-left text-xl mb-2">Audit Trend</h5>
+          <CardVue
+            cardTitle="Current Week"
+            :cardBodyContent="currentWeekAuditTrendPercentageCount"
+            :contentColor="currentWeekAuditTrendContentColor"
+            :contentIcon="currentWeekAuditTrendIcon"
+            :contentIconColor="currentWeekAuditTrendIconColor"
+            titleIcon="info-circle"
+            titleIconColor="#948C8C"
+            titleIconTooltip="Your audit trend this week in comparison to last week"
+          />
+        </div>
+        <div>
+          <h5 class="text-left text-xl mb-2">Audit Rank</h5>
+          <CardVue
+            cardTitle="Current Week"
+            :cardBodyContent="weeklyRankLabel"
+            :contentColor="weeklyRankContentColor"
+            :contentIcon="weeklyRankIcon"
+            :contentIconColor="weeklyRankIconColor"
+            titleIcon="info-circle"
+            titleIconColor="#948C8C"
+            titleIconTooltip="Your rank based on number of findings you triaged in current week"
+          />
+        </div>
+      </div>
+
+      <h5 class="text-left text-xl mb-2 mt-8">Audit Statistics</h5>
+      <div class="flex gap-4 flex-wrap">
+        <CardVue
+          :cardTitle="CommonUtils.formatStatusLabels('TRUE_POSITIVE')"
+          :cardBodyContent="truePositive"
+          titleIcon="info-circle"
+          titleIconColor="#948C8C"
+          :titleIconTooltip="`Number of ${CommonUtils.formatStatusLabels('TRUE_POSITIVE')} audited.`"
+        />
+        <CardVue
+          :cardTitle="CommonUtils.formatStatusLabels('FALSE_POSITIVE')"
+          :cardBodyContent="falsePositive"
+          titleIcon="info-circle"
+          titleIconColor="#948C8C"
+          :titleIconTooltip="`Number of ${CommonUtils.formatStatusLabels('FALSE_POSITIVE')} audited.`"
+        />
+        <CardVue
+          :cardTitle="CommonUtils.formatStatusLabels('NOT_ACCESSIBLE')"
+          :cardBodyContent="notAccessible"
+          titleIcon="info-circle"
+          titleIconColor="#948C8C"
+          :titleIconTooltip="`Number of ${CommonUtils.formatStatusLabels('NOT_ACCESSIBLE')} audited.`"
+        />
+        <CardVue
+          :cardTitle="CommonUtils.formatStatusLabels('NOT_ANALYZED')"
+          :cardBodyContent="notAnalyzed"
+          titleIcon="info-circle"
+          titleIconColor="#948C8C"
+          :titleIconTooltip="`Number of ${CommonUtils.formatStatusLabels('NOT_ANALYZED')} audited.`"
+        />
+        <CardVue
+          :cardTitle="CommonUtils.formatStatusLabels('CLARIFICATION_REQUIRED')"
+          :cardBodyContent="clarificationRequired"
+          titleIcon="info-circle"
+          titleIconColor="#948C8C"
+          :titleIconTooltip="`Number of ${CommonUtils.formatStatusLabels('CLARIFICATION_REQUIRED')} audited.`"
+        />
+        <CardVue
+          :cardTitle="CommonUtils.formatStatusLabels('OUTDATED')"
+          :cardBodyContent="outdated"
+          titleIcon="info-circle"
+          titleIconColor="#948C8C"
+          :titleIconTooltip="`Number of ${CommonUtils.formatStatusLabels('OUTDATED')} audited.`"
+        />
+      </div>
     </div>
   </div>
 </template>

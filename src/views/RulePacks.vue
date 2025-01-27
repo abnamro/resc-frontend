@@ -67,7 +67,7 @@
       </Column>
       <Column field="created" header="Created" headerClass="bg-teal-500/20">
         <template #body="slotProps">
-          {{ formatDate(slotProps.data.created) }}
+          {{ DateUtils.formatDate(slotProps.data.created) }}
         </template>
       </Column>
       <Column
@@ -187,11 +187,6 @@ function downloadRulePack(rulePackVersion: string) {
     .catch((error) => {
       AxiosConfig.handleError(error);
     });
-}
-
-function formatDate(timestamp: string) {
-  const date = DateUtils.formatDate(timestamp);
-  return timestamp ? date : 'Not Available';
 }
 
 function openMarkAsOutdated(rulePack: RulePackRead): void {

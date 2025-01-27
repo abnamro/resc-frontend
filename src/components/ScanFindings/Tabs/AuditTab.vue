@@ -20,8 +20,8 @@ import type { DetailedFindingRead, FindingStatus } from '@/services/shema-to-typ
 import { computed, ref } from 'vue';
 import { MAX_COMMENT_LENGTH } from '@/configuration/config';
 import ProgressSpinner from 'primevue/progressspinner';
-import SelectStatus from '../Form/SelectStatus.vue';
-import SetComment from '../Form/SetComment.vue';
+import SelectStatus from '@/components/ScanFindings/Form/SelectStatus.vue';
+import SetComment from '@/components/ScanFindings/Form/SetComment.vue';
 import Button from 'primevue/button';
 
 const loadedData = ref(true);

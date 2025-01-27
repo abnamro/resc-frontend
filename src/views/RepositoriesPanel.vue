@@ -12,13 +12,12 @@
     <DataTable
       :value="repositoryList"
       size="small"
-      :loading="!loadedData"
-      dataKey="_id"
-      v-model:selection="currentSelection"
-      :highlight-on-select="true"
+      :loading="repositoryList === undefined"
+      v-model:selection="selection"
       selection-mode="single"
-      :virtual-scroller-options="{ itemSize: 36 }"
-      @row-dblclick="handleRowClicked"
+      :highlight-on-select="true"
+      :dataKey="(data) => `${data.id_}`"
+      @row-click="handleRowClicked"
       class="mt-8"
     >
       <Column field="project_key" header="Project" headerClass="bg-teal-500/20"></Column>
@@ -29,7 +28,7 @@
       </Column>
       <Column field="vcs_provider" header="VCS Provider" headerClass="bg-teal-500/20">
         <template #body="slotProps">
-          {{ formatVcsProvider(slotProps.data.vcs_provider) }}
+          {{ CommonUtils.formatVcsProvider(slotProps.data.vcs_provider) }}
         </template>
       </Column>
       <Column field="last_scan_timestamp" header="Last Scan Date" headerClass="bg-teal-500/20">
@@ -42,7 +41,12 @@
         header="Finding Counts"
         headerClass="bg-teal-500/20"
       ></Column>
-      <Column field="findings" header="Findings(%)" bodyClass="w-96" headerClass="bg-teal-500/20">
+      <Column
+        field="findings"
+        header="Findings(%)"
+        bodyClass=" w-[36rem]"
+        headerClass="bg-teal-500/20"
+      >
         <template #body="slotProps">
           <HealthBar
             :truePositive="slotProps.data.true_positive"
@@ -68,8 +72,6 @@
 </template>
 
 <script setup lang="ts">
-import AxiosConfig from '@/configuration/axios-config';
-import Config from '@/configuration/config';
 import CommonUtils from '@/utils/common-utils';
 import DateUtils from '@/utils/date-utils';
 import HealthBar from '@/components/Common/HealthBar.vue';
@@ -80,37 +82,40 @@ import { useRouter } from 'vue-router';
 import type { RepositoryEnrichedRead, VCSProviders } from '@/services/shema-to-types';
 import { onKeyStroke } from '@vueuse/core';
 import { shouldIgnoreKeystroke } from '@/utils/keybind-utils';
-import { PAGE_SIZES } from '@/configuration/config';
+import { dispatchError, PAGE_SIZES } from '@/configuration/config';
 import DataTable, { type DataTableRowClickEvent } from 'primevue/datatable';
 import Column from 'primevue/column';
 import Paginator from 'primevue/paginator';
+import { usePaginator } from '@/composables/usePaginator';
+import { useFetchers } from '@/composables/useFetchers';
 
-const loadedData = ref(false);
-const repositoriesTable = ref();
 const router = useRouter();
 
-const repositoryList = ref([] as RepositoryEnrichedRead[]);
-const currentSelection = ref<RepositoryEnrichedRead | undefined>(undefined);
-const totalRows = ref(0);
-const currentPage = ref(0);
-const perPage = ref(Number(`${Config.value('defaultPageSize')}`));
-const vcsFilter = ref([] as VCSProviders[]);
-const repositoryFilter = ref(undefined as string | undefined);
-const projectFilter = ref(undefined as string | undefined);
-const projectNames = ref([] as string[]);
-const repositoryNames = ref([] as string[]);
-const selectedIndex = ref(undefined as number | undefined);
-const includeZeroFindingRepos = ref(false);
-const includeDeletedRepositories = ref(false);
-const onlyIfHasUntriagedFindings = ref(false);
+const repositoryList = ref<RepositoryEnrichedRead[] | undefined>(undefined);
+const selection = ref<RepositoryEnrichedRead | undefined>(undefined);
+const selectedIndex = ref<number | undefined>(undefined);
+
+const { totalRows, currentPage, perPage } = usePaginator();
+
+const {
+  vcsFilter,
+  repositoryFilter,
+  projectFilter,
+
+  includeZeroFindingRepos,
+  includeDeletedRepositories,
+  onlyIfHasUntriagedFindings,
+
+  projectNames,
+  repositoryNames,
+
+  fetchDistinctProjects,
+  fetchDistinctRepositories,
+} = useFetchers();
 
 function formatDate(timestamp: string) {
   const date = DateUtils.formatDate(timestamp);
   return timestamp ? date : 'Not Scanned';
-}
-
-function formatVcsProvider(vcsProvider: VCSProviders) {
-  return CommonUtils.formatVcsProvider(vcsProvider);
 }
 
 function handlePageClick(page: number) {
@@ -119,7 +124,7 @@ function handlePageClick(page: number) {
 }
 
 function handlePageSizeChange(pageSize: number) {
-  perPage.value = Number(pageSize);
+  perPage.value = pageSize;
   currentPage.value = 0;
   fetchPaginatedRepositories();
 }
@@ -130,11 +135,10 @@ function handleRowClicked(event: DataTableRowClickEvent) {
 }
 
 function goToScanFindings() {
-  const recordItem = getCurrentRepositorySelected() as RepositoryEnrichedRead;
-  if (recordItem.last_scan_id) {
+  if (selection.value?.last_scan_id) {
     const routeData = router.resolve({
       name: 'ScanFindings',
-      params: { scanId: recordItem.last_scan_id },
+      params: { scanId: selection.value.last_scan_id },
     });
     window.open(routeData.href, '_blank');
   }
@@ -161,8 +165,7 @@ function handleFilterChange(
 }
 
 function fetchPaginatedRepositories() {
-  repositoryList.value = [];
-  loadedData.value = false;
+  repositoryList.value = undefined;
   RepositoryService.getRepositoriesWithFindingsMetadata(
     perPage.value,
     currentPage.value,
@@ -176,71 +179,27 @@ function fetchPaginatedRepositories() {
     .then((response) => {
       totalRows.value = response.data.total;
       repositoryList.value = response.data.data;
-      loadedData.value = true;
     })
-    .catch((error) => {
-      /* istanbul ignore next @preserve */
-      AxiosConfig.handleError(error);
-    });
-}
-
-function fetchDistinctProjects() {
-  RepositoryService.getDistinctProjects(
-    vcsFilter.value,
-    repositoryFilter.value,
-    includeZeroFindingRepos.value,
-    includeDeletedRepositories.value,
-  )
-    .then((response) => {
-      projectNames.value = [];
-      for (const projectKey of response.data) {
-        projectNames.value.push(projectKey);
-      }
-    })
-    .catch((error) => {
-      /* istanbul ignore next @preserve */
-      AxiosConfig.handleError(error);
-    });
-}
-function fetchDistinctRepositories() {
-  RepositoryService.getDistinctRepositories(
-    vcsFilter.value,
-    projectFilter.value,
-    includeZeroFindingRepos.value,
-    includeDeletedRepositories.value,
-    onlyIfHasUntriagedFindings.value,
-  )
-    .then((response) => {
-      repositoryNames.value = [];
-      for (const repoName of response.data) {
-        repositoryNames.value.push(repoName);
-      }
-    })
-    .catch((error) => {
-      /* istanbul ignore next @preserve */
-      AxiosConfig.handleError(error);
-    });
-}
-
-function getCurrentRepositorySelected(): RepositoryEnrichedRead | undefined {
-  if (selectedIndex.value === undefined) {
-    return undefined;
-  }
-
-  return repositoryList.value[selectedIndex.value];
+    .catch(dispatchError);
 }
 
 function selectUp(): boolean {
+  if (!repositoryList.value) {
+    return false;
+  }
+
   selectedIndex.value = Math.max(0, (selectedIndex.value ?? 1) - 1);
-  repositoriesTable.value.clearSelected();
-  repositoriesTable.value.selectRow(selectedIndex.value);
+  selection.value = repositoryList.value[selectedIndex.value];
   return true;
 }
 
 function selectDown(): boolean {
+  if (!repositoryList.value) {
+    return false;
+  }
+
   selectedIndex.value = ((selectedIndex.value ?? -1) + 1) % repositoryList.value.length;
-  repositoriesTable.value.clearSelected();
-  repositoriesTable.value.selectRow(selectedIndex.value);
+  selection.value = repositoryList.value[selectedIndex.value];
   return true;
 }
 

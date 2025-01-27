@@ -143,7 +143,7 @@ import ToggleSwitch from 'primevue/toggleswitch';
 import type { DataTableRowClickEvent } from 'primevue/datatable';
 import Column from 'primevue/column';
 import DataTable from 'primevue/datatable';
-import FindingStatusBadge from '../Common/FindingStatusBadge.vue';
+import FindingStatusBadge from '@/components/Common/FindingStatusBadge.vue';
 
 const loadedData = ref(false);
 

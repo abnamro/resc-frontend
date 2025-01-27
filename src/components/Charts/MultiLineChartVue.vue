@@ -11,7 +11,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { Line } from 'vue-chartjs';
-import type { DataSetObject } from '../Metrics/types';
+import type { DataSetObject } from '@/views/Metrics/types';
 import type { ChartData, ChartOptions } from 'chart.js';
 
 type Props = {
