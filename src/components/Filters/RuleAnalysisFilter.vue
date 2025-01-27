@@ -78,10 +78,9 @@
 
       <div class="col-span-4">
         <RulePackFilter
-          :rulePackPreSelected="props.rulePackPreSelected"
+          :rulePackSelected="rulePackSelected"
           :rulePackOptions="props.rulePackOptions"
           @on-rule-pack-version-change="onRulePackVersionChange"
-          @set-rule-pack-versions-on-rule-pack-filter="setRulePackVersionsOnRulePackFilter"
         />
       </div>
       <!-- Rule Tags Filter -->
@@ -134,18 +133,15 @@ import Button from 'primevue/button';
 import ToggleSwitch from 'primevue/toggleswitch';
 
 type Props = {
-  projectOptions?: string[];
-  repositoryOptions?: string[];
-  rulePackPreSelected?: RulePackRead[];
-  rulePackOptions?: RulePackRead[];
+  projectOptions: string[];
+  repositoryOptions: string[];
+  rulePackOptions: RulePackRead[];
+  ruleTagOptions: string[];
 };
 
-const props = withDefaults(defineProps<Props>(), {
-  projectOptions: () => [],
-  repositoryOptions: () => [],
-  rulePackPreSelected: () => [],
-  rulePackOptions: () => [],
-});
+const props = defineProps<Props>();
+
+const rulePackSelected = defineModel('rulePackFilter') as Ref<string[]>;
 
 export type RuleAnalysisFilter = {
   startDate: string | undefined;
@@ -173,7 +169,6 @@ const selectedProject = ref(undefined as string | undefined);
 const selectedRepository = ref(undefined as string | undefined);
 const selectedRule = ref([] as string[]);
 const selectedRuleTags = ref([] as string[]);
-const selectedRulePackVersions = ref([] as RulePackRead[]);
 const advancedSearchVisible = ref(false);
 const includeDeletedRepositories = ref(false);
 
@@ -234,27 +229,21 @@ function onRuleTagsChange(ruleTagsChange: string[]) {
   handleFilterChange();
 }
 
-function onRulePackVersionChange(rulePackVersionsChanged: RulePackRead[]) {
-  selectedRulePackVersions.value = rulePackVersionsChanged;
+function onRulePackVersionChange(rulePackVersionsChanged: string[]) {
+  rulePackSelected.value = rulePackVersionsChanged;
   fetchAllDetectedRules();
   fetchRuleTags();
   handleFilterChange();
 }
 
-function setRulePackVersionsOnRulePackFilter(rulePackVersionsChanged: RulePackRead[]) {
-  selectedRulePackVersions.value = rulePackVersionsChanged;
-  fetchAllDetectedRules();
-  fetchRuleTags();
-}
+// function setRulePackVersionsOnRulePackFilter(rulePackVersionsChanged: RulePackRead[]) {
+//   selectedRulePackVersions.value = rulePackVersionsChanged;
+//   fetchAllDetectedRules();
+//   fetchRuleTags();
+// }
 
 function handleFilterChange() {
   // Refresh table data in Rule Analysis page
-  const rulePackVersionsValues = [];
-  if (selectedRulePackVersions.value) {
-    for (const obj of selectedRulePackVersions.value) {
-      rulePackVersionsValues.push(obj.version);
-    }
-  }
   const filterObj: RuleAnalysisFilter = {
     startDate: CommonUtils.stringify_date(startDate.value),
     endDate: CommonUtils.stringify_date(endDate.value),
@@ -263,7 +252,7 @@ function handleFilterChange() {
     project: selectedProject.value,
     repository: selectedRepository.value,
     rule: selectedRule.value,
-    rulePackVersions: rulePackVersionsValues,
+    rulePackVersions: rulePackSelected.value,
     ruleTags: selectedRuleTags.value,
     includeDeletedRepositories: includeDeletedRepositories.value,
   };
@@ -271,12 +260,6 @@ function handleFilterChange() {
 }
 
 function fetchAllDetectedRules() {
-  const rulePackVersionsFetched: string[] = [];
-  if (selectedRulePackVersions.value.length === 0) {
-    for (const obj of selectedRulePackVersions.value) {
-      rulePackVersionsFetched.push(obj.version);
-    }
-  }
   RuleService.getAllDetectedRules(
     selectedStatus.value.map((s) => s.value),
     selectedVcsProvider.value,
@@ -284,7 +267,7 @@ function fetchAllDetectedRules() {
     selectedRepository.value,
     CommonUtils.stringify_date(startDate.value),
     CommonUtils.stringify_date(endDate.value),
-    rulePackVersionsFetched,
+    rulePackSelected.value,
     includeDeletedRepositories.value,
   )
     .then((response) => {
@@ -296,13 +279,7 @@ function fetchAllDetectedRules() {
 }
 
 function fetchRuleTags() {
-  const rulePackVersionsFetched: string[] = [];
-  if (selectedRulePackVersions.value) {
-    for (const obj of selectedRulePackVersions.value) {
-      rulePackVersionsFetched.push(obj.version);
-    }
-  }
-  RulePackService.getRuleTagsByRulePackVersions(rulePackVersionsFetched)
+  RulePackService.getRuleTagsByRulePackVersions(rulePackSelected.value)
     .then((response) => {
       optionsRuleTags.value = response.data;
     })

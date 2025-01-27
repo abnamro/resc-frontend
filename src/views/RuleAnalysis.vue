@@ -3,17 +3,18 @@
     <h1 class="text-left text-3xl mb-10">RULE ANALYSIS</h1>
 
     <RuleAnalysisFilter
-      :projectOptions="projectNames"
-      :repositoryOptions="repositoryNames"
-      :rulePackPreSelected="selectedRulePackVersionsList"
-      :rulePackOptions="rulePackVersions"
+      :project-options="projectNames"
+      :repository-options="repositoryNames"
+      :rule-pack-options="rulePacks"
+      :rule-tag-options="ruleTags"
+      :rule-pack-filter="rulePacksFilter"
       @on-filter-change="handleFilterChange"
-    ></RuleAnalysisFilter>
+    >
+    </RuleAnalysisFilter>
 
     <FindingsTable
       :findings="findingList"
       :is-rule-finding="true"
-      :has-records="hasRecords"
       @refresh-table="fetchPaginatedDetailedFindings"
     >
     </FindingsTable>
@@ -34,19 +35,16 @@ import AxiosConfig from '@/configuration/axios-config';
 import FindingsTable from '@/components/Findings/FindingsTable.vue';
 import FindingsService, { type QueryFilterType } from '@/services/findings-service';
 import { type RuleAnalysisFilter } from '@/components/Filters/RuleAnalysisFilter.vue';
-import RulePackService from '@/services/rule-pack-service';
 import { useAuthUserStore, type PreviousRouteState } from '@/store/index';
-import { computed, onMounted, ref, type Ref } from 'vue';
-import type { DetailedFindingRead, PaginationType, RulePackRead } from '@/services/shema-to-types';
+import { onMounted, ref } from 'vue';
+import type { DetailedFindingRead, PaginationType } from '@/services/shema-to-types';
 import type { AxiosResponse } from 'axios';
-import CommonUtils from '@/utils/common-utils';
 import { PAGE_SIZES } from '@/configuration/config';
 import { storeToRefs } from 'pinia';
 import Paginator from 'primevue/paginator';
 import { usePaginator } from '@/composables/usePaginator';
 import { useFetchers } from '@/composables/useFetchers';
 
-const loadedData = ref(false);
 const store = useAuthUserStore();
 
 const { totalRows, currentPage, perPage, handlePageClick, handlePageSizeChange } = usePaginator(
@@ -57,6 +55,8 @@ const {
   vcsFilter,
   repositoryFilter,
   projectFilter,
+  ruleTagsFilter,
+  rulePacksFilter,
 
   includeZeroFindingRepos,
   includeDeletedRepositories,
@@ -64,25 +64,22 @@ const {
 
   projectNames,
   repositoryNames,
+  rulePacks,
+  ruleTags,
 
   fetchDistinctProjects,
   fetchDistinctRepositories,
+  fetchRuleTags,
+  fetchRulePackVersions,
 } = useFetchers();
 
-const findingList = ref([] as DetailedFindingRead[]);
-const rulePackVersions = ref([] as RulePackRead[]);
-const ruleTagsList = ref([] as string[]);
-const selectedStartDate = ref(undefined) as Ref<string | undefined>;
-const selectedEndDate = ref(undefined) as Ref<string | undefined>;
+const findingList = ref<DetailedFindingRead[] | undefined>(undefined);
+const selectedStartDate = ref<string | undefined>(undefined);
+const selectedEndDate = ref<string | undefined>(undefined);
 const { selectedStatus } = storeToRefs(store);
-const selectedRule = ref(undefined) as Ref<string[] | undefined>;
-const selectedRuleTags = ref(undefined) as Ref<string[] | undefined>;
-const selectedRulePackVersions = ref([] as string[]);
-const selectedRulePackVersionsList = ref([] as RulePackRead[]);
-const selectedCheckBoxIds = ref([] as number[]);
+const selectedRule = ref<string[] | undefined>(undefined);
+const selectedCheckBoxIds = ref<number[]>([]);
 const allSelected = ref(false);
-
-const hasRecords = computed(() => findingList.value.length > 0);
 
 function isRedirectedFromRuleMetricsPage() {
   const sourceRoute = store.sourceRoute;
@@ -95,7 +92,6 @@ function isRedirectedFromRuleMetricsPage() {
 }
 
 function fetchPaginatedDetailedFindings() {
-  loadedData.value = false;
   const filterObj: QueryFilterType = {
     skip: currentPage.value,
     limit: perPage.value,
@@ -106,12 +102,12 @@ function fetchPaginatedDetailedFindings() {
     project: projectFilter.value,
     repository: repositoryFilter.value,
     rule: selectedRule.value,
-    ruleTags: selectedRuleTags.value,
-    rulePackVersions: selectedRulePackVersions.value,
+    ruleTags: ruleTagsFilter.value,
+    rulePackVersions: rulePacksFilter.value,
     includeDeletedRepositories: includeDeletedRepositories.value,
   };
 
-  findingList.value = [];
+  findingList.value = undefined;
 
   FindingsService.getDetailedFindings(filterObj)
     .then((response: AxiosResponse<PaginationType<DetailedFindingRead>>) => {
@@ -119,7 +115,6 @@ function fetchPaginatedDetailedFindings() {
       selectedCheckBoxIds.value = [];
       totalRows.value = response.data.total;
       findingList.value = response.data.data;
-      loadedData.value = true;
     })
     .catch((error) => {
       /* istanbul ignore next @preserve */
@@ -134,8 +129,8 @@ function handleFilterChange(filterObj: RuleAnalysisFilter) {
   projectFilter.value = filterObj.project;
   repositoryFilter.value = filterObj.repository;
   selectedRule.value = filterObj.rule;
-  selectedRuleTags.value = filterObj.ruleTags;
-  selectedRulePackVersions.value = filterObj.rulePackVersions ?? [];
+  ruleTagsFilter.value = filterObj.ruleTags;
+  rulePacksFilter.value = filterObj.rulePackVersions ?? [];
   includeDeletedRepositories.value = filterObj.includeDeletedRepositories ?? false;
   currentPage.value = 0;
   allSelected.value = false;
@@ -144,66 +139,15 @@ function handleFilterChange(filterObj: RuleAnalysisFilter) {
   fetchPaginatedDetailedFindings();
 }
 
-function fetchRulePackVersionsWhenRedirectedFromRuleMetricsPage() {
-  RulePackService.getRulePackVersions(10000, 0)
-    .then((response: AxiosResponse<PaginationType<RulePackRead>>) => {
-      rulePackVersions.value = [];
-      selectedRulePackVersions.value = [];
-      response.data.data.forEach((rulePack) => {
-        if (rulePack.outdated !== true) {
-          rulePackVersions.value.push(rulePack);
-        }
-      });
-      rulePackVersions.value.sort(CommonUtils.compareRulePackRead).reverse();
-      //Select rule pack versions passed from rule analysis scrren
-      const previousRouteState = store.previousRouteState as PreviousRouteState;
-      if (previousRouteState && previousRouteState.rulePackVersions !== undefined) {
-        for (const obj of previousRouteState.rulePackVersions) {
-          selectedRulePackVersions.value.push(obj.version);
-          selectedRulePackVersionsList.value.push(obj);
-        }
-        fetchRuleTags();
-        store.update_previous_route_state(null);
-      }
-    })
-    .catch((error) => {
-      /* istanbul ignore next @preserve */
-      AxiosConfig.handleError(error);
-    });
-}
-
-function fetchRulePackVersions() {
-  RulePackService.getRulePackVersions(10000, 0)
-    .then((response: AxiosResponse<PaginationType<RulePackRead>>) => {
-      rulePackVersions.value = [];
-      selectedRulePackVersions.value = [];
-      selectedRulePackVersionsList.value = [];
-      for (const index of response.data.data.keys()) {
-        const data = response.data.data[index];
-        if (data.active) {
-          selectedRulePackVersions.value.push(data.version);
-          selectedRulePackVersionsList.value.push(data);
-        }
-        rulePackVersions.value.push(data);
-      }
-      rulePackVersions.value.sort(CommonUtils.compareRulePackRead).reverse();
-      fetchPaginatedDetailedFindings();
-    })
-    .catch((error) => {
-      /* istanbul ignore next @preserve */
-      AxiosConfig.handleError(error);
-    });
-}
-
-function fetchRuleTags() {
-  RulePackService.getRuleTagsByRulePackVersions(selectedRulePackVersions.value)
-    .then((response: AxiosResponse<string[]>) => {
-      selectedRuleTags.value = [];
-      ruleTagsList.value = response.data;
-    })
-    .catch((error) => {
-      AxiosConfig.handleError(error);
-    });
+function setRulePackSelectionFromStore() {
+  const previousRouteState = store.previousRouteState as PreviousRouteState;
+  if (previousRouteState && previousRouteState.rulePackVersions !== undefined) {
+    for (const obj of previousRouteState.rulePackVersions) {
+      rulePacksFilter.value.push(obj.version);
+    }
+    fetchRuleTags();
+    store.update_previous_route_state(null);
+  }
 }
 
 onMounted(() => {
@@ -212,10 +156,10 @@ onMounted(() => {
   onlyIfHasUntriagedFindings.value = false;
 
   if (isRedirectedFromRuleMetricsPage()) {
-    fetchRulePackVersionsWhenRedirectedFromRuleMetricsPage();
+    fetchRulePackVersions(setRulePackSelectionFromStore);
   } else {
     store.update_previous_route_state(null);
-    fetchRulePackVersions();
+    fetchRulePackVersions(fetchPaginatedDetailedFindings);
     fetchDistinctProjects();
     fetchDistinctRepositories();
   }

@@ -14,7 +14,7 @@
     v-model:selection="selection"
     selection-mode="multiple"
     v-model:expanded-rows="expandedRows"
-    :loading="findingList === undefined"
+    :loading="filteredList === undefined"
     :dataKey="(data) => `${data.id_}`"
   >
     <template #header>

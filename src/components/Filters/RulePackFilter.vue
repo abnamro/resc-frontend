@@ -4,10 +4,11 @@
       >Rule Pack</label
     >
     <MultiSelect
-      v-model:model-value="selectedRulePack"
+      v-model:model-value="rulePackSelected"
       :options="props.rulePackOptions"
       display="chip"
-      optionLabel="version"
+      option-value="version"
+      option-label="version"
       class="w-full"
       placeholder="Select RulePack"
       :show-toggle-all="false"
@@ -40,69 +41,59 @@
   </div>
 </template>
 <script setup lang="ts">
-import { useAuthUserStore } from '@/store/index';
-import { onUpdated, ref } from 'vue';
+// import { useAuthUserStore } from '@/store/index';
+// import { onUpdated, ref, watch, type Ref } from 'vue';
 import type { RulePackRead } from '@/services/shema-to-types';
 import MultiSelect from 'primevue/multiselect';
 import Tag from 'primevue/tag';
+import type { Ref } from 'vue';
 
-type Props = {
-  rulePackOptions?: RulePackRead[];
-  rulePackSelected?: RulePackRead[]; // For testing.
-  rulePackPreSelected?: RulePackRead[];
-};
+const props = defineProps<{ rulePackOptions: RulePackRead[] }>();
+const rulePackSelected = defineModel('rulePackSelected') as Ref<string[]>;
 
-const props = withDefaults(defineProps<Props>(), {
-  rulePackOptions: () => [],
-  rulePackSelected: () => [],
-  rulePackPreSelected: () => [],
-});
-
-const selectedRulePack = ref(props.rulePackSelected);
-const initialized = ref(false);
-
-function isRedirectedFromRuleMetricsPage() {
-  const store = useAuthUserStore();
-  const sourceRoute = store.sourceRoute;
-  const destinationRoute = store.destinationRoute;
-  return sourceRoute === '/metrics/rule-metrics' &&
-    destinationRoute === '/rule-analysis' &&
-    store.previousRouteState
-    ? true
-    : false;
-}
+// function isRedirectedFromRuleMetricsPage() {
+//   const store = useAuthUserStore();
+//   const sourceRoute = store.sourceRoute;
+//   const destinationRoute = store.destinationRoute;
+//   return sourceRoute === '/metrics/rule-metrics' &&
+//     destinationRoute === '/rule-analysis' &&
+//     store.previousRouteState
+//     ? true
+//     : false;
+// }
 
 const emit = defineEmits([
   'on-rule-pack-version-change',
-  'set-rule-pack-versions-on-rule-pack-filter',
+  // 'set-rule-pack-versions-on-rule-pack-filter',
 ]);
 
 function onRulePackVersionFilterChange() {
-  if (selectedRulePack.value.length > 0) {
-    emit('on-rule-pack-version-change', selectedRulePack.value);
+  if (rulePackSelected.value.length > 0) {
+    emit('on-rule-pack-version-change', rulePackSelected.value);
   } else {
     emit('on-rule-pack-version-change', []);
   }
 }
 
-function update() {
-  if (
-    !initialized.value &&
-    props.rulePackPreSelected.length > 0 &&
-    selectedRulePack.value.length < 1
-  ) {
-    initialized.value = true;
-    if (isRedirectedFromRuleMetricsPage()) {
-      // Get selected rule pack versions from Rule metrics screen and set it on Rule analyis page
-      for (const obj of props.rulePackPreSelected) {
-        selectedRulePack.value.push(obj);
-      }
-    } else {
-      // Select the latest version of rule pack version on Rule analysis page filter
-      selectedRulePack.value = props.rulePackPreSelected;
-    }
-    emit('set-rule-pack-versions-on-rule-pack-filter', selectedRulePack.value);
-  }
-}
-onUpdated(() => update());
+// function update() {
+//   if (
+//     !initialized.value &&
+//     props.rulePackSelected.length > 0 &&
+//     rulePackSelected.value.length < 1
+//   ) {
+//     initialized.value = true;
+//     if (isRedirectedFromRuleMetricsPage()) {
+//       // Get selected rule pack versions from Rule metrics screen and set it on Rule analyis page
+//       for (const obj of props.rulePackPreSelected) {
+//         selectedRulePack.value.push(obj);
+//       }
+//     } else {
+//       // Select the latest version of rule pack version on Rule analysis page filter
+//       selectedRulePack.value = props.rulePackPreSelected;
+//     }
+//     emit('set-rule-pack-versions-on-rule-pack-filter', selectedRulePack.value);
+//   }
+// }
+
+// onUpdated(() => update());
 </script>
