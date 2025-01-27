@@ -2,13 +2,13 @@
   <div class="flex">
     <div class="w-1/3 text-left">
       <Button
-        class="d-inline-block me-3"
+        class="mr-3"
         severity="primary"
         v-on:click="isAuditModalVisible = true"
         :disabled="props.auditButtonDisabled"
         >AUDIT</Button
       >
-      <Button class="d-inline-block" severity="primary" v-on:click="isColumnSelectorVisible = true"
+      <Button class="" severity="primary" v-on:click="isColumnSelectorVisible = true"
         >Columns</Button
       >
     </div>

@@ -41,7 +41,6 @@
 
 <script setup lang="ts">
 import AxiosConfig from '@/configuration/axios-config';
-import Config from '@/configuration/config';
 import RepositoryPanel from '@/components/ScanFindings/RepositoryPanel.vue';
 import ScanFindingsFilter from '@/components/Filters/ScanFindingsFilter.vue';
 import ScanFindingsService from '@/services/scan-findings-service';
@@ -61,6 +60,7 @@ import { useAuthUserStore } from '@/store';
 import { storeToRefs } from 'pinia';
 import { PAGE_SIZES } from '@/configuration/config';
 import Paginator from 'primevue/paginator';
+import { usePaginator } from '@/composables/usePaginator';
 
 const loadedData = ref(false);
 const loadedRepoData = ref(false);
@@ -68,6 +68,9 @@ const loadedRepoData = ref(false);
 type Props = {
   scanId: string;
 };
+
+const { totalRows, currentPage, perPage, handlePageClick, handlePageSizeChange } =
+  usePaginator(fetchPaginatedData);
 
 const props = defineProps<Props>();
 const previousScanChecked = ref(false);
@@ -83,9 +86,6 @@ const findingList = ref([] as AugmentedDetailedFindingRead[]);
 const selectedScanID = ref(Number(props.scanId));
 const ruleFilter = ref([] as string[]);
 const ruleTagsFilter = ref(undefined) as Ref<string[] | undefined>;
-const totalRows = ref(0);
-const currentPage = ref(1);
-const perPage = ref(Number(`${Config.value('defaultPageSize')}`));
 
 const hasRecords = computed(() => findingList.value.length > 0);
 
@@ -96,15 +96,7 @@ function onPreviousScanChecked(checked: boolean) {
   previousScanChecked.value = checked;
 }
 
-function handlePageClick(page: number) {
-  allSelected.value = false;
-  currentPage.value = page;
-  previousScanChecked.value ? fetchPreviousScanFindings() : fetchPaginatedFindingsByScanId();
-}
-
-function handlePageSizeChange(pageSize: number) {
-  perPage.value = pageSize;
-  currentPage.value = 0;
+function fetchPaginatedData() {
   previousScanChecked.value ? fetchPreviousScanFindings() : fetchPaginatedFindingsByScanId();
 }
 

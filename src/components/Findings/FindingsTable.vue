@@ -14,7 +14,7 @@
     v-model:selection="selection"
     selection-mode="multiple"
     v-model:expanded-rows="expandedRows"
-    :loading="!props.hasRecords"
+    :loading="findingList === undefined"
     :dataKey="(data) => `${data.id_}`"
   >
     <template #header>
@@ -74,24 +74,23 @@ import { useFiltering } from '@/composables/useFiltering';
 import { useColumnFiltering } from '@/composables/useColumnFiltering';
 
 type Props = {
-  findings: DetailedFindingRead[];
+  findings: DetailedFindingRead[] | undefined;
   isRuleFinding: boolean;
-  hasRecords: boolean;
 };
 
 const props = defineProps<Props>();
 
 const isAuditModalVisible = ref(false);
 const isColumnSelectorVisible = ref(false);
-const selection = ref([] as DetailedFindingRead[]);
+const selection = ref<DetailedFindingRead[]>([]);
 const expandedRows = ref<Record<string, boolean>>({});
 
-const findingList = ref(props.findings as DetailedFindingRead[]);
-const selectedCheckBoxIds = ref([] as number[]);
+const findingList = ref<DetailedFindingRead[] | undefined>(props.findings);
+const selectedCheckBoxIds = ref<number[]>([]);
 const allSelected = ref(false);
 
 const auditButtonDisabled = computed(() => selectedCheckBoxIds.value.length <= 0);
-const selectedIndex = ref(undefined as number | undefined);
+const selectedIndex = ref<number | undefined>(undefined);
 const emit = defineEmits(['refresh-table']);
 
 const { fields, setTableFields } = useColumnFiltering(props.isRuleFinding);

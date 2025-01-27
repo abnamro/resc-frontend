@@ -30,51 +30,57 @@
 </template>
 
 <script lang="ts" setup>
-import Config from '@/configuration/config';
 import AxiosConfig from '@/configuration/axios-config';
 import FindingsTable from '@/components/Findings/FindingsTable.vue';
 import FindingsService, { type QueryFilterType } from '@/services/findings-service';
-import RepositoryService from '@/services/repository-service';
 import { type RuleAnalysisFilter } from '@/components/Filters/RuleAnalysisFilter.vue';
 import RulePackService from '@/services/rule-pack-service';
 import { useAuthUserStore, type PreviousRouteState } from '@/store/index';
 import { computed, onMounted, ref, type Ref } from 'vue';
-import type {
-  DetailedFindingRead,
-  PaginationType,
-  RulePackRead,
-  VCSProviders,
-} from '@/services/shema-to-types';
+import type { DetailedFindingRead, PaginationType, RulePackRead } from '@/services/shema-to-types';
 import type { AxiosResponse } from 'axios';
 import CommonUtils from '@/utils/common-utils';
 import { PAGE_SIZES } from '@/configuration/config';
 import { storeToRefs } from 'pinia';
 import Paginator from 'primevue/paginator';
+import { usePaginator } from '@/composables/usePaginator';
+import { useFetchers } from '@/composables/useFetchers';
 
 const loadedData = ref(false);
 const store = useAuthUserStore();
 
+const { totalRows, currentPage, perPage, handlePageClick, handlePageSizeChange } = usePaginator(
+  fetchPaginatedDetailedFindings,
+);
+
+const {
+  vcsFilter,
+  repositoryFilter,
+  projectFilter,
+
+  includeZeroFindingRepos,
+  includeDeletedRepositories,
+  onlyIfHasUntriagedFindings,
+
+  projectNames,
+  repositoryNames,
+
+  fetchDistinctProjects,
+  fetchDistinctRepositories,
+} = useFetchers();
+
 const findingList = ref([] as DetailedFindingRead[]);
-const totalRows = ref(0);
-const currentPage = ref(1);
-const perPage = ref(Number(`${Config.value('defaultPageSize')}`));
 const rulePackVersions = ref([] as RulePackRead[]);
 const ruleTagsList = ref([] as string[]);
-const projectNames = ref([] as string[]);
-const repositoryNames = ref([] as string[]);
 const selectedStartDate = ref(undefined) as Ref<string | undefined>;
 const selectedEndDate = ref(undefined) as Ref<string | undefined>;
-const selectedVcsProvider = ref([] as VCSProviders[]);
 const { selectedStatus } = storeToRefs(store);
-const selectedProject = ref(undefined) as Ref<string | undefined>;
-const selectedRepository = ref(undefined) as Ref<string | undefined>;
 const selectedRule = ref(undefined) as Ref<string[] | undefined>;
 const selectedRuleTags = ref(undefined) as Ref<string[] | undefined>;
 const selectedRulePackVersions = ref([] as string[]);
 const selectedRulePackVersionsList = ref([] as RulePackRead[]);
 const selectedCheckBoxIds = ref([] as number[]);
 const allSelected = ref(false);
-const includeDeletedRepositories = ref(false);
 
 const hasRecords = computed(() => findingList.value.length > 0);
 
@@ -88,18 +94,6 @@ function isRedirectedFromRuleMetricsPage() {
     : false;
 }
 
-function handlePageClick(page: number) {
-  allSelected.value = false;
-  currentPage.value = page;
-  fetchPaginatedDetailedFindings();
-}
-
-function handlePageSizeChange(pageSize: number) {
-  perPage.value = pageSize;
-  currentPage.value = 0;
-  fetchPaginatedDetailedFindings();
-}
-
 function fetchPaginatedDetailedFindings() {
   loadedData.value = false;
   const filterObj: QueryFilterType = {
@@ -107,10 +101,10 @@ function fetchPaginatedDetailedFindings() {
     limit: perPage.value,
     startDate: selectedStartDate.value,
     endDate: selectedEndDate.value,
-    vcsProvider: selectedVcsProvider.value,
+    vcsProvider: vcsFilter.value,
     findingStatus: selectedStatus.value.map((s) => s.value),
-    project: selectedProject.value,
-    repository: selectedRepository.value,
+    project: projectFilter.value,
+    repository: repositoryFilter.value,
     rule: selectedRule.value,
     ruleTags: selectedRuleTags.value,
     rulePackVersions: selectedRulePackVersions.value,
@@ -136,9 +130,9 @@ function fetchPaginatedDetailedFindings() {
 function handleFilterChange(filterObj: RuleAnalysisFilter) {
   selectedStartDate.value = filterObj.startDate;
   selectedEndDate.value = filterObj.endDate;
-  selectedVcsProvider.value = filterObj.vcsProvider ?? [];
-  selectedProject.value = filterObj.project;
-  selectedRepository.value = filterObj.repository;
+  vcsFilter.value = filterObj.vcsProvider ?? [];
+  projectFilter.value = filterObj.project;
+  repositoryFilter.value = filterObj.repository;
   selectedRule.value = filterObj.rule;
   selectedRuleTags.value = filterObj.ruleTags;
   selectedRulePackVersions.value = filterObj.rulePackVersions ?? [];
@@ -148,45 +142,6 @@ function handleFilterChange(filterObj: RuleAnalysisFilter) {
   fetchDistinctProjects();
   fetchDistinctRepositories();
   fetchPaginatedDetailedFindings();
-}
-
-function fetchDistinctProjects() {
-  RepositoryService.getDistinctProjects(
-    selectedVcsProvider.value,
-    selectedRepository.value,
-    false,
-    includeDeletedRepositories.value,
-  )
-    .then((response) => {
-      projectNames.value = [];
-      for (const projectKey of response.data) {
-        projectNames.value.push(projectKey);
-      }
-    })
-    .catch((error) => {
-      /* istanbul ignore next @preserve */
-      AxiosConfig.handleError(error);
-    });
-}
-
-function fetchDistinctRepositories() {
-  RepositoryService.getDistinctRepositories(
-    selectedVcsProvider.value,
-    selectedProject.value,
-    false,
-    includeDeletedRepositories.value,
-    false,
-  )
-    .then((response) => {
-      repositoryNames.value = [];
-      for (const repoName of response.data) {
-        repositoryNames.value.push(repoName);
-      }
-    })
-    .catch((error) => {
-      /* istanbul ignore next @preserve */
-      AxiosConfig.handleError(error);
-    });
 }
 
 function fetchRulePackVersionsWhenRedirectedFromRuleMetricsPage() {
@@ -252,6 +207,10 @@ function fetchRuleTags() {
 }
 
 onMounted(() => {
+  includeDeletedRepositories.value = false;
+  includeZeroFindingRepos.value = false;
+  onlyIfHasUntriagedFindings.value = false;
+
   if (isRedirectedFromRuleMetricsPage()) {
     fetchRulePackVersionsWhenRedirectedFromRuleMetricsPage();
   } else {

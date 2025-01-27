@@ -6,7 +6,7 @@
     <div class="flex justify-start">
       <Button
         class="mt-2 mb-2 bg-yellow-520 border-none text-surface-950"
-        v-on:click="showRulePackUploadModal()"
+        v-on:click="isRulePackUploadOpen = true"
       >
         IMPORT
       </Button>
@@ -20,7 +20,7 @@
     <DataTable
       :value="rulePackList"
       size="small"
-      :loading="!loadedData"
+      :loading="rulePackList === undefined"
       dataKey="_id"
       :highlight-on-select="true"
       selection-mode="single"
@@ -90,7 +90,7 @@
       v-model:rows="perPage"
       :totalRecords="totalRows"
       :rowsPerPageOptions="PAGE_SIZES"
-      @update:first="handlePageChange"
+      @update:first="handlePageClick"
       @update:rows="handlePageSizeChange"
     />
   </div>
@@ -112,7 +112,7 @@
 
 <script setup lang="ts">
 import AxiosConfig from '@/configuration/axios-config';
-import Config, { PAGE_SIZES } from '@/configuration/config';
+import { dispatchError, PAGE_SIZES } from '@/configuration/config';
 import DateUtils from '@/utils/date-utils';
 import CommonUtils from '@/utils/common-utils';
 import RulePackUploadModal from '@/components/RulePack/RulePackUploadModal.vue';
@@ -126,45 +126,30 @@ import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
 import Paginator from 'primevue/paginator';
 import Dialog from 'primevue/dialog';
+import { usePaginator } from '@/composables/usePaginator';
 
-const loadedData = ref(false);
 const isRulePackUploadOpen = ref(false);
 
-const rulePackList = ref([] as RulePackRead[]);
-const totalRows = ref(0);
-const currentPage = ref(0);
-const perPage = ref(Number(`${Config.value('defaultPageSize')}`));
+const rulePackList = ref<RulePackRead[] | undefined>(undefined);
+
+const { totalRows, currentPage, perPage, handlePageClick, handlePageSizeChange } =
+  usePaginator(fetchPaginatedRulePacks);
 
 const isConfirmOpen = ref(false);
 const rulePackSelected = ref(null as RulePackRead | null);
 
-function handlePageSizeChange() {
-  currentPage.value = 0;
-  fetchPaginatedRulePacks();
-}
-function handlePageChange(val: number) {
-  currentPage.value = val;
-  fetchPaginatedRulePacks();
-}
-
-function showRulePackUploadModal() {
-  isRulePackUploadOpen.value = true;
-}
 function onRulePackUploadSuccess() {
   fetchPaginatedRulePacks();
 }
 
 function fetchPaginatedRulePacks() {
-  loadedData.value = false;
+  rulePackList.value = undefined;
   RulePackService.getRulePackVersions(perPage.value, currentPage.value)
     .then((response: AxiosResponse<PaginationType<RulePackRead>>) => {
       rulePackList.value = response.data.data.sort(CommonUtils.compareRulePackRead).reverse();
       totalRows.value = response.data.total;
-      loadedData.value = true;
     })
-    .catch((error) => {
-      AxiosConfig.handleError(error);
-    });
+    .catch(dispatchError);
 }
 
 function forceFileDownload(response: AxiosResponse<unknown>, title: string) {
@@ -177,16 +162,12 @@ function forceFileDownload(response: AxiosResponse<unknown>, title: string) {
 }
 
 function downloadRulePack(rulePackVersion: string) {
-  loadedData.value = false;
   const title = `RESC-SECRETS-RULE_v${rulePackVersion}.TOML`;
   RulePackService.downloadRulePack(rulePackVersion)
     .then((response) => {
       forceFileDownload(response, title);
-      loadedData.value = true;
     })
-    .catch((error) => {
-      AxiosConfig.handleError(error);
-    });
+    .catch(dispatchError);
 }
 
 function openMarkAsOutdated(rulePack: RulePackRead): void {

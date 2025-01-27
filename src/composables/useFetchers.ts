@@ -7,8 +7,10 @@ export function useFetchers() {
   const vcsFilter = ref<VCSProviders[]>([]);
   const repositoryFilter = ref<string | undefined>(undefined);
   const projectFilter = ref<string | undefined>(undefined);
+
   const projectNames = ref<string[]>([]);
   const repositoryNames = ref<string[]>([]);
+
   const includeZeroFindingRepos = ref(false);
   const includeDeletedRepositories = ref(false);
   const onlyIfHasUntriagedFindings = ref(false);

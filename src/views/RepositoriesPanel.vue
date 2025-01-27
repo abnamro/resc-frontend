@@ -95,7 +95,9 @@ const repositoryList = ref<RepositoryEnrichedRead[] | undefined>(undefined);
 const selection = ref<RepositoryEnrichedRead | undefined>(undefined);
 const selectedIndex = ref<number | undefined>(undefined);
 
-const { totalRows, currentPage, perPage } = usePaginator();
+const { totalRows, currentPage, perPage, handlePageClick, handlePageSizeChange } = usePaginator(
+  fetchPaginatedRepositories,
+);
 
 const {
   vcsFilter,
@@ -116,17 +118,6 @@ const {
 function formatDate(timestamp: string) {
   const date = DateUtils.formatDate(timestamp);
   return timestamp ? date : 'Not Scanned';
-}
-
-function handlePageClick(page: number) {
-  currentPage.value = page;
-  fetchPaginatedRepositories();
-}
-
-function handlePageSizeChange(pageSize: number) {
-  perPage.value = pageSize;
-  currentPage.value = 0;
-  fetchPaginatedRepositories();
 }
 
 function handleRowClicked(event: DataTableRowClickEvent) {
