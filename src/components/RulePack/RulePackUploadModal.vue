@@ -43,8 +43,6 @@ import { useToast } from 'primevue/usetoast';
 const loadedData = ref(true);
 const visible = defineModel('visible') as Ref<boolean>;
 
-const RulePackUploadModal = ref();
-
 const file = ref(undefined) as Ref<File | undefined>;
 const version = ref('');
 const versionState = ref(null) as Ref<boolean | null>;
@@ -97,10 +95,7 @@ function submitForm() {
         });
       }
       loadedData.value = true;
-      // Hide the modal manually
-      nextTick(() => {
-        RulePackUploadModal.value.hide();
-      });
+      visible.value = false;
     })
     .catch((error) => {
       AxiosConfig.handleError(error);

@@ -1,5 +1,5 @@
 <template>
-  <DataTable :value="auditList" :loading="!loadedData">
+  <DataTable :value="auditList" :loading="auditList === undefined">
     <Column>
       <template #body="slotProps">
         {{ formatDate(slotProps.data.timestamp) }}
@@ -35,15 +35,13 @@ import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
 import { dispatchError } from '@/configuration/config';
 
-const loadedData = ref(false);
-
 type Props = {
   finding: DetailedFindingRead;
 };
 const props = defineProps<Props>();
 
 const finding = ref(props.finding);
-const auditList = ref([] as AuditRead[]);
+const auditList = ref<AuditRead[] | undefined>(undefined);
 const totalRows = ref(0);
 
 function formatDate(timestamp: string): string {
@@ -51,12 +49,10 @@ function formatDate(timestamp: string): string {
 }
 
 function fetchAuditsForFinding() {
-  loadedData.value = false;
   FindingsService.getFindingAudits(finding.value.id_, 100, 0)
     .then((response) => {
       auditList.value = response.data.data;
       totalRows.value = response.data.total;
-      loadedData.value = true;
     })
     .catch(dispatchError);
 }

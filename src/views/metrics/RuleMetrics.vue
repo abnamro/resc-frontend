@@ -35,7 +35,7 @@
     <DataTable
       :value="ruleList"
       size="small"
-      :loading="!loadedData"
+      :loading="ruleList === undefined"
       dataKey="_id"
       :highlight-on-select="true"
       selection-mode="single"
@@ -85,7 +85,7 @@
         </template>
       </Column>
       <template #footer>
-        <div v-if="loadedData" class="flex flex-col">
+        <div v-if="ruleList !== undefined" class="flex flex-col">
           <h5 class="text-left font-bold text-lg mt-8">Totals</h5>
           <div class="text-left">
             <FindingStatusBadge status="TRUE_POSITIVE" /> :
@@ -144,8 +144,7 @@ import type { DataTableRowClickEvent } from 'primevue/datatable';
 import Column from 'primevue/column';
 import DataTable from 'primevue/datatable';
 import FindingStatusBadge from '@/components/Common/FindingStatusBadge.vue';
-
-const loadedData = ref(false);
+import { dispatchError } from '@/configuration/config';
 
 type Stats = {
   tpCount: number;
@@ -165,8 +164,8 @@ function getTruePositiveRate(stat: Stats): number {
 type RuleFindingCountModelAugmented = RuleFindingCountModel & Stats;
 
 const router = useRouter();
-const ruleList = ref([] as RuleFindingCountModelAugmented[]);
-const ruleTagsList = ref([] as string[]);
+const ruleList = ref<undefined | RuleFindingCountModelAugmented[]>(undefined);
+const ruleTagsList = ref<string[]>([]);
 const truePositiveTotalCount = ref(0);
 const falsePositiveTotalCount = ref(0);
 const clarificationRequiredTotalCount = ref(0);
@@ -174,12 +173,12 @@ const notAccessibleTotalCount = ref(0);
 const notAnalyzedTotalCount = ref(0);
 const outdatedTotalCount = ref(0);
 const totalFindingsCountForAllRules = ref(0);
-const truePositiveRateList = ref([] as number[]);
+const truePositiveRateList = ref<number[]>([]);
 const avgTruePosiitveRate = ref('0');
-const allRulePackVersions = ref([] as RulePackRead[]);
-const selectedRuleTags = ref([] as string[]);
-const selectedVersionsList = ref([] as RulePackRead[]);
-const selectedVersions = ref([] as string[]);
+const allRulePackVersions = ref<RulePackRead[]>([]);
+const selectedRuleTags = ref<string[]>([]);
+const selectedVersionsList = ref<RulePackRead[]>([]);
+const selectedVersions = ref<string[]>([]);
 const includeDeletedRepositories = ref(false);
 
 function onRuleTagsFilterChange(ruleTags: string[]) {
@@ -199,7 +198,7 @@ function fetchRuleTags() {
 }
 
 function fetchRulesWithFindingStatusCount() {
-  loadedData.value = false;
+  ruleList.value = undefined;
   RuleService.getRulesWithFindingStatusCount(
     selectedVersions.value,
     selectedRuleTags.value,
@@ -207,11 +206,8 @@ function fetchRulesWithFindingStatusCount() {
   )
     .then((response: AxiosResponse<RuleFindingCountModel[]>) => {
       getTotalCountRowValuesForRuleMetricsTable(response.data);
-      loadedData.value = true;
     })
-    .catch((error) => {
-      AxiosConfig.handleError(error);
-    });
+    .catch(dispatchError);
 }
 
 function getTotalCountRowValuesForRuleMetricsTable(ruleListCounts: RuleFindingCountModel[]) {
@@ -228,7 +224,7 @@ function getTotalCountRowValuesForRuleMetricsTable(ruleListCounts: RuleFindingCo
 
   ruleListCounts.forEach((rule: RuleFindingCountModel) => {
     const ruleFindingCountAugmented = getRuleFindingCountAugmented(rule);
-    ruleList.value.push(ruleFindingCountAugmented);
+    ruleList.value!.push(ruleFindingCountAugmented);
 
     const truePositiveRate = getTruePositiveRate(ruleFindingCountAugmented);
     truePositiveRateList.value.push(truePositiveRate);
@@ -275,7 +271,7 @@ function getRuleFindingCountAugmented(rule: RuleFindingCountModel): RuleFindingC
 }
 
 function calculateAverageTruePositiveRatePercentage() {
-  if (ruleList.value.length > 0 && truePositiveRateList.value.length > 0) {
+  if (ruleList.value && ruleList.value.length > 0 && truePositiveRateList.value.length > 0) {
     const sumOfTruePositveRates = truePositiveRateList.value.reduce((a, b) => a + b, 0);
     avgTruePosiitveRate.value = `${Math.round(sumOfTruePositveRates / ruleList.value.length)}`;
   }

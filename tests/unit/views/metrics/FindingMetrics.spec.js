@@ -1,7 +1,7 @@
 import { shallowMount } from '@vue/test-utils';
 import axios from 'axios';
 import { describe, expect, it, vi } from 'vitest';
-import App from '@/components/Metrics/FindingMetrics.vue';
+import App from '@/views/metrics/FindingMetrics.vue';
 import findings_status_counts_per_vcs_provider_per_week from '@/../tests/resources/mock_findings_status_count_by_vcs_provider_per_week.json';
 
 vi.mock('axios');

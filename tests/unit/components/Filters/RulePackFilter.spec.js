@@ -16,7 +16,7 @@ describe('RulePackFilter tests', () => {
   it('Given a RulePackFilter When props are passed then RulePackFilter will be displayed', () => {
     const wrapper = mount(App, {
       props: {
-        rulePackPreSelected: rule_pack_selected,
+        rulePackSelected: rule_pack_selected,
         rulePackOptions: rule_packs.data,
       },
       components: {},
@@ -26,15 +26,13 @@ describe('RulePackFilter tests', () => {
     });
 
     expect(wrapper.exists()).toBe(true);
-    expect(wrapper.vm.initialized).toBe(false);
-    expect(() => wrapper.vm.update()).not.toThrow();
     expect(() => wrapper.vm.onRulePackVersionFilterChange()).not.toThrow();
   });
 
   it('Given a RulePackFilter When props are passed then RulePackFilter will be displayed', () => {
     const wrapper = mount(App, {
       props: {
-        rulePackPreSelected: [],
+        rulePackSelected: [],
         rulePackOptions: rule_packs.data,
       },
       components: {},
@@ -44,15 +42,13 @@ describe('RulePackFilter tests', () => {
     });
 
     expect(wrapper.exists()).toBe(true);
-    expect(wrapper.vm.initialized).toBe(false);
-    expect(() => wrapper.vm.update()).not.toThrow();
     expect(() => wrapper.vm.onRulePackVersionFilterChange()).not.toThrow();
   });
 
   it('Given a RulePackFilter When props are passed then RulePackFilter will be displayed', () => {
     const wrapper = mount(App, {
       props: {
-        rulePackPreSelected: rule_pack_selected,
+        rulePackSelected: rule_pack_selected,
         rulePackOptions: rule_packs.data,
       },
       components: {},
@@ -77,8 +73,6 @@ describe('RulePackFilter tests', () => {
     });
 
     expect(wrapper.exists()).toBe(true);
-    expect(wrapper.vm.initialized).toBe(false);
-    expect(() => wrapper.vm.update()).not.toThrow();
     expect(() => wrapper.vm.onRulePackVersionFilterChange()).not.toThrow();
   });
 });

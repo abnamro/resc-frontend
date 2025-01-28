@@ -1,6 +1,7 @@
 import { mount } from '@vue/test-utils';
 import { describe, expect, it } from 'vitest';
 import App from '@/components/Filters/RuleFilter.vue';
+import flushPromises from 'flush-promises';
 
 describe('RuleFilter tests', () => {
   function getApp() {
@@ -22,7 +23,7 @@ describe('RuleFilter tests', () => {
     const wrapper = getApp();
     expect(wrapper.exists()).toBe(true);
     wrapper.setProps({ rulesSelected: ['rule3'] });
-    await wrapper.vm.$nextTick();
+    await flushPromises();
     expect(() => wrapper.vm.onRuleFilterChange()).not.toThrow();
     expect(wrapper.emitted()).toHaveProperty('on-rule-change');
   });

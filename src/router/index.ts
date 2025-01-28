@@ -5,15 +5,15 @@ import {
   type RouteLocationNormalized,
 } from 'vue-router';
 import Config from '@/configuration/config';
-import FindingMetrics from '@/views/Metrics/FindingMetrics.vue';
-import AuditMetrics from '@/views/Metrics/AuditMetrics.vue';
+import FindingMetrics from '@/views/metrics/FindingMetrics.vue';
+import AuditMetrics from '@/views/metrics/AuditMetrics.vue';
 import { useAuthUserStore } from '@/store/index';
-import PersonalAuditMetrics from '@/views/Metrics/PersonalAuditMetrics.vue';
+import PersonalAuditMetrics from '@/views/metrics/PersonalAuditMetrics.vue';
 import RepositoriesPanel from '@/views/RepositoriesPanel.vue';
 import ScanFindings from '@/views/ScanFindings.vue';
 import RuleAnalysis from '@/views/RuleAnalysis.vue';
 import RulePacks from '@/views/RulePacks.vue';
-import RuleMetrics from '@/views/Metrics/RuleMetrics.vue';
+import RuleMetrics from '@/views/metrics/RuleMetrics.vue';
 import Login from '@/views/LoginPanel.vue';
 import LoginCallback from '@/components/Login/LoginCallback.vue';
 import AuthService from '@/services/auth-service';

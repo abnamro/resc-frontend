@@ -1,7 +1,7 @@
 import { shallowMount } from '@vue/test-utils';
 import axios from 'axios';
 import { describe, expect, it, vi } from 'vitest';
-import App from '@/components/Metrics/PersonalAuditMetrics.vue';
+import App from '@/views/metrics/PersonalAuditMetrics.vue';
 import personal_audit from '@/../tests/resources/mock_personal_audits.json';
 import personal_audit2 from '@/../tests/resources/mock_personal_audits2.json';
 import personal_audit3 from '@/../tests/resources/mock_personal_audits3.json';

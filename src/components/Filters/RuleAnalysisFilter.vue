@@ -157,7 +157,7 @@ export type RuleAnalysisFilter = {
 };
 
 const optionsRules = ref([] as string[]);
-const optionsRuleTags = ref([] as string[]);
+const optionsRuleTags = ref(props.ruleTagOptions);
 const startDate = ref(undefined) as Ref<Date | undefined>;
 const endDate = ref(undefined) as Ref<Date | undefined>;
 
@@ -236,12 +236,6 @@ function onRulePackVersionChange(rulePackVersionsChanged: string[]) {
   handleFilterChange();
 }
 
-// function setRulePackVersionsOnRulePackFilter(rulePackVersionsChanged: RulePackRead[]) {
-//   selectedRulePackVersions.value = rulePackVersionsChanged;
-//   fetchAllDetectedRules();
-//   fetchRuleTags();
-// }
-
 function handleFilterChange() {
   // Refresh table data in Rule Analysis page
   const filterObj: RuleAnalysisFilter = {
@@ -274,6 +268,7 @@ function fetchAllDetectedRules() {
       optionsRules.value = response.data;
     })
     .catch((error) => {
+      throw new Error('OUPS');
       AxiosConfig.handleError(error);
     });
 }
@@ -284,6 +279,7 @@ function fetchRuleTags() {
       optionsRuleTags.value = response.data;
     })
     .catch((error) => {
+      throw new Error('OUPS@');
       AxiosConfig.handleError(error);
     });
 }

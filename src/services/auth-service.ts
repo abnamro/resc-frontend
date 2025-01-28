@@ -116,7 +116,7 @@ const AuthService = {
     } else {
       dispatchError('authCode && codeVerifier are null!');
       return new Promise((_resolve, _reject) => {
-        Router.push(store.destinationRoute ?? '/').catch((error) => {
+        Router.push('/').catch((error) => {
           dispatchError(error);
         });
       });

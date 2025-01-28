@@ -6,6 +6,10 @@ export default defineConfig((configEnv) =>
   mergeConfig(
     viteConfig(configEnv),
     defineConfig({
+      server: {
+        port: 8080
+      },
+      define: { global: 'window' },
       test: {
         setupFiles: 'tests/setup.ts',
         environment: 'jsdom',

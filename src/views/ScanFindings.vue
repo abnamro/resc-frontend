@@ -62,7 +62,6 @@ import { PAGE_SIZES } from '@/configuration/config';
 import Paginator from 'primevue/paginator';
 import { usePaginator } from '@/composables/usePaginator';
 
-const loadedData = ref(false);
 const loadedRepoData = ref(false);
 
 type Props = {
@@ -127,7 +126,6 @@ function fetchRepository() {
 }
 
 function fetchScan() {
-  loadedData.value = false;
   selectedScanID.value = Number(props.scanId);
   ScanFindingsService.getScanById(selectedScanID.value)
     .then((response: AxiosResponse<ScanRead>) => {
@@ -142,7 +140,6 @@ function fetchScan() {
 }
 
 function fetchPaginatedFindingsByScanId() {
-  loadedData.value = false;
   ScanFindingsService.getScanById(selectedScanID.value)
     .then((response: AxiosResponse<ScanRead>) => {
       scanType.value = response.data.scan_type;
@@ -170,7 +167,6 @@ function fetchPaginatedFindingsByScanId() {
       totalRows.value = response.data.total;
       findingList.value = response.data.data;
       addScanTypeTagForSingleScan();
-      loadedData.value = true;
     })
     .catch((error) => {
       AxiosConfig.handleError(error);
@@ -212,8 +208,6 @@ function fetchPreviousScanFindings() {
     previousScanIds.push(scan.id_);
   }
 
-  loadedData.value = false;
-
   const filterObj: QueryFilterType = {
     skip: currentPage.value,
     limit: perPage.value,
@@ -232,7 +226,6 @@ function fetchPreviousScanFindings() {
       totalRows.value = response.data.total;
       findingList.value = response.data.data;
       addScanTypeTagForMultipleScans();
-      loadedData.value = true;
     })
     .catch((error) => {
       AxiosConfig.handleError(error);

@@ -9,6 +9,7 @@ import rule_tags from '@/../tests/resources/mock_rule_tags.json';
 import RuleTagsFilter from '@/components/Filters/RuleTagsFilter.vue';
 import RuleFilter from '@/components/Filters/RuleFilter.vue';
 import { createTestingPinia } from '@pinia/testing';
+import flushPromises from 'flush-promises';
 
 vi.mock('axios');
 vi.mock('vue-router', async () => {
@@ -110,10 +111,7 @@ describe('ScanFindingsFilter tests', () => {
     expect(wrapper.exists()).toBe(true);
     axios.get.mockResolvedValueOnce({ data: scans_for_a_repository });
     expect(() => wrapper.vm.fetchScanDates()).not.toThrow();
-    await wrapper.vm.$nextTick();
-    await wrapper.vm.$nextTick();
-    await wrapper.vm.$nextTick();
-    await wrapper.vm.$nextTick();
+    await flushPromises();
     expect(wrapper.vm.selectedScan).not.toBe(null);
 
     axios.get.mockResolvedValueOnce(rule_tags);
@@ -163,10 +161,7 @@ describe('ScanFindingsFilter tests', () => {
     axios.get.mockResolvedValueOnce(rule_tags);
 
     expect(() => wrapper.vm.fetchScanDates()).not.toThrow();
-    await wrapper.vm.$nextTick();
-    await wrapper.vm.$nextTick();
-    await wrapper.vm.$nextTick();
-    await wrapper.vm.$nextTick();
+    await flushPromises();
     expect(wrapper.vm.selectedScan).not.toBe(null);
 
     axios.get.mockResolvedValueOnce(rule_tags);
@@ -177,6 +172,6 @@ describe('ScanFindingsFilter tests', () => {
     expect(wrapper.emitted()).toHaveProperty('previous-scans-checked');
     expect(wrapper.emitted()).toHaveProperty('on-filter-change');
     expect(wrapper.emitted()['previous-scans-checked'].length).toBe(1);
-    expect(wrapper.emitted()['on-filter-change'].length).toBe(1);
+    expect(wrapper.emitted()['on-filter-change'].length).toBe(2);
   });
 });

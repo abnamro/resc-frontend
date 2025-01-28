@@ -7,6 +7,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 import Config from '@/configuration/config';
 import { importFA } from '@/assets/font-awesome';
 import { createTestingPinia } from '@pinia/testing';
+import flushPromises from 'flush-promises';
 
 importFA();
 
@@ -58,10 +59,7 @@ describe('TopBarMenu.vue unit tests', () => {
     expect(store.firstName).toBe(null);
     expect(store.lastName).toBe(null);
     expect(store.email).toBe(null);
-    await wrapper.vm.$nextTick();
-    await wrapper.vm.$nextTick();
-    await wrapper.vm.$nextTick();
-    await wrapper.vm.$nextTick();
+    await flushPromises();
     expect(store.destinationRoute).toBe('/');
   });
 });

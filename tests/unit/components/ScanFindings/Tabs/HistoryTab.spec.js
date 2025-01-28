@@ -6,6 +6,7 @@ import audits from '@/../tests/resources/mock_finding_audits.json';
 import findings from '@/../tests/resources/mock_findings.json';
 
 vi.mock('axios');
+const tooltip = vi.fn();
 
 describe('History Tab', () => {
   it('Display an Audit in the History tab', async () => {
@@ -17,9 +18,10 @@ describe('History Tab', () => {
         finding: findings.data[0],
       },
       components: {},
+      global: {
+        directives: { tooltip }
+      }
     });
-
-    expect(wrapper.vm.loadedData).toBe(false);
 
     expect(() => wrapper.vm.fetchAuditsForFinding()).not.toThrow();
   });

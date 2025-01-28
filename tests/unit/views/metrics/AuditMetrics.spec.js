@@ -1,7 +1,7 @@
 import { shallowMount } from '@vue/test-utils';
 import axios from 'axios';
 import { describe, expect, it, vi } from 'vitest';
-import App from '@/components/Metrics/AuditMetrics.vue';
+import App from '@/views/metrics/AuditMetrics.vue';
 import audit_count_by_auditor_per_week from '@/../tests/resources/mock_audit_count_by_auditor_per_week.json';
 
 vi.mock('axios');

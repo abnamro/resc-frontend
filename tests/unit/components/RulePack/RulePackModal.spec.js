@@ -2,6 +2,7 @@ import { mount } from '@vue/test-utils';
 import axios from 'axios';
 import { describe, expect, it, vi } from 'vitest';
 import App from '@/components/RulePack/RulePackUploadModal.vue';
+import ToastService from 'primevue/toastservice';
 
 vi.mock('axios');
 
@@ -9,6 +10,7 @@ describe('RulePackUploadModal tests', () => {
   it('Given a RulePackUploadModal then RulePackUploadModal will be initiated', async () => {
     const wrapper = mount(App, {
       props: {},
+      global: { plugins: [ToastService], },
       components: {},
     });
 
@@ -19,8 +21,6 @@ describe('RulePackUploadModal tests', () => {
     expect(() => wrapper.vm.hide()).not.toThrow();
     axios.post.mockResolvedValueOnce({ status: 200 });
     expect(() => wrapper.vm.handleOk(new MouseEvent('click'))).not.toThrow();
-    expect(wrapper.find('.spinner').exists()).toBe(false);
     expect(() => wrapper.vm.resetModal()).not.toThrow();
-    expect(() => wrapper.vm.show()).not.toThrow();
   });
 });

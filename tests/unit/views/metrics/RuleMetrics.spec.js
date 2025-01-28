@@ -1,12 +1,13 @@
 import { mount } from '@vue/test-utils';
 import axios from 'axios';
 import { describe, expect, it, vi } from 'vitest';
-import App from '@/components/Metrics/RuleMetrics.vue';
+import App from '@/views/metrics/RuleMetrics.vue';
 import rule_packs from '@/../tests/resources/mock_rule_packs.json';
 import rule_tags from '@/../tests/resources/mock_rule_tags.json';
 import rules_with_findings_status_count from '@/../tests/resources/mock_rules_with_findings_status_count.json';
 import { createApp } from 'vue';
 import { PiniaVuePlugin, createPinia, setActivePinia } from 'pinia';
+import flushPromises from 'flush-promises';
 
 const app = createApp({});
 const pinia = createPinia();
@@ -44,21 +45,11 @@ describe('RuleMetrics tests', () => {
     });
 
     expect(wrapper.exists()).toBe(true);
-    // We need to wait a few ticks for the re-rendering of the wrapper.
-    await wrapper.vm.$nextTick();
-    await wrapper.vm.$nextTick();
-    await wrapper.vm.$nextTick();
-    await wrapper.vm.$nextTick();
-    await wrapper.vm.$nextTick();
-    await wrapper.vm.$nextTick();
-    await wrapper.vm.$nextTick();
-    await wrapper.vm.$nextTick(); // Re-rendiring table
-    expect(wrapper.vm.loadedData).toBe(true);
+    await flushPromises();
     expect(wrapper.vm.ruleList.length > 0).toBe(true);
-    expect(wrapper.vm.hasRecords).toBe(true);
 
     wrapper.find('tr').trigger('click');
-    wrapper.vm.goToRuleAnalysisPage({ rule_name: 'Rule-3' });
+    wrapper.vm.goToRuleAnalysisPage({ data: {rule_name: 'Rule-3' }});
   });
 
   it('Given a RuleMetrics When props are passed then RuleMetrics will be displayed', () => {

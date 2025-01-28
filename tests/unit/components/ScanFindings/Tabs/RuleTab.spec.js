@@ -3,6 +3,7 @@ import axios from 'axios';
 import { describe, expect, it, vi } from 'vitest';
 import App from '@/components/ScanFindings/Tabs/RuleTab.vue';
 import rule from '@/../tests/resources/mock_rule.json';
+import flushPromises from 'flush-promises';
 
 vi.mock('axios');
 
@@ -19,7 +20,9 @@ describe('Rule Tab', () => {
       components: {},
     });
 
-    expect(wrapper.vm.loadedData).toBe(false);
+    expect(wrapper.exists()).toBe(true);
+    await flushPromises();
+    expect(wrapper.vm.rule).not.toBe(undefined);
 
     expect(() => wrapper.vm.fetchRuleForRulePack()).not.toThrow();
   });

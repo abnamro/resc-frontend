@@ -2,6 +2,7 @@ import { mount } from '@vue/test-utils';
 import axios from 'axios';
 import { vi, describe, expect, it } from 'vitest';
 import App from '@/components/ScanFindings/RepositoryPanel.vue';
+import flushPromises from 'flush-promises';
 
 vi.mock('axios');
 
@@ -37,10 +38,7 @@ describe('Repository Panel', () => {
     expect(wrapper.text()).toContain('vcs_name');
     expect(wrapper.vm.repoDeleted).toBe(false);
     expect(async () => await wrapper.vm.handleDeletedChange()).not.toThrow();
-    await wrapper.vm.$nextTick();
-    await wrapper.vm.$nextTick();
-    await wrapper.vm.$nextTick();
-    await wrapper.vm.$nextTick();
+    await flushPromises();
 
     expect(wrapper.vm.repoDeleted).toBe(true);
   });

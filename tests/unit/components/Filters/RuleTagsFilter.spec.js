@@ -1,6 +1,7 @@
 import { mount } from '@vue/test-utils';
 import { describe, expect, it } from 'vitest';
 import App from '@/components/Filters/RuleTagsFilter.vue';
+import flushPromises from 'flush-promises';
 
 describe('RuleTagsFilter tests', () => {
   it('Given a RuleTagsFilter When props are passed then RuleTagsFilter will be displayed', () => {
@@ -28,7 +29,7 @@ describe('RuleTagsFilter tests', () => {
 
     expect(wrapper.exists()).toBe(true);
     wrapper.setProps({ ruleTagsSelected: ['tag1'] });
-    await wrapper.vm.$nextTick();
+    await flushPromises();
     expect(() => wrapper.vm.onRuleTagFilterChange()).not.toThrow();
     expect(wrapper.emitted()).toHaveProperty('on-rule-tags-change');
     expect(() => wrapper.vm.resetRuleTagsFilterSelection()).not.toThrow();

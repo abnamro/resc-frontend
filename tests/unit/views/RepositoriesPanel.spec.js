@@ -7,8 +7,11 @@ import vcs_providers from '@/../tests/resources/mock_vcs_providers.json';
 import HealthBar from '@/components/Common/HealthBar.vue';
 import RepositoriesPageFilter from '@/components/Filters/RepositoriesPageFilter.vue';
 import ProgressSpinner from 'primevue/progressspinner';
+import flushPromises from 'flush-promises';
 
 vi.mock('axios');
+const tooltip = vi.fn();
+
 const allRepos = ['bb_repo1', 'bb_repo2', 'ado_repo1', 'ado_repo2'];
 // const bitbucketRepos = ['bb_repo1', 'bb_repo2'];
 // const adoRepos = ['ado_repo1', 'ado_repo2'];
@@ -34,6 +37,11 @@ vi.mock('vue-router', async () => {
 
 describe('RepositoriesPanel tests', () => {
   let wrapper;
+  window.open = vi.fn()
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
 
   function initMountApp() {
     wrapper = mount(App, {
@@ -43,14 +51,16 @@ describe('RepositoriesPanel tests', () => {
         RepositoriesPageFilter,
       },
       global: {
-        stubs: {
-          // RepositoriesPageFilter: true
-        },
+        stubs: {},
+        directives: {
+          tooltip
+        }
       },
     });
   }
 
   it('Given a RepositoriesPanel then RepositoriesPanel will be displayed', async () => {
+    vi.spyOn(window, 'open');
     axios.get.mockResolvedValueOnce({ data: allProjects });
     axios.get.mockResolvedValueOnce({ data: allRepos });
     axios.get.mockResolvedValueOnce(vcs_providers);
@@ -61,7 +71,6 @@ describe('RepositoriesPanel tests', () => {
     expect(wrapper.exists()).toBe(true);
     expect(wrapper.vm.formatDate(0)).toBe('Not Scanned');
     expect(wrapper.vm.formatDate(123456)).toContain('Jan 01, 1970');
-    expect(wrapper.vm.formatVcsProvider('GITHUB_PUBLIC')).toBe('GitHub Public');
 
     axios.get.mockResolvedValueOnce({ data: repositories });
     wrapper.vm.handlePageClick(1);
@@ -71,18 +80,14 @@ describe('RepositoriesPanel tests', () => {
     axios.get.mockResolvedValueOnce({ data: allRepos });
     axios.get.mockResolvedValueOnce({ data: repositories });
     wrapper.vm.handleFilterChange(['AZURE_DEVOPS'], undefined, undefined);
-    expect(wrapper.vm.getCurrentRepositorySelected()).toBe(undefined);
-    await wrapper.vm.$nextTick();
-    await wrapper.vm.$nextTick();
-    await wrapper.vm.$nextTick();
-    await wrapper.vm.$nextTick();
-    await wrapper.vm.$nextTick();
-    expect(() => wrapper.vm.selectUp()).not.toThrow();
+    expect(wrapper.vm.selection).toBe(undefined);
+    await flushPromises();
     expect(() => wrapper.vm.selectDown()).not.toThrow();
-    expect(wrapper.vm.selectedIndex).toBe(1);
-    expect(() => wrapper.vm.handleRowClicked('', 0)).not.toThrow();
+    expect(() => wrapper.vm.selectUp()).not.toThrow();
     expect(wrapper.vm.selectedIndex).toBe(0);
-    expect(wrapper.vm.getCurrentRepositorySelected()).not.toBe(undefined);
+    expect(() => wrapper.vm.handleRowClicked({index: 1})).not.toThrow();
+    expect(wrapper.vm.selectedIndex).toBe(1);
+    expect(wrapper.vm.selection).not.toBe(undefined);
     expect(() => wrapper.vm.goToScanFindings()).not.toThrow();
   });
 });
