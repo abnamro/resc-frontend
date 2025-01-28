@@ -99,13 +99,9 @@
       This will mark all findings from rule pack {{ rulePackSelected?.version }} and older as
       outdated.
     </div>
-    <div class="flex gap-2 justify-end">
-      <Button class="mt-3 float-end" severity="danger" block @click="markAsOutdated"
-        >Confirm</Button
-      >
-      <Button class="mt-3 float-end me-2" severity="secondary" block @click="cancelAction"
-        >Cancel</Button
-      >
+    <div class="flex gap-2 justify-end pt-3 pr-2">
+      <Button severity="danger" block @click="markAsOutdated">Confirm</Button>
+      <Button severity="secondary" block @click="cancelAction">Cancel</Button>
     </div>
   </Dialog>
 </template>

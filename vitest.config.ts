@@ -18,7 +18,7 @@ export default defineConfig((configEnv) =>
         globals: true,
         coverage: {
           include: ['src/**/*'],
-          exclude: ['**/main.ts', '**/axios-config.ts', '**/chartjs.ts'],
+          exclude: ['**/main.ts', '**/axios-config.ts', '**/chartjs.ts', '**/preset.ts'],
           enabled: true,
           provider: 'istanbul',
           all: true,

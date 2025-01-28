@@ -32,8 +32,6 @@ describe('RulePacks tests', () => {
   it('Given a RulePacks then RulePacks will be displayed', async () => {
     initMountApp();
     expect(wrapper.exists()).toBe(true);
-    // expect(wrapper.vm.formatDate(0)).toBe('Not Available');
-    // expect(wrapper.vm.formatDate(123456)).toContain('Jan 01, 1970');
 
     axios.get.mockResolvedValueOnce({ data: rule_packs });
     expect(() => wrapper.vm.handlePageClick(1)).not.toThrow();
@@ -46,9 +44,25 @@ describe('RulePacks tests', () => {
     axios.get.mockResolvedValueOnce(buffer);
     expect(() => wrapper.vm.downloadRulePack('0.0.6')).not.toThrow();
     await flushPromises();
-
+ 
     axios.post.mockResolvedValueOnce({});
-    expect(() => wrapper.vm.markAsOutdated(rule_packs.data[6])).not.toThrow();
-    expect(() => wrapper.vm.markAsOutdated(rule_packs.data[5])).not.toThrow();
+    wrapper.vm.openMarkAsOutdated(rule_packs.data[0]);
+    expect(wrapper.vm.isConfirmOpen).toBe(false);
+    await flushPromises();
+
+    wrapper.vm.openMarkAsOutdated(rule_packs.data[6]);
+    expect(wrapper.vm.isConfirmOpen).toBe(true);
+    expect(wrapper.vm.rulePackSelected).toStrictEqual(rule_packs.data[6]);
+    await flushPromises();
+
+    wrapper.vm.cancelAction()
+    await flushPromises();
+    expect(wrapper.vm.isConfirmOpen).toBe(false);
+    expect(wrapper.vm.rulePackSelected).toBe(null);
+
+    wrapper.vm.openMarkAsOutdated(rule_packs.data[6]);
+    expect(wrapper.vm.isConfirmOpen).toBe(true);
+    expect(wrapper.vm.rulePackSelected).toStrictEqual(rule_packs.data[6]);
+    expect(() => wrapper.vm.markAsOutdated()).not.toThrow();
   });
 });

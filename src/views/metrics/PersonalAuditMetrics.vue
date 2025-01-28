@@ -124,7 +124,6 @@
   </div>
 </template>
 <script setup lang="ts">
-import AxiosConfig from '@/configuration/axios-config';
 import CardVue, { type CardIcon } from '@/components/Common/CardVue.vue';
 import DateUtils from '@/utils/date-utils';
 import CommonUtils from '@/utils/common-utils';
@@ -133,6 +132,7 @@ import { ref, type Ref } from 'vue';
 import type { AxiosResponse } from 'axios';
 import type { PersonalAuditMetrics, Swr } from '@/services/shema-to-types';
 import ProgressSpinner from 'primevue/progressspinner';
+import { dispatchError } from '@/configuration/config';
 
 const loadedData = ref(false);
 
@@ -274,7 +274,5 @@ MetricsService.getPersonalAuditMetrics()
 
     loadedData.value = true;
   })
-  .catch((error: Swr) => {
-    AxiosConfig.handleError(error);
-  });
+  .catch(dispatchError);
 </script>

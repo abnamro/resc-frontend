@@ -39,8 +39,7 @@
 </template>
 
 <script setup lang="ts">
-import AxiosConfig from '@/configuration/axios-config';
-import Config from '@/configuration/config';
+import Config, { dispatchError } from '@/configuration/config';
 import FindingsService from '@/services/findings-service';
 import MultiLineChart from '@/components/Charts/MultiLineChartVue.vue';
 import { ref } from 'vue';
@@ -119,9 +118,7 @@ function getTruePositiveCounts() {
 
       setChartDataForTruePositiveFindingsCount();
     })
-    .catch((error) => {
-      AxiosConfig.handleError(error);
-    });
+    .catch(dispatchError);
 }
 
 function getTotalCounts() {
@@ -143,9 +140,7 @@ function getTotalCounts() {
       setChartDataForTotalFindingsCount();
       setChartDataForPercentTriagedFindingGraph();
     })
-    .catch((error) => {
-      AxiosConfig.handleError(error);
-    });
+    .catch(dispatchError);
 }
 
 function getUnTriagedCounts() {
@@ -169,9 +164,7 @@ function getUnTriagedCounts() {
       setChartDataForUnTriagedFindingsCount();
       setChartDataForPercentTriagedFindingGraph();
     })
-    .catch((error) => {
-      AxiosConfig.handleError(error);
-    });
+    .catch(dispatchError);
 }
 
 function prepareDataSetForVcsProvider(vcsType: string, findingCountList: number[]): DataSetObject {

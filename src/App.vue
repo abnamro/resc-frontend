@@ -1,5 +1,5 @@
 <template>
-  <SessionTimout />
+  <SessionTimeout />
   <ErrorView />
   <Toast />
   <SidebarMenu
@@ -36,7 +36,7 @@ import { disableScrollingWithArrowsAndCtrlA, shouldIgnoreKeystroke } from './uti
 import { onKeyStroke } from '@vueuse/core';
 import ErrorView from './views/ErrorView.vue';
 import Toast from 'primevue/toast';
-import SessionTimout from './components/Login/SessionTimout.vue';
+import SessionTimeout from './components/Login/SessionTimeout.vue';
 
 const route = useRoute();
 

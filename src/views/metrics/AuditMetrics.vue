@@ -14,12 +14,12 @@
 </template>
 
 <script setup lang="ts">
-import AxiosConfig from '@/configuration/axios-config';
 import FindingsService from '@/services/findings-service';
 import MultiLineChartVue from '@/components/Charts/MultiLineChartVue.vue';
 import { ref, type Ref } from 'vue';
 import type { DataSetObject, DataSetObjectCollection, AuditData } from './types';
 import ProgressSpinner from 'primevue/progressspinner';
+import { dispatchError } from '@/configuration/config';
 
 const loadedAuditCounts = ref(false);
 const loadedAuditCountsAuditors = ref(false);
@@ -60,9 +60,7 @@ function getGraphData() {
       });
       loadedAuditCounts.value = true;
     })
-    .catch((error) => {
-      AxiosConfig.handleError(error);
-    });
+    .catch(dispatchError);
 }
 
 function prepareDataSet(datasetLabel: string, datasetFirstValue: number): DataSetObject {

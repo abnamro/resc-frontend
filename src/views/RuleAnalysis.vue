@@ -31,7 +31,6 @@
 </template>
 
 <script lang="ts" setup>
-import AxiosConfig from '@/configuration/axios-config';
 import FindingsTable from '@/components/Findings/FindingsTable.vue';
 import FindingsService, { type QueryFilterType } from '@/services/findings-service';
 import { type RuleAnalysisFilter } from '@/components/Filters/RuleAnalysisFilter.vue';
@@ -39,7 +38,7 @@ import { useAuthUserStore, type PreviousRouteState } from '@/store/index';
 import { onMounted, ref } from 'vue';
 import type { DetailedFindingRead, PaginationType } from '@/services/shema-to-types';
 import type { AxiosResponse } from 'axios';
-import { PAGE_SIZES } from '@/configuration/config';
+import { dispatchError, PAGE_SIZES } from '@/configuration/config';
 import { storeToRefs } from 'pinia';
 import Paginator from 'primevue/paginator';
 import { usePaginator } from '@/composables/usePaginator';
@@ -116,10 +115,7 @@ function fetchPaginatedDetailedFindings() {
       totalRows.value = response.data.total;
       findingList.value = response.data.data;
     })
-    .catch((error) => {
-      /* istanbul ignore next @preserve */
-      AxiosConfig.handleError(error);
-    });
+    .catch(dispatchError);
 }
 
 function handleFilterChange(filterObj: RuleAnalysisFilter) {

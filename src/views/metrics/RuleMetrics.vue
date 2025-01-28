@@ -121,7 +121,6 @@
 </template>
 
 <script setup lang="ts">
-import AxiosConfig from '@/configuration/axios-config';
 import HealthBar from '@/components/Common/HealthBar.vue';
 import RulePackFilter from '@/components/Filters/RulePackFilter.vue';
 import RulePackService from '@/services/rule-pack-service';
@@ -134,7 +133,6 @@ import type {
   PaginationType,
   RuleFindingCountModel,
   RulePackRead,
-  Swr,
 } from '@/services/shema-to-types';
 import { useRouter } from 'vue-router';
 import type { AxiosResponse } from 'axios';
@@ -192,9 +190,7 @@ function fetchRuleTags() {
       selectedRuleTags.value = [];
       ruleTagsList.value = response.data;
     })
-    .catch((error) => {
-      AxiosConfig.handleError(error);
-    });
+    .catch(dispatchError);
 }
 
 function fetchRulesWithFindingStatusCount() {
@@ -320,7 +316,5 @@ RulePackService.getRulePackVersions(10000, 0)
     fetchRuleTags();
     fetchRulesWithFindingStatusCount();
   })
-  .catch((error: Swr) => {
-    AxiosConfig.handleError(error);
-  });
+  .catch(dispatchError);
 </script>
