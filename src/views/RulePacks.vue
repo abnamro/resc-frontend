@@ -78,7 +78,7 @@
         <template #body="slotProps">
           <FontAwesomeIcon
             icon="download"
-            class=" text-sky-400 cursor-pointer"
+            class="text-sky-400 cursor-pointer"
             @click="downloadRulePack(slotProps.data.version)"
           />
         </template>
@@ -107,7 +107,6 @@
 </template>
 
 <script setup lang="ts">
-import AxiosConfig from '@/configuration/axios-config';
 import { dispatchError, PAGE_SIZES } from '@/configuration/config';
 import DateUtils from '@/utils/date-utils';
 import CommonUtils from '@/utils/common-utils';
@@ -189,9 +188,7 @@ function markAsOutdated() {
 
   RulePackService.markAsOutdated(rulePackSelected.value.version)
     .then((_response) => {})
-    .catch((error) => {
-      AxiosConfig.handleError(error);
-    });
+    .catch(dispatchError);
 
   rulePackSelected.value = null;
 }

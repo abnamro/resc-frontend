@@ -20,8 +20,7 @@
 
 <script setup lang="ts">
 import AuthService from '@/services/auth-service';
-import AxiosConfig from '@/configuration/axios-config';
-import Config from '@/configuration/config';
+import Config, { dispatchError } from '@/configuration/config';
 import { useAuthUserStore } from '@/store/index';
 import { useRouter } from 'vue-router';
 import { onKeyStroke } from '@vueuse/core';
@@ -40,13 +39,9 @@ function login() {
 /* istanbul ignore if -- @preserve */
 if (store.idToken && !AuthService.isTokenExpired(store.idToken)) {
   if (store.destinationRoute) {
-    router.push(store.destinationRoute).catch((error) => {
-      AxiosConfig.handleError(error);
-    });
+    router.push(store.destinationRoute).catch(dispatchError);
   } else {
-    router.push('/').catch((error) => {
-      AxiosConfig.handleError(error);
-    });
+    router.push('/').catch(dispatchError);
   }
 }
 onKeyStroke('Enter', login, { eventName: 'keydown' });

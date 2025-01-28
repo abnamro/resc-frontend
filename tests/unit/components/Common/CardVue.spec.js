@@ -27,7 +27,6 @@ describe('CardVue tests', () => {
       },
       global: {
         stubs: {},
-
         directives: {
           tooltip,
         },
@@ -46,6 +45,9 @@ describe('CardVue tests', () => {
       },
       global: {
         stubs: { FontAwesomeIcon: true },
+        directives: {
+          tooltip,
+        },
       },
       components: {
         Card,

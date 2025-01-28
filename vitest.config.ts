@@ -7,7 +7,7 @@ export default defineConfig((configEnv) =>
     viteConfig(configEnv),
     defineConfig({
       server: {
-        port: 8080
+        port: 8080,
       },
       define: { global: 'window' },
       test: {

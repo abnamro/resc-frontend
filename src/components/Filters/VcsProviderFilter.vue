@@ -18,12 +18,12 @@
   </div>
 </template>
 <script setup lang="ts">
-import AxiosConfig from '@/configuration/axios-config';
 import CommonUtils from '@/utils/common-utils';
 import RepositoryService from '@/services/repository-service';
 import { ref } from 'vue';
 import type { VCSProviders } from '@/services/shema-to-types';
 import MultiSelect from 'primevue/multiselect';
+import { dispatchError } from '@/configuration/config';
 
 type VcsProvider = {
   id: number;
@@ -70,7 +70,5 @@ RepositoryService.getVCSProviders()
       optionsVcsProviders.value.push(vcsJson);
     }
   })
-  .catch((error) => {
-    AxiosConfig.handleError(error);
-  });
+  .catch(dispatchError);
 </script>

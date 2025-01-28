@@ -51,7 +51,7 @@ type MessageEvent = {
 type ResponseEvent = {
   status: number;
   data: string;
-  header: any;
+  header: unknown;
   config: {
     method: string;
     baseURL: string;

@@ -14,11 +14,10 @@
 </template>
 
 <script setup lang="ts">
-import AxiosConfig from '@/configuration/axios-config';
 import FindingsService from '@/services/findings-service';
 import type { DetailedFindingRead, FindingStatus } from '@/services/shema-to-types';
 import { computed, ref } from 'vue';
-import { MAX_COMMENT_LENGTH } from '@/configuration/config';
+import { dispatchError, MAX_COMMENT_LENGTH } from '@/configuration/config';
 import ProgressSpinner from 'primevue/progressspinner';
 import SelectStatus from '@/components/ScanFindings/Form/SelectStatus.vue';
 import SetComment from '@/components/ScanFindings/Form/SetComment.vue';
@@ -49,8 +48,6 @@ function onSubmit(event: Event) {
     .then(() => {
       loadedData.value = true;
     })
-    .catch((error) => {
-      AxiosConfig.handleError(error);
-    });
+    .catch(dispatchError);
 }
 </script>

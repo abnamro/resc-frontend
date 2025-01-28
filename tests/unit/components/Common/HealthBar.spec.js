@@ -1,6 +1,8 @@
 import { mount } from '@vue/test-utils';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import App from '@/components/Common/HealthBar.vue';
+
+const tooltip = vi.fn();
 
 describe('HealthBar tests', () => {
   it('Given a HealthBar When props are passed then HealthBar will be displayed', () => {
@@ -15,6 +17,11 @@ describe('HealthBar tests', () => {
         totalCount: 15,
       },
       components: {},
+      global: {
+        directives: {
+          tooltip,
+        },
+      },
     });
 
     expect(wrapper.exists()).toBe(true);

@@ -1,9 +1,9 @@
 import type { TableColumn } from '@/utils/column-utils';
-import AxiosConfig from '@/configuration/axios-config';
 import ScanFindingsService from '@/services/scan-findings-service';
 import type { FindingStatus, RulePackRead } from '@/services/shema-to-types';
 import { defineStore, type Store } from 'pinia';
 import type { StatusOptionType } from '@/utils/common-utils';
+import { dispatchError } from '@/configuration/config';
 
 export type TokenData = {
   id_token: string;
@@ -79,9 +79,7 @@ export const useAuthUserStore: () => Store<'authUser', State, GettersStore, Acti
             .then((response) => {
               this.findingStatusList = response.data as FindingStatus[];
             })
-            .catch((error) => {
-              AxiosConfig.handleError(error);
-            });
+            .catch(dispatchError);
         }
 
         return this.findingStatusList ?? ([] as FindingStatus[]);

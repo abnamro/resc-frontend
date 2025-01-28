@@ -14,6 +14,7 @@
       "comment": "",
       "rule_name": "Hardcoded-Username",
       "rule_tags": "",
+      "rule_pack": "2.3.4",
       "project_key": "ABC",
       "repository_name": "test",
       "repository_url": "https://bitbucket.com:7999/scm/ABC/test.git",

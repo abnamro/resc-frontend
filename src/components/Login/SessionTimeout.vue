@@ -1,11 +1,9 @@
 <template>
   <!-- Easter Egg -->
   <!-- Show the bat only at night ;p ? -->
-  <div
-    class="fixed bottom-0.5 z-20 -translate-x-1/2"
-    :style="`left: ${100 - timeLeft}%`"
-  >
+  <div class="fixed bottom-0.5 z-20 -translate-x-1/2" :style="`left: ${100 - timeLeft}%`">
     <img
+      alt="Na na na na na na na na na na na na na na na na... BATMAN!"
       src="/bat.gif"
       class="h-10 animate-pulse dark:invert"
     />

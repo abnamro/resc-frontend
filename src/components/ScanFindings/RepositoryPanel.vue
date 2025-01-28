@@ -1,5 +1,5 @@
 <template>
-  <DataTable :value="data" class="w-1/4" size="small">
+  <DataTable :value="data" class="w-1/4 mb-4" size="small">
     <Column field="field" body-class="font-bold border-none" header-class="border-none"></Column>
     <Column field="value" body-class=" border-none" header-class="border-none">
       <template #body="slotProps">
@@ -26,17 +26,17 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue';
-import AxiosConfig from '@/configuration/axios-config';
 import RepositoryService from '@/services/repository-service';
 import type { RepositoryRead, VCSInstanceRead } from '@/services/shema-to-types';
 import type { AxiosResponse } from 'axios';
 import ToggleSwitch from 'primevue/toggleswitch';
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
+import { dispatchError } from '@/configuration/config';
 
 type Props = {
   repository: RepositoryRead;
-  vcs_instance: VCSInstanceRead;
+  vcsInstance: VCSInstanceRead;
 };
 
 const props = defineProps<Props>();
@@ -48,7 +48,7 @@ const loadedData = ref(true);
 const data = computed(() => [
   {
     field: 'VCS Instance',
-    value: props.vcs_instance.name,
+    value: props.vcsInstance.name,
   },
   {
     field: 'Project',
@@ -77,7 +77,7 @@ function handleDeletedChange() {
     })
     /* istanbul ignore next @preserve */
     .catch((error) => {
-      AxiosConfig.handleError(error);
+      dispatchError(error);
       repoDeleted.value = repositoryData.value.deleted_at ? true : false;
     });
 }

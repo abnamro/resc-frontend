@@ -109,7 +109,6 @@
 </template>
 
 <script setup lang="ts">
-import AxiosConfig from '@/configuration/axios-config';
 import FindingStatusFilter from '@/components/Filters/FindingStatusFilter.vue';
 import ProjectFilter from '@/components/Filters/ProjectFilter.vue';
 import RepositoryFilter from '@/components/Filters/RepositoryFilter.vue';
@@ -131,6 +130,7 @@ import { storeToRefs } from 'pinia';
 import { Collapse } from 'vue-collapsed';
 import Button from 'primevue/button';
 import ToggleSwitch from 'primevue/toggleswitch';
+import { dispatchError } from '@/configuration/config';
 
 type Props = {
   projectOptions: string[];
@@ -267,10 +267,7 @@ function fetchAllDetectedRules() {
     .then((response) => {
       optionsRules.value = response.data;
     })
-    .catch((error) => {
-      throw new Error('OUPS');
-      AxiosConfig.handleError(error);
-    });
+    .catch(dispatchError);
 }
 
 function fetchRuleTags() {
@@ -278,10 +275,7 @@ function fetchRuleTags() {
     .then((response) => {
       optionsRuleTags.value = response.data;
     })
-    .catch((error) => {
-      throw new Error('OUPS@');
-      AxiosConfig.handleError(error);
-    });
+    .catch(dispatchError);
 }
 
 function applyRuleFilterInRuleAnalysisPage() {

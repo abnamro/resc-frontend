@@ -1,20 +1,33 @@
-import { shallowMount } from '@vue/test-utils';
-import MockAdapter from 'axios-mock-adapter';
+import { mount } from '@vue/test-utils';
 import { describe, expect, it, vi } from 'vitest';
 import App from '@/components/Filters/RuleAnalysisFilter.vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { createTestingPinia } from '@pinia/testing';
 import rules from '@/../tests/resources/mock_rules.json';
-import rule_tags from '@/../tests/resources/mock_rule_tags.json';
 import axios from 'axios';
+import flushPromises from 'flush-promises';
 
 vi.mock('axios');
 
 describe('RuleAnalysisFilter tests', () => {
-  let mock;
+  beforeAll(() => {
+    Object.defineProperty(window, 'matchMedia', {
+      writable: true,
+      value: vi.fn().mockImplementation((query) => ({
+        matches: false,
+        media: query,
+        onchange: null,
+        addListener: vi.fn(), // Deprecated
+        removeListener: vi.fn(), // Deprecated
+        addEventListener: vi.fn(),
+        removeEventListener: vi.fn(),
+        dispatchEvent: vi.fn(),
+      })),
+    });
+  });
 
   function initMount() {
-    return shallowMount(App, {
+    return mount(App, {
       props: {
         projectOptions: [],
         repositoryOptions: [],
@@ -45,136 +58,69 @@ describe('RuleAnalysisFilter tests', () => {
   }
 
   afterEach(() => {
+    axios.get.mockReset();
     vi.restoreAllMocks();
   });
 
-  // it('Given a RuleAnalysisFilter then RuleAnalysisFilter will be displayed', () => {
-
-  //   vi.mock('axios');
-  //   axios.get.mockResolvedValueOnce({ data: rules });
-  //   axios.get.mockResolvedValueOnce({ rule_tags });
-  //   // vi.spyOn(axios, 'get');
-
-  //   const wrapper = initMount();
-  //   expect(wrapper.exists()).toBe(true);
-  //   expect(() => wrapper.vm.toggleAdvancedSearch()).not.toThrow();
-  //   expect(wrapper.vm.advancedSearchVisible).toBe(true);
-  //   axios.get.mockReset();
-  // });
- 
-  it('Given a RuleAnalysisFilter When updating VCS filters then on-filter-change is emitted', () => {
-    let mock = new MockAdapter(axios);
-    mock.onGet(/^\/resc\/v1\/detected-rules.*/).reply(200, rules)
-    mock.onGet(/^\/resc\/v1\/rule-packs\/tags.*/).reply(200, rule_tags)
+  it('Given a RuleAnalysisFilter a RuleAnalysisFilter is displayed', async () => {
+    const spy = vi.spyOn(axios, 'get');
+    spy.mockImplementation((q) => {
+      switch (q) {
+        case '/findings/supported-statuses/':
+          return {
+            data: [
+              'NOT_ANALYZED',
+              'NOT_ACCESSIBLE',
+              'CLARIFICATION_REQUIRED',
+              'FALSE_POSITIVE',
+              'TRUE_POSITIVE',
+              'OUTDATED',
+            ],
+          };
+        case '/supported-vcs-providers':
+          return { data: ['AZURE_DEVOPS', 'BITBUCKET', 'GITHUB_PUBLIC'] };
+        case '/detected-rules?vcs_provider=AZURE_DEVOPS&project_name=ABC':
+          return { data: rules };
+        case '/detected-rules?vcs_provider=AZURE_DEVOPS&project_name=ABC&rule_pack_version=0.0.0':
+          return { data: rules };
+        case '/rule-packs/tags?version=0.0.0':
+          return { data: [] };
+        case '/detected-rules?vcs_provider=AZURE_DEVOPS&project_name=ABC&repository_name=Repo1&rule_pack_version=0.0.0':
+          return { data: rules };
+        default:
+          console.log(q);
+      }
+    });
 
     const wrapper = initMount();
     expect(wrapper.exists()).toBe(true);
+
+    expect(wrapper.vm.advancedSearchVisible).toBe(false);
+    wrapper.vm.toggleAdvancedSearch();
+    expect(wrapper.vm.advancedSearchVisible).toBe(true);
+    await flushPromises();
 
     axios.get.mockResolvedValueOnce({ data: rules });
     expect(() => wrapper.vm.onVcsProviderChange(['AZURE_DEVOPS'])).not.toThrow();
     expect(wrapper.emitted()).toHaveProperty('on-filter-change');
 
-    axios.get.mockReset();
+    expect(() => wrapper.vm.onProjectChange('ABC')).not.toThrow();
+    expect(wrapper.emitted()).toHaveProperty('on-filter-change');
+
+    expect(() => wrapper.vm.onRulePackVersionChange(['0.0.0'])).not.toThrowError();
+    expect(wrapper.emitted()).toHaveProperty('on-filter-change');
+
+    expect(() => wrapper.vm.onRepositoryChange('Repo1')).not.toThrow();
+    expect(wrapper.emitted()).toHaveProperty('on-filter-change');
+
+    expect(() => wrapper.vm.onFindingsStatusChange()).not.toThrow();
+    expect(wrapper.emitted()).toHaveProperty('on-filter-change');
+
+    expect(() => wrapper.vm.onRuleChange(['Rule-1'])).not.toThrow();
+    expect(wrapper.emitted()).toHaveProperty('on-filter-change');
+
+    expect(() => wrapper.vm.onStartDateChange()).not.toThrow();
+    expect(() => wrapper.vm.onEndDateChange()).not.toThrow();
+    expect(() => wrapper.vm.onRuleTagsChange(['cli'])).not.toThrow();
   });
-
-  // it('Given a RuleAnalysisFilter When updating Project filters then on-filter-change is emitted', () => {
-  //   axios.get.mockResolvedValueOnce({ data: rules });
-  //   axios.get.mockResolvedValueOnce({ rule_tags });
-
-  //   const wrapper = initMount();
-  //   expect(wrapper.exists()).toBe(true);
-
-  //   axios.get.mockResolvedValueOnce({ data: rules });
-  //   expect(() => wrapper.vm.onProjectChange('ABC')).not.toThrow();
-  //   expect(wrapper.emitted()).toHaveProperty('on-filter-change');
-  //   axios.get.mockReset();
-  // });
-
-  // it('Given a RuleAnalysisFilter When updating Repo filters then on-filter-change is emitted', () => {
-  //   axios.get.mockResolvedValueOnce({ data: rules });
-  //   axios.get.mockResolvedValueOnce({ rule_tags });
-
-  //   const wrapper = initMount();
-  //   expect(wrapper.exists()).toBe(true);
-
-  //   axios.get.mockResolvedValueOnce({ data: rules });
-  //   expect(() => wrapper.vm.onRepositoryChange('Repo1')).not.toThrow();
-  //   expect(wrapper.emitted()).toHaveProperty('on-filter-change');
-  //   axios.get.mockReset();
-  // });
-
-  // it('Given a RuleAnalysisFilter When updating FindingStatus filters then on-filter-change is emitted', () => {
-  //   axios.get.mockResolvedValueOnce({ data: rules });
-  //   axios.get.mockResolvedValueOnce({ rule_tags });
-
-  //   const wrapper = initMount();
-  //   expect(wrapper.exists()).toBe(true);
-
-  //   axios.get.mockResolvedValueOnce({ data: rules });
-  //   expect(() => wrapper.vm.onFindingsStatusChange(['NOT_ANALYZED'])).not.toThrow();
-  //   expect(wrapper.emitted()).toHaveProperty('on-filter-change');
-  //   axios.get.mockReset();
-  // });
-
-  // it('Given a RuleAnalysisFilter When updating Rule filters then on-filter-change is emitted', () => {
-  //   axios.get.mockResolvedValueOnce({ data: rules });
-  //   axios.get.mockResolvedValueOnce({ rule_tags });
-
-  //   const wrapper = initMount();
-  //   expect(wrapper.exists()).toBe(true);
-  //   expect(() => wrapper.vm.onRuleChange(['Rule-1'])).not.toThrow();
-  //   expect(wrapper.emitted()).toHaveProperty('on-filter-change');
-  //   axios.get.mockReset();
-  // });
-
-  // it('Given a RuleAnalysisFilter When updating RuleTag filters then on-filter-change is emitted', () => {
-  //   axios.get.mockResolvedValueOnce({ data: rules });
-  //   axios.get.mockResolvedValueOnce({ rule_tags });
-
-  //   const wrapper = initMount();
-  //   expect(wrapper.exists()).toBe(true);
-  //   expect(() => wrapper.vm.onRuleTagsChange(['Info'])).not.toThrow();
-  //   expect(wrapper.emitted()).toHaveProperty('on-filter-change');
-  //   axios.get.mockReset();
-  // });
-
-  // it('Given a RuleAnalysisFilter When updating RulePack filters then on-filter-change is emitted', () => {
-  //   axios.get.mockResolvedValueOnce({ data: rules });
-  //   axios.get.mockResolvedValueOnce({ rule_tags });
-
-  //   const wrapper = initMount();
-  //   expect(wrapper.exists()).toBe(true);
-
-  //   axios.get.mockResolvedValueOnce({ data: rules });
-  //   axios.get.mockResolvedValueOnce({ rule_tags });
-  //   expect(() => wrapper.vm.onRulePackVersionChange(['0.0.5'])).not.toThrow();
-  //   expect(wrapper.emitted()).toHaveProperty('on-filter-change');
-  //   axios.get.mockReset();
-  // });
-
-  // it('Given a RuleAnalysisFilter When onStartDateChange then on-filter-change  is emitted', () => {
-  //   axios.get.mockResolvedValueOnce({ data: rules });
-  //   axios.get.mockResolvedValueOnce({ rule_tags });
-
-  //   const wrapper = initMount();
-  //   expect(wrapper.exists()).toBe(true);
-
-  //   axios.get.mockResolvedValueOnce({ data: rules });
-  //   axios.get.mockResolvedValueOnce({ rule_tags });
-  //   expect(() => wrapper.vm.onStartDateChange()).not.toThrow();
-  //   axios.get.mockReset();
-  // });
-
-  // it('Given a RuleAnalysisFilter When onEndDateChange then on-filter-change  is emitted', () => {
-  //   axios.get.mockResolvedValueOnce({ data: rules });
-  //   axios.get.mockResolvedValueOnce({ rule_tags });
-
-  //   const wrapper = initMount();
-  //   expect(wrapper.exists()).toBe(true);
-
-  //   axios.get.mockResolvedValueOnce({ data: rules });
-  //   axios.get.mockResolvedValueOnce({ rule_tags });
-  //   expect(() => wrapper.vm.onEndDateChange()).not.toThrow();
-  //   axios.get.mockReset();
-  // });
 });

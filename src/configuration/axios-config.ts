@@ -71,9 +71,6 @@ const AxiosConfig = {
       },
     );
   },
-  handleError(error: Swr) {
-    dispatchError(error);
-  },
 };
 
 export default AxiosConfig;

@@ -10,7 +10,7 @@ describe('RulePackUploadModal tests', () => {
   it('Given a RulePackUploadModal then RulePackUploadModal will be initiated', async () => {
     const wrapper = mount(App, {
       props: {},
-      global: { plugins: [ToastService], },
+      global: { plugins: [ToastService] },
       components: {},
     });
 

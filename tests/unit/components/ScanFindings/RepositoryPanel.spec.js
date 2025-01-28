@@ -28,7 +28,7 @@ describe('Repository Panel', () => {
           id_: 1,
           vcs_instance: 1,
         },
-        vcs_instance: { name: 'vcs_name' },
+        vcsInstance: { name: 'vcs_name' },
       },
       components: {},
     });

@@ -15,6 +15,7 @@ describe('FindingPanel Tab', () => {
         stubs: {
           AuditTab: true,
           HistoryTab: true,
+          RuleTab: true,
         },
         plugins: [
           createTestingPinia({

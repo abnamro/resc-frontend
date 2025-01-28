@@ -17,7 +17,7 @@ describe('LoginCallback tests', () => {
       global: {
         plugins: [createTestingPinia()],
       },
-    })
+    });
     expect(window.dispatchEvent).toBeCalled();
   });
 

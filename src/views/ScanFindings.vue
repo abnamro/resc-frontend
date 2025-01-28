@@ -3,27 +3,25 @@
     <h1 class="text-left text-3xl mb-10">SCAN FINDINGS</h1>
 
     <RepositoryPanel
-      v-if="loadedRepoData"
+      v-if="repository && vcsInstance"
       :repository="repository"
-      :vcs_instance="vcsInstance"
+      :vcs-instance="vcsInstance"
       @on-delete-at-change="fetchPaginatedFindingsByScanId"
     >
     </RepositoryPanel>
 
-    <div>
-      <!-- Filters -->
-      <ScanFindingsFilter
-        :repository="repository"
-        @on-filter-change="handleFilterChange"
-        @previous-scans-checked="onPreviousScanChecked"
-        @include-previous-scans="displayPreviousScans"
-      ></ScanFindingsFilter>
-    </div>
+    <!-- Filters -->
+    <ScanFindingsFilter
+      v-if="repository"
+      :repository="repository"
+      @on-filter-change="handleFilterChange"
+      @previous-scans-checked="onPreviousScanChecked"
+      @include-previous-scans="displayPreviousScans"
+    ></ScanFindingsFilter>
 
     <FindingsTable
       :findings="findingList"
       :is-rule-finding="false"
-      :has-records="hasRecords"
       @refresh-table="fetchPaginatedFindingsByScanId"
     >
     </FindingsTable>
@@ -40,13 +38,12 @@
 </template>
 
 <script setup lang="ts">
-import AxiosConfig from '@/configuration/axios-config';
 import RepositoryPanel from '@/components/ScanFindings/RepositoryPanel.vue';
 import ScanFindingsFilter from '@/components/Filters/ScanFindingsFilter.vue';
 import ScanFindingsService from '@/services/scan-findings-service';
 import FindingsService, { type QueryFilterType } from '@/services/findings-service';
 import VCSInstanceService from '@/services/vcs-instance-service';
-import { computed, ref, type Ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import type {
   DetailedFindingRead,
   ScanRead,
@@ -58,11 +55,9 @@ import type {
 import type { AxiosResponse } from 'axios';
 import { useAuthUserStore } from '@/store';
 import { storeToRefs } from 'pinia';
-import { PAGE_SIZES } from '@/configuration/config';
+import { dispatchError, PAGE_SIZES } from '@/configuration/config';
 import Paginator from 'primevue/paginator';
 import { usePaginator } from '@/composables/usePaginator';
-
-const loadedRepoData = ref(false);
 
 type Props = {
   scanId: string;
@@ -73,20 +68,18 @@ const { totalRows, currentPage, perPage, handlePageClick, handlePageSizeChange }
 
 const props = defineProps<Props>();
 const previousScanChecked = ref(false);
-const scanType = ref(undefined) as Ref<string | undefined>;
-const previousScanList = ref([] as ScanRead[]);
-const incrementNumber = ref(undefined) as Ref<number | undefined>;
-const repositoryId = ref(null) as Ref<number | null>;
-const repository = ref({} as RepositoryRead);
-const vcsInstance = ref({} as VCSInstanceRead);
-const selectedCheckBoxIds = ref([] as number[]);
+const scanType = ref<string | undefined>(undefined);
+const previousScanList = ref<ScanRead[]>([]);
+const incrementNumber = ref<number | undefined>(undefined);
+const repositoryId = ref<number | null>(null);
+const repository = ref<RepositoryRead | undefined>(undefined);
+const vcsInstance = ref<VCSInstanceRead | undefined>(undefined);
+const selectedCheckBoxIds = ref<number[]>([]);
 const allSelected = ref(false);
-const findingList = ref([] as AugmentedDetailedFindingRead[]);
+const findingList = ref<AugmentedDetailedFindingRead[] | undefined>(undefined);
 const selectedScanID = ref(Number(props.scanId));
-const ruleFilter = ref([] as string[]);
-const ruleTagsFilter = ref(undefined) as Ref<string[] | undefined>;
-
-const hasRecords = computed(() => findingList.value.length > 0);
+const ruleFilter = ref<string[]>([]);
+const ruleTagsFilter = ref<string[] | undefined>(undefined);
 
 const store = useAuthUserStore();
 const { selectedStatus } = storeToRefs(store);
@@ -100,13 +93,15 @@ function fetchPaginatedData() {
 }
 
 function fetchVCSInstance() {
+  if (repository.value === undefined) {
+    return;
+  }
+
   VCSInstanceService.getVCSInstance(repository.value.vcs_instance)
     .then((res: AxiosResponse<VCSInstanceRead>) => {
       vcsInstance.value = res.data;
     })
-    .catch((error) => {
-      AxiosConfig.handleError(error);
-    });
+    .catch(dispatchError);
 }
 
 function fetchRepository() {
@@ -118,11 +113,8 @@ function fetchRepository() {
     .then((response: AxiosResponse<RepositoryRead>) => {
       repository.value = response.data;
       fetchVCSInstance();
-      loadedRepoData.value = true;
     })
-    .catch((error) => {
-      AxiosConfig.handleError(error);
-    });
+    .catch(dispatchError);
 }
 
 function fetchScan() {
@@ -134,9 +126,7 @@ function fetchScan() {
       incrementNumber.value = response.data.increment_number;
       fetchRepository();
     })
-    .catch((error) => {
-      AxiosConfig.handleError(error);
-    });
+    .catch(dispatchError);
 }
 
 function fetchPaginatedFindingsByScanId() {
@@ -145,9 +135,7 @@ function fetchPaginatedFindingsByScanId() {
       scanType.value = response.data.scan_type;
       incrementNumber.value = response.data.increment_number;
     })
-    .catch((error) => {
-      AxiosConfig.handleError(error);
-    });
+    .catch(dispatchError);
 
   const filterObj: QueryFilterType = {
     skip: currentPage.value,
@@ -162,18 +150,19 @@ function fetchPaginatedFindingsByScanId() {
   FindingsService.getDetailedFindings(filterObj)
     .then((response: AxiosResponse<PaginationType<DetailedFindingRead>>) => {
       totalRows.value = 0;
-      findingList.value = [];
       selectedCheckBoxIds.value = [];
       totalRows.value = response.data.total;
       findingList.value = response.data.data;
       addScanTypeTagForSingleScan();
     })
-    .catch((error) => {
-      AxiosConfig.handleError(error);
-    });
+    .catch(dispatchError);
 }
 
 function addScanTypeTagForSingleScan() {
+  if (findingList.value === undefined) {
+    return;
+  }
+
   findingList.value.forEach((_finding, idx, theArray) => {
     theArray[idx].scanType = scanType.value;
     theArray[idx].incrementNumber = incrementNumber.value;
@@ -227,13 +216,16 @@ function fetchPreviousScanFindings() {
       findingList.value = response.data.data;
       addScanTypeTagForMultipleScans();
     })
-    .catch((error) => {
-      AxiosConfig.handleError(error);
-    });
+    .catch(dispatchError);
 }
 
 function addScanTypeTagForMultipleScans() {
+  if (findingList.value === undefined) {
+    return;
+  }
+
   previousScanList.value.forEach((scan) => {
+    // @ts-expect-error
     findingList.value.forEach((finding, idx, theArray) => {
       if (scan.id_ === finding.scan_id) {
         theArray[idx].scanType = scan.scan_type;
@@ -243,5 +235,5 @@ function addScanTypeTagForMultipleScans() {
   });
 }
 
-fetchScan();
+onMounted(fetchScan);
 </script>

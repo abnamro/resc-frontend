@@ -19,8 +19,8 @@ describe('History Tab', () => {
       },
       components: {},
       global: {
-        directives: { tooltip }
-      }
+        directives: { tooltip },
+      },
     });
 
     expect(() => wrapper.vm.fetchAuditsForFinding()).not.toThrow();

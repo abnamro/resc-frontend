@@ -21,7 +21,7 @@ describe('RulePacks tests', () => {
   function initMountApp() {
     wrapper = mount(App, {
       props: {},
-      global: {plugins:[ToastService]},
+      global: { plugins: [ToastService] },
       components: {
         FontAwesomeIcon,
         RulePackUploadModal,
@@ -44,7 +44,7 @@ describe('RulePacks tests', () => {
     axios.get.mockResolvedValueOnce(buffer);
     expect(() => wrapper.vm.downloadRulePack('0.0.6')).not.toThrow();
     await flushPromises();
- 
+
     axios.post.mockResolvedValueOnce({});
     wrapper.vm.openMarkAsOutdated(rule_packs.data[0]);
     expect(wrapper.vm.isConfirmOpen).toBe(false);
@@ -55,7 +55,7 @@ describe('RulePacks tests', () => {
     expect(wrapper.vm.rulePackSelected).toStrictEqual(rule_packs.data[6]);
     await flushPromises();
 
-    wrapper.vm.cancelAction()
+    wrapper.vm.cancelAction();
     await flushPromises();
     expect(wrapper.vm.isConfirmOpen).toBe(false);
     expect(wrapper.vm.rulePackSelected).toBe(null);

@@ -29,9 +29,8 @@
 </template>
 
 <script setup lang="ts">
-import AxiosConfig from '@/configuration/axios-config';
 import RulePackService from '@/services/rule-pack-service';
-import { nextTick, ref, type Ref } from 'vue';
+import { ref, type Ref } from 'vue';
 import { OK } from '@/configuration/axios-config';
 import ProgressSpinner from 'primevue/progressspinner';
 import Dialog from 'primevue/dialog';
@@ -39,6 +38,7 @@ import Button from 'primevue/button';
 import InputText from 'primevue/inputtext';
 import FileUpload, { type FileUploadSelectEvent } from 'primevue/fileupload';
 import { useToast } from 'primevue/usetoast';
+import { dispatchError } from '@/configuration/config';
 
 const loadedData = ref(true);
 const visible = defineModel('visible') as Ref<boolean>;
@@ -98,7 +98,7 @@ function submitForm() {
       visible.value = false;
     })
     .catch((error) => {
-      AxiosConfig.handleError(error);
+      dispatchError(error);
       loadedData.value = false;
     });
 }

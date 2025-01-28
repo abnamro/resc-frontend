@@ -92,7 +92,7 @@ const expandedRows = ref<Record<string, boolean>>({});
 const findingList = ref<DetailedFindingRead[] | undefined>(props.findings);
 const selectedCheckBoxIds = computed(() => selection.value.map((s) => s.id_));
 
-const auditButtonDisabled = computed(() => selection.value.length == 0);
+const auditButtonDisabled = computed(() => selection.value.length === 0);
 const selectedIndex = ref<number>(0);
 const emit = defineEmits(['refresh-table']);
 

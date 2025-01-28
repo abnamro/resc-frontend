@@ -49,7 +49,7 @@ describe('RuleMetrics tests', () => {
     expect(wrapper.vm.ruleList.length > 0).toBe(true);
 
     wrapper.find('tr').trigger('click');
-    wrapper.vm.goToRuleAnalysisPage({ data: {rule_name: 'Rule-3' }});
+    wrapper.vm.goToRuleAnalysisPage({ data: { rule_name: 'Rule-3' } });
   });
 
   it('Given a RuleMetrics When props are passed then RuleMetrics will be displayed', () => {

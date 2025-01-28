@@ -37,7 +37,7 @@ vi.mock('vue-router', async () => {
 
 describe('RepositoriesPanel tests', () => {
   let wrapper;
-  window.open = vi.fn()
+  window.open = vi.fn();
 
   afterEach(() => {
     vi.restoreAllMocks();
@@ -53,8 +53,8 @@ describe('RepositoriesPanel tests', () => {
       global: {
         stubs: {},
         directives: {
-          tooltip
-        }
+          tooltip,
+        },
       },
     });
   }
@@ -85,7 +85,7 @@ describe('RepositoriesPanel tests', () => {
     expect(() => wrapper.vm.selectDown()).not.toThrow();
     expect(() => wrapper.vm.selectUp()).not.toThrow();
     expect(wrapper.vm.selectedIndex).toBe(0);
-    expect(() => wrapper.vm.handleRowClicked({index: 1})).not.toThrow();
+    expect(() => wrapper.vm.handleRowClicked({ index: 1 })).not.toThrow();
     expect(wrapper.vm.selectedIndex).toBe(1);
     expect(wrapper.vm.selection).not.toBe(undefined);
     expect(() => wrapper.vm.goToScanFindings()).not.toThrow();

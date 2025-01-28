@@ -4,27 +4,28 @@ import App from '@/components/Login/SessionTimeout.vue';
 import { createTestingPinia } from '@pinia/testing';
 // import axios from 'axios';
 import * as jose from 'jose';
-import flushPromises from 'flush-promises';
 
 describe('BatView tests', () => {
   afterEach(() => {
     vi.resetModules();
-    vi.restoreAllMocks()
+    vi.restoreAllMocks();
   });
 
   it('Given a SessionTimeout without session will be displayed', async () => {
-    vi.mock('axios')
+    vi.mock('axios');
     vi.mock('jose');
-    
+
     vi.spyOn(window, 'dispatchEvent');
     vi.spyOn(window, 'setInterval');
     const wrapper = mount(App, {
       props: {},
       components: {},
       global: {
-        plugins: [createTestingPinia({
-          initialState: {}
-        })],
+        plugins: [
+          createTestingPinia({
+            initialState: {},
+          }),
+        ],
       },
     });
 
@@ -37,23 +38,25 @@ describe('BatView tests', () => {
   });
 
   it('Given a SessionTimeout then SessionTimeout will be displayed', async () => {
-    vi.mock('axios')
+    vi.mock('axios');
     vi.mock('jose');
-    
+
     vi.spyOn(window, 'dispatchEvent');
     vi.spyOn(window, 'setInterval');
-    jose.decodeJwt.mockResolvedValue({exp: undefined});
+    jose.decodeJwt.mockResolvedValue({ exp: undefined });
     const wrapper = mount(App, {
       props: {},
       components: {},
       global: {
-        plugins: [createTestingPinia({
-          initialState: {
-            authUser: {
-              idToken: '123456'
-            }
-          }
-        })],
+        plugins: [
+          createTestingPinia({
+            initialState: {
+              authUser: {
+                idToken: '123456',
+              },
+            },
+          }),
+        ],
       },
     });
 
@@ -66,26 +69,28 @@ describe('BatView tests', () => {
   });
 
   it('Given a SessionTimeout then SessionTimeout will be displayed with time', async () => {
-    vi.mock('axios')
+    vi.mock('axios');
     vi.mock('jose');
-    
+
     vi.spyOn(window, 'dispatchEvent');
     vi.spyOn(window, 'setInterval');
-    const claims = { exp: (Date.now()/1000 + 50*36) };
-    const spy = vi.spyOn(jose, 'decodeJwt')
-    spy.mockImplementation((_t) => claims)
+    const claims = { exp: Date.now() / 1000 + 50 * 36 };
+    const spy = vi.spyOn(jose, 'decodeJwt');
+    spy.mockImplementation(() => claims);
 
     const wrapper = mount(App, {
       props: {},
       components: {},
       global: {
-        plugins: [createTestingPinia({
-          initialState: {
-            authUser: {
-              idToken: '123456'
-            }
-          }
-        })],
+        plugins: [
+          createTestingPinia({
+            initialState: {
+              authUser: {
+                idToken: '123456',
+              },
+            },
+          }),
+        ],
       },
     });
 
@@ -99,26 +104,30 @@ describe('BatView tests', () => {
   });
 
   it('Given a SessionTimeout then SessionTimeout will throw', async () => {
-    vi.mock('axios')
+    vi.mock('axios');
     vi.mock('jose');
-    
+
     vi.spyOn(window, 'dispatchEvent');
     vi.spyOn(window, 'setInterval');
 
-    const spy = vi.spyOn(jose, 'decodeJwt')
-    spy.mockImplementation((_t) => { throw new Error('oups') });
+    const spy = vi.spyOn(jose, 'decodeJwt');
+    spy.mockImplementation(() => {
+      throw new Error('oups');
+    });
 
     const wrapper = mount(App, {
       props: {},
       components: {},
       global: {
-        plugins: [createTestingPinia({
-          initialState: {
-            authUser: {
-              idToken: '123456'
-            }
-          }
-        })],
+        plugins: [
+          createTestingPinia({
+            initialState: {
+              authUser: {
+                idToken: '123456',
+              },
+            },
+          }),
+        ],
       },
     });
 

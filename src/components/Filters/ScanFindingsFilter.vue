@@ -1,80 +1,77 @@
 <template>
-  <div>
-    <div class="grid grid-cols-12 gap-x-2 gap-y-4">
-      <!-- Scan Date Filter -->
-      <div class="col-span-3">
-        <div class="flex flex-col justify-start">
-          <label for="scanDate" class="font-bold text-lg text-left text-muted-color-emphasis"
-            >Scan Date</label
-          >
-          <Select
-            v-model:model-value="selectedScan"
-            :options="scanDateList"
-            display="chip"
-            class="w-full"
-            :option-label="'scanDate'"
-            placeholder="Select VCS Provider"
-            :show-toggle-all="false"
-            id="scanDate"
-            @update:model-value="handleScanDateFilterChange"
-          >
-            <template #option="slotProps">
-              {{ slotProps.option.scanDate }}: {{ slotProps.option.scanType }}
-            </template>
-          </Select>
-        </div>
-      </div>
-
-      <!-- Rule Filter -->
-      <div class="col-span-3">
-        <RuleFilter
-          ref="ruleFilterChildComponent"
-          :rulesOptions="ruleList"
-          @on-rule-change="handleRuleFilterChange"
-        />
-      </div>
-
-      <!-- Status Filter -->
-      <div class="col-span-3">
-        <FindingStatusFilter @on-findings-status-change="handleFilterChange" />
-      </div>
-
-      <!-- Rule Tags Filter -->
-      <div class="col-span-3">
-        <RuleTagsFilter
-          ref="ruleTagsFilterChildComponent"
-          :ruleTagsOptions="ruleTagsList"
-          :ruleTagsSelected="selectedRuleTags"
-          @on-rule-tags-change="handleRuleTagsFilterChange"
-        />
-      </div>
-
-      <!-- Include previous scan findings -->
-      <div class="col-span-12 text-left flex items-center">
-        <ToggleSwitch
-          size="small"
-          v-model="includePreviousScans"
-          inputId="includePreviousScans"
-          @change="togglePreviousScans"
-          v-on:click="handleToggleButtonClick"
+  <div class="grid grid-cols-12 gap-x-2 gap-y-4">
+    <!-- Scan Date Filter -->
+    <div class="col-span-3">
+      <div class="flex flex-col justify-start">
+        <label for="scanDate" class="font-bold text-lg text-left text-muted-color-emphasis"
+          >Scan Date</label
         >
-        </ToggleSwitch>
-        <label for="includePreviousScans" class="ml-2">Include previous scan findings.</label>
+        <Select
+          v-model:model-value="selectedScan"
+          :options="scanDateList"
+          display="chip"
+          class="w-full"
+          :option-label="'scanDate'"
+          placeholder="Select VCS Provider"
+          :show-toggle-all="false"
+          id="scanDate"
+          @update:model-value="handleScanDateFilterChange"
+        >
+          <template #option="slotProps">
+            {{ slotProps.option.scanDate }}: {{ slotProps.option.scanType }}
+          </template>
+        </Select>
       </div>
+    </div>
+
+    <!-- Rule Filter -->
+    <div class="col-span-3">
+      <RuleFilter
+        ref="ruleFilterChildComponent"
+        :rulesOptions="ruleList"
+        @on-rule-change="handleRuleFilterChange"
+      />
+    </div>
+
+    <!-- Status Filter -->
+    <div class="col-span-3">
+      <FindingStatusFilter @on-findings-status-change="handleFilterChange" />
+    </div>
+
+    <!-- Rule Tags Filter -->
+    <div class="col-span-3">
+      <RuleTagsFilter
+        ref="ruleTagsFilterChildComponent"
+        :ruleTagsOptions="ruleTagsList"
+        :ruleTagsSelected="selectedRuleTags"
+        @on-rule-tags-change="handleRuleTagsFilterChange"
+      />
+    </div>
+
+    <!-- Include previous scan findings -->
+    <div class="col-span-12 text-left flex items-center">
+      <ToggleSwitch
+        size="small"
+        v-model="includePreviousScans"
+        inputId="includePreviousScans"
+        @change="togglePreviousScans"
+        v-on:click="handleToggleButtonClick"
+      >
+      </ToggleSwitch>
+      <label for="includePreviousScans" class="ml-2">Include previous scan findings.</label>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import AxiosConfig from '@/configuration/axios-config';
-import Config from '@/configuration/config';
+import Config, { dispatchError } from '@/configuration/config';
 import DateUtils from '@/utils/date-utils';
 import FindingStatusFilter from '@/components/Filters/FindingStatusFilter.vue';
 import RuleFilter from '@/components/Filters/RuleFilter.vue';
 import RulePackService from '@/services/rule-pack-service';
 import RuleTagsFilter from '@/components/Filters/RuleTagsFilter.vue';
 import ScanFindingsService from '@/services/scan-findings-service';
-import { ref, watch, type Ref } from 'vue';
+import { onMounted, ref, type Ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import type { RepositoryRead, ScanRead } from '@/services/shema-to-types';
 import { onKeyStroke } from '@vueuse/core';
@@ -217,9 +214,7 @@ function refreshRuleFilter() {
         selectedRule.value = [];
         ruleList.value = response.data;
       })
-      .catch((error) => {
-        AxiosConfig.handleError(error);
-      });
+      .catch(dispatchError);
   }
 }
 
@@ -238,9 +233,7 @@ function fetchRules() {
         // Fetch Rule Tags
         fetchRuleTags();
       })
-      .catch((error) => {
-        AxiosConfig.handleError(error);
-      });
+      .catch(dispatchError);
   }
 }
 
@@ -262,9 +255,7 @@ function fetchRuleTags() {
         });
       }
     })
-    .catch((error) => {
-      AxiosConfig.handleError(error);
-    });
+    .catch(dispatchError);
 }
 function refreshRuleTagsOnToggleOfPreviousScansButton() {
   const rulePackVersions = getSelectedRulePacks();
@@ -274,64 +265,49 @@ function refreshRuleTagsOnToggleOfPreviousScansButton() {
       selectedRuleTags.value = [];
       ruleTagsFilterChildComponent.value.resetRuleTagsFilterSelection();
     })
-    .catch((error) => {
-      AxiosConfig.handleError(error);
-    });
+    .catch(dispatchError);
 }
 
 function fetchScanDates() {
-  if (props.repository.id_) {
-    ScanFindingsService.getScansByRepositoryId(
-      props.repository.id_,
-      skipRecords.value,
-      limitRecords.value,
-    )
-      .then((res) => {
-        const response: ScanRead[] = res.data.data;
-        response.sort(function (a, b) {
-          return new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime();
-        });
-
-        scanDateList.value = [];
-        scanList.value = response;
-
-        for (const scan of scanList.value) {
-          const scanJson: ScanJson = {
-            scanId: scan.id_,
-            scanDate: DateUtils.formatDate(scan.timestamp),
-            scanType: scan.scan_type === 'INCREMENTAL' ? 'Incremental' : 'Base',
-            rulePackVersion: scan.rule_pack,
-          };
-
-          // Set scan date value in select option when user clicks a record from Repositories page
-          if (Number(route.params.scanId as string) === scan.id_) {
-            selectedScan.value = scanJson;
-          }
-          scanDateList.value.push(scanJson);
-        }
-
-        //Sort scan dates
-        scanDateList.value.sort(DateUtils.sortListByDate);
-
-        //Rules depend upon scan/scan date selected
-        fetchRules();
-      })
-      .catch((error) => {
-        AxiosConfig.handleError(error);
+  ScanFindingsService.getScansByRepositoryId(
+    props.repository.id_,
+    skipRecords.value,
+    limitRecords.value,
+  )
+    .then((res) => {
+      const response: ScanRead[] = res.data.data;
+      response.sort(function (a, b) {
+        return new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime();
       });
-  }
+
+      scanDateList.value = [];
+      scanList.value = response;
+
+      for (const scan of scanList.value) {
+        const scanJson: ScanJson = {
+          scanId: scan.id_,
+          scanDate: DateUtils.formatDate(scan.timestamp),
+          scanType: scan.scan_type === 'INCREMENTAL' ? 'Incremental' : 'Base',
+          rulePackVersion: scan.rule_pack,
+        };
+
+        // Set scan date value in select option when user clicks a record from Repositories page
+        if (Number(route.params.scanId as string) === scan.id_) {
+          selectedScan.value = scanJson;
+        }
+        scanDateList.value.push(scanJson);
+      }
+
+      //Sort scan dates
+      scanDateList.value.sort(DateUtils.sortListByDate);
+
+      //Rules depend upon scan/scan date selected
+      fetchRules();
+    })
+    .catch(dispatchError);
 }
 
-// Double check if I work.
-watch(
-  () => props.repository,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  (newVal, oldVal) => {
-    if (newVal !== oldVal) {
-      fetchScanDates();
-    }
-  },
-);
+onMounted(fetchScanDates);
 
 /* istanbul ignore next @preserve */
 onKeyStroke('p', () => {

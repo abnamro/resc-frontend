@@ -130,7 +130,7 @@ import CommonUtils from '@/utils/common-utils';
 import MetricsService from '@/services/metrics-service';
 import { ref, type Ref } from 'vue';
 import type { AxiosResponse } from 'axios';
-import type { PersonalAuditMetrics, Swr } from '@/services/shema-to-types';
+import type { PersonalAuditMetrics } from '@/services/shema-to-types';
 import ProgressSpinner from 'primevue/progressspinner';
 import { dispatchError } from '@/configuration/config';
 

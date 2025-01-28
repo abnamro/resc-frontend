@@ -9,7 +9,6 @@ import rule_packs from '@/../tests/resources/mock_rule_packs.json';
 import detailed_findings from '@/../tests/resources/mock_detailed_findings.json';
 import rule_tags from '@/../tests/resources/mock_rule_tags.json';
 
-
 let allProjects = ['ABC', 'XYZ', 'GRD0000001', 'GRD0000002'];
 let allRepos = ['bb_repo1', 'bb_repo2', 'ado_repo1', 'ado_repo2'];
 
@@ -19,15 +18,30 @@ vi.mock('axios');
 
 describe('RuleAnalysis tests', () => {
   it('Given a RuleAnalysis then RuleAnalysis will be displayed', () => {
-    const spy = vi.spyOn(axios, 'get')
-    spy.mockImplementation((q) => { 
+    const spy = vi.spyOn(axios, 'get');
+    spy.mockImplementation((q) => {
       switch (q) {
-        case '/findings/supported-statuses/': return { data: [ 'NOT_ANALYZED', 'NOT_ACCESSIBLE', 'CLARIFICATION_REQUIRED', 'FALSE_POSITIVE', 'TRUE_POSITIVE', 'OUTDATED' ] }
-        case 'rule-packs/versions': return { data: rule_packs };
-        case '/repositories/distinct-projects/?only_if_has_findings=true': return { data: allProjects };
-        case '/repositories/distinct-repositories/?only_if_has_findings=true': return { data: allRepos };
-        case '/detailed-findings': return { data: detailed_findings };
-        default: console.log(q);
+        case '/findings/supported-statuses/':
+          return {
+            data: [
+              'NOT_ANALYZED',
+              'NOT_ACCESSIBLE',
+              'CLARIFICATION_REQUIRED',
+              'FALSE_POSITIVE',
+              'TRUE_POSITIVE',
+              'OUTDATED',
+            ],
+          };
+        case 'rule-packs/versions':
+          return { data: rule_packs };
+        case '/repositories/distinct-projects/?only_if_has_findings=true':
+          return { data: allProjects };
+        case '/repositories/distinct-repositories/?only_if_has_findings=true':
+          return { data: allRepos };
+        case '/detailed-findings':
+          return { data: detailed_findings };
+        default:
+          console.log(q);
       }
     });
 
@@ -60,20 +74,24 @@ describe('RuleAnalysis tests', () => {
 
     axios.get.mockResolvedValueOnce({ data: detailed_findings });
     expect(() => wrapper.vm.fetchPaginatedDetailedFindings()).not.toThrow();
-
   });
 
   it('Given a RuleAnalysis then RuleAnalysis will be displayed', () => {
-    const spy = vi.spyOn(axios, 'get')
-    spy.mockImplementation((q) => { 
+    const spy = vi.spyOn(axios, 'get');
+    spy.mockImplementation((q) => {
       switch (q) {
-        case 'rule-packs/versions': return { data: rule_packs };
-        case '/rule-packs/tags?version=0.0.6&version=null&version=null&version=null&version=null&version=null': return rule_tags;
-        // case '/findings/supported-statuses/': return { data: [ 'NOT_ANALYZED', 'NOT_ACCESSIBLE', 'CLARIFICATION_REQUIRED', 'FALSE_POSITIVE', 'TRUE_POSITIVE', 'OUTDATED' ] }
-        // case '/repositories/distinct-projects/?only_if_has_findings=true': return { data: allProjects };
-        // case '/repositories/distinct-repositories/?only_if_has_findings=true': return { data: allRepos };
-        // case '/detailed-findings': return { data: detailed_findings };
-        default: console.log(q);
+        case 'rule-packs/versions':
+          return { data: rule_packs };
+        case '/rule-packs/tags?version=0.0.6&version=null&version=null&version=null&version=null&version=null':
+          return rule_tags;
+        case '/repositories/distinct-projects/?only_if_has_findings=true':
+          return { data: allProjects };
+        case '/repositories/distinct-repositories/?only_if_has_findings=true':
+          return { data: allRepos };
+        case '/detailed-findings':
+          return { data: detailed_findings };
+        default:
+          console.log(q);
       }
     });
 
@@ -102,7 +120,7 @@ describe('RuleAnalysis tests', () => {
                   'TRUE_POSITIVE',
                   'OUTDATED',
                 ],
-                selectedStatus: [{value: 'TRUE_POSITIVE'}],
+                selectedStatus: [{ value: 'TRUE_POSITIVE' }],
               },
             },
           }),
@@ -119,7 +137,8 @@ describe('RuleAnalysis tests', () => {
     expect(wrapper.exists()).toBe(true);
 
     axios.get.mockResolvedValueOnce({ data: detailed_findings });
-    expect(() => wrapper.vm.handleFilterChange({findingStatus: [{status: 'TRUE_POSITIVE'}]})).not.toThrow();
-  
+    expect(() =>
+      wrapper.vm.handleFilterChange({ findingStatus: [{ status: 'TRUE_POSITIVE' }] }),
+    ).not.toThrow();
   });
 });

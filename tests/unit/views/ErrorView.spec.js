@@ -1,5 +1,5 @@
 import { mount } from '@vue/test-utils';
-import { beforeAll, describe, expect, it } from 'vitest';
+import { beforeAll, describe, expect, it, vi } from 'vitest';
 import PrimeVue from 'primevue/config';
 import ToastService from 'primevue/toastservice';
 import { Collapse } from 'vue-collapsed';
@@ -25,7 +25,7 @@ describe('ErrorView tests', () => {
   beforeAll(() => {
     Object.defineProperty(window, 'matchMedia', {
       writable: true,
-      value: vi.fn().mockImplementation(query => ({
+      value: vi.fn().mockImplementation((query) => ({
         matches: false,
         media: query,
         onchange: null,
@@ -36,7 +36,7 @@ describe('ErrorView tests', () => {
         dispatchEvent: vi.fn(),
       })),
     });
-  })
+  });
 
   it('Given a ErrorView then ErrorView will be displayed', async () => {
     initMountApp();
@@ -47,19 +47,28 @@ describe('ErrorView tests', () => {
     expect(wrapper.vm.isOpen).toBe(false);
     expect(wrapper.vm.errors).toStrictEqual([]);
     wrapper.vm.errorHandler({ details: 'with details' });
-    expect(wrapper.vm.errors).toStrictEqual([ { details: 'with details' } ]);
-    wrapper.vm.errorHandler({ detail: { foo: 'bar' }});
-    expect(wrapper.vm.errors).toStrictEqual([ { details: 'with details' }, {foo: 'bar'} ]);
-    wrapper.vm.errorHandler({ detail: { axios: { fizz: 'fizz' } }});
-    expect(wrapper.vm.errors).toStrictEqual([ { details: 'with details' }, {foo: 'bar'}, { fizz: 'fizz' } ]);
-    wrapper.vm.errorHandler({ detail: { response: { data: 'data' } }});
-    expect(wrapper.vm.errors).toStrictEqual([ { details: 'with details' }, {foo: 'bar'}, { fizz: 'fizz' }, { data: 'data' } ]);
+    expect(wrapper.vm.errors).toStrictEqual([{ details: 'with details' }]);
+    wrapper.vm.errorHandler({ detail: { foo: 'bar' } });
+    expect(wrapper.vm.errors).toStrictEqual([{ details: 'with details' }, { foo: 'bar' }]);
+    wrapper.vm.errorHandler({ detail: { axios: { fizz: 'fizz' } } });
+    expect(wrapper.vm.errors).toStrictEqual([
+      { details: 'with details' },
+      { foo: 'bar' },
+      { fizz: 'fizz' },
+    ]);
+    wrapper.vm.errorHandler({ detail: { response: { data: 'data' } } });
+    expect(wrapper.vm.errors).toStrictEqual([
+      { details: 'with details' },
+      { foo: 'bar' },
+      { fizz: 'fizz' },
+      { data: 'data' },
+    ]);
     wrapper.vm.openOrToast();
     expect(wrapper.vm.isOpen).toBe(true);
-    await flushPromises()
+    await flushPromises();
     expect(wrapper.find('.pi-exclamation-triangle').exists()).toBe(true);
     wrapper.get('.pi-exclamation-triangle').trigger('click');
-    await flushPromises()
+    await flushPromises();
     expect(wrapper.vm.isOpen).toBe(false);
   });
 });

@@ -16,6 +16,31 @@ importFA();
 vi.mock('axios');
 
 describe('FindingsTable tests', () => {
+  it('Given a FindingsTable without data then FindingsTable will not be displayed', async () => {
+    const wrapper = mount(App, {
+      props: {
+        findings: undefined,
+        isRuleFinding: true,
+      },
+      components: {},
+      global: {
+        plugins: [createTestingPinia()],
+        stubs: {},
+      },
+    });
+
+    expect(wrapper.exists()).toBe(true);
+    expect(wrapper.vm.filteredList).toBe(undefined);
+
+    expect(wrapper.vm.rowClass()).toBe('');
+    expect(wrapper.vm.toggleAllCheckboxes()).toBe(undefined);
+    expect(wrapper.vm.updateVisualBadge()).toBe(undefined);
+    expect(() => wrapper.vm.getCurrentFindingSelected()).toThrowError();
+    expect(wrapper.vm.selectDown()).toBe(false);
+    expect(wrapper.vm.selectUp()).toBe(false);
+    expect(() => wrapper.vm.openDetails()).toThrowError();
+  });
+
   it('Given a FindingsTable in rule findings then FindingsTable will be displayed', async () => {
     axios.get.mockResolvedValueOnce({ data: rule_packs });
     axios.get.mockResolvedValueOnce({ data: allProjects });
@@ -36,7 +61,9 @@ describe('FindingsTable tests', () => {
 
     expect(wrapper.exists()).toBe(true);
     expect(wrapper.vm.findingList).toEqual(detailed_findings.data);
-    expect(() => wrapper.find('[data-pc-name="pcheadercheckbox"] input').setValue(true)).not.toThrow();
+    expect(() =>
+      wrapper.find('[data-pc-name="pcheadercheckbox"] input').setValue(true),
+    ).not.toThrow();
     expect(wrapper.vm.selectedCheckBoxIds).toEqual([
       detailed_findings.data[0].id_,
       detailed_findings.data[1].id_,

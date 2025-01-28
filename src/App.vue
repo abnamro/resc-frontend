@@ -24,7 +24,7 @@
       <RouterView />
     </div>
   </div>
-  </template>
+</template>
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 import { useRoute, RouterView } from 'vue-router';
