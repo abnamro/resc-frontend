@@ -3,7 +3,7 @@
   <div class="flex justify-center mt-[10%]">
     <Panel
       header="Repository Scanner (RESC)"
-      :pt:header:class="'justify-center bg-teal-600 text-surface-0'"
+      :pt:header:class="'justify-center  bg-teal-850 text-surface-0'"
       class="max-w-2xl rounded overflow-hidden"
     >
       <div class="flex flex-col items-center">
@@ -12,7 +12,7 @@
           Unauthorized access prohibited.<br />
           {{ ssoLoginPageMessage }}
         </div>
-        <Button @click="login" class="bg-yellow-520 border-none text-surface-950">Login</Button>
+        <Button @click="login">Login</Button>
       </div>
     </Panel>
   </div>

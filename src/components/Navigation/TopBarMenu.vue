@@ -2,9 +2,9 @@
   <KeybindingModal v-model:visible="isKeybindingModalOpen" />
   <div class="absolute right-4 top-2 flex gap-2">
     <div
-      v-if="false"
       class="aspect-square float-start px-3 flex items-center cursor-pointer justify-center rounded-full bg-slate-700 text-white font-bold text-sm"
       @click="toggleDarkMode"
+      v-if="false"
     >
       <i class="pi pi-moon"></i>
     </div>
@@ -83,6 +83,6 @@ function logout() {
 }
 
 function toggleDarkMode() {
-  document.getElementById('app')?.classList.toggle('darkMode');
+  document.getElementById('app')?.classList.toggle('dark');
 }
 </script>

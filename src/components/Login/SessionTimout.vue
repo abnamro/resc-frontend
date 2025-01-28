@@ -2,16 +2,12 @@
   <!-- Easter Egg -->
   <!-- Show the bat only at night ;p ? -->
   <div
-    class="fixed bottom-0.5 z-20 -translate-x-1/2 landingIntroPopIn"
+    class="fixed bottom-0.5 z-20 -translate-x-1/2"
     :style="`left: ${100 - timeLeft}%`"
   >
     <img
       src="/bat.gif"
-      :class="{
-        'h-10': true,
-        invert: true,
-        'animate-pulse': true,
-      }"
+      class="h-10 animate-pulse dark:invert"
     />
   </div>
   <ProgressBar
@@ -19,7 +15,6 @@
     :value="timeLeft"
     class="fixed bottom-0 w-full h-2 z-20 scale-x-[-1] rounded-none"
     :pt:label:class="'hidden'"
-    :pt:value:class="'bg-yellow-520'"
   ></ProgressBar>
 </template>
 <script setup lang="ts">

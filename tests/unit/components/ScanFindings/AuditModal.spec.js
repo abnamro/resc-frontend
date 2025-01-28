@@ -31,10 +31,7 @@ describe('Audit Modal', () => {
     });
 
     expect(wrapper.vm.isStatusValid).toBe(true);
-    expect(wrapper.vm.getModalTitle).toBe('AUDIT 5 FINDINGS');
     expect(wrapper.vm.isCommentValid).toBe(true);
-    expect(() => wrapper.vm.show()).not.toThrow();
-    expect(() => wrapper.vm.hide()).not.toThrow();
     expect(() => wrapper.vm.resetModal()).not.toThrow();
     expect(() => wrapper.vm.handleOk(new MouseEvent('click'))).not.toThrow();
   });

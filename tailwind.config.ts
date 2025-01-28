@@ -2,6 +2,7 @@
 
 export default {
   content: ['./public/index.html', './src/**/*.{js,ts,jsx,tsx,vue}'],
+  darkMode: ['selector', '.dark'],
   theme: {
     extend: {
       fontSize: {

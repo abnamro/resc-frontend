@@ -24,7 +24,7 @@
       <RouterView />
     </div>
   </div>
-</template>
+  </template>
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 import { useRoute, RouterView } from 'vue-router';
@@ -65,5 +65,11 @@ onKeyStroke(
   },
 );
 
+function toggleDarkMode() {
+  document.getElementById('app')?.classList.toggle('dark');
+}
+
+/* istanbul ignore next @preserve */
+onKeyStroke('b', () => !shouldIgnoreKeystroke() && toggleDarkMode(), { eventName: 'keydown' });
 disableScrollingWithArrowsAndCtrlA();
 </script>

@@ -10,16 +10,20 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import PrimeVue from 'primevue/config';
 import ToastService from 'primevue/toastservice';
 import Aura from '@primevue/themes/aura';
+import { definePreset } from '@primevue/themes';
 import Tooltip from 'primevue/tooltip';
+import BasicAAB from './styles/preset';
 
 import './styles/main.css';
+
+const AABPreset = definePreset(Aura, BasicAAB);
 
 const app = createApp(App);
 app.use(PiniaVuePlugin);
 app.use(router);
 app.use(PrimeVue, {
   theme: {
-    preset: Aura,
+    preset: AABPreset,
     options: {
       darkModeSelector: '.dark',
       cssLayer: {

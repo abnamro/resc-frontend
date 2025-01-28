@@ -40,7 +40,7 @@
           <FontAwesomeIcon
             v-if="!slotProps.data.active"
             :icon="['fas', 'circle-check']"
-            class="disabled-button"
+            class="opacity-50 pointer-events-none"
           />
         </template>
       </Column>
@@ -54,14 +54,14 @@
             :icon="['fas', 'circle-check']"
             :style="{ color: '#d2042d', cursor: 'pointer' }"
             v-on:click="openMarkAsOutdated(slotProps.data)"
-            :class="slotProps.data.active ? 'disabled-button' : ''"
+            :class="slotProps.data.active ? 'opacity-50 pointer-events-none' : ''"
           />
           <FontAwesomeIcon
             v-if="!slotProps.data.outdated"
             :icon="['fas', 'circle-check']"
             :style="{ color: 'rgba(0,0,0,0.5)', cursor: 'pointer' }"
             @click="openMarkAsOutdated(slotProps.data)"
-            :class="slotProps.data.active ? 'disabled-button' : ''"
+            :class="slotProps.data.active ? 'opacity-50 pointer-events-none' : ''"
           />
         </template>
       </Column>
@@ -78,7 +78,7 @@
         <template #body="slotProps">
           <FontAwesomeIcon
             icon="download"
-            class="download-button"
+            class=" text-sky-400 cursor-pointer"
             @click="downloadRulePack(slotProps.data.version)"
           />
         </template>

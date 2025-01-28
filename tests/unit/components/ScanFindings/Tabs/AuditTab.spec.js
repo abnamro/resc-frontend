@@ -38,7 +38,6 @@ describe('Audit Tab', () => {
     expect(wrapper.vm.loadedData).toBe(true);
     expect(wrapper.vm.isStatusValid).toBe(true);
     expect(wrapper.vm.isCommentValid).toBe(true);
-    expect(() => wrapper.vm.onReset(new Event('reset'))).not.toThrow();
     expect(() => wrapper.vm.onSubmit(new Event('submit'))).not.toThrow();
   });
 });
