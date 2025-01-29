@@ -24,11 +24,13 @@ import ProgressBar from 'primevue/progressbar';
 import { onMounted, ref } from 'vue';
 
 const store = useAuthUserStore();
-const { idToken } = storeToRefs(store);
+const { idToken, tokenLength } = storeToRefs(store);
 const timeLeft = ref(0);
 
 function updateTimer(): void {
-  if (idToken.value === null) {
+  if (idToken.value === null
+    || tokenLength.value === null
+    || tokenLength.value <= 0) {
     return;
   }
 
@@ -39,7 +41,7 @@ function updateTimer(): void {
       return;
     }
 
-    timeLeft.value = ((claims.exp - Math.floor(Date.now() / 1000)) * 100) / 3600;
+    timeLeft.value = ((claims.exp - Math.floor(Date.now() / 1000)) * 100) / tokenLength.value;
   } catch (error) {
     dispatchError(error);
   }

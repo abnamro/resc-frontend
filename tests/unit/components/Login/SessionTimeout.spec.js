@@ -53,6 +53,7 @@ describe('BatView tests', () => {
             initialState: {
               authUser: {
                 idToken: '123456',
+                tokenLength: 3600,
               },
             },
           }),
@@ -87,6 +88,7 @@ describe('BatView tests', () => {
             initialState: {
               authUser: {
                 idToken: '123456',
+                tokenLength: 3600,
               },
             },
           }),
@@ -124,6 +126,7 @@ describe('BatView tests', () => {
             initialState: {
               authUser: {
                 idToken: '123456',
+                tokenLength: 3600,
               },
             },
           }),
