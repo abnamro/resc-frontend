@@ -22,21 +22,21 @@ vi.mock('vue-router', async () => {
 describe('App.vue unit tests', () => {
   it('Given an App When login then Top bar and SideMenubar will be displayed', async () => {
     const wrapper = shallowMount(App, {
-        components: {
-          SidebarMenu: SidebarMenu,
-          TopBarMenu: TopBarMenu,
-          fontAwesomeIcon: FontAwesomeIcon,
-        },
-        data() {
-          return {
-            sidebarCollapsed: false,
-            sidebarNavigationMenu: sidebarMenu,
-          };
-        },
-        global: {
-          plugins: [createTestingPinia()],
-          stubs: ['router-view'],
-        },
+      components: {
+        SidebarMenu: SidebarMenu,
+        TopBarMenu: TopBarMenu,
+        fontAwesomeIcon: FontAwesomeIcon,
+      },
+      data() {
+        return {
+          sidebarCollapsed: false,
+          sidebarNavigationMenu: sidebarMenu,
+        };
+      },
+      global: {
+        plugins: [createTestingPinia()],
+        stubs: ['router-view'],
+      },
     });
 
     expect(wrapper.exists()).toBe(true);

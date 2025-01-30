@@ -11,7 +11,7 @@ const _defaultColumns = [
   'status',
 ] as const;
 
-export type TableColumn = typeof _defaultColumns[number];
+export type TableColumn = (typeof _defaultColumns)[number];
 
 export type SimpleTableField = {
   key: TableColumn;
@@ -53,7 +53,7 @@ const ColumnUtils = {
   },
 
   _class(column: TableColumn): string {
-    const baseCss = 'position-sticky text-nowrap ';
+    const baseCss = 'text-nowrap ';
     if (column === 'file_path') {
       return baseCss + 'text-start mw-50';
     }

@@ -1,29 +1,21 @@
 <template>
-  <DataTable :value="auditList" :loading="auditList === undefined" :pt:header:class="'hidden'">
-    <Column>
-      <template #body="slotProps">
-        {{ formatDate(slotProps.data.timestamp) }}
-      </template>
-    </Column>
-    <Column field="auditor" />
-    <Column>
-      <template #body="slotProps">
-        <FindingStatusBadge :status="slotProps.data.status ?? 'NOT_ANALYZED'" />
-      </template>
-    </Column>
-    <Column>
-      <template #body="slotProps">
-        <p
-          v-if="(slotProps.data?.comment?.length ?? 0) > 45"
-          v-tooltip="slotProps.data.comment"
-          class="text-ellipsis"
-        >
-          {{ slotProps.data.comment }}
-        </p>
-        <p v-else>{{ slotProps.data.comment }}</p>
-      </template>
-    </Column>
-  </DataTable>
+  <table class="w-full text-left mt-2 text-muted-color">
+    <tbody>
+      <tr v-for="data in auditList" :key="`audit${data.id_}`" class="hover:bg-teal-450/5">
+        <td>
+          {{ DateUtils.formatDate(data.timestamp) }}
+        </td>
+        <td>{{ data.auditor }}</td>
+        <td>
+          <FindingStatusBadge :status="data.status ?? 'NOT_ANALYZED'" />
+        </td>
+        <td v-if="(data?.comment?.length ?? 0) > 45" v-tooltip="data.comment" class="text-ellipsis">
+          {{ data.comment }}
+        </td>
+        <td v-else>{{ data.comment }}</td>
+      </tr>
+    </tbody>
+  </table>
 </template>
 
 <script setup lang="ts">
@@ -31,8 +23,6 @@ import DateUtils from '@/utils/date-utils';
 import FindingsService from '@/services/findings-service';
 import type { AuditRead, DetailedFindingRead } from '@/services/shema-to-types';
 import { onMounted, ref } from 'vue';
-import DataTable from 'primevue/datatable';
-import Column from 'primevue/column';
 import { dispatchError } from '@/configuration/config';
 
 type Props = {
@@ -43,10 +33,6 @@ const props = defineProps<Props>();
 const finding = ref(props.finding);
 const auditList = ref<AuditRead[] | undefined>(undefined);
 const totalRows = ref(0);
-
-function formatDate(timestamp: string): string {
-  return DateUtils.formatDate(timestamp);
-}
 
 function fetchAuditsForFinding() {
   FindingsService.getFindingAudits(finding.value.id_, 100, 0)

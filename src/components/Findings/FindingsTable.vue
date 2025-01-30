@@ -1,11 +1,18 @@
 <template>
-  <AuditModal v-model:visible="isAuditModalVisible" :selectedCheckBoxIds="selection"
-    @update-audit="updateAudit" />
+  <AuditModal
+    v-model:visible="isAuditModalVisible"
+    :selectedCheckBoxIds="selection"
+    @update-audit="updateAudit"
+  />
   <ColumnSelector v-model:visible="isColumnSelectorVisible" @update-columns="setTableFields" />
 
   <Panel :pt:header:class="'hidden'" class="mt-4 pt-[1.125rem]">
-    <FindingTableHeader v-model:filter-string="filterString" v-model:is-audit-modal-visible="isAuditModalVisible"
-          v-model:is-column-selector-visible="isColumnSelectorVisible" :audit-button-disabled="auditButtonDisabled" />
+    <FindingTableHeader
+      v-model:filter-string="filterString"
+      v-model:is-audit-modal-visible="isAuditModalVisible"
+      v-model:is-column-selector-visible="isColumnSelectorVisible"
+      :audit-button-disabled="auditButtonDisabled"
+    />
 
     <table class="w-full text-left mt-2">
       <thead>
@@ -14,7 +21,12 @@
             <!-- <Checkbox binary v-model="selection" /> -->
           </th>
           <th class="bg-teal-500/20"></th>
-          <th v-for="col of fields" :class="col.class" class="text-lg bg-teal-500/20">
+          <th
+            v-for="col of fields"
+            :key="col.key"
+            :class="col.class"
+            class="text-lg bg-teal-500/20"
+          >
             {{ col.label }}
           </th>
         </tr>
@@ -23,29 +35,41 @@
         <template v-if="filteredList === undefined">
           <tr>
             <td :colspan="3 + fields.length" class="text-center p-4">
-              <i class="pi pi-spin pi-spinner mr-2" ></i> Loading data...
+              <i class="pi pi-spin pi-spinner mr-2"></i> Loading data...
             </td>
           </tr>
         </template>
-        <template v-else v-for="(data, idx) in filteredList">
-          <tr :class="{
-            'bg-teal-450/10': selectedIndex === idx,
-            'hover:bg-teal-450/5': true
-          }"
-          @click="selectedIndex = idx"
+        <template v-else v-for="(data, idx) in filteredList" :key="`d${data.id_}`">
+          <tr
+            :class="{
+              'bg-teal-450/10': selectedIndex === idx,
+              'hover:bg-teal-450/5': true,
+            }"
+            @click="selectedIndex = idx"
           >
             <td class="pl-2">
-              <Checkbox v-model="selection" :value="data.id_" />
+              <Checkbox size="small" v-model="selection" :value="data.id_" />
             </td>
             <td>
-              <Button rounded text :icon="'pi ' + (expanded === idx ? 'pi-chevron-down' : 'pi-chevron-right')"
-              class="border-none" 
-              @click="toggleExpand(idx)"></Button>
+              <Button
+                rounded
+                text
+                :icon="'pi ' + (expanded === idx ? 'pi-chevron-down' : 'pi-chevron-right')"
+                class="border-none h-7"
+                size="small"
+                @click="toggleExpand(idx)"
+              ></Button>
             </td>
-            <td v-for="col of fields" :class="col.class">
-              <FindingStatusBadge v-if="col.key === 'status'" :status="data[col.key] ?? 'NOT_ANALYZED'" />
-              <span v-else-if="col.key === 'file_path'" :title="data[col.key]"
-                class="rtl text-nowrap truncate inline-block">
+            <td v-for="col of fields" :class="col.class" :key="`d${data.id_}f${col.key}`">
+              <FindingStatusBadge
+                v-if="col.key === 'status'"
+                :status="data[col.key] ?? 'NOT_ANALYZED'"
+              />
+              <span
+                v-else-if="col.key === 'file_path'"
+                :title="data[col.key]"
+                class="rtl text-nowrap truncate inline-block"
+              >
                 {{ data[col.key] }}
               </span>
               <template v-else>
@@ -81,6 +105,7 @@ import { dispatchError, dispatchMessage } from '@/configuration/config';
 import Panel from 'primevue/panel';
 import Checkbox from 'primevue/checkbox';
 import Button from 'primevue/button';
+import FindingStatusBadge from '../Common/FindingStatusBadge.vue';
 
 const props = defineProps<{
   findings: DetailedFindingRead[] | undefined;
@@ -105,7 +130,7 @@ setTableFields();
 
 function toggleExpand(idx: number) {
   selectedIndex.value = idx;
-  expanded.value = (expanded.value === idx) ? -1 : idx;
+  expanded.value = expanded.value === idx ? -1 : idx;
 }
 
 function toggleAllCheckboxes() {
@@ -142,7 +167,7 @@ function updateVisualBadge(selectedIds: number[], status: FindingStatus, comment
     return;
   }
 
-  selection.value = selection.value.filter((s) => s.id_ !== selectedIds[0]);
+  selection.value = selection.value.filter((s) => s !== selectedIds[0]);
 }
 
 function getCurrentFindingSelected(): DetailedFindingRead {
@@ -172,7 +197,7 @@ function selectUp(): boolean {
 
   selectedIndex.value =
     (selectedIndex.value + filteredList.value.length - 1) % filteredList.value.length;
-    expanded.value = expanded.value === -1 ? -1 : selectedIndex.value;
+  expanded.value = expanded.value === -1 ? -1 : selectedIndex.value;
 
   return true;
 }

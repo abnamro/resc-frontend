@@ -1,12 +1,18 @@
 <template>
   <ProgressSpinner v-if="rule === undefined" />
-  <div class="flex flex-col gap-2" v-else-if="rule">
+  <div class="flex flex-col gap-2 text-muted-color" v-else-if="rule">
     <div v-if="rule?.description">
-      <span class="font-bold">Description: </span>{{ rule.description }}
+      <span class="font-bold text-muted-color-emphasis">Description: </span>{{ rule.description }}
     </div>
-    <div v-if="rule?.regex"><span class="font-bold">Regex: </span>{{ rule.regex }}</div>
-    <div v-if="rule?.path"><span class="font-bold">Path: </span>{{ rule.path }}</div>
-    <div v-if="rule?.comment"><span class="font-bold">Comment: </span>{{ rule.comment }}</div>
+    <div v-if="rule?.regex">
+      <span class="font-bold text-muted-color-emphasis">Regex: </span>{{ rule.regex }}
+    </div>
+    <div v-if="rule?.path">
+      <span class="font-bold text-muted-color-emphasis">Path: </span>{{ rule.path }}
+    </div>
+    <div v-if="rule?.comment">
+      <span class="font-bold text-muted-color-emphasis">Comment: </span>{{ rule.comment }}
+    </div>
   </div>
   <div v-else>Rule not found.</div>
 </template>

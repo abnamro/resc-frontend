@@ -4,12 +4,7 @@
 
     <!-- Import button to upload rulepack -->
     <div class="flex justify-start">
-      <Button
-        severity="warn"
-        v-on:click="isRulePackUploadOpen = true"
-      >
-        IMPORT
-      </Button>
+      <Button severity="warn" v-on:click="isRulePackUploadOpen = true"> IMPORT </Button>
     </div>
     <!-- RulePackUpload Modal -->
     <RulePackUploadModal
@@ -17,87 +12,81 @@
       @on-file-upload-suceess="onRulePackUploadSuccess"
     />
 
-    <DataTable
-      :value="rulePackList"
-      size="small"
-      :loading="rulePackList === undefined"
-      dataKey="_id"
-      :highlight-on-select="true"
-      selection-mode="single"
-      class="mt-2"
-    >
-      <Column field="version" header="Version"> </Column>
-      <Column bodyClass="text-center">
-        <template #header>
-          <span class="font-bold text-center w-full">Active</span>
-        </template>
-        <template #body="slotProps">
-          <FontAwesomeIcon
-            v-if="slotProps.data.active"
-            :icon="['fas', 'circle-check']"
-            :class="'dark:text-green-570 text-green-750'"
-          />
-          <FontAwesomeIcon
-            v-if="!slotProps.data.active"
-            :icon="['fas', 'circle-check']"
-            class="opacity-50 pointer-events-none"
-          />
-        </template>
-      </Column>
-      <Column bodyClass="text-center">
-        <template #header>
-          <span class="font-bold text-center w-full">Outdated</span>
-        </template>
-        <template #body="slotProps">
-          <FontAwesomeIcon
-            v-if="slotProps.data.outdated"
-            :icon="['fas', 'circle-check']"
-            v-on:click="openMarkAsOutdated(slotProps.data)"
-            :class="{
-              'text-red-620 dark:text-red-400': true,
-              'opacity-50 pointer-events-none cursor-not-allowed': slotProps.data.active,
-              'cursor-pointer': !slotProps.data.active
-            }"
-          />
-          <FontAwesomeIcon
-            v-if="!slotProps.data.outdated"
-            :icon="['fas', 'circle-check']"
-            :style="{ opacity: 'rgba(0,0,0,0.5)' }"
-            @click="openMarkAsOutdated(slotProps.data)"
-            :class="slotProps.data.active ? 'opacity-50 pointer-events-none' : 'cursor-pointer'"
-          />
-        </template>
-      </Column>
-      <Column field="created" header="Created">
-        <template #body="slotProps">
-          {{ DateUtils.formatDate(slotProps.data.created) }}
-        </template>
-      </Column>
-      <Column
-        header="Download"
-        headerClass="bg-teal-500/20 text-center flex justify-center"
-        bodyClass="text-center"
-      >
-        <template #body="slotProps">
-          <FontAwesomeIcon
-            icon="download"
-            class="dark:text-blue-350 text-blue-660 cursor-pointer"
-            @click="downloadRulePack(slotProps.data.version)"
-          />
-        </template>
-      </Column>
-    </DataTable>
-
-    <Paginator
-      v-model:first="currentPage"
-      v-model:rows="perPage"
-      :totalRecords="totalRows"
-      :rowsPerPageOptions="PAGE_SIZES"
-      @update:first="handlePageClick"
-      @update:rows="handlePageSizeChange"
-    />
+    <Panel :pt:header:class="'hidden'" class="mt-2 pt-[1.125rem]">
+      <table class="w-full">
+        <thead>
+          <tr class="bg-teal-500/20 text-lg">
+            <th>Version</th>
+            <th>Active</th>
+            <th>Outdate</th>
+            <th>Created</th>
+            <th>Download</th>
+          </tr>
+        </thead>
+        <tbody>
+          <template v-if="rulePackList === undefined">
+            <tr>
+              <td colspan="5" class="text-center p-4">
+                <i class="pi pi-spin pi-spinner mr-2"></i> Loading data...
+              </td>
+            </tr>
+          </template>
+          <tr
+            v-else
+            v-for="data in rulePackList"
+            class="hover:bg-teal-450/5"
+            :key="`${data.version}`"
+          >
+            <td class="py-1" :class="{ 'font-bold': data.active }">{{ data.version }}</td>
+            <td class="py-1">
+              <FontAwesomeIcon
+                :icon="['fas', 'circle-check']"
+                :class="{
+                  'dark:text-green-570 text-green-750': data.active,
+                  'opacity-50 pointer-events-none': !data.active,
+                }"
+              />
+            </td>
+            <td class="py-1">
+              <FontAwesomeIcon
+                :icon="['fas', 'circle-check']"
+                v-on:click="openMarkAsOutdated(data)"
+                :class="{
+                  'text-red-620 dark:text-red-400': data.outdated,
+                  'opacity-50': true,
+                  'cursor-not-allowed pointer-events-none': data.active,
+                  'cursor-pointer': !data.active,
+                }"
+              />
+            </td>
+            <td class="py-1">
+              {{ DateUtils.formatDate(data.created) }}
+            </td>
+            <td class="py-1">
+              <FontAwesomeIcon
+                icon="download"
+                class="dark:text-blue-350 text-blue-660 cursor-pointer"
+                @click="downloadRulePack(data.version)"
+              />
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <Paginator
+        v-model:first="currentPage"
+        v-model:rows="perPage"
+        :totalRecords="totalRows"
+        :rowsPerPageOptions="PAGE_SIZES"
+        @update:first="handlePageClick"
+        @update:rows="handlePageSizeChange"
+      />
+    </Panel>
   </div>
-  <Dialog v-model:visible="isConfirmOpen" header="Mark findings as outdated?">
+  <Dialog
+    v-model:visible="isConfirmOpen"
+    header="Mark findings as outdated?"
+    :class="{ dark: dark }"
+  >
     <div>
       This will mark all findings from rule pack {{ rulePackSelected?.version }} and older as
       outdated.
@@ -120,13 +109,16 @@ import type { AxiosResponse } from 'axios';
 import type { PaginationType, RulePackRead } from '@/services/shema-to-types';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import Button from 'primevue/button';
-import DataTable from 'primevue/datatable';
-import Column from 'primevue/column';
 import Paginator from 'primevue/paginator';
 import Dialog from 'primevue/dialog';
 import { usePaginator } from '@/composables/usePaginator';
+import { useAuthUserStore } from '@/store';
+import { storeToRefs } from 'pinia';
+import Panel from 'primevue/panel';
 
 const isRulePackUploadOpen = ref(false);
+const store = useAuthUserStore();
+const { dark } = storeToRefs(store);
 
 const rulePackList = ref<RulePackRead[] | undefined>(undefined);
 

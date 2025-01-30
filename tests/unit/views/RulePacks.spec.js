@@ -8,6 +8,7 @@ import { importFA } from '@/assets/font-awesome';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import ToastService from 'primevue/toastservice';
 import flushPromises from 'flush-promises';
+import { createTestingPinia } from '@pinia/testing';
 
 importFA();
 
@@ -21,7 +22,7 @@ describe('RulePacks tests', () => {
   function initMountApp() {
     wrapper = mount(App, {
       props: {},
-      global: { plugins: [ToastService] },
+      global: { plugins: [ToastService, createTestingPinia()] },
       components: {
         FontAwesomeIcon,
         RulePackUploadModal,

@@ -7,11 +7,15 @@ import { importFA } from '@/assets/font-awesome';
 import rule_packs from '@/../tests/resources/mock_rule_packs.json';
 import detailed_findings from '@/../tests/resources/mock_detailed_findings2.json';
 import flushPromises from 'flush-promises';
+import FindingTableHeader from '@/components/Findings/FindingTableHeader.vue';
+import Panel from 'primevue/panel';
 
 let allProjects = ['ABC', 'XYZ', 'GRD0000001', 'GRD0000002'];
 let allRepos = ['bb_repo1', 'bb_repo2', 'ado_repo1', 'ado_repo2'];
 
 importFA();
+
+const tooltip = vi.fn();
 
 vi.mock('axios');
 
@@ -22,10 +26,16 @@ describe('FindingsTable tests', () => {
         findings: undefined,
         isRuleFinding: true,
       },
-      components: {},
+      components: {
+        FindingTableHeader,
+        Panel,
+      },
       global: {
         plugins: [createTestingPinia()],
         stubs: {},
+        directives: {
+          tooltip,
+        },
       },
     });
 
@@ -50,24 +60,21 @@ describe('FindingsTable tests', () => {
         findings: detailed_findings.data,
         isRuleFinding: true,
       },
-      components: {},
+      components: {
+        FindingTableHeader,
+        Panel,
+      },
       global: {
         plugins: [createTestingPinia()],
         stubs: {},
+        directives: {
+          tooltip,
+        },
       },
     });
 
     expect(wrapper.exists()).toBe(true);
     expect(wrapper.vm.findingList).toEqual(detailed_findings.data);
-    // expect(() =>
-    //   wrapper.find('[data-pc-name="pcheadercheckbox"] input').setValue(true),
-    // ).not.toThrow();
-    // expect(wrapper.vm.selection).toEqual([
-    //   detailed_findings.data[0].id_,
-    //   detailed_findings.data[1].id_,
-    // ]);
-    // expect(() => wrapper.vm.toggleAllCheckboxes()).not.toThrow();
-    // expect(wrapper.vm.selection).toEqual([]);
     expect(() => wrapper.vm.toggleAllCheckboxes()).not.toThrow();
     expect(wrapper.vm.selection).toEqual([
       detailed_findings.data[0].id_,
@@ -97,6 +104,7 @@ describe('FindingsTable tests', () => {
 
     expect(() => wrapper.vm.openDetails()).not.toThrow();
     expect(() => wrapper.vm.openCommitUrl()).not.toThrow();
+    await flushPromises();
     expect(() => wrapper.vm.closeDetails()).not.toThrow();
     expect(() => wrapper.vm.toggleSelect()).not.toThrow();
     expect(() => wrapper.vm.markAsFalsePositive()).not.toThrow();
@@ -138,10 +146,16 @@ describe('FindingsTable tests', () => {
         findings: detailed_findings.data,
         isRuleFinding: false,
       },
-      components: {},
+      components: {
+        FindingTableHeader,
+        Panel,
+      },
       global: {
         plugins: [createTestingPinia()],
         stubs: {},
+        directives: {
+          tooltip,
+        },
       },
     });
 

@@ -13,7 +13,9 @@
           {{ ssoLoginPageMessage }}
         </div>
         <Button @click="login" severity="warn">Login</Button>
-        <span class="hidden dark:flex mt-4 text-muted-color-emphasis">Be careful with the light.</span>
+        <span class="hidden dark:flex mt-4 text-muted-color-emphasis"
+          >Be careful with the light.</span
+        >
       </div>
     </Panel>
   </div>

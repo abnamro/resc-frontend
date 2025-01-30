@@ -20,7 +20,7 @@
       'sidebar-opened': !sidebarCollapsed,
     }"
   >
-    <div class="container-fluid">
+    <div class="container-fluid pb-8">
       <RouterView />
     </div>
   </div>
@@ -74,5 +74,5 @@ onKeyStroke(
 /* istanbul ignore next @preserve */
 onKeyStroke('b', () => !shouldIgnoreKeystroke() && toggleDarkMode(), { eventName: 'keydown' });
 disableScrollingWithArrowsAndCtrlA();
-onMounted(setDarkMode)
+onMounted(setDarkMode);
 </script>

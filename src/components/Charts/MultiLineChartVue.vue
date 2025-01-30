@@ -50,18 +50,17 @@ const chartOptions = ref<ChartOptions<'line'>>({
   plugins: {
     legend: {
       labels: {
-        color
+        color,
       },
       title: {
-        color
-      }
-    }
+        color,
+      },
+    },
   },
   scales: {
-    x: { border: { color: color}, grid: { color: `${color}80`}, ticks: { color: color}},
-    y: { border: { color: color}, grid: { color: `${color}80`}, ticks: { color: color}},
-  }
+    x: { border: { color: color }, grid: { color: `${color}80` }, ticks: { color: color } },
+    y: { border: { color: color }, grid: { color: `${color}80` }, ticks: { color: color } },
+  },
 });
-const styles = ref(props.styles ?? { height: `${props.height} px`, width: `${props.width} px`, });
-
+const styles = ref(props.styles ?? { height: `${props.height} px`, width: `${props.width} px` });
 </script>

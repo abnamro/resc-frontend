@@ -1,5 +1,11 @@
 <template>
-  <Dialog header="Import Rulepack" v-model:visible="visible" @hide="resetModal" class="w-[500px]">
+  <Dialog
+    header="Import Rulepack"
+    v-model:visible="visible"
+    @hide="resetModal"
+    class="w-[500px]"
+    :class="{ dark: dark }"
+  >
     <div class="flex justify-center" v-if="!loadedData">
       <ProgressSpinner />
     </div>
@@ -39,6 +45,11 @@ import InputText from 'primevue/inputtext';
 import FileUpload, { type FileUploadSelectEvent } from 'primevue/fileupload';
 import { useToast } from 'primevue/usetoast';
 import { dispatchError } from '@/configuration/config';
+import { useAuthUserStore } from '@/store';
+import { storeToRefs } from 'pinia';
+
+const store = useAuthUserStore();
+const { dark } = storeToRefs(store);
 
 const loadedData = ref(true);
 const visible = defineModel('visible') as Ref<boolean>;

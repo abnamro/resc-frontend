@@ -1,38 +1,52 @@
 <template>
-  <DataTable :value="data" class="w-1/4 mb-4" size="small">
-    <Column field="field" body-class="font-bold border-none" header-class="border-none"></Column>
-    <Column field="value" body-class=" border-none" header-class="border-none">
-      <template #body="slotProps">
-        <div v-if="slotProps.data.field === 'Deleted at'" class="flex gap-2 items-center">
-          <ToggleSwitch
-            size="small"
-            v-model="repoDeleted"
-            inputId="onlyIfHasUntriagedFindings"
-            :disabled="!loadedData"
-            @change="handleDeletedChange"
-          >
-          </ToggleSwitch>
-          <small class="text-nowrap" v-if="repositoryData.deleted_at">{{
-            repositoryData.deleted_at.substring(0, 10)
-          }}</small>
-        </div>
-        <template v-else>
-          {{ slotProps.data.value }}
-        </template>
-      </template>
-    </Column>
-  </DataTable>
+  <Panel :pt:header:class="'hidden'" class="w-full lg:w-2/3 xl:w-1/2 2xl:w-1/3 mb-4 pt-[1.125rem]">
+    <table class="text-left">
+      <tbody>
+        <tr>
+          <td class="font-bold pr-8 py-2">VCS Instance</td>
+          <td>{{ props.vcsInstance.name }}</td>
+        </tr>
+        <tr>
+          <td class="font-bold pr-8 py-2">Project</td>
+          <td>{{ repositoryData.project_key }}</td>
+        </tr>
+        <tr>
+          <td class="font-bold pr-8 py-2">Repository</td>
+          <td>{{ repositoryData.repository_name }}</td>
+        </tr>
+        <tr>
+          <td class="font-bold pr-8 py-2">Repository Id</td>
+          <td>{{ repositoryData.repository_id }}</td>
+        </tr>
+        <tr>
+          <td class="font-bold pr-8 py-2">Deleted at</td>
+          <td class="flex items-center">
+            <ToggleSwitch
+              size="small"
+              v-model="repoDeleted"
+              inputId="onlyIfHasUntriagedFindings"
+              :disabled="!loadedData"
+              @change="handleDeletedChange"
+            >
+            </ToggleSwitch>
+            <span class="ml-2 text-nowrap" v-if="repositoryData.deleted_at">{{
+              repositoryData.deleted_at.substring(0, 10)
+            }}</span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </Panel>
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { ref } from 'vue';
 import RepositoryService from '@/services/repository-service';
 import type { RepositoryRead, VCSInstanceRead } from '@/services/shema-to-types';
 import type { AxiosResponse } from 'axios';
 import ToggleSwitch from 'primevue/toggleswitch';
-import DataTable from 'primevue/datatable';
-import Column from 'primevue/column';
 import { dispatchError } from '@/configuration/config';
+import Panel from 'primevue/panel';
 
 type Props = {
   repository: RepositoryRead;
@@ -44,25 +58,6 @@ const props = defineProps<Props>();
 const repositoryData = ref(props.repository);
 const repoDeleted = ref(props.repository.deleted_at ? true : false);
 const loadedData = ref(true);
-
-const data = computed(() => [
-  {
-    field: 'VCS Instance',
-    value: props.vcsInstance.name,
-  },
-  {
-    field: 'Project',
-    value: repositoryData.value.project_key,
-  },
-  {
-    field: 'VCS Instance',
-    value: repositoryData.value.repository_name,
-  },
-  {
-    field: 'Deleted at',
-    value: repositoryData.value.repository_name,
-  },
-]);
 
 const emit = defineEmits(['on-delete-at-change']);
 
