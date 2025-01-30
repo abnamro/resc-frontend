@@ -2,7 +2,7 @@
   <Card
     class="rounded overflow-hidden"
     :pt:body:class="'p-0 min-w-[200px]'"
-    :pt:caption:class="'px-4 py-2 bg-teal-400/10'"
+    :pt:caption:class="'px-4 py-2 bg-teal-450/20'"
     :pt:title:class="'flex items-center justify-center'"
     :pt:content:class="'px-4 pb-2 flex items-center justify-center font-bold'"
   >
@@ -11,7 +11,7 @@
       <template v-if="titleIconDefinition">
         <FontAwesomeIcon
           :id="titleIconTooltipId"
-          class="ml-2"
+          class="ml-2 text-xs"
           :style="titleIconStyle"
           :icon="titleIconDefinition"
           v-tooltip.right="titleIconTooltip"
@@ -19,13 +19,13 @@
       </template>
     </template>
     <template #content>
-      <h5 class="mb-0" :style="contentStyle">
+      <span class="text-lg/0" :style="contentStyle">
         {{ formatCardBodyContent }}
-      </h5>
+      </span>
       <FontAwesomeIcon
         v-if="contentIconDefinition"
-        class="ml-2"
-        :style="contentIconStyle"
+        class="ml-2 text-xl"
+        :style="contentStyle"
         :icon="contentIconDefinition"
       />
     </template>
@@ -61,15 +61,9 @@ const props = defineProps<Props>();
 const title = ref(props.cardTitle);
 const titleIconStyle = ref({
   color: props.titleIconColor,
-  fontSize: '12px',
-});
-const contentIconStyle = ref({
-  color: props.contentIconColor,
-  fontSize: '20px',
 });
 const contentStyle = ref({
   color: props.contentIconColor,
-  fontSize: '17px',
 });
 
 const titleIconDefinition = ref(props.titleIcon ? ['fas', props.titleIcon] : null);

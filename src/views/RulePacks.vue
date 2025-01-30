@@ -5,7 +5,7 @@
     <!-- Import button to upload rulepack -->
     <div class="flex justify-start">
       <Button
-        class="mt-2 mb-2 bg-yellow-520 border-none text-surface-950"
+        severity="warn"
         v-on:click="isRulePackUploadOpen = true"
       >
         IMPORT
@@ -26,8 +26,8 @@
       selection-mode="single"
       class="mt-2"
     >
-      <Column field="version" header="Version" headerClass="bg-teal-500/20"> </Column>
-      <Column headerClass="bg-teal-500/20" bodyClass="text-center">
+      <Column field="version" header="Version"> </Column>
+      <Column bodyClass="text-center">
         <template #header>
           <span class="font-bold text-center w-full">Active</span>
         </template>
@@ -35,7 +35,7 @@
           <FontAwesomeIcon
             v-if="slotProps.data.active"
             :icon="['fas', 'circle-check']"
-            :style="{ color: 'green' }"
+            :class="'dark:text-green-570 text-green-750'"
           />
           <FontAwesomeIcon
             v-if="!slotProps.data.active"
@@ -44,7 +44,7 @@
           />
         </template>
       </Column>
-      <Column headerClass="bg-teal-500/20" bodyClass="text-center">
+      <Column bodyClass="text-center">
         <template #header>
           <span class="font-bold text-center w-full">Outdated</span>
         </template>
@@ -52,20 +52,23 @@
           <FontAwesomeIcon
             v-if="slotProps.data.outdated"
             :icon="['fas', 'circle-check']"
-            :style="{ color: '#d2042d', cursor: 'pointer' }"
             v-on:click="openMarkAsOutdated(slotProps.data)"
-            :class="slotProps.data.active ? 'opacity-50 pointer-events-none' : ''"
+            :class="{
+              'text-red-620 dark:text-red-400': true,
+              'opacity-50 pointer-events-none cursor-not-allowed': slotProps.data.active,
+              'cursor-pointer': !slotProps.data.active
+            }"
           />
           <FontAwesomeIcon
             v-if="!slotProps.data.outdated"
             :icon="['fas', 'circle-check']"
-            :style="{ color: 'rgba(0,0,0,0.5)', cursor: 'pointer' }"
+            :style="{ opacity: 'rgba(0,0,0,0.5)' }"
             @click="openMarkAsOutdated(slotProps.data)"
-            :class="slotProps.data.active ? 'opacity-50 pointer-events-none' : ''"
+            :class="slotProps.data.active ? 'opacity-50 pointer-events-none' : 'cursor-pointer'"
           />
         </template>
       </Column>
-      <Column field="created" header="Created" headerClass="bg-teal-500/20">
+      <Column field="created" header="Created">
         <template #body="slotProps">
           {{ DateUtils.formatDate(slotProps.data.created) }}
         </template>
@@ -78,7 +81,7 @@
         <template #body="slotProps">
           <FontAwesomeIcon
             icon="download"
-            class="text-sky-400 cursor-pointer"
+            class="dark:text-blue-350 text-blue-660 cursor-pointer"
             @click="downloadRulePack(slotProps.data.version)"
           />
         </template>

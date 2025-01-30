@@ -12,9 +12,10 @@
     <div class="col-span-4">
       <FindingStatusFilter @on-findings-status-change="onFindingsStatusChange" />
     </div>
-    <div class="col-span-2 mt-1 ml-1">
+    <div class="col-span-2 mt-1 ml-1 flex flex-col justify-end">
       <Button
-        class="mt-4 w-100 bg-yellow-520 border-none text-surface-950"
+        class=""
+        severity="warn"
         @click="toggleAdvancedSearch"
         >Advanced Search</Button
       >

@@ -49,6 +49,7 @@ interface State {
   findingStatusList: null | FindingStatus[];
   tableColumns: TableColumn[];
   selectedStatus: StatusOptionType[];
+  dark: boolean;
 }
 
 export const useAuthUserStore: () => Store<'authUser', State, GettersStore, ActionsStore> =
@@ -67,6 +68,7 @@ export const useAuthUserStore: () => Store<'authUser', State, GettersStore, Acti
       findingStatusList: [],
       tableColumns: [],
       selectedStatus: [],
+      dark: false,
     }),
     getters: {
       get_finding_status_list(): FindingStatus[] {

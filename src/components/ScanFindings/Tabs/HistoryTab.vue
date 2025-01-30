@@ -1,5 +1,5 @@
 <template>
-  <DataTable :value="auditList" :loading="auditList === undefined">
+  <DataTable :value="auditList" :loading="auditList === undefined" :pt:header:class="'hidden'">
     <Column>
       <template #body="slotProps">
         {{ formatDate(slotProps.data.timestamp) }}

@@ -3,16 +3,17 @@
   <div class="flex justify-center mt-[10%]">
     <Panel
       header="Repository Scanner (RESC)"
-      :pt:header:class="'justify-center  bg-teal-850 text-surface-0'"
+      :pt:header:class="'justify-center bg-teal-850 text-surface-0'"
       class="max-w-2xl rounded overflow-hidden"
     >
       <div class="flex flex-col items-center">
         <!-- Auth warning -->
-        <div class="text-red-500 text-center font-bold p-8">
+        <div class="text-red-620 dark:text-red-400 text-center font-bold p-8">
           Unauthorized access prohibited.<br />
           {{ ssoLoginPageMessage }}
         </div>
-        <Button @click="login">Login</Button>
+        <Button @click="login" severity="warn">Login</Button>
+        <span class="hidden dark:flex mt-4 text-muted-color-emphasis">Be careful with the light.</span>
       </div>
     </Panel>
   </div>

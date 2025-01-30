@@ -26,7 +26,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { useRoute, RouterView } from 'vue-router';
 import { SidebarMenu } from 'vue-sidebar-menu';
 import TopBarMenu from '@/components/Navigation/TopBarMenu.vue';
@@ -37,11 +37,17 @@ import { onKeyStroke } from '@vueuse/core';
 import ErrorView from './views/ErrorView.vue';
 import Toast from 'primevue/toast';
 import SessionTimeout from './components/Login/SessionTimeout.vue';
+import { useDarkMode } from './composables/useDarkmode';
+import { useAuthUserStore } from './store';
+import { storeToRefs } from 'pinia';
 
 const route = useRoute();
 
 const sidebarNavigationMenu = sidebarMenu;
 const sidebarCollapsed = ref(false);
+const store = useAuthUserStore();
+const { dark } = storeToRefs(store);
+const { toggleDarkMode, setDarkMode } = useDarkMode(dark);
 
 function onToggleCollapse(collapsed: boolean) {
   sidebarCollapsed.value = collapsed;
@@ -65,11 +71,8 @@ onKeyStroke(
   },
 );
 
-function toggleDarkMode() {
-  document.getElementById('app')?.classList.toggle('dark');
-}
-
 /* istanbul ignore next @preserve */
 onKeyStroke('b', () => !shouldIgnoreKeystroke() && toggleDarkMode(), { eventName: 'keydown' });
 disableScrollingWithArrowsAndCtrlA();
+onMounted(setDarkMode)
 </script>

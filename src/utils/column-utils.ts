@@ -1,6 +1,4 @@
 const _defaultColumns = [
-  'select',
-  'toggle_row',
   'project_key',
   'repository_name',
   'rule_name',
@@ -11,12 +9,12 @@ const _defaultColumns = [
   'scanType',
   'vcs_provider',
   'status',
-];
+] as const;
 
-export type TableColumn = (typeof _defaultColumns)[number];
+export type TableColumn = typeof _defaultColumns[number];
 
 export type SimpleTableField = {
-  key: string;
+  key: TableColumn;
   sortable?: boolean;
   label: string;
   class: string;
@@ -34,8 +32,6 @@ const ColumnUtils = {
 
   formatColumnLabel(column: TableColumn): string {
     const labels = {
-      select: '',
-      toggle_row: '',
       project_key: 'Project',
       repository_name: 'Repository',
       rule_name: 'Rule',
@@ -63,7 +59,7 @@ const ColumnUtils = {
     }
 
     if (column === 'status') {
-      return baseCss + 'text-end';
+      return baseCss + 'text-end pr-2';
     }
     return baseCss + 'text-start';
   },

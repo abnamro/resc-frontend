@@ -35,3 +35,11 @@ html {
   direction: rtl;
   max-width: 70ch;
 }
+
+h1, h2, h3, h4, h5 {
+  color: var(--p-primary-850)
+}
+
+.dark h1, .dark h2, .dark h3, .dark h4, .dark h5 {
+  color: var(--p-primary-550)
+} 
