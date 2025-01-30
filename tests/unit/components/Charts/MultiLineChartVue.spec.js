@@ -2,6 +2,7 @@ import { mount } from '@vue/test-utils';
 import { describe, expect, it, vi } from 'vitest';
 import App from '@/components/Charts/MultiLineChartVue.vue';
 import { Line } from 'vue-chartjs';
+import { createTestingPinia } from '@pinia/testing';
 
 HTMLCanvasElement.prototype.getContext = vi.fn();
 
@@ -30,7 +31,9 @@ describe('MultilineChart tests', () => {
       components: {
         Line: Line,
       },
-      global: {},
+      global: {
+        plugins: [createTestingPinia()],
+      },
     });
 
     expect(wrapper.exists()).toBe(true);

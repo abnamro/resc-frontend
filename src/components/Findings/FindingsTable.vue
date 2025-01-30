@@ -62,31 +62,6 @@
         </template>
       </tbody>
     </table>
-    <!-- <DataTable :value="filteredList" size="small" class="w-full" v-model:selection="selection" selection-mode="multiple"
-      :rowHover="false" v-model:expanded-rows="expandedRows" scrollable :scrollHeight="scrollHeight"
-      :virtualScrollerOptions="{ itemSize: 42 }" :loading="filteredList === undefined"
-      :dataKey="(data) => `${data.id_}`" :rowClass="rowClass" @row-click="(e) => (selectedIndex = e.index)">
-      <template #header>
-      </template>
-      <Column selectionMode="multiple" headerStyle="width: 3rem" />
-      <Column :expander="true" />
-      <Column v-for="col of fields" :key="col.key" :field="col.key" :header="col.label" :sortable="col.sortable"
-        :class="col.class">
-        <template #body="slotProps">
-          <FindingStatusBadge v-if="col.key === 'status'" :status="slotProps.data[col.key] ?? 'NOT_ANALYZED'" />
-          <span v-else-if="col.key === 'file_path'" :title="slotProps.data[col.key]"
-            class="rtl text-nowrap truncate inline-block">
-            {{ slotProps.data[col.key] }}
-          </span>
-          <template v-else>
-            {{ slotProps.data[col.key] }}
-          </template>
-        </template>
-      </Column>
-      <template #expansion="slotProps">
-        <FindingPanel :finding="slotProps.data"></FindingPanel>
-      </template>
-    </DataTable> -->
   </Panel>
 </template>
 <script lang="ts" setup>
