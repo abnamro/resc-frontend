@@ -1,5 +1,6 @@
 <template>
-  <div class="grid grid-cols-10 gap-2">
+  <Panel :pt:header:class="'hidden'" class="mt-4 pt-[1.125rem]">
+    <div class="grid grid-cols-10 gap-2">
     <!--Rule Filter -->
     <div class="col-span-4">
       <RuleFilter
@@ -102,6 +103,7 @@
       </div>
     </div>
   </Collapse>
+  </Panel>
 </template>
 
 <script setup lang="ts">
@@ -127,6 +129,7 @@ import { Collapse } from 'vue-collapsed';
 import Button from 'primevue/button';
 import ToggleSwitch from 'primevue/toggleswitch';
 import { dispatchError } from '@/configuration/config';
+import Panel from 'primevue/panel';
 
 type Props = {
   projectOptions: string[];

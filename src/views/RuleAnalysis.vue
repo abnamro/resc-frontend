@@ -2,7 +2,7 @@
   <div class="p-4">
     <h1 class="text-left text-3xl mb-10">RULE ANALYSIS</h1>
 
-    <RuleAnalysisFilter
+    <RuleAnalysisFilterView
       :project-options="projectNames"
       :repository-options="repositoryNames"
       :rule-pack-options="rulePacks"
@@ -10,7 +10,7 @@
       :rule-pack-filter="rulePacksFilter"
       @on-filter-change="handleFilterChange"
     >
-    </RuleAnalysisFilter>
+    </RuleAnalysisFilterView>
 
     <FindingsTable
       :findings="findingList"
@@ -33,7 +33,7 @@
 <script lang="ts" setup>
 import FindingsTable from '@/components/Findings/FindingsTable.vue';
 import FindingsService, { type QueryFilterType } from '@/services/findings-service';
-import { type RuleAnalysisFilter } from '@/components/Filters/RuleAnalysisFilter.vue';
+import RuleAnalysisFilterView, { type RuleAnalysisFilter } from '@/components/Filters/RuleAnalysisFilterView.vue';
 import { useAuthUserStore, type PreviousRouteState } from '@/store/index';
 import { onMounted, ref } from 'vue';
 import type { DetailedFindingRead, PaginationType } from '@/services/shema-to-types';

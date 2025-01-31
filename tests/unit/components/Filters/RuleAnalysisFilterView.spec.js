@@ -1,6 +1,6 @@
 import { mount } from '@vue/test-utils';
 import { describe, expect, it, vi } from 'vitest';
-import App from '@/components/Filters/RuleAnalysisFilter.vue';
+import App from '@/components/Filters/RuleAnalysisFilterView.vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { createTestingPinia } from '@pinia/testing';
 import rules from '@/../tests/resources/mock_rules.json';
@@ -9,7 +9,7 @@ import flushPromises from 'flush-promises';
 
 vi.mock('axios');
 
-describe('RuleAnalysisFilter tests', () => {
+describe('RuleAnalysisFilterView tests', () => {
   beforeAll(() => {
     Object.defineProperty(window, 'matchMedia', {
       writable: true,
@@ -62,7 +62,7 @@ describe('RuleAnalysisFilter tests', () => {
     vi.restoreAllMocks();
   });
 
-  it('Given a RuleAnalysisFilter a RuleAnalysisFilter is displayed', async () => {
+  it('Given a RuleAnalysisFilterView a RuleAnalysisFilterView is displayed', async () => {
     const spy = vi.spyOn(axios, 'get');
     spy.mockImplementation((q) => {
       switch (q) {
