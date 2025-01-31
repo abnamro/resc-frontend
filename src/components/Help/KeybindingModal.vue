@@ -1,25 +1,31 @@
 <template>
-  <Dialog id="keybindings-table" v-model:visible="visible" modal header="Keyboard shortcuts">
-    <DataTable :value="keybindings" size="small">
-      <Column field="effect"></Column>
-      <Column field="combination" class="text-right">
-        <template #body="slotProps">
+  <Dialog
+    id="keybindings-table"
+    v-model:visible="visible"
+    modal
+    header="Keyboard shortcuts"
+    :class="{ dark: dark }"
+  >
+    <table>
+      <tr v-for="data in keybindings" :key="data.effect" class="text-muted-color-emphasis">
+        <td>{{ data.effect }}</td>
+        <td class="py-1 text-right">
           <span
             class="kb"
-            v-for="combinations in slotProps.data.combination"
-            v-bind:key="combinations.effect"
+            v-for="(combinations, idx) in data.combination"
+            v-bind:key="data.effect + idx"
           >
             <template v-for="combination in combinations" v-bind:key="combination">
               <Chip
-                class="rounded px-1 py-0.5 shadow-[1px_1px_1px_rgba(0,0,0,0.15)] border border-surface-800 text-xs font-bold min-w-8 text-center"
+                class="rounded px-1 py-0.5 shadow-[1px_1px_1px_rgba(0,0,0,0.15)] border border-gray-870 dark:border-gray-620 text-xs font-bold min-w-8 text-center"
               >
                 <span v-html="combination" class="w-full"></span>
               </Chip>
             </template>
           </span>
-        </template>
-      </Column>
-    </DataTable>
+        </td>
+      </tr>
+    </table>
     <div class="flex justify-end pt-4">
       <Button type="button" label="Close" severity="secondary" @click="visible = false"></Button>
     </div>
@@ -31,10 +37,13 @@ import { shouldIgnoreKeystroke } from '@/utils/keybind-utils';
 import { onKeyStroke } from '@vueuse/core';
 import Button from 'primevue/button';
 import Dialog from 'primevue/dialog';
-import DataTable from 'primevue/datatable';
-import Column from 'primevue/column';
 import Chip from 'primevue/chip';
 import { ref, type Ref } from 'vue';
+import { useAuthUserStore } from '@/store';
+import { storeToRefs } from 'pinia';
+
+const store = useAuthUserStore();
+const { dark } = storeToRefs(store);
 
 const visible = defineModel('visible') as Ref<boolean>;
 

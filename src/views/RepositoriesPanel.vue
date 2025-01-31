@@ -8,7 +8,7 @@
       @on-filter-change="handleFilterChange"
     />
 
-    <Panel :pt:header:class="'hidden'" class="mt-2 pt-[1.125rem]">
+    <Panel :pt:header:class="'hidden'" class="mt-4 pt-[1.125rem]">
       <table class="w-full text-left">
         <thead>
           <tr class="bg-teal-500/20 text-lg">

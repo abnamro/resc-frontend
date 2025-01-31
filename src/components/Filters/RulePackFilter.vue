@@ -26,7 +26,7 @@
           </div>
           <Tag
             v-if="slotProps.option.active"
-            class="text-xs px-2 py-0.5 ml-4 font-bold bg-emerald-600 text-surface-0"
+            class="text-xs px-2 py-0.5 ml-4 font-bold bg-teal-850 text-surface-0"
             value="active"
           />
           <Tag

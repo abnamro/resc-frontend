@@ -332,4 +332,6 @@ onKeyStroke('/', () => !shouldIgnoreKeystroke() && toggleAdvancedSearch(), {
 });
 
 applyRuleFilterInRuleAnalysisPage();
+fetchAllDetectedRules();
+fetchRuleTags();
 </script>

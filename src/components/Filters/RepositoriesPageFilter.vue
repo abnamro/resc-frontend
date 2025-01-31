@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <Panel :pt:header:class="'hidden'" class="pt-[1.125rem]">
     <div class="grid grid-cols-10 gap-x-2 gap-y-4">
       <!--VCS Filter -->
       <div class="col-span-3">
@@ -60,7 +60,7 @@
         >
       </div>
     </div>
-  </div>
+  </Panel>
 </template>
 
 <script setup lang="ts">
@@ -68,6 +68,7 @@ import ProjectFilter from '@/components/Filters/ProjectFilter.vue';
 import RepositoryFilter from '@/components/Filters/RepositoryFilter.vue';
 import VcsProviderFilter from '@/components/Filters/VcsProviderFilter.vue';
 import type { VCSProviders } from '@/services/shema-to-types';
+import Panel from 'primevue/panel';
 import ToggleSwitch from 'primevue/toggleswitch';
 import { ref } from 'vue';
 

@@ -33,16 +33,16 @@ type Props = {
 const props = defineProps<Props>();
 
 const value = computed(() => [
-  { value: props.truePositive, label: 'True Positive', color: 'bg-red-100 text-red-700' },
-  { value: props.falsePositive, label: 'False Positive', color: 'bg-green-100 text-green-700' },
+  { value: props.truePositive, label: 'True Positive', color: 'bg-red-300 text-red-750' },
+  { value: props.falsePositive, label: 'False Positive', color: 'bg-green-570/50 text-teal-890' },
   {
     value: props.clarificationRequired,
     label: 'Clarification Required',
-    color: 'bg-orange-100 text-orange-700',
+    color: 'bg-yellow-570/20 text-yellow-570',
   },
-  { value: props.notAccessible, label: 'Not Accessible', color: 'bg-sky-100 text-sky-700' },
-  { value: props.notAnalyzed, label: 'Not Analyzed', color: 'bg-surface-100 text-surface-600' },
-  { value: props.outdated, label: 'Outdated', color: 'bg-surface-800 text-surface-0' },
+  { value: props.notAccessible, label: 'Not Accessible', color: 'bg-blue-70 text-blue-660' },
+  { value: props.notAnalyzed, label: 'Not Analyzed', color: 'bg-gray-130 text-gray-620' },
+  { value: props.outdated, label: 'Outdated', color: 'bg-gray-870 text-gray-50' },
 ]);
 
 const PERCENT = 100;
