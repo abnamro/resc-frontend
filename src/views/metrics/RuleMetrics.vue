@@ -3,72 +3,75 @@
     <h1 class="text-left text-3xl mb-10">RULE METRICS</h1>
 
     <Panel :pt:header:class="'hidden'" class="pt-[1.125rem]">
-    <div class="flex gap-4 mb-2">
-      <div class="w-1/4">
-        <RulePackFilter
-          :rulePackPreSelected="selectedVersionsList"
-          :rulePackOptions="allRulePackVersions"
-          @on-rule-pack-version-change="onRulePackVersionChange"
-        />
+      <div class="flex gap-4 mb-2">
+        <div class="w-1/4">
+          <RulePackFilter
+            :rulePackPreSelected="selectedVersionsList"
+            :rulePackOptions="allRulePackVersions"
+            @on-rule-pack-version-change="onRulePackVersionChange"
+          />
+        </div>
+        <div class="w-1/4">
+          <RuleTagsFilter
+            ref="ruleTagsFilterChildComponent"
+            :ruleTagsOptions="ruleTagsList"
+            :ruleTagsSelected="selectedRuleTags"
+            @on-rule-tags-change="onRuleTagsFilterChange"
+          />
+        </div>
       </div>
-      <div class="w-1/4">
-        <RuleTagsFilter
-          ref="ruleTagsFilterChildComponent"
-          :ruleTagsOptions="ruleTagsList"
-          :ruleTagsSelected="selectedRuleTags"
-          @on-rule-tags-change="onRuleTagsFilterChange"
-        />
+      <div class="text-left flex items-center">
+        <ToggleSwitch
+          size="small"
+          v-model="includeDeletedRepositories"
+          inputId="includeDeletedRepositories"
+          @change="fetchRulesWithFindingStatusCount"
+        >
+        </ToggleSwitch>
+        <label for="includeDeletedRepositories" class="ml-2"
+          >Include data from repositories marked as deleted.</label
+        >
       </div>
-    </div>
-    <div class="text-left flex items-center">
-      <ToggleSwitch
-        size="small"
-        v-model="includeDeletedRepositories"
-        inputId="includeDeletedRepositories"
-        @change="fetchRulesWithFindingStatusCount"
-      >
-      </ToggleSwitch>
-      <label for="includeDeletedRepositories" class="ml-2"
-        >Include data from repositories marked as deleted.</label
-      >
-    </div>
     </Panel>
 
     <Panel :pt:header:class="'hidden'" class="mt-8 pt-[1.125rem] rounded-b-none">
       <table class="w-full text-left">
         <thead>
           <tr class="bg-teal-500/20 text-lg">
-            <th class="pl-2"
+            <th
+              class="pl-2"
               :class="{
                 'cursor-pointer hover:text-primary-emphasis': true,
-                'text-primary-emphasis-alt': sortBy === 'rule_name'
+                'text-primary-emphasis-alt': sortBy === 'rule_name',
               }"
               @click="toggleSort('rule_name')"
-              >
+            >
               Rule <SorterBtn :is="sortBy === 'rule_name'" :by="sortOrder" />
             </th>
-            <th 
-            :class="{
+            <th
+              :class="{
                 'cursor-pointer hover:text-primary-emphasis': true,
-                'text-primary-emphasis-alt': sortBy === 'true_positive_rate'
+                'text-primary-emphasis-alt': sortBy === 'true_positive_rate',
               }"
               @click="toggleSort('true_positive_rate')"
-              >True Positive Rate
-              <SorterBtn :is="sortBy === 'true_positive_rate'" :by="sortOrder" /></th>
+            >
+              True Positive Rate <SorterBtn :is="sortBy === 'true_positive_rate'" :by="sortOrder" />
+            </th>
             <th>True Positive</th>
             <th>False Positive</th>
             <th>Clarification Required</th>
             <th>Not Accessible</th>
             <th>Not Analyzed</th>
             <th>Outdated</th>
-            <th 
-            :class="{
+            <th
+              :class="{
                 'cursor-pointer hover:text-primary-emphasis': true,
-                'text-primary-emphasis-alt': sortBy === 'finding_count'
+                'text-primary-emphasis-alt': sortBy === 'finding_count',
               }"
               @click="toggleSort('finding_count')"
-              >Total Count
-              <SorterBtn :is="sortBy === 'finding_count'" :by="sortOrder" /></th>
+            >
+              Total Count <SorterBtn :is="sortBy === 'finding_count'" :by="sortOrder" />
+            </th>
             <th class="w-36 md:w-48 xl:w-72">Findings (%)</th>
           </tr>
         </thead>
@@ -86,8 +89,7 @@
             :key="`${data.rule_name}`"
             class="hover:bg-teal-450/5"
             @click="goToRuleAnalysisPage(idx)"
-
-            >
+          >
             <td class="pl-2">{{ data.rule_name }}</td>
             <td class="py-1">{{ data.true_positive_rate }}</td>
             <td class="py-1">{{ data.tpCount }}</td>
@@ -113,36 +115,36 @@
       </table>
     </Panel>
 
-    <Panel header="Totals" v-if="ruleList !== undefined" class=" rounded-t-none">
-      <div  class="flex flex-col">
-          <div class="text-left">
-            <FindingStatusBadge status="TRUE_POSITIVE" /> :
-            <span class="ml-4">{{ truePositiveTotalCount }}</span>
-          </div>
-          <div class="text-left">
-            <FindingStatusBadge status="FALSE_POSITIVE" /> :
-            <span class="ml-4">{{ falsePositiveTotalCount }}</span>
-          </div>
-          <div class="text-left">
-            <FindingStatusBadge status="CLARIFICATION_REQUIRED" /> :
-            <span class="ml-4">{{ clarificationRequiredTotalCount }}</span>
-          </div>
-          <div class="text-left">
-            <FindingStatusBadge status="NOT_ACCESSIBLE" /> :
-            <span class="ml-4">{{ notAccessibleTotalCount }}</span>
-          </div>
-          <div class="text-left">
-            <FindingStatusBadge status="NOT_ANALYZED" /> :
-            <span class="ml-4">{{ notAnalyzedTotalCount }}</span>
-          </div>
-          <div class="text-left">
-            <FindingStatusBadge status="OUTDATED" /> :
-            <span class="ml-4">{{ outdatedTotalCount }}</span>
-          </div>
-          <div class="text-left">
-            Total number of Findings: <span class="ml-4">{{ totalFindingsCountForAllRules }}</span>
-          </div>
+    <Panel header="Totals" v-if="ruleList !== undefined" class="rounded-t-none">
+      <div class="flex flex-col">
+        <div class="text-left">
+          <FindingStatusBadge status="TRUE_POSITIVE" /> :
+          <span class="ml-4">{{ truePositiveTotalCount }}</span>
         </div>
+        <div class="text-left">
+          <FindingStatusBadge status="FALSE_POSITIVE" /> :
+          <span class="ml-4">{{ falsePositiveTotalCount }}</span>
+        </div>
+        <div class="text-left">
+          <FindingStatusBadge status="CLARIFICATION_REQUIRED" /> :
+          <span class="ml-4">{{ clarificationRequiredTotalCount }}</span>
+        </div>
+        <div class="text-left">
+          <FindingStatusBadge status="NOT_ACCESSIBLE" /> :
+          <span class="ml-4">{{ notAccessibleTotalCount }}</span>
+        </div>
+        <div class="text-left">
+          <FindingStatusBadge status="NOT_ANALYZED" /> :
+          <span class="ml-4">{{ notAnalyzedTotalCount }}</span>
+        </div>
+        <div class="text-left">
+          <FindingStatusBadge status="OUTDATED" /> :
+          <span class="ml-4">{{ outdatedTotalCount }}</span>
+        </div>
+        <div class="text-left">
+          Total number of Findings: <span class="ml-4">{{ totalFindingsCountForAllRules }}</span>
+        </div>
+      </div>
     </Panel>
   </div>
 </template>
@@ -194,9 +196,9 @@ const ruleTagsList = ref<string[]>([]);
 const sortBy = ref<'rule_name' | 'true_positive_rate' | 'finding_count' | undefined>(undefined);
 const sortOrder = ref<1 | -1>(1);
 
-const { alphaNumSort } = useSorting(sortBy, sortOrder)
+const { alphaNumSort } = useSorting(sortBy, sortOrder);
 const ruleOrderedList = computed(() => {
-  if (ruleList.value === undefined) { 
+  if (ruleList.value === undefined) {
     return undefined;
   }
   if (sortBy.value === undefined) {
@@ -204,8 +206,8 @@ const ruleOrderedList = computed(() => {
   }
 
   // @ts-expect-error complaining because object != reccord string.
-  return ruleList.value.sort(alphaNumSort);
-})
+  return ruleList.value.toSorted(alphaNumSort);
+});
 
 const truePositiveTotalCount = ref(0);
 const falsePositiveTotalCount = ref(0);
@@ -321,7 +323,7 @@ function goToRuleAnalysisPage(idx: number) {
     return;
   }
 
-  const record = ruleOrderedList.value[idx]
+  const record = ruleOrderedList.value[idx];
   const store = useAuthUserStore();
   const updateState: PreviousRouteState = {
     ruleName: record.rule_name,
@@ -367,12 +369,10 @@ RulePackService.getRulePackVersions(10000, 0)
 
 function toggleSort(field: 'rule_name' | 'true_positive_rate' | 'finding_count') {
   if (sortBy.value === field) {
-    sortOrder.value = -sortOrder.value as (1 | -1)
-  }
-  else {
+    sortOrder.value = -sortOrder.value as 1 | -1;
+  } else {
     sortBy.value = field;
     sortOrder.value = 1;
   }
 }
-
 </script>

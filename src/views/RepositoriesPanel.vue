@@ -37,12 +37,17 @@
               'hover:bg-teal-450/5': true,
             }"
             @click="handleRowClicked(idx)"
-
-            >
+          >
             <td class="pl-2">{{ data.project_key }}</td>
-            <td>{{ data.repository_name.slice(0,20) }}</td>
+            <td>{{ data.repository_name.slice(0, 20) }}</td>
             <td>{{ CommonUtils.formatVcsProvider(data.vcs_provider) }}</td>
-            <td>{{ data.last_scan_timestamp ? DateUtils.formatDate(data.last_scan_timestamp) : 'Not scanned' }}</td>
+            <td>
+              {{
+                data.last_scan_timestamp
+                  ? DateUtils.formatDate(data.last_scan_timestamp)
+                  : 'Not scanned'
+              }}
+            </td>
             <td>{{ data.total_findings_count }}</td>
             <td>
               <HealthBar
@@ -92,7 +97,9 @@ const router = useRouter();
 
 const repositoryList = ref<RepositoryEnrichedRead[] | undefined>(undefined);
 const selectedIndex = ref<number | undefined>(undefined);
-const selection = computed(() => !repositoryList.value ? undefined : repositoryList.value[selectedIndex.value ?? 0]);
+const selection = computed(() =>
+  !repositoryList.value ? undefined : repositoryList.value[selectedIndex.value ?? 0],
+);
 
 const { totalRows, currentPage, perPage, handlePageClick, handlePageSizeChange } = usePaginator(
   fetchPaginatedRepositories,
@@ -200,7 +207,9 @@ onKeyStroke(['ArrowUp', 'k', 'K'], () => !shouldIgnoreKeystroke() && selectUp(),
   eventName: 'keydown',
 });
 /* istanbul ignore next @preserve */
-onKeyStroke(['o','Enter'], () => !shouldIgnoreKeystroke() && goToScanFindings(), { eventName: 'keydown' });
+onKeyStroke(['o', 'Enter'], () => !shouldIgnoreKeystroke() && goToScanFindings(), {
+  eventName: 'keydown',
+});
 
 onMounted(() => {
   fetchDistinctProjects();

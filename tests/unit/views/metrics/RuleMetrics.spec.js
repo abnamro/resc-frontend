@@ -28,7 +28,7 @@ describe('RuleMetrics tests', () => {
     axios.get.mockResolvedValueOnce({ data: rules_with_findings_status_count });
     const wrapper = mount(App, {
       components: {
-        SorterBtn
+        SorterBtn,
       },
       global: {
         stubs: {
@@ -69,7 +69,7 @@ describe('RuleMetrics tests', () => {
         rulePackVersion: [{ version: '0.0.6', active: true, created: 'today' }],
       },
       components: {
-        SorterBtn
+        SorterBtn,
       },
       global: {
         stubs: {
