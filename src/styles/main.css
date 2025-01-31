@@ -27,7 +27,7 @@ html {
   min-height: 100svh;
 }
 
-#app.dark {
+body.dark {
   background: var(--p-surface-900);
 }
 

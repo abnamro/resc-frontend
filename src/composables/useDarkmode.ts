@@ -3,9 +3,9 @@ import type { Ref } from 'vue';
 export function useDarkMode(dark: Ref<boolean>) {
   function setDarkMode() {
     if (dark.value) {
-      document.getElementById('app')?.classList.add('dark');
+      document.getElementsByTagName('body')[0].classList.add('dark');
     } else {
-      document.getElementById('app')?.classList.remove('dark');
+      document.getElementsByTagName('body')[0].classList.remove('dark');
     }
   }
   function toggleDarkMode() {

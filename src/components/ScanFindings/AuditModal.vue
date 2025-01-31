@@ -3,7 +3,7 @@
     :header="`AUDIT ${props.selectedCheckBoxIds.length} FINDINGS`"
     v-model:visible="visible"
     @hide="resetModal"
-    :class="{ 'w-[500px]': true, dark: dark }"
+    class="w-[500px]"
   >
     <form ref="form" @submit.stop.prevent="handleSubmit" class="flex flex-col gap-4">
       <SelectStatus v-model:status="status" :invalid="!isStatusValid" />
@@ -28,11 +28,6 @@ import Dialog from 'primevue/dialog';
 import Button from 'primevue/button';
 import SelectStatus from './Form/SelectStatus.vue';
 import SetComment from './Form/SetComment.vue';
-import { useAuthUserStore } from '@/store';
-import { storeToRefs } from 'pinia';
-
-const store = useAuthUserStore();
-const { dark } = storeToRefs(store);
 
 const visible = defineModel('visible') as Ref<boolean>;
 type Props = {

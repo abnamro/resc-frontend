@@ -1,11 +1,5 @@
 <template>
-  <Dialog
-    id="keybindings-table"
-    v-model:visible="visible"
-    modal
-    header="Keyboard shortcuts"
-    :class="{ dark: dark }"
-  >
+  <Dialog id="keybindings-table" v-model:visible="visible" modal header="Keyboard shortcuts">
     <table>
       <tr v-for="data in keybindings" :key="data.effect" class="text-muted-color-emphasis">
         <td>{{ data.effect }}</td>
@@ -39,11 +33,6 @@ import Button from 'primevue/button';
 import Dialog from 'primevue/dialog';
 import Chip from 'primevue/chip';
 import { ref, type Ref } from 'vue';
-import { useAuthUserStore } from '@/store';
-import { storeToRefs } from 'pinia';
-
-const store = useAuthUserStore();
-const { dark } = storeToRefs(store);
 
 const visible = defineModel('visible') as Ref<boolean>;
 

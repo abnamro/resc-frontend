@@ -318,7 +318,7 @@ const BasicAAB = {
           shadow: '0 0 #0000, 0 0 #0000, 0 1px 2px 0 rgba(18, 18, 23, 0.05)',
         },
         text: {
-          color: '{surface.50}',
+          color: '{surface.130}',
           hoverColor: '{surface.0}',
           mutedColor: '{surface.370}',
           hoverMutedColor: '{surface.130}',
@@ -347,19 +347,19 @@ const BasicAAB = {
             color: '{text.color}',
           },
         },
-        // list: {
-        //   option: {
-        //     focusBackground: '{surface.800}',
-        //     selectedBackground: '{highlight.background}',
-        //     selectedFocusBackground: '{highlight.focus.background}',
-        //     color: '{text.color}',
-        //     focusColor: '{text.hover.color}',
-        //     selectedColor: '{highlight.color}',
-        //     selectedFocusColor: '{highlight.focus.color}',
-        //     icon: { color: '{surface.500}', focusColor: '{surface.400}' },
-        //   },
-        //   optionGroup: { background: 'transparent', color: '{text.muted.color}' },
-        // },
+        list: {
+          option: {
+            focusBackground: '{surface.800}',
+            selectedBackground: '{highlight.background}',
+            selectedFocusBackground: '{highlight.focus.background}',
+            color: '{text.color}',
+            focusColor: '{text.hover.color}',
+            selectedColor: '{highlight.color}',
+            selectedFocusColor: '{highlight.focus.color}',
+            icon: { color: '{surface.500}', focusColor: '{surface.400}' },
+          },
+          optionGroup: { background: 'transparent', color: '{text.muted.color}' },
+        },
         // navigation: {
         //   item: {
         //     focusBackground: '{surface.800}',
@@ -842,184 +842,6 @@ const BasicAAB = {
         },
       },
     },
-    // datatable: {
-    // 	root: {
-    //     transitionDuration: "{transition.duration}",
-    //     colorScheme: {
-    //       light:{
-    //         background: "transparent",
-    //       },
-    //       dark: {
-    //         // background: "{content.dark.background}",
-    //       }
-    //     }
-    //   },
-    // 	header: {
-    // background: "transparent",
-    // 	// 	borderColor: "{datatable.border.color}",
-    // 	// 	color: "{content.color}",
-    // 	// 	borderWidth: "0 0 1px 0",
-    // 	// 	padding: "0.75rem 1rem",
-    // 	// },
-    // 	// headerCell: {
-    // 	// 	background: "{content.background}",
-    // 	// 	hoverBackground: "{content.hover.background}",
-    // 	// 	selectedBackground: "{highlight.background}",
-    // 	// 	borderColor: "{datatable.border.color}",
-    // 	// 	color: "{content.color}",
-    // 	// 	hoverColor: "{content.hover.color}",
-    // 	// 	selectedColor: "{highlight.color}",
-    // 	// 	gap: "0.5rem",
-    // 	// 	padding: "0.75rem 1rem",
-    // 	// 	focusRing: {
-    // 	// 		width: "{focus.ring.width}",
-    // 	// 		style: "{focus.ring.style}",
-    // 	// 		color: "{focus.ring.color}",
-    // 	// 		offset: "-1px",
-    // 	// 		shadow: "{focus.ring.shadow}",
-    // 	// 	},
-    // },
-    // 	columnTitle: { fontWeight: "600" },
-    // colorScheme: {
-    // 	row: {
-    //       light: {
-    //         background: "{surface.0}",
-    //         color: "{surface.880}",
-    // },
-    // dark: {
-    // background: "{surface.880}",
-    //         hoverBackground: "{content.dark.hover.background}",
-    //         selectedBackground: "{highlight.dark.background}",
-    // color: "{surface.50}",
-    //         hoverColor: "{content.dark.hover.color}",
-    //         selectedColor: "{highlight.dark.color}",
-    //         focusRing: {
-    //           width: "{focus.ring.width}",
-    //           style: "{focus.ring.style}",
-    //           color: "{focus.ring.color}",
-    //           offset: "-1px",
-    //           shadow: "{focus.ring.shadow}",
-    //     },
-    //   }
-    // }
-    // },
-    // 	bodyCell: { borderColor: "{datatable.border.color}", padding: "0.75rem 1rem" },
-    // 	footerCell: {
-    // 		background: "{content.background}",
-    // 		borderColor: "{datatable.border.color}",
-    // 		color: "{content.color}",
-    // 		padding: "0.75rem 1rem",
-    // 	},
-    // 	columnFooter: { fontWeight: "600" },
-    // 	footer: {
-    // 		background: "{content.background}",
-    // 		borderColor: "{datatable.border.color}",
-    // 		color: "{content.color}",
-    // 		borderWidth: "0 0 1px 0",
-    // 		padding: "0.75rem 1rem",
-    // 	},
-    // 	dropPointColor: "{primary.color}",
-    // 	columnResizerWidth: "0.5rem",
-    // 	resizeIndicator: { width: "1px", color: "{primary.color}" },
-    // 	sortIcon: { color: "{text.muted.color}", hoverColor: "{text.hover.muted.color}" },
-    // 	loadingIcon: { size: "2rem" },
-    // 	// rowToggleButton: {
-    // 	// 	hoverBackground: "{content.hover.background}",
-    // 	// 	selectedHoverBackground: "{content.background}",
-    // 	// 	color: "{text.muted.color}",
-    // 	// 	hoverColor: "{text.color}",
-    // 	// 	selectedHoverColor: "{primary.color}",
-    // 	// 	size: "1.75rem",
-    // 	// 	borderRadius: "50%",
-    // 	// 	focusRing: {
-    // 	// 		width: "{focus.ring.width}",
-    // 	// 		style: "{focus.ring.style}",
-    // 	// 		color: "{focus.ring.color}",
-    // 	// 		offset: "{focus.ring.offset}",
-    // 	// 		shadow: "{focus.ring.shadow}",
-    // 	// 	},
-    // },
-    // 	// filter: {
-    // 	// 	inlineGap: "0.5rem",
-    // 	// 	overlaySelect: {
-    // 	// 		background: "{overlay.select.background}",
-    // 	// 		borderColor: "{overlay.select.border.color}",
-    // 	// 		borderRadius: "{overlay.select.border.radius}",
-    // 	// 		color: "{overlay.select.color}",
-    // 	// 		shadow: "{overlay.select.shadow}",
-    // 	// 	},
-    // 	// 	overlayPopover: {
-    // 	// 		background: "{overlay.popover.background}",
-    // 	// 		borderColor: "{overlay.popover.border.color}",
-    // 	// 		borderRadius: "{overlay.popover.border.radius}",
-    // 	// 		color: "{overlay.popover.color}",
-    // 	// 		shadow: "{overlay.popover.shadow}",
-    // 	// 		padding: "{overlay.popover.padding}",
-    // 	// 		gap: "0.5rem",
-    // 	// 	},
-    // 	// 	rule: { borderColor: "{content.border.color}" },
-    // 	// 	constraintList: { padding: "{list.padding}", gap: "{list.gap}" },
-    // 	// 	constraint: {
-    // 	// 		focusBackground: "{list.option.focus.background}",
-    // 	// 		selectedBackground: "{list.option.selected.background}",
-    // 	// 		selectedFocusBackground: "{list.option.selected.focus.background}",
-    // 	// 		color: "{list.option.color}",
-    // 	// 		focusColor: "{list.option.focus.color}",
-    // 	// 		selectedColor: "{list.option.selected.color}",
-    // 	// 		selectedFocusColor: "{list.option.selected.focus.color}",
-    // 	// 		separator: { borderColor: "{content.border.color}" },
-    // 	// 		padding: "{list.option.padding}",
-    // 	// 		borderRadius: "{list.option.border.radius}",
-    // 	// 	},
-    // 	// },
-    // 	colorScheme: {
-    // 		light: {
-    // 			root: { borderColor: "{content.border.color}" },
-    // 			row: { stripedBackground: "{surface.50}" },
-    // 			bodyCell: { selectedBorderColor: "{primary.100}" },
-    // 		},
-    // 		dark: {
-    // 			root: { background: "{surface.800}" },
-    //       header: {
-    //         background: "{content.dark.background}",
-    //         borderColor: "{datatable.border.color}",
-    //         color: "{content.dark.color}",
-    //         borderWidth: "0 0 1px 0",
-    //         padding: "0.75rem 1rem",
-    //       },
-    // 		},
-    // 	},
-    // },
-    // toggleswitch: {
-    //   width: '2rem',
-    //   height: '1rem',
-    //   gap: '0.25rem',
-    //   handle: {
-    //     size: '0.65rem',
-    //   },
-    //   colorScheme: {
-    //     light: {
-    //       disabled: {
-    //         background: '{surface.130}',
-    //       },
-    //       handle: {
-    //         disabled: {
-    //           background: '{surface.130}',
-    //         },
-    //       },
-    //     },
-    //     dark: {
-    //       disabled: {
-    //         background: '{surface.800}',
-    //       },
-    //       handle: {
-    //         disabled: {
-    //           background: '{surface.700}',
-    //         },
-    //       },
-    //     },
-    //   },
-    // },
     paginator: {
       root: {
         colorScheme: {
@@ -1033,47 +855,6 @@ const BasicAAB = {
           },
         },
       },
-      // navButton: {
-      //   colorScheme: {
-      //     light: {
-      //         background: "transparent",
-      //         hoverBackground: "{content.hover.background}",
-      //         selectedBackground: "{highlight.background}",
-      //         color: "{text.muted.color}",
-      //         hoverColor: "{text.hover.muted.color}",
-      //         selectedColor: "{highlight.color}",
-      //         width: "2.5rem",
-      //         height: "2.5rem",
-      //         borderRadius: "50%",
-      //         focusRing: {
-      //           width: "{focus.ring.width}",
-      //           style: "{focus.ring.style}",
-      //           color: "{focus.ring.color}",
-      //           offset: "{focus.ring.offset}",
-      //           shadow: "{focus.ring.shadow}",
-      //         },
-      // },
-      // dark: {
-      //         background: "{content.dark.background}",
-      //         hoverBackground: "{content.dark.hover.background}",
-      //         selectedBackground: "{highlight.dark.background}",
-      //         color: "{text.muted.color}",
-      //         hoverColor: "{text.hover.muted.color}",
-      //         selectedColor: "{highlight.dark.color}",
-      //         width: "2.5rem",
-      //         height: "2.5rem",
-      //         borderRadius: "50%",
-      //         focusRing: {
-      //           width: "{focus.ring.width}",
-      //           style: "{focus.ring.style}",
-      //           color: "{focus.ring.color}",
-      //           offset: "{focus.ring.offset}",
-      //           shadow: "{focus.ring.shadow}",
-      //         },
-      //   }
-      // }
-
-      // },
       currentPageReport: { color: '{text.muted.color}' },
       // 	jumpToPageInput: { maxWidth: "2.5rem" },
       colorSheme: {
@@ -1236,6 +1017,30 @@ const BasicAAB = {
         },
       },
     },
+    multiselect: {
+      root: {
+        colorScheme: {
+          light: {
+            background: 'transparent',
+          },
+          dark: {
+            background: 'transparent',
+          },
+        },
+      },
+      list: {
+        padding: '0 0',
+      },
+      option: {
+        border: {
+          radius: 0,
+        },
+        focus: {
+          background: 'linear-gradient({primary.450}, {primary.550})',
+          color: '{surface.0}',
+        },
+      },
+    },
     select: {
       background: 'transparent',
       border: {
@@ -1326,14 +1131,6 @@ const BasicAAB = {
         },
       },
     },
-    scrollpanel: {
-      colorScheme: {
-        light: {},
-        dark: {
-          bar: {},
-        },
-      },
-    },
     panel: {
       colorScheme: {
         light: {
@@ -1389,7 +1186,7 @@ const BasicAAB = {
         },
         dark: {
           root: {
-            background: '{surface.800}',
+            background: '{surface.880}',
             color: '{surface.0}',
           },
           subtitle: {

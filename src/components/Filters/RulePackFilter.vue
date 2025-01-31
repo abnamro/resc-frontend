@@ -14,6 +14,8 @@
       :show-toggle-all="false"
       id="rulePack"
       @update:model-value="onRulePackVersionFilterChange"
+      :pt:option:class="'text-gray-840 dark:text-gray-130'"
+      :pt:overlay:class="'bg-gray-0 dark:bg-gray-870 dark:border-gray-780'"
     >
       <template #option="slotProps">
         <div class="flex items-center">

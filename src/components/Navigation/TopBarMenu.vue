@@ -30,7 +30,7 @@
       @click="isKeybindingModalOpen = true"
     ></Button>
     <Button rounded icon="pi pi-user" v-if="displayLoggedInUser" @click="toggle"></Button>
-    <Popover ref="op" v-if="displayLoggedInUser" :class="{ dark: dark }">
+    <Popover ref="op" v-if="displayLoggedInUser">
       <div class="flex flex-col gap-4 w-[25rem]">
         <div class="flex gap-2">
           <Avatar :label="avatarText" size="large" />

@@ -1,5 +1,5 @@
 <template>
-  <Dialog v-model:visible="visible" modal header="Select columns" :class="{ dark: dark }">
+  <Dialog v-model:visible="visible" modal header="Select columns">
     <Listbox
       v-model="tableColumns"
       checkmark
@@ -26,7 +26,7 @@ const visible = defineModel('visible') as Ref<boolean>;
 const selectableColumns = ref(ColumnUtils.selectableColumns());
 
 const store = useAuthUserStore();
-const { dark, tableColumns } = storeToRefs(store);
+const { tableColumns } = storeToRefs(store);
 
 const emit = defineEmits(['update-columns']);
 
