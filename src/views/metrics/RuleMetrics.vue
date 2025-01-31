@@ -2,6 +2,7 @@
   <div class="p-4">
     <h1 class="text-left text-3xl mb-10">RULE METRICS</h1>
 
+    <Panel :pt:header:class="'hidden'" class="pt-[1.125rem]">
     <div class="flex gap-4 mb-2">
       <div class="w-1/4">
         <RulePackFilter
@@ -31,62 +32,89 @@
         >Include data from repositories marked as deleted.</label
       >
     </div>
+    </Panel>
 
-    <DataTable
-      :value="ruleList"
-      size="small"
-      :loading="ruleList === undefined"
-      dataKey="_id"
-      :highlight-on-select="true"
-      selection-mode="single"
-      :virtual-scroller-options="{ itemSize: 36 }"
-      @row-click="goToRuleAnalysisPage"
-      class="mt-8"
-    >
-      <Column field="rule_name" header="Rule" sortable header-class="bg-teal-500/20"></Column>
-      <Column
-        field="true_positive_rate"
-        header="True Positive Rate"
-        sortable
-        header-class="bg-teal-500/20"
-      >
-      </Column>
-      <!-- True Positive Count Column -->
-      <Column field="tpCount" header="True Positive" header-class="bg-teal-500/20"></Column>
-      <!-- False Positive Count Column -->
-      <Column field="fpCount" header="False Positive" header-class="bg-teal-500/20"></Column>
-      <!-- Clarification Required Count Column -->
-      <Column
-        field="crCount"
-        header="Clarification Required"
-        header-class="bg-teal-500/20"
-      ></Column>
-      <!-- Not Accessible Count Column -->
-      <Column field="urCount" header="Not Accessible" header-class="bg-teal-500/20"></Column>
-      <!-- Not Accessible Count Column -->
-      <Column field="naCount" header="Not Analyzed" header-class="bg-teal-500/20"></Column>
-      <!-- Outdated Count Column -->
-      <Column field="odCount" header="Outdated" header-class="bg-teal-500/20"></Column>
+    <Panel :pt:header:class="'hidden'" class="mt-8 pt-[1.125rem] rounded-b-none">
+      <table class="w-full text-left">
+        <thead>
+          <tr class="bg-teal-500/20 text-lg">
+            <th class="pl-2"
+              :class="{
+                'cursor-pointer hover:text-primary-emphasis': true,
+                'text-primary-emphasis-alt': sortBy === 'rule_name'
+              }"
+              @click="toggleSort('rule_name')"
+              >
+              Rule <SorterBtn :is="sortBy === 'rule_name'" :by="sortOrder" />
+            </th>
+            <th 
+            :class="{
+                'cursor-pointer hover:text-primary-emphasis': true,
+                'text-primary-emphasis-alt': sortBy === 'true_positive_rate'
+              }"
+              @click="toggleSort('true_positive_rate')"
+              >True Positive Rate
+              <SorterBtn :is="sortBy === 'true_positive_rate'" :by="sortOrder" /></th>
+            <th>True Positive</th>
+            <th>False Positive</th>
+            <th>Clarification Required</th>
+            <th>Not Accessible</th>
+            <th>Not Analyzed</th>
+            <th>Outdated</th>
+            <th 
+            :class="{
+                'cursor-pointer hover:text-primary-emphasis': true,
+                'text-primary-emphasis-alt': sortBy === 'finding_count'
+              }"
+              @click="toggleSort('finding_count')"
+              >Total Count
+              <SorterBtn :is="sortBy === 'finding_count'" :by="sortOrder" /></th>
+            <th class="w-36 md:w-48 xl:w-72">Findings (%)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <template v-if="ruleList === undefined">
+            <tr>
+              <td colspan="10" class="text-center p-4">
+                <i class="pi pi-spin pi-spinner mr-2"></i> Loading data...
+              </td>
+            </tr>
+          </template>
+          <tr
+            v-else
+            v-for="(data, idx) in ruleOrderedList"
+            :key="`${data.rule_name}`"
+            class="hover:bg-teal-450/5"
+            @click="goToRuleAnalysisPage(idx)"
 
-      <Column field="finding_count" header="Total Count" sortable header-class="bg-teal-500/20">
-      </Column>
+            >
+            <td class="pl-2">{{ data.rule_name }}</td>
+            <td class="py-1">{{ data.true_positive_rate }}</td>
+            <td class="py-1">{{ data.tpCount }}</td>
+            <td class="py-1">{{ data.fpCount }}</td>
+            <td class="py-1">{{ data.crCount }}</td>
+            <td class="py-1">{{ data.urCount }}</td>
+            <td class="py-1">{{ data.naCount }}</td>
+            <td class="py-1">{{ data.odCount }}</td>
+            <td class="py-1">{{ data.finding_count }}</td>
+            <td>
+              <HealthBar
+                :truePositive="data.tpCount"
+                :falsePositive="data.fpCount"
+                :notAnalyzed="data.naCount"
+                :notAccessible="data.urCount"
+                :clarificationRequired="data.crCount"
+                :outdated="data.odCount"
+                :totalCount="data.finding_count ?? 0"
+              />
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </Panel>
 
-      <Column header="Findings (%)" header-class="bg-teal-500/20" body-class="w-96">
-        <template #body="slotProps">
-          <HealthBar
-            :truePositive="slotProps.data.tpCount"
-            :falsePositive="slotProps.data.fpCount"
-            :notAnalyzed="slotProps.data.naCount"
-            :notAccessible="slotProps.data.urCount"
-            :clarificationRequired="slotProps.data.crCount"
-            :outdated="slotProps.data.odCount"
-            :totalCount="slotProps.data.finding_count ?? 0"
-          />
-        </template>
-      </Column>
-      <template #footer>
-        <div v-if="ruleList !== undefined" class="flex flex-col">
-          <h5 class="text-left font-bold text-lg mt-8">Totals</h5>
+    <Panel header="Totals" v-if="ruleList !== undefined" class=" rounded-t-none">
+      <div  class="flex flex-col">
           <div class="text-left">
             <FindingStatusBadge status="TRUE_POSITIVE" /> :
             <span class="ml-4">{{ truePositiveTotalCount }}</span>
@@ -115,8 +143,7 @@
             Total number of Findings: <span class="ml-4">{{ totalFindingsCountForAllRules }}</span>
           </div>
         </div>
-      </template>
-    </DataTable>
+    </Panel>
   </div>
 </template>
 
@@ -127,7 +154,7 @@ import RulePackService from '@/services/rule-pack-service';
 import RuleService from '@/services/rule-service';
 import RuleTagsFilter from '@/components/Filters/RuleTagsFilter.vue';
 import { useAuthUserStore, type PreviousRouteState } from '@/store/index';
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import type {
   FindingStatus,
   PaginationType,
@@ -138,11 +165,11 @@ import { useRouter } from 'vue-router';
 import type { AxiosResponse } from 'axios';
 import CommonUtils from '@/utils/common-utils';
 import ToggleSwitch from 'primevue/toggleswitch';
-import type { DataTableRowClickEvent } from 'primevue/datatable';
-import Column from 'primevue/column';
-import DataTable from 'primevue/datatable';
 import FindingStatusBadge from '@/components/Common/FindingStatusBadge.vue';
 import { dispatchError } from '@/configuration/config';
+import Panel from 'primevue/panel';
+import SorterBtn from '@/components/Common/SorterBtn.vue';
+import { useSorting } from '@/composables/useSorting';
 
 type Stats = {
   tpCount: number;
@@ -164,6 +191,22 @@ type RuleFindingCountModelAugmented = RuleFindingCountModel & Stats;
 const router = useRouter();
 const ruleList = ref<undefined | RuleFindingCountModelAugmented[]>(undefined);
 const ruleTagsList = ref<string[]>([]);
+const sortBy = ref<'rule_name' | 'true_positive_rate' | 'finding_count' | undefined>(undefined);
+const sortOrder = ref<1 | -1>(1);
+
+const { alphaNumSort } = useSorting(sortBy, sortOrder)
+const ruleOrderedList = computed(() => {
+  if (ruleList.value === undefined) { 
+    return undefined;
+  }
+  if (sortBy.value === undefined) {
+    return ruleList.value;
+  }
+
+  // @ts-expect-error complaining because object != reccord string.
+  return ruleList.value.sort(alphaNumSort);
+})
+
 const truePositiveTotalCount = ref(0);
 const falsePositiveTotalCount = ref(0);
 const clarificationRequiredTotalCount = ref(0);
@@ -273,8 +316,12 @@ function calculateAverageTruePositiveRatePercentage() {
   }
 }
 
-function goToRuleAnalysisPage(event: DataTableRowClickEvent) {
-  const record = event.data as RuleFindingCountModelAugmented;
+function goToRuleAnalysisPage(idx: number) {
+  if (ruleOrderedList.value === undefined) {
+    return;
+  }
+
+  const record = ruleOrderedList.value[idx]
   const store = useAuthUserStore();
   const updateState: PreviousRouteState = {
     ruleName: record.rule_name,
@@ -317,4 +364,15 @@ RulePackService.getRulePackVersions(10000, 0)
     fetchRulesWithFindingStatusCount();
   })
   .catch(dispatchError);
+
+function toggleSort(field: 'rule_name' | 'true_positive_rate' | 'finding_count') {
+  if (sortBy.value === field) {
+    sortOrder.value = -sortOrder.value as (1 | -1)
+  }
+  else {
+    sortBy.value = field;
+    sortOrder.value = 1;
+  }
+}
+
 </script>
