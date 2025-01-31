@@ -1,5 +1,5 @@
 <template>
-  <Dialog v-model:visible="visible" modal header="Select columns" :class="{'dark': dark }">
+  <Dialog v-model:visible="visible" modal header="Select columns" :class="{ dark: dark }">
     <Listbox
       v-model="tableColumns"
       checkmark

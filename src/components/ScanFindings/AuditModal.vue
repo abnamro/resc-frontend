@@ -3,7 +3,7 @@
     :header="`AUDIT ${props.selectedCheckBoxIds.length} FINDINGS`"
     v-model:visible="visible"
     @hide="resetModal"
-    :class="{'w-[500px]': true, 'dark': dark }"
+    :class="{ 'w-[500px]': true, dark: dark }"
   >
     <form ref="form" @submit.stop.prevent="handleSubmit" class="flex flex-col gap-4">
       <SelectStatus v-model:status="status" :invalid="!isStatusValid" />

@@ -33,7 +33,9 @@
 <script lang="ts" setup>
 import FindingsTable from '@/components/Findings/FindingsTable.vue';
 import FindingsService, { type QueryFilterType } from '@/services/findings-service';
-import RuleAnalysisFilterView, { type RuleAnalysisFilter } from '@/components/Filters/RuleAnalysisFilterView.vue';
+import RuleAnalysisFilterView, {
+  type RuleAnalysisFilter,
+} from '@/components/Filters/RuleAnalysisFilterView.vue';
 import { useAuthUserStore, type PreviousRouteState } from '@/store/index';
 import { onMounted, ref } from 'vue';
 import type { DetailedFindingRead, PaginationType } from '@/services/shema-to-types';

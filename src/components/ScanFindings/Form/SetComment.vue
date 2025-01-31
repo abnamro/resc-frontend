@@ -3,7 +3,8 @@
     <label for="comment" class="font-bold text-lg text-left text-muted-color-emphasis">
       Comment
     </label>
-    <Textarea v-model="comment" :invalid="invalid" placeholder="Enter comment." rows="5" > </Textarea>
+    <Textarea v-model="comment" :invalid="invalid" placeholder="Enter comment." rows="5">
+    </Textarea>
     <Message severity="error" class="mt-2" v-if="props.invalid">
       Comment must be at most {{ MAX_COMMENT_LENGTH }} characters.
     </Message>

@@ -1,108 +1,108 @@
 <template>
   <Panel :pt:header:class="'hidden'" class="mt-4 pt-[1.125rem]">
     <div class="grid grid-cols-10 gap-2">
-    <!--Rule Filter -->
-    <div class="col-span-4">
-      <RuleFilter
-        :rulesOptions="optionsRules"
-        :rulesSelected="selectedRule"
-        @on-rule-change="onRuleChange"
-      />
-    </div>
-    <!-- Status Filter -->
-    <div class="col-span-4">
-      <FindingStatusFilter @on-findings-status-change="onFindingsStatusChange" />
-    </div>
-    <div class="col-span-2 mt-1 ml-1 flex flex-col justify-end">
-      <Button class="" severity="warn" @click="toggleAdvancedSearch">Advanced Search</Button>
-    </div>
-  </div>
-
-  <Collapse :when="advancedSearchVisible">
-    <div class="grid grid-cols-12 gap-x-2 gap-y-4 mt-4">
-      <!-- VCS Filter -->
+      <!--Rule Filter -->
       <div class="col-span-4">
-        <VcsProviderFilter @on-vcs-change="onVcsProviderChange" />
-      </div>
-      <!--Project Filter -->
-      <div class="col-span-4">
-        <ProjectFilter
-          :projectOptions="props.projectOptions"
-          @on-project-change="onProjectChange"
+        <RuleFilter
+          :rulesOptions="optionsRules"
+          :rulesSelected="selectedRule"
+          @on-rule-change="onRuleChange"
         />
       </div>
-      <!--Repository Filter -->
+      <!-- Status Filter -->
       <div class="col-span-4">
-        <RepositoryFilter
-          :repositoryOptions="props.repositoryOptions"
-          @on-repository-change="onRepositoryChange"
-        />
+        <FindingStatusFilter @on-findings-status-change="onFindingsStatusChange" />
       </div>
+      <div class="col-span-2 mt-1 ml-1 flex flex-col justify-end">
+        <Button class="" severity="warn" @click="toggleAdvancedSearch">Advanced Search</Button>
+      </div>
+    </div>
 
-      <!-- Start Date Filter -->
-      <div class="col-span-2">
-        <div class="flex flex-col justify-start">
-          <label for="start-date" class="font-bold text-lg text-left text-muted-color-emphasis"
-            >From Date</label
-          >
-          <DatePicker
-            v-model="startDate"
-            placeholder="Enter Scan Start Date"
-            date-format="dd/mm/yyyy"
-            :max-date="todaysDate"
-            @update:model-value="onStartDateChange"
+    <Collapse :when="advancedSearchVisible">
+      <div class="grid grid-cols-12 gap-x-2 gap-y-4 mt-4">
+        <!-- VCS Filter -->
+        <div class="col-span-4">
+          <VcsProviderFilter @on-vcs-change="onVcsProviderChange" />
+        </div>
+        <!--Project Filter -->
+        <div class="col-span-4">
+          <ProjectFilter
+            :projectOptions="props.projectOptions"
+            @on-project-change="onProjectChange"
           />
         </div>
-      </div>
-
-      <!-- End Date Filter -->
-      <div class="col-span-2">
-        <div class="flex flex-col justify-start">
-          <label for="end-date" class="font-bold text-lg text-left text-muted-color-emphasis"
-            >To Date</label
-          >
-          <DatePicker
-            v-model="startDate"
-            placeholder="Enter Scan End Date"
-            date-format="dd/mm/yyyy"
-            :min-date="minEndDate"
-            :max-date="todaysDate"
-            :disabled="endDateDisabled"
-            @update:model-value="onEndDateChange"
+        <!--Repository Filter -->
+        <div class="col-span-4">
+          <RepositoryFilter
+            :repositoryOptions="props.repositoryOptions"
+            @on-repository-change="onRepositoryChange"
           />
         </div>
-      </div>
 
-      <div class="col-span-4">
-        <RulePackFilter
-          :rulePackSelected="rulePackSelected"
-          :rulePackOptions="props.rulePackOptions"
-          @on-rule-pack-version-change="onRulePackVersionChange"
-        />
-      </div>
-      <!-- Rule Tags Filter -->
-      <div class="col-span-4">
-        <RuleTagsFilter
-          :ruleTagsOptions="optionsRuleTags"
-          :ruleTagsSelected="selectedRuleTags"
-          @on-rule-tags-change="onRuleTagsChange"
-        />
-      </div>
+        <!-- Start Date Filter -->
+        <div class="col-span-2">
+          <div class="flex flex-col justify-start">
+            <label for="start-date" class="font-bold text-lg text-left text-muted-color-emphasis"
+              >From Date</label
+            >
+            <DatePicker
+              v-model="startDate"
+              placeholder="Enter Scan Start Date"
+              date-format="dd/mm/yyyy"
+              :max-date="todaysDate"
+              @update:model-value="onStartDateChange"
+            />
+          </div>
+        </div>
 
-      <div class="col-span-12 text-left flex items-center">
-        <ToggleSwitch
-          size="small"
-          v-model="includeDeletedRepositories"
-          inputId="includeDeletedRepositories"
-          @change="handleFilterChange"
-        >
-        </ToggleSwitch>
-        <label for="includeDeletedRepositories" class="ml-2"
-          >Display findings for repositories marked as deleted.</label
-        >
+        <!-- End Date Filter -->
+        <div class="col-span-2">
+          <div class="flex flex-col justify-start">
+            <label for="end-date" class="font-bold text-lg text-left text-muted-color-emphasis"
+              >To Date</label
+            >
+            <DatePicker
+              v-model="startDate"
+              placeholder="Enter Scan End Date"
+              date-format="dd/mm/yyyy"
+              :min-date="minEndDate"
+              :max-date="todaysDate"
+              :disabled="endDateDisabled"
+              @update:model-value="onEndDateChange"
+            />
+          </div>
+        </div>
+
+        <div class="col-span-4">
+          <RulePackFilter
+            :rulePackSelected="rulePackSelected"
+            :rulePackOptions="props.rulePackOptions"
+            @on-rule-pack-version-change="onRulePackVersionChange"
+          />
+        </div>
+        <!-- Rule Tags Filter -->
+        <div class="col-span-4">
+          <RuleTagsFilter
+            :ruleTagsOptions="optionsRuleTags"
+            :ruleTagsSelected="selectedRuleTags"
+            @on-rule-tags-change="onRuleTagsChange"
+          />
+        </div>
+
+        <div class="col-span-12 text-left flex items-center">
+          <ToggleSwitch
+            size="small"
+            v-model="includeDeletedRepositories"
+            inputId="includeDeletedRepositories"
+            @change="handleFilterChange"
+          >
+          </ToggleSwitch>
+          <label for="includeDeletedRepositories" class="ml-2"
+            >Display findings for repositories marked as deleted.</label
+          >
+        </div>
       </div>
-    </div>
-  </Collapse>
+    </Collapse>
   </Panel>
 </template>
 
