@@ -69,9 +69,6 @@ describe('RepositoriesPanel tests', () => {
 
     initMountApp();
     expect(wrapper.exists()).toBe(true);
-    expect(wrapper.vm.formatDate(0)).toBe('Not Scanned');
-    expect(wrapper.vm.formatDate(123456)).toContain('Jan 01, 1970');
-
     axios.get.mockResolvedValueOnce({ data: repositories });
     wrapper.vm.handlePageClick(1);
     axios.get.mockResolvedValueOnce({ data: repositories });
@@ -85,7 +82,7 @@ describe('RepositoriesPanel tests', () => {
     expect(() => wrapper.vm.selectDown()).not.toThrow();
     expect(() => wrapper.vm.selectUp()).not.toThrow();
     expect(wrapper.vm.selectedIndex).toBe(0);
-    expect(() => wrapper.vm.handleRowClicked({ index: 1 })).not.toThrow();
+    expect(() => wrapper.vm.handleRowClicked(1)).not.toThrow();
     expect(wrapper.vm.selectedIndex).toBe(1);
     expect(wrapper.vm.selection).not.toBe(undefined);
     expect(() => wrapper.vm.goToScanFindings()).not.toThrow();

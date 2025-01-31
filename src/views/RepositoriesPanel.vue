@@ -8,58 +8,58 @@
       @on-filter-change="handleFilterChange"
     />
 
+    <Panel :pt:header:class="'hidden'" class="mt-2 pt-[1.125rem]">
+      <table class="w-full text-left">
+        <thead>
+          <tr class="bg-teal-500/20 text-lg">
+            <th class="pl-2">Project</th>
+            <th>Repository</th>
+            <th>VCS Provider</th>
+            <th>Last Scan Date</th>
+            <th>Findings Count</th>
+            <th class="w-36 md:w-48 xl:w-72">Findings (%)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <template v-if="repositoryList === undefined">
+            <tr>
+              <td colspan="5" class="text-center p-4">
+                <i class="pi pi-spin pi-spinner mr-2"></i> Loading data...
+              </td>
+            </tr>
+          </template>
+          <tr
+            v-else
+            v-for="(data, idx) in repositoryList"
+            :key="`${data.repository_id}`"
+            :class="{
+              'bg-teal-450/10': selectedIndex === idx,
+              'hover:bg-teal-450/5': true,
+            }"
+            @click="handleRowClicked(idx)"
+
+            >
+            <td class="pl-2">{{ data.project_key }}</td>
+            <td>{{ data.repository_name.slice(0,20) }}</td>
+            <td>{{ CommonUtils.formatVcsProvider(data.vcs_provider) }}</td>
+            <td>{{ data.last_scan_timestamp ? DateUtils.formatDate(data.last_scan_timestamp) : 'Not scanned' }}</td>
+            <td>{{ data.total_findings_count }}</td>
+            <td>
+              <HealthBar
+                :truePositive="data.true_positive"
+                :falsePositive="data.false_positive"
+                :notAnalyzed="data.not_analyzed"
+                :notAccessible="data.not_accessible"
+                :clarificationRequired="data.clarification_required"
+                :outdated="data.outdated"
+                :totalCount="data.total_findings_count"
+              />
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </Panel>
     <!--Repository Table -->
-    <DataTable
-      :value="repositoryList"
-      size="small"
-      :loading="repositoryList === undefined"
-      v-model:selection="selection"
-      selection-mode="single"
-      :highlight-on-select="true"
-      :dataKey="(data) => `${data.id_}`"
-      @row-click="handleRowClicked"
-      class="mt-8"
-    >
-      <Column field="project_key" header="Project" headerClass="bg-teal-500/20"></Column>
-      <Column field="repository_name" header="Repository" headerClass="bg-teal-500/20">
-        <template #body="slotProps">
-          {{ slotProps.data.repository_name.slice(0, 20) }}
-        </template>
-      </Column>
-      <Column field="vcs_provider" header="VCS Provider" headerClass="bg-teal-500/20">
-        <template #body="slotProps">
-          {{ CommonUtils.formatVcsProvider(slotProps.data.vcs_provider) }}
-        </template>
-      </Column>
-      <Column field="last_scan_timestamp" header="Last Scan Date" headerClass="bg-teal-500/20">
-        <template #body="slotProps">
-          {{ formatDate(slotProps.data.last_scan_timestamp) }}
-        </template>
-      </Column>
-      <Column
-        field="total_findings_count"
-        header="Finding Counts"
-        headerClass="bg-teal-500/20"
-      ></Column>
-      <Column
-        field="findings"
-        header="Findings(%)"
-        bodyClass=" w-[36rem]"
-        headerClass="bg-teal-500/20"
-      >
-        <template #body="slotProps">
-          <HealthBar
-            :truePositive="slotProps.data.true_positive"
-            :falsePositive="slotProps.data.false_positive"
-            :notAnalyzed="slotProps.data.not_analyzed"
-            :notAccessible="slotProps.data.not_accessible"
-            :clarificationRequired="slotProps.data.clarification_required"
-            :outdated="slotProps.data.outdated"
-            :totalCount="slotProps.data.total_findings_count"
-          />
-        </template>
-      </Column>
-    </DataTable>
     <Paginator
       v-model:first="currentPage"
       v-model:rows="perPage"
@@ -77,23 +77,22 @@ import DateUtils from '@/utils/date-utils';
 import HealthBar from '@/components/Common/HealthBar.vue';
 import RepositoryService from '@/services/repository-service';
 import RepositoriesPageFilter from '@/components/Filters/RepositoriesPageFilter.vue';
-import { onMounted, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import type { RepositoryEnrichedRead, VCSProviders } from '@/services/shema-to-types';
 import { onKeyStroke } from '@vueuse/core';
 import { shouldIgnoreKeystroke } from '@/utils/keybind-utils';
 import { dispatchError, PAGE_SIZES } from '@/configuration/config';
-import DataTable, { type DataTableRowClickEvent } from 'primevue/datatable';
-import Column from 'primevue/column';
 import Paginator from 'primevue/paginator';
 import { usePaginator } from '@/composables/usePaginator';
 import { useFetchers } from '@/composables/useFetchers';
+import Panel from 'primevue/panel';
 
 const router = useRouter();
 
 const repositoryList = ref<RepositoryEnrichedRead[] | undefined>(undefined);
-const selection = ref<RepositoryEnrichedRead | undefined>(undefined);
 const selectedIndex = ref<number | undefined>(undefined);
+const selection = computed(() => !repositoryList.value ? undefined : repositoryList.value[selectedIndex.value ?? 0]);
 
 const { totalRows, currentPage, perPage, handlePageClick, handlePageSizeChange } = usePaginator(
   fetchPaginatedRepositories,
@@ -115,13 +114,8 @@ const {
   fetchDistinctRepositories,
 } = useFetchers();
 
-function formatDate(timestamp: string) {
-  const date = DateUtils.formatDate(timestamp);
-  return timestamp ? date : 'Not Scanned';
-}
-
-function handleRowClicked(event: DataTableRowClickEvent) {
-  selectedIndex.value = event.index;
+function handleRowClicked(idx: number) {
+  selectedIndex.value = idx;
   goToScanFindings();
 }
 
@@ -180,7 +174,6 @@ function selectUp(): boolean {
   }
 
   selectedIndex.value = Math.max(0, (selectedIndex.value ?? 1) - 1);
-  selection.value = repositoryList.value[selectedIndex.value];
   return true;
 }
 
@@ -190,7 +183,6 @@ function selectDown(): boolean {
   }
 
   selectedIndex.value = ((selectedIndex.value ?? -1) + 1) % repositoryList.value.length;
-  selection.value = repositoryList.value[selectedIndex.value];
   return true;
 }
 
@@ -208,7 +200,7 @@ onKeyStroke(['ArrowUp', 'k', 'K'], () => !shouldIgnoreKeystroke() && selectUp(),
   eventName: 'keydown',
 });
 /* istanbul ignore next @preserve */
-onKeyStroke('o', () => !shouldIgnoreKeystroke() && goToScanFindings(), { eventName: 'keydown' });
+onKeyStroke(['o','Enter'], () => !shouldIgnoreKeystroke() && goToScanFindings(), { eventName: 'keydown' });
 
 onMounted(() => {
   fetchDistinctProjects();
