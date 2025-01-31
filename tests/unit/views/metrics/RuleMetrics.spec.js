@@ -5,14 +5,9 @@ import App from '@/views/metrics/RuleMetrics.vue';
 import rule_packs from '@/../tests/resources/mock_rule_packs.json';
 import rule_tags from '@/../tests/resources/mock_rule_tags.json';
 import rules_with_findings_status_count from '@/../tests/resources/mock_rules_with_findings_status_count.json';
-import { createApp } from 'vue';
-import { PiniaVuePlugin, createPinia, setActivePinia } from 'pinia';
 import flushPromises from 'flush-promises';
-
-const app = createApp({});
-const pinia = createPinia();
-setActivePinia(pinia);
-app.use(PiniaVuePlugin);
+import SorterBtn from '@/components/Common/SorterBtn.vue';
+import { createTestingPinia } from '@pinia/testing';
 
 vi.mock('axios');
 vi.mock('vue-router', async () => {
@@ -31,25 +26,37 @@ describe('RuleMetrics tests', () => {
     axios.get.mockResolvedValueOnce({ data: rule_packs });
     axios.get.mockResolvedValueOnce(rule_tags);
     axios.get.mockResolvedValueOnce({ data: rules_with_findings_status_count });
-
     const wrapper = mount(App, {
-      props: {},
-      components: {},
+      components: {
+        SorterBtn
+      },
       global: {
         stubs: {
           HealthBar: true,
           RulePackFilter: true,
           RuleTagsFilter: true,
+          'router-view': true,
         },
+        plugins: [
+          createTestingPinia({
+            initialState: {
+              authUser: {
+                idToken: null,
+                accessToken: '12345',
+                destinationRoute: 'resc',
+                firstName: 'user',
+                lastName: 'test',
+                email: 'testuser@test.com',
+              },
+            },
+          }),
+        ],
       },
     });
-
     expect(wrapper.exists()).toBe(true);
     await flushPromises();
     expect(wrapper.vm.ruleList.length > 0).toBe(true);
-
-    wrapper.find('tr').trigger('click');
-    wrapper.vm.goToRuleAnalysisPage({ data: { rule_name: 'Rule-3' } });
+    wrapper.vm.goToRuleAnalysisPage(0);
   });
 
   it('Given a RuleMetrics When props are passed then RuleMetrics will be displayed', () => {
@@ -61,12 +68,15 @@ describe('RuleMetrics tests', () => {
       props: {
         rulePackVersion: [{ version: '0.0.6', active: true, created: 'today' }],
       },
-      components: {},
+      components: {
+        SorterBtn
+      },
       global: {
         stubs: {
           HealthBar: true,
           RulePackFilter: true,
           RuleTagsFilter: true,
+          'router-view': true,
         },
       },
     });
