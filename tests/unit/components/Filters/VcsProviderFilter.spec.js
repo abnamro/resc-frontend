@@ -3,8 +3,6 @@ import axios from 'axios';
 import { describe, expect, it, vi } from 'vitest';
 import App from '@/components/Filters/VcsProviderFilter.vue';
 import Config from '@/configuration/config';
-import Multiselect from 'vue-multiselect';
-import { BFormGroup } from 'bootstrap-vue-next';
 import vcs_providers from '@/../tests/resources/mock_vcs_providers.json';
 
 vi.mock('axios');
@@ -15,10 +13,7 @@ describe('VcsProviderFilter tests', () => {
 
     const wrapper = mount(App, {
       props: {},
-      components: {
-        Multiselect,
-        BFormGroup,
-      },
+      components: {},
     });
 
     expect(wrapper.exists()).toBe(true);
@@ -39,10 +34,7 @@ describe('VcsProviderFilter tests', () => {
           },
         ],
       },
-      components: {
-        Multiselect,
-        BFormGroup,
-      },
+      components: {},
     });
 
     expect(wrapper.exists()).toBe(true);

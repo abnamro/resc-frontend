@@ -1,8 +1,7 @@
 import { mount } from '@vue/test-utils';
 import { describe, expect, it } from 'vitest';
 import App from '@/components/Filters/RuleTagsFilter.vue';
-import { BFormGroup } from 'bootstrap-vue-next';
-import Multiselect from 'vue-multiselect';
+import flushPromises from 'flush-promises';
 
 describe('RuleTagsFilter tests', () => {
   it('Given a RuleTagsFilter When props are passed then RuleTagsFilter will be displayed', () => {
@@ -10,10 +9,7 @@ describe('RuleTagsFilter tests', () => {
       props: {
         ruleTagsOptions: ['tag1', 'tag2'],
       },
-      components: {
-        BFormGroup: BFormGroup,
-        Multiselect: Multiselect,
-      },
+      components: {},
     });
 
     expect(wrapper.exists()).toBe(true);
@@ -28,15 +24,12 @@ describe('RuleTagsFilter tests', () => {
         ruleTagsOptions: ['tag1', 'tag2'],
         ruleTagsSelected: ['tag1'],
       },
-      components: {
-        BFormGroup: BFormGroup,
-        Multiselect: Multiselect,
-      },
+      components: {},
     });
 
     expect(wrapper.exists()).toBe(true);
     wrapper.setProps({ ruleTagsSelected: ['tag1'] });
-    await wrapper.vm.$nextTick();
+    await flushPromises();
     expect(() => wrapper.vm.onRuleTagFilterChange()).not.toThrow();
     expect(wrapper.emitted()).toHaveProperty('on-rule-tags-change');
     expect(() => wrapper.vm.resetRuleTagsFilterSelection()).not.toThrow();

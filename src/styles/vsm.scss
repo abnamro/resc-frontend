@@ -13,19 +13,28 @@
   padding: 5px !important;
 }
 
+.dark .v-sidebar-menu {
+  --primary-bg: var(--p-teal-850);
+  --secondary-bg: var(--p-teal-920);
+}
+
 .v-sidebar-menu {
+  --secondary-bg: var(--p-teal-550);
+  --primary-bg: var(--p-teal-850);
+
   --vsm-item-color: #fff;
-  --vsm-base-bg: var(--bs-secondary);
-  --vsm-icon-active-bg: var(--bs-secondary);
-  --vsm-toggle-btn-bg: var(--bs-secondary-lighter);
-  --vsm-item-open-bg: var(--bs-secondary);
-  --vsm-dropdown-bg: var(--bs-secondary);
+  --vsm-base-bg: var(--primary-bg);
+  --vsm-icon-active-bg: var(--primary-bg);
+  --vsm-toggle-btn-bg: var(--secondary-bg);
+  --vsm-item-open-bg: var(--primary-bg);
+  --vsm-dropdown-bg: var(--primary-bg);
   --vsm-item-line-height: 30px;
   --vsm-icon-height: 20px;
   --vsm-icon-width: 20px;
   --vsm-item-font-size: 14px;
   --vsm-item-padding: 10px;
-  --vsm-icon-bg: var(--bs-secondary);
+  --vsm-icon-bg: var(--primary-bg);
+  z-index: 20;
 
   .vsm--header {
     font-size: 12px;
@@ -33,7 +42,7 @@
   }
 
   .vsm--icon {
-    background-color: var(--bs-secondary);
+    background-color: var(--primary-bg);
     height: 20px;
     line-height: 20px;
     width: 20px;
@@ -42,7 +51,7 @@
   
   .vsm--link_level-1.vsm--link_exact-active,
   .vsm--link_level-1.vsm--link_active {
-    box-shadow: 3px 0 0 0 #00ffae inset;
+    box-shadow: 3px 0 0 0 var(--p-primary-500) inset;
   }
 
   .vsm--mobile-item {
@@ -55,7 +64,7 @@
 }
 
 .vsm--mobile-bg {
-  background-color: var(--bs-secondary);
+  background-color: var(--primary-bg);
 }
 
 .collapse-arrow {

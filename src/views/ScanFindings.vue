@@ -1,72 +1,49 @@
 <template>
-  <div class="mx-4">
-    <!-- Page Title -->
-    <div class="col-md-2 pt-2 text-start page-title">
-      <h3><small class="text-nowrap">SCAN FINDINGS</small></h3>
-    </div>
+  <div class="p-4">
+    <h1 class="text-left text-3xl mb-10">SCAN FINDINGS</h1>
 
-    <SpinnerVue v-if="!loadedData" />
+    <RepositoryPanel
+      v-if="repository && vcsInstance"
+      :repository="repository"
+      :vcs-instance="vcsInstance"
+      @on-delete-at-change="fetchPaginatedFindingsByScanId"
+    >
+    </RepositoryPanel>
 
-    <!-- Repository Panel -->
-    <div class="col-md-6 ms-2 mt-4 text-start" v-if="loadedRepoData">
-      <RepositoryPanel
-        :repository="repository"
-        :vcs_instance="vcsInstance"
-        @on-delete-at-change="fetchPaginatedFindingsByScanId"
-      >
-      </RepositoryPanel>
-    </div>
-
-    <div>
-      <!-- Filters -->
-      <ScanFindingsFilter
-        :repository="repository"
-        @on-filter-change="handleFilterChange"
-        @previous-scans-checked="onPreviousScanChecked"
-        @include-previous-scans="displayPreviousScans"
-      ></ScanFindingsFilter>
-    </div>
-
-    <!--Scan Findings Table -->
-    <div v-if="!hasRecords && loadedData" class="text-center cursor-default">
-      <br />
-      <br />No Record Found...
-    </div>
+    <!-- Filters -->
+    <ScanFindingsFilter
+      v-if="repository"
+      :repository="repository"
+      @on-filter-change="handleFilterChange"
+      @previous-scans-checked="onPreviousScanChecked"
+      @include-previous-scans="displayPreviousScans"
+    ></ScanFindingsFilter>
 
     <FindingsTable
       :findings="findingList"
-      :is_rule_finding="false"
-      v-if="hasRecords"
+      :is-rule-finding="false"
       @refresh-table="fetchPaginatedFindingsByScanId"
     >
     </FindingsTable>
 
-    <div class="p-3" v-if="hasRecords">
-      <!-- Pagination -->
-      <Pagination
-        :currentPage="currentPage"
-        :perPage="perPage"
-        :totalRows="totalRows"
-        :pageSizes="pageSizes"
-        :requestedPageNumber="requestedPageNumber"
-        @page-click="handlePageClick"
-        @page-size-change="handlePageSizeChange"
-      ></Pagination>
-    </div>
+    <Paginator
+      v-model:first="currentPage"
+      v-model:rows="perPage"
+      :totalRecords="totalRows"
+      :rowsPerPageOptions="PAGE_SIZES"
+      @update:first="handlePageClick"
+      @update:rows="handlePageSizeChange"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
-import AxiosConfig from '@/configuration/axios-config';
-import Config from '@/configuration/config';
-import Pagination from '@/components/Common/PaginationVue.vue';
 import RepositoryPanel from '@/components/ScanFindings/RepositoryPanel.vue';
 import ScanFindingsFilter from '@/components/Filters/ScanFindingsFilter.vue';
 import ScanFindingsService from '@/services/scan-findings-service';
-import SpinnerVue from '@/components/Common/SpinnerVue.vue';
 import FindingsService, { type QueryFilterType } from '@/services/findings-service';
 import VCSInstanceService from '@/services/vcs-instance-service';
-import { computed, ref, type Ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import type {
   DetailedFindingRead,
   ScanRead,
@@ -76,42 +53,33 @@ import type {
   AugmentedDetailedFindingRead,
 } from '@/services/shema-to-types';
 import type { AxiosResponse } from 'axios';
-import type { TableItem } from 'bootstrap-vue-next';
 import { useAuthUserStore } from '@/store';
 import { storeToRefs } from 'pinia';
-import { PAGE_SIZES } from '@/configuration/config';
-
-const loadedData = ref(false);
-const loadedRepoData = ref(false);
+import { dispatchError, PAGE_SIZES } from '@/configuration/config';
+import Paginator from 'primevue/paginator';
+import { usePaginator } from '@/composables/usePaginator';
 
 type Props = {
   scanId: string;
 };
 
-type TableItemAugmentedDetailedFindingRead = AugmentedDetailedFindingRead & TableItem;
+const { totalRows, currentPage, perPage, handlePageClick, handlePageSizeChange } =
+  usePaginator(fetchPaginatedData);
 
 const props = defineProps<Props>();
 const previousScanChecked = ref(false);
-const scanType = ref(undefined) as Ref<string | undefined>;
-const previousScanList = ref([] as ScanRead[]);
-const incrementNumber = ref(undefined) as Ref<number | undefined>;
-const repositoryId = ref(null) as Ref<number | null>;
-const repository = ref({} as RepositoryRead);
-const vcsInstance = ref({} as VCSInstanceRead);
-const selectedCheckBoxIds = ref([] as number[]);
+const scanType = ref<string | undefined>(undefined);
+const previousScanList = ref<ScanRead[]>([]);
+const incrementNumber = ref<number | undefined>(undefined);
+const repositoryId = ref<number | null>(null);
+const repository = ref<RepositoryRead | undefined>(undefined);
+const vcsInstance = ref<VCSInstanceRead | undefined>(undefined);
+const selectedCheckBoxIds = ref<number[]>([]);
 const allSelected = ref(false);
-const findingList = ref([] as TableItemAugmentedDetailedFindingRead[]);
+const findingList = ref<AugmentedDetailedFindingRead[] | undefined>(undefined);
 const selectedScanID = ref(Number(props.scanId));
-const ruleFilter = ref([] as string[]);
-const ruleTagsFilter = ref(undefined) as Ref<string[] | undefined>;
-const totalRows = ref(0);
-const currentPage = ref(1);
-const perPage = ref(Number(`${Config.value('defaultPageSize')}`));
-const pageSizes = ref(PAGE_SIZES);
-const requestedPageNumber = ref(1);
-
-const hasRecords = computed(() => findingList.value.length > 0);
-const skipRowCount = computed(() => (currentPage.value - 1) * perPage.value);
+const ruleFilter = ref<string[]>([]);
+const ruleTagsFilter = ref<string[] | undefined>(undefined);
 
 const store = useAuthUserStore();
 const { selectedStatus } = storeToRefs(store);
@@ -120,26 +88,20 @@ function onPreviousScanChecked(checked: boolean) {
   previousScanChecked.value = checked;
 }
 
-function handlePageClick(page: number) {
-  allSelected.value = false;
-  currentPage.value = page;
-  previousScanChecked.value ? fetchPreviousScanFindings() : fetchPaginatedFindingsByScanId();
-}
-
-function handlePageSizeChange(pageSize: number) {
-  perPage.value = pageSize;
-  currentPage.value = 1;
+function fetchPaginatedData() {
   previousScanChecked.value ? fetchPreviousScanFindings() : fetchPaginatedFindingsByScanId();
 }
 
 function fetchVCSInstance() {
+  if (repository.value === undefined) {
+    return;
+  }
+
   VCSInstanceService.getVCSInstance(repository.value.vcs_instance)
     .then((res: AxiosResponse<VCSInstanceRead>) => {
       vcsInstance.value = res.data;
     })
-    .catch((error) => {
-      AxiosConfig.handleError(error);
-    });
+    .catch(dispatchError);
 }
 
 function fetchRepository() {
@@ -151,15 +113,11 @@ function fetchRepository() {
     .then((response: AxiosResponse<RepositoryRead>) => {
       repository.value = response.data;
       fetchVCSInstance();
-      loadedRepoData.value = true;
     })
-    .catch((error) => {
-      AxiosConfig.handleError(error);
-    });
+    .catch(dispatchError);
 }
 
 function fetchScan() {
-  loadedData.value = false;
   selectedScanID.value = Number(props.scanId);
   ScanFindingsService.getScanById(selectedScanID.value)
     .then((response: AxiosResponse<ScanRead>) => {
@@ -168,24 +126,19 @@ function fetchScan() {
       incrementNumber.value = response.data.increment_number;
       fetchRepository();
     })
-    .catch((error) => {
-      AxiosConfig.handleError(error);
-    });
+    .catch(dispatchError);
 }
 
 function fetchPaginatedFindingsByScanId() {
-  loadedData.value = false;
   ScanFindingsService.getScanById(selectedScanID.value)
     .then((response: AxiosResponse<ScanRead>) => {
       scanType.value = response.data.scan_type;
       incrementNumber.value = response.data.increment_number;
     })
-    .catch((error) => {
-      AxiosConfig.handleError(error);
-    });
+    .catch(dispatchError);
 
   const filterObj: QueryFilterType = {
-    skip: skipRowCount.value,
+    skip: currentPage.value,
     limit: perPage.value,
     scanIds: [selectedScanID.value],
     findingStatus: selectedStatus.value.map((s) => s.value),
@@ -197,19 +150,19 @@ function fetchPaginatedFindingsByScanId() {
   FindingsService.getDetailedFindings(filterObj)
     .then((response: AxiosResponse<PaginationType<DetailedFindingRead>>) => {
       totalRows.value = 0;
-      findingList.value = [];
       selectedCheckBoxIds.value = [];
       totalRows.value = response.data.total;
       findingList.value = response.data.data;
       addScanTypeTagForSingleScan();
-      loadedData.value = true;
     })
-    .catch((error) => {
-      AxiosConfig.handleError(error);
-    });
+    .catch(dispatchError);
 }
 
 function addScanTypeTagForSingleScan() {
+  if (findingList.value === undefined) {
+    return;
+  }
+
   findingList.value.forEach((_finding, idx, theArray) => {
     theArray[idx].scanType = scanType.value;
     theArray[idx].incrementNumber = incrementNumber.value;
@@ -220,7 +173,7 @@ function handleFilterChange(scanId: number, rule: string[], ruleTags: string[]) 
   selectedScanID.value = scanId;
   ruleFilter.value = rule;
   ruleTagsFilter.value = ruleTags;
-  currentPage.value = 1;
+  currentPage.value = 0;
   allSelected.value = false;
   fetchPaginatedFindingsByScanId();
 }
@@ -230,7 +183,7 @@ function displayPreviousScans(
   ruleTags: string[],
   previousScanListUpdate: ScanRead[],
 ) {
-  currentPage.value = 1;
+  currentPage.value = 0;
   allSelected.value = false;
   previousScanList.value = previousScanListUpdate;
   ruleFilter.value = rule;
@@ -244,10 +197,8 @@ function fetchPreviousScanFindings() {
     previousScanIds.push(scan.id_);
   }
 
-  loadedData.value = false;
-
   const filterObj: QueryFilterType = {
-    skip: skipRowCount.value,
+    skip: currentPage.value,
     limit: perPage.value,
     scanIds: previousScanIds,
     findingStatus: selectedStatus.value.map((s) => s.value),
@@ -264,15 +215,17 @@ function fetchPreviousScanFindings() {
       totalRows.value = response.data.total;
       findingList.value = response.data.data;
       addScanTypeTagForMultipleScans();
-      loadedData.value = true;
     })
-    .catch((error) => {
-      AxiosConfig.handleError(error);
-    });
+    .catch(dispatchError);
 }
 
 function addScanTypeTagForMultipleScans() {
+  if (findingList.value === undefined) {
+    return;
+  }
+
   previousScanList.value.forEach((scan) => {
+    // @ts-expect-error
     findingList.value.forEach((finding, idx, theArray) => {
       if (scan.id_ === finding.scan_id) {
         theArray[idx].scanType = scan.scan_type;
@@ -282,5 +235,5 @@ function addScanTypeTagForMultipleScans() {
   });
 }
 
-fetchScan();
+onMounted(fetchScan);
 </script>

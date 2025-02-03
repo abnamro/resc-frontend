@@ -1,214 +1,136 @@
 <template>
-  <div class="mx-4">
-    <!-- Page Title -->
-    <div class="col-md-2 pt-2 text-start page-title">
-      <h3><small class="text-nowrap">REPOSITORIES</small></h3>
-    </div>
+  <div class="p-4">
+    <h1 class="text-left text-3xl mb-10">REPOSITORIES</h1>
 
-    <SpinnerVue v-if="!loadedData" />
+    <RepositoriesPageFilter
+      v-model:projectOptions="projectNames"
+      v-model:repositoryOptions="repositoryNames"
+      @on-filter-change="handleFilterChange"
+    />
 
-    <!--Repository Filters -->
-    <div class="ml-3 mt-4">
-      <RepositoriesPageFilter
-        v-model:projectOptions="projectNames"
-        v-model:repositoryOptions="repositoryNames"
-        @on-filter-change="handleFilterChange"
-      ></RepositoriesPageFilter>
-    </div>
-
+    <Panel :pt:header:class="'hidden'" class="mt-4 pt-[1.125rem]">
+      <table class="w-full text-left">
+        <thead>
+          <tr class="bg-teal-500/20 text-lg">
+            <th class="pl-2">Project</th>
+            <th>Repository</th>
+            <th>VCS Provider</th>
+            <th>Last Scan Date</th>
+            <th>Findings Count</th>
+            <th class="w-36 md:w-48 xl:w-72">Findings (%)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <template v-if="repositoryList === undefined">
+            <tr>
+              <td colspan="5" class="text-center p-4">
+                <i class="pi pi-spin pi-spinner mr-2"></i> Loading data...
+              </td>
+            </tr>
+          </template>
+          <tr
+            v-else
+            v-for="(data, idx) in repositoryList"
+            :key="`${data.repository_id}`"
+            :class="{
+              'bg-teal-450/10': selectedIndex === idx,
+              'hover:bg-teal-450/5': true,
+            }"
+            @click="handleRowClicked(idx)"
+          >
+            <td class="pl-2">{{ data.project_key }}</td>
+            <td>{{ data.repository_name.slice(0, 20) }}</td>
+            <td>{{ CommonUtils.formatVcsProvider(data.vcs_provider) }}</td>
+            <td>
+              {{
+                data.last_scan_timestamp
+                  ? DateUtils.formatDate(data.last_scan_timestamp)
+                  : 'Not scanned'
+              }}
+            </td>
+            <td>{{ data.total_findings_count }}</td>
+            <td>
+              <HealthBar
+                :truePositive="data.true_positive"
+                :falsePositive="data.false_positive"
+                :notAnalyzed="data.not_analyzed"
+                :notAccessible="data.not_accessible"
+                :clarificationRequired="data.clarification_required"
+                :outdated="data.outdated"
+                :totalCount="data.total_findings_count"
+              />
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </Panel>
     <!--Repository Table -->
-    <div v-if="!hasRecords && loadedData" class="text-center cursor-default">
-      <br />
-      <br />No Record Found...
-    </div>
-
-    <div class="p-3" v-if="hasRecords">
-      <BTable
-        ref="repositoriesTable"
-        id="repositories-table"
-        :items="repositoryList"
-        :fields="fields"
-        :current-page="1"
-        :per-page="0"
-        :selectable="true"
-        :select-mode="'single'"
-        primary-key="id_"
-        v-model="currentItems"
-        responsive
-        small
-        head-variant="light"
-        :tbody-tr-class="rowClass"
-        @row-clicked="handleRowClicked"
-      >
-        <!-- Repository Column -->
-        <template #cell(repository_name)="data">
-          {{ data.item.repository_name }}
-        </template>
-
-        <template #cell(vcs_provider)="data">
-          {{ formatVcsProvider(data.item.vcs_provider) }}
-        </template>
-
-        <template #cell(last_scan_timestamp)="data">
-          {{ formatDate(data.item.last_scan_timestamp ?? '') }}
-        </template>
-
-        <!-- Health Bar Column -->
-        <template #cell(findings)="data">
-          <HealthBar
-            :truePositive="data.item.true_positive"
-            :falsePositive="data.item.false_positive"
-            :notAnalyzed="data.item.not_analyzed"
-            :notAccessible="data.item.not_accessible"
-            :clarificationRequired="data.item.clarification_required"
-            :outdated="data.item.outdated"
-            :totalCount="data.item.total_findings_count"
-          />
-        </template>
-      </BTable>
-
-      <!-- Pagination -->
-      <Pagination
-        :currentPage="currentPage"
-        :perPage="perPage"
-        :totalRows="totalRows"
-        :pageSizes="pageSizes"
-        :requestedPageNumber="requestedPageNumber"
-        @page-click="handlePageClick"
-        @page-size-change="handlePageSizeChange"
-      >
-      </Pagination>
-    </div>
+    <Paginator
+      v-model:first="currentPage"
+      v-model:rows="perPage"
+      :totalRecords="totalRows"
+      :rowsPerPageOptions="PAGE_SIZES"
+      @update:first="handlePageClick"
+      @update:rows="handlePageSizeChange"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
-import AxiosConfig from '@/configuration/axios-config';
-import Config from '@/configuration/config';
 import CommonUtils from '@/utils/common-utils';
 import DateUtils from '@/utils/date-utils';
 import HealthBar from '@/components/Common/HealthBar.vue';
-import Pagination from '@/components/Common/PaginationVue.vue';
 import RepositoryService from '@/services/repository-service';
 import RepositoriesPageFilter from '@/components/Filters/RepositoriesPageFilter.vue';
-import SpinnerVue from '@/components/Common/SpinnerVue.vue';
 import { computed, onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import type { RepositoryEnrichedRead, VCSProviders } from '@/services/shema-to-types';
-import { BTable, type TableItem } from 'bootstrap-vue-next';
 import { onKeyStroke } from '@vueuse/core';
 import { shouldIgnoreKeystroke } from '@/utils/keybind-utils';
-import { PAGE_SIZES } from '@/configuration/config';
+import { dispatchError, PAGE_SIZES } from '@/configuration/config';
+import Paginator from 'primevue/paginator';
+import { usePaginator } from '@/composables/usePaginator';
+import { useFetchers } from '@/composables/useFetchers';
+import Panel from 'primevue/panel';
 
-const loadedData = ref(false);
-const repositoriesTable = ref();
 const router = useRouter();
 
-type TableRepositoryEnrichedRead = RepositoryEnrichedRead & TableItem;
+const repositoryList = ref<RepositoryEnrichedRead[] | undefined>(undefined);
+const selectedIndex = ref<number | undefined>(undefined);
+const selection = computed(() =>
+  !repositoryList.value ? undefined : repositoryList.value[selectedIndex.value ?? 0],
+);
 
-const repositoryList = ref([] as TableRepositoryEnrichedRead[]);
-const currentItems = ref([] as TableRepositoryEnrichedRead[]);
-const totalRows = ref(0);
-const currentPage = ref(1);
-const perPage = ref(Number(`${Config.value('defaultPageSize')}`));
-const pageSizes = ref(PAGE_SIZES);
-const requestedPageNumber = ref(1);
-const vcsFilter = ref([] as VCSProviders[]);
-const repositoryFilter = ref(undefined as string | undefined);
-const projectFilter = ref(undefined as string | undefined);
-const projectNames = ref([] as string[]);
-const repositoryNames = ref([] as string[]);
-const selectedIndex = ref(undefined as number | undefined);
-const includeZeroFindingRepos = ref(false);
-const includeDeletedRepositories = ref(false);
-const onlyIfHasUntriagedFindings = ref(false);
-const fields = ref([
-  {
-    key: 'project_key',
-    sortable: false,
-    label: 'Project',
-    class: 'text-start position-sticky',
-    thStyle: { borderTop: '0px', width: '10%' },
-  },
-  {
-    key: 'repository_name',
-    sortable: false,
-    label: 'Repository',
-    class: 'text-start position-sticky text-truncate',
-    thStyle: { borderTop: '0px', width: '20%' },
-  },
-  {
-    key: 'vcs_provider',
-    sortable: false,
-    label: 'VCS Provider',
-    class: 'text-start position-sticky',
-    thStyle: { borderTop: '0px', width: '10%' },
-  },
-  {
-    key: 'last_scan_timestamp',
-    sortable: false,
-    label: 'Last Scan Date',
-    class: 'text-start position-sticky',
-    thStyle: { borderTop: '0px', width: '20%' },
-  },
-  {
-    key: 'total_findings_count',
-    sortable: false,
-    label: 'Findings Count',
-    class: 'text-start position-sticky',
-    thStyle: { borderTop: '0px', width: '15%' },
-  },
-  {
-    key: 'findings',
-    label: 'Findings(%)',
-    class: 'text-start position-sticky',
-    thStyle: { borderTop: '0px', width: '25%' },
-  },
-]);
+const { totalRows, currentPage, perPage, handlePageClick, handlePageSizeChange } = usePaginator(
+  fetchPaginatedRepositories,
+);
 
-const hasRecords = computed(() => {
-  return repositoryList.value.length > 0;
-});
+const {
+  vcsFilter,
+  repositoryFilter,
+  projectFilter,
 
-const skipRowCount = computed(() => {
-  return (currentPage.value - 1) * perPage.value;
-});
+  includeZeroFindingRepos,
+  includeDeletedRepositories,
+  onlyIfHasUntriagedFindings,
 
-function rowClass(item: RepositoryEnrichedRead) {
-  return item.last_scan_id ? 'row-clickable' : 'row-unclickable';
-}
+  projectNames,
+  repositoryNames,
 
-function formatDate(timestamp: string) {
-  const date = DateUtils.formatDate(timestamp);
-  return timestamp ? date : 'Not Scanned';
-}
+  fetchDistinctProjects,
+  fetchDistinctRepositories,
+} = useFetchers();
 
-function formatVcsProvider(vcsProvider: VCSProviders) {
-  return CommonUtils.formatVcsProvider(vcsProvider);
-}
-
-function handlePageClick(page: number) {
-  currentPage.value = page;
-  fetchPaginatedRepositories();
-}
-
-function handlePageSizeChange(pageSize: number) {
-  perPage.value = Number(pageSize);
-  currentPage.value = 1;
-  fetchPaginatedRepositories();
-}
-
-function handleRowClicked(_row: TableItem, index: number) {
-  selectedIndex.value = index;
+function handleRowClicked(idx: number) {
+  selectedIndex.value = idx;
   goToScanFindings();
 }
 
 function goToScanFindings() {
-  const recordItem = getCurrentRepositorySelected() as RepositoryEnrichedRead;
-  if (recordItem.last_scan_id) {
+  if (selection.value?.last_scan_id) {
     const routeData = router.resolve({
       name: 'ScanFindings',
-      params: { scanId: recordItem.last_scan_id },
+      params: { scanId: selection.value.last_scan_id },
     });
     window.open(routeData.href, '_blank');
   }
@@ -228,18 +150,17 @@ function handleFilterChange(
   includeZeroFindingRepos.value = includeZeroFindingReposArg;
   includeDeletedRepositories.value = includeDeletedRepositoriesArg;
   onlyIfHasUntriagedFindings.value = onlyIfHasUntriagedFindingsArg;
-  currentPage.value = 1;
+  currentPage.value = 0;
   fetchDistinctProjects();
   fetchDistinctRepositories();
   fetchPaginatedRepositories();
 }
 
 function fetchPaginatedRepositories() {
-  repositoryList.value = [];
-  loadedData.value = false;
+  repositoryList.value = undefined;
   RepositoryService.getRepositoriesWithFindingsMetadata(
     perPage.value,
-    skipRowCount.value,
+    currentPage.value,
     vcsFilter.value,
     projectFilter.value,
     repositoryFilter.value,
@@ -250,71 +171,25 @@ function fetchPaginatedRepositories() {
     .then((response) => {
       totalRows.value = response.data.total;
       repositoryList.value = response.data.data;
-      loadedData.value = true;
     })
-    .catch((error) => {
-      /* istanbul ignore next @preserve */
-      AxiosConfig.handleError(error);
-    });
-}
-
-function fetchDistinctProjects() {
-  RepositoryService.getDistinctProjects(
-    vcsFilter.value,
-    repositoryFilter.value,
-    includeZeroFindingRepos.value,
-    includeDeletedRepositories.value,
-  )
-    .then((response) => {
-      projectNames.value = [];
-      for (const projectKey of response.data) {
-        projectNames.value.push(projectKey);
-      }
-    })
-    .catch((error) => {
-      /* istanbul ignore next @preserve */
-      AxiosConfig.handleError(error);
-    });
-}
-function fetchDistinctRepositories() {
-  RepositoryService.getDistinctRepositories(
-    vcsFilter.value,
-    projectFilter.value,
-    includeZeroFindingRepos.value,
-    includeDeletedRepositories.value,
-    onlyIfHasUntriagedFindings.value,
-  )
-    .then((response) => {
-      repositoryNames.value = [];
-      for (const repoName of response.data) {
-        repositoryNames.value.push(repoName);
-      }
-    })
-    .catch((error) => {
-      /* istanbul ignore next @preserve */
-      AxiosConfig.handleError(error);
-    });
-}
-
-function getCurrentRepositorySelected(): RepositoryEnrichedRead | undefined {
-  if (selectedIndex.value === undefined) {
-    return undefined;
-  }
-
-  return repositoryList.value[selectedIndex.value];
+    .catch(dispatchError);
 }
 
 function selectUp(): boolean {
+  if (!repositoryList.value) {
+    return false;
+  }
+
   selectedIndex.value = Math.max(0, (selectedIndex.value ?? 1) - 1);
-  repositoriesTable.value.clearSelected();
-  repositoriesTable.value.selectRow(selectedIndex.value);
   return true;
 }
 
 function selectDown(): boolean {
+  if (!repositoryList.value) {
+    return false;
+  }
+
   selectedIndex.value = ((selectedIndex.value ?? -1) + 1) % repositoryList.value.length;
-  repositoriesTable.value.clearSelected();
-  repositoriesTable.value.selectRow(selectedIndex.value);
   return true;
 }
 
@@ -332,7 +207,9 @@ onKeyStroke(['ArrowUp', 'k', 'K'], () => !shouldIgnoreKeystroke() && selectUp(),
   eventName: 'keydown',
 });
 /* istanbul ignore next @preserve */
-onKeyStroke('o', () => !shouldIgnoreKeystroke() && goToScanFindings(), { eventName: 'keydown' });
+onKeyStroke(['o', 'Enter'], () => !shouldIgnoreKeystroke() && goToScanFindings(), {
+  eventName: 'keydown',
+});
 
 onMounted(() => {
   fetchDistinctProjects();

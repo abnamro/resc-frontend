@@ -1,30 +1,25 @@
 <template>
-  <div>
-    <BFormGroup class="label-title text-start" label="Rule" label-for="rule-filter">
-      <multiselect
-        v-model="selectedRules"
-        :options="props.rulesOptions"
-        :multiple="true"
-        :show-labels="true"
-        :close-on-select="true"
-        :clear-on-select="false"
-        :searchable="true"
-        :preserve-search="true"
-        :select-label="'Select'"
-        :deselect-label="'Remove'"
-        placeholder="Select Rule"
-        :preselect-first="false"
-        @update:modelValue="onRuleFilterChange"
-      >
-        <template v-slot:noResult><span>No rule found</span></template>
-      </multiselect>
-    </BFormGroup>
+  <div class="flex flex-col justify-start">
+    <label for="rules" class="font-bold text-lg text-left text-muted-color-emphasis">Rules</label>
+    <MultiSelect
+      v-model:model-value="selectedRules"
+      :options="props.rulesOptions"
+      display="chip"
+      class="w-full"
+      placeholder="Select Rules"
+      :show-toggle-all="false"
+      :filter="true"
+      id="rules"
+      @update:model-value="onRuleFilterChange"
+      :pt:option:class="'text-gray-840 dark:text-gray-130'"
+      :pt:overlay:class="'bg-gray-0 dark:bg-gray-870 dark:border-gray-780'"
+    >
+    </MultiSelect>
   </div>
 </template>
 <script setup lang="ts">
-import { BFormGroup } from 'bootstrap-vue-next';
+import MultiSelect from 'primevue/multiselect';
 import { ref, watch } from 'vue';
-import Multiselect from 'vue-multiselect';
 
 type Props = {
   rulesOptions: string[];
@@ -59,4 +54,3 @@ watch(
 // We probably need to expose this.
 defineExpose({ resetRuleFilterSelection });
 </script>
-<style src="vue-multiselect/dist/vue-multiselect.css"></style>

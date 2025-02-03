@@ -1,108 +1,86 @@
 <template>
-  <div class="mx-4">
-    <!-- Page Title -->
-    <div class="col-md-2 pt-2 text-start page-title">
-      <h3><small class="text-nowrap">RULE ANALYSIS</small></h3>
-    </div>
+  <div class="p-4">
+    <h1 class="text-left text-3xl mb-10">RULE ANALYSIS</h1>
 
-    <SpinnerVue v-if="!loadedData" />
-
-    <!-- Filters -->
-    <div class="mt-4">
-      <RuleAnalysisFilter
-        :projectOptions="projectNames"
-        :repositoryOptions="repositoryNames"
-        :rulePackPreSelected="selectedRulePackVersionsList"
-        :rulePackOptions="rulePackVersions"
-        @on-filter-change="handleFilterChange"
-      ></RuleAnalysisFilter>
-    </div>
-
-    <!--Scan Findings Table -->
-    <div v-if="!hasRecords && loadedData" class="text-center cursor-default">
-      <br />
-      <br />No Record Found...
-    </div>
+    <RuleAnalysisFilterView
+      :project-options="projectNames"
+      :repository-options="repositoryNames"
+      :rule-pack-options="rulePacks"
+      :rule-tag-options="ruleTags"
+      :rule-pack-filter="rulePacksFilter"
+      @on-filter-change="handleFilterChange"
+    >
+    </RuleAnalysisFilterView>
 
     <FindingsTable
       :findings="findingList"
-      :is_rule_finding="true"
-      v-if="hasRecords"
+      :is-rule-finding="true"
       @refresh-table="fetchPaginatedDetailedFindings"
     >
     </FindingsTable>
 
-    <div class="p-3" v-if="hasRecords">
-      <!-- Pagination -->
-      <Pagination
-        :currentPage="currentPage"
-        :perPage="perPage"
-        :totalRows="totalRows"
-        :pageSizes="pageSizes"
-        :requestedPageNumber="requestedPageNumber"
-        @page-click="handlePageClick"
-        @page-size-change="handlePageSizeChange"
-      >
-      </Pagination>
-    </div>
+    <Paginator
+      v-model:first="currentPage"
+      v-model:rows="perPage"
+      :totalRecords="totalRows"
+      :rowsPerPageOptions="PAGE_SIZES"
+      @update:first="handlePageClick"
+      @update:rows="handlePageSizeChange"
+    />
   </div>
 </template>
 
 <script lang="ts" setup>
-import Config from '@/configuration/config';
-import AxiosConfig from '@/configuration/axios-config';
 import FindingsTable from '@/components/Findings/FindingsTable.vue';
 import FindingsService, { type QueryFilterType } from '@/services/findings-service';
-import RepositoryService from '@/services/repository-service';
-import SpinnerVue from '@/components/Common/SpinnerVue.vue';
-import Pagination from '@/components/Common/PaginationVue.vue';
-import { type RuleAnalysisFilter } from '@/components/Filters/RuleAnalysisFilter.vue';
-import RulePackService from '@/services/rule-pack-service';
+import RuleAnalysisFilterView, {
+  type RuleAnalysisFilter,
+} from '@/components/Filters/RuleAnalysisFilterView.vue';
 import { useAuthUserStore, type PreviousRouteState } from '@/store/index';
-import { computed, onMounted, ref, type Ref } from 'vue';
-import type {
-  DetailedFindingRead,
-  PaginationType,
-  RulePackRead,
-  VCSProviders,
-} from '@/services/shema-to-types';
+import { onMounted, ref } from 'vue';
+import type { DetailedFindingRead, PaginationType } from '@/services/shema-to-types';
 import type { AxiosResponse } from 'axios';
-import type { TableItem } from 'bootstrap-vue-next';
-import CommonUtils from '@/utils/common-utils';
-import { PAGE_SIZES } from '@/configuration/config';
+import { dispatchError, PAGE_SIZES } from '@/configuration/config';
 import { storeToRefs } from 'pinia';
+import Paginator from 'primevue/paginator';
+import { usePaginator } from '@/composables/usePaginator';
+import { useFetchers } from '@/composables/useFetchers';
 
-type TableItemDetailedFindingRead = DetailedFindingRead & TableItem;
-
-const loadedData = ref(false);
 const store = useAuthUserStore();
 
-const findingList = ref([] as TableItemDetailedFindingRead[]);
-const totalRows = ref(0);
-const currentPage = ref(1);
-const perPage = ref(Number(`${Config.value('defaultPageSize')}`));
-const pageSizes = ref(PAGE_SIZES);
-const requestedPageNumber = ref(1);
-const rulePackVersions = ref([] as RulePackRead[]);
-const ruleTagsList = ref([] as string[]);
-const projectNames = ref([] as string[]);
-const repositoryNames = ref([] as string[]);
-const selectedStartDate = ref(undefined) as Ref<string | undefined>;
-const selectedEndDate = ref(undefined) as Ref<string | undefined>;
-const selectedVcsProvider = ref([] as VCSProviders[]);
-const { selectedStatus } = storeToRefs(store);
-const selectedProject = ref(undefined) as Ref<string | undefined>;
-const selectedRepository = ref(undefined) as Ref<string | undefined>;
-const selectedRule = ref(undefined) as Ref<string[] | undefined>;
-const selectedRuleTags = ref(undefined) as Ref<string[] | undefined>;
-const selectedRulePackVersions = ref([] as string[]);
-const selectedRulePackVersionsList = ref([] as RulePackRead[]);
-const selectedCheckBoxIds = ref([] as number[]);
-const allSelected = ref(false);
-const includeDeletedRepositories = ref(false);
+const { totalRows, currentPage, perPage, handlePageClick, handlePageSizeChange } = usePaginator(
+  fetchPaginatedDetailedFindings,
+);
 
-const hasRecords = computed(() => findingList.value.length > 0);
-const skipRowCount = computed(() => (currentPage.value - 1) * perPage.value);
+const {
+  vcsFilter,
+  repositoryFilter,
+  projectFilter,
+  ruleTagsFilter,
+  rulePacksFilter,
+
+  includeZeroFindingRepos,
+  includeDeletedRepositories,
+  onlyIfHasUntriagedFindings,
+
+  projectNames,
+  repositoryNames,
+  rulePacks,
+  ruleTags,
+
+  fetchDistinctProjects,
+  fetchDistinctRepositories,
+  fetchRuleTags,
+  fetchRulePackVersions,
+} = useFetchers();
+
+const findingList = ref<DetailedFindingRead[] | undefined>(undefined);
+const selectedStartDate = ref<string | undefined>(undefined);
+const selectedEndDate = ref<string | undefined>(undefined);
+const { selectedStatus } = storeToRefs(store);
+const selectedRule = ref<string[] | undefined>(undefined);
+const selectedCheckBoxIds = ref<number[]>([]);
+const allSelected = ref(false);
 
 function isRedirectedFromRuleMetricsPage() {
   const sourceRoute = store.sourceRoute;
@@ -114,36 +92,23 @@ function isRedirectedFromRuleMetricsPage() {
     : false;
 }
 
-function handlePageClick(page: number) {
-  allSelected.value = false;
-  currentPage.value = page;
-  fetchPaginatedDetailedFindings();
-}
-
-function handlePageSizeChange(pageSize: number) {
-  perPage.value = pageSize;
-  currentPage.value = 1;
-  fetchPaginatedDetailedFindings();
-}
-
 function fetchPaginatedDetailedFindings() {
-  loadedData.value = false;
   const filterObj: QueryFilterType = {
-    skip: skipRowCount.value,
+    skip: currentPage.value,
     limit: perPage.value,
     startDate: selectedStartDate.value,
     endDate: selectedEndDate.value,
-    vcsProvider: selectedVcsProvider.value,
+    vcsProvider: vcsFilter.value,
     findingStatus: selectedStatus.value.map((s) => s.value),
-    project: selectedProject.value,
-    repository: selectedRepository.value,
+    project: projectFilter.value,
+    repository: repositoryFilter.value,
     rule: selectedRule.value,
-    ruleTags: selectedRuleTags.value,
-    rulePackVersions: selectedRulePackVersions.value,
+    ruleTags: ruleTagsFilter.value,
+    rulePackVersions: rulePacksFilter.value,
     includeDeletedRepositories: includeDeletedRepositories.value,
   };
 
-  findingList.value = [];
+  findingList.value = undefined;
 
   FindingsService.getDetailedFindings(filterObj)
     .then((response: AxiosResponse<PaginationType<DetailedFindingRead>>) => {
@@ -151,138 +116,48 @@ function fetchPaginatedDetailedFindings() {
       selectedCheckBoxIds.value = [];
       totalRows.value = response.data.total;
       findingList.value = response.data.data;
-      loadedData.value = true;
     })
-    .catch((error) => {
-      /* istanbul ignore next @preserve */
-      AxiosConfig.handleError(error);
-    });
+    .catch(dispatchError);
 }
 
 function handleFilterChange(filterObj: RuleAnalysisFilter) {
   selectedStartDate.value = filterObj.startDate;
   selectedEndDate.value = filterObj.endDate;
-  selectedVcsProvider.value = filterObj.vcsProvider ?? [];
-  selectedProject.value = filterObj.project;
-  selectedRepository.value = filterObj.repository;
+  vcsFilter.value = filterObj.vcsProvider ?? [];
+  projectFilter.value = filterObj.project;
+  repositoryFilter.value = filterObj.repository;
   selectedRule.value = filterObj.rule;
-  selectedRuleTags.value = filterObj.ruleTags;
-  selectedRulePackVersions.value = filterObj.rulePackVersions ?? [];
+  ruleTagsFilter.value = filterObj.ruleTags;
+  rulePacksFilter.value = filterObj.rulePackVersions ?? [];
   includeDeletedRepositories.value = filterObj.includeDeletedRepositories ?? false;
-  currentPage.value = 1;
+  currentPage.value = 0;
   allSelected.value = false;
   fetchDistinctProjects();
   fetchDistinctRepositories();
   fetchPaginatedDetailedFindings();
 }
 
-function fetchDistinctProjects() {
-  RepositoryService.getDistinctProjects(
-    selectedVcsProvider.value,
-    selectedRepository.value,
-    false,
-    includeDeletedRepositories.value,
-  )
-    .then((response) => {
-      projectNames.value = [];
-      for (const projectKey of response.data) {
-        projectNames.value.push(projectKey);
-      }
-    })
-    .catch((error) => {
-      /* istanbul ignore next @preserve */
-      AxiosConfig.handleError(error);
-    });
-}
-
-function fetchDistinctRepositories() {
-  RepositoryService.getDistinctRepositories(
-    selectedVcsProvider.value,
-    selectedProject.value,
-    false,
-    includeDeletedRepositories.value,
-    false,
-  )
-    .then((response) => {
-      repositoryNames.value = [];
-      for (const repoName of response.data) {
-        repositoryNames.value.push(repoName);
-      }
-    })
-    .catch((error) => {
-      /* istanbul ignore next @preserve */
-      AxiosConfig.handleError(error);
-    });
-}
-
-function fetchRulePackVersionsWhenRedirectedFromRuleMetricsPage() {
-  RulePackService.getRulePackVersions(10000, 0)
-    .then((response: AxiosResponse<PaginationType<RulePackRead>>) => {
-      rulePackVersions.value = [];
-      selectedRulePackVersions.value = [];
-      response.data.data.forEach((rulePack) => {
-        if (rulePack.outdated !== true) {
-          rulePackVersions.value.push(rulePack);
-        }
-      });
-      rulePackVersions.value.sort(CommonUtils.compareRulePackRead).reverse();
-      //Select rule pack versions passed from rule analysis scrren
-      const previousRouteState = store.previousRouteState as PreviousRouteState;
-      if (previousRouteState && previousRouteState.rulePackVersions !== undefined) {
-        for (const obj of previousRouteState.rulePackVersions) {
-          selectedRulePackVersions.value.push(obj.version);
-          selectedRulePackVersionsList.value.push(obj);
-        }
-        fetchRuleTags();
-        store.update_previous_route_state(null);
-      }
-    })
-    .catch((error) => {
-      /* istanbul ignore next @preserve */
-      AxiosConfig.handleError(error);
-    });
-}
-
-function fetchRulePackVersions() {
-  RulePackService.getRulePackVersions(10000, 0)
-    .then((response: AxiosResponse<PaginationType<RulePackRead>>) => {
-      rulePackVersions.value = [];
-      selectedRulePackVersions.value = [];
-      selectedRulePackVersionsList.value = [];
-      for (const index of response.data.data.keys()) {
-        const data = response.data.data[index];
-        if (data.active) {
-          selectedRulePackVersions.value.push(data.version);
-          selectedRulePackVersionsList.value.push(data);
-        }
-        rulePackVersions.value.push(data);
-      }
-      rulePackVersions.value.sort(CommonUtils.compareRulePackRead).reverse();
-      fetchPaginatedDetailedFindings();
-    })
-    .catch((error) => {
-      /* istanbul ignore next @preserve */
-      AxiosConfig.handleError(error);
-    });
-}
-
-function fetchRuleTags() {
-  RulePackService.getRuleTagsByRulePackVersions(selectedRulePackVersions.value)
-    .then((response: AxiosResponse<string[]>) => {
-      selectedRuleTags.value = [];
-      ruleTagsList.value = response.data;
-    })
-    .catch((error) => {
-      AxiosConfig.handleError(error);
-    });
+function setRulePackSelectionFromStore() {
+  const previousRouteState = store.previousRouteState as PreviousRouteState;
+  if (previousRouteState && previousRouteState.rulePackVersions !== undefined) {
+    for (const obj of previousRouteState.rulePackVersions) {
+      rulePacksFilter.value.push(obj.version);
+    }
+    fetchRuleTags();
+    store.update_previous_route_state(null);
+  }
 }
 
 onMounted(() => {
+  includeDeletedRepositories.value = false;
+  includeZeroFindingRepos.value = false;
+  onlyIfHasUntriagedFindings.value = false;
+
   if (isRedirectedFromRuleMetricsPage()) {
-    fetchRulePackVersionsWhenRedirectedFromRuleMetricsPage();
+    fetchRulePackVersions(setRulePackSelectionFromStore);
   } else {
     store.update_previous_route_state(null);
-    fetchRulePackVersions();
+    fetchRulePackVersions(fetchPaginatedDetailedFindings);
     fetchDistinctProjects();
     fetchDistinctRepositories();
   }

@@ -1,84 +1,35 @@
 <template>
-  <div>
-    <BModal
-      id="auditModal"
-      ref="auditModal"
-      size="lg"
-      button-size="sm"
-      :title="getModalTitle"
-      @show="resetModal"
-      @hidden="resetModal"
-      @ok="handleOk"
-    >
-      <form ref="form" @submit.stop.prevent="handleSubmit">
-        <BFormGroup
-          label="Status"
-          label-for="audit-status"
-          invalid-feedback="Status is required"
-          :state="isStatusValid"
-        >
-          <BFormSelect id="audit-status" v-model="status" :state="isStatusValid" required>
-            <option value="">-- Select Status</option>
-            <option v-for="status in statusList" :value="status.value" :key="status.id">
-              {{ status.label }}
-            </option>
-          </BFormSelect>
-        </BFormGroup>
-
-        <BFormGroup
-          label="Comment"
-          label-for="comment-input"
-          invalid-feedback="Maximum 255 characters are allowed"
-          :state="isCommentValid"
-        >
-          <BFormTextarea
-            id="comment-input"
-            placeholder="Enter Comment"
-            rows="3"
-            trim
-            v-model="comment"
-            :state="isCommentValid"
-          ></BFormTextarea>
-        </BFormGroup>
-      </form>
-
-      <template #modal-footer>
-        <div class="w-100">
-          <BButton
-            variant="primary"
-            class="float-right"
-            v-on:click="handleOk"
-            :disabled="!isStatusValid || !isCommentValid"
-          >
-            APPLY
-          </BButton>
-          <BButton variant="secondary" class="float-right mr-3" v-on:click="hide"> CLOSE </BButton>
-        </div>
-      </template>
-    </BModal>
-  </div>
+  <Dialog
+    :header="`AUDIT ${props.selectedCheckBoxIds.length} FINDINGS`"
+    v-model:visible="visible"
+    @hide="resetModal"
+    class="w-[500px]"
+  >
+    <form ref="form" @submit.stop.prevent="handleSubmit" class="flex flex-col gap-4">
+      <SelectStatus v-model:status="status" :invalid="!isStatusValid" />
+      <SetComment :invalid="!isCommentValid" v-model:comment="comment" />
+    </form>
+    <div class="flex justify-end gap-2 mt-8">
+      <Button severity="primary" @click="handleOk" :disabled="!isStatusValid || !isCommentValid">
+        APPLY
+      </Button>
+      <Button severity="secondary" @click="visible = false"> CLOSE </Button>
+    </div>
+  </Dialog>
 </template>
 
 <script setup lang="ts">
-import AxiosConfig from '@/configuration/axios-config';
-import CommonUtils, { type StatusOptionType } from '@/utils/common-utils';
 import FindingsService from '@/services/findings-service';
-import { computed, ref } from 'vue';
+import { computed, ref, type Ref } from 'vue';
 import type { FindingStatus } from '@/services/shema-to-types';
-import {
-  BButton,
-  BFormGroup,
-  BFormSelect,
-  BFormTextarea,
-  BModal,
-  type BvTriggerableEvent,
-} from 'bootstrap-vue-next';
 import { nextTick } from 'vue';
-import { useAuthUserStore } from '@/store';
-import { MAX_COMMENT_LENGTH } from '@/configuration/config';
+import { dispatchError, MAX_COMMENT_LENGTH } from '@/configuration/config';
+import Dialog from 'primevue/dialog';
+import Button from 'primevue/button';
+import SelectStatus from './Form/SelectStatus.vue';
+import SetComment from './Form/SetComment.vue';
 
-const auditModal = ref();
-
+const visible = defineModel('visible') as Ref<boolean>;
 type Props = {
   selectedCheckBoxIds: number[];
 };
@@ -88,11 +39,7 @@ const emit = defineEmits(['update-audit']);
 
 const comment = ref('');
 const status = ref('NOT_ANALYZED' as FindingStatus | '');
-const statusList = ref([] as StatusOptionType[]);
 
-const getModalTitle = computed(() => {
-  return `AUDIT ${props.selectedCheckBoxIds.length} FINDINGS`;
-});
 const isStatusValid = computed(() => {
   return status.value !== '';
 });
@@ -100,21 +47,13 @@ const isCommentValid = computed(() => {
   return comment.value !== '' && comment.value.length > MAX_COMMENT_LENGTH ? false : true;
 });
 
-function show() {
-  auditModal.value.show();
-}
-
-function hide() {
-  auditModal.value.hide();
-}
-
 function resetModal() {
   status.value = 'NOT_ANALYZED';
   comment.value = '';
 }
 
-function handleOk(bvModalEvt: BvTriggerableEvent | MouseEvent) {
-  bvModalEvt.preventDefault();
+function handleOk(event: Event) {
+  event.preventDefault();
   handleSubmit();
 }
 
@@ -131,18 +70,11 @@ function handleSubmit() {
     .then(() => {
       emit('update-audit', status, comment);
     })
-    .catch((error) => {
-      AxiosConfig.handleError(error);
-    });
+    .catch(dispatchError);
 
   // Hide the modal manually
   nextTick(() => {
-    auditModal.value.hide();
+    visible.value = false;
   });
 }
-
-const store = useAuthUserStore();
-statusList.value = CommonUtils.parseStatusOptions(store.get_finding_status_list);
-
-defineExpose({ show });
 </script>

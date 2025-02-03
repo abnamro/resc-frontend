@@ -1,13 +1,13 @@
 <template>
-  <div>
-    <BBadge v-if="props.scanType === 'BASE'" variant="success">{{ baseScanTag }}</BBadge>
-    <BBadge v-if="props.scanType === 'INCREMENTAL'" variant="info"
-      >INC: {{ props.incrementNumber }}</BBadge
-    >
-  </div>
+  <Tag v-if="props.scanType === 'BASE'" severity="success" :value="baseScanTag"></Tag>
+  <Tag
+    v-if="props.scanType === 'INCREMENTAL'"
+    severity="info"
+    :value="'INC: ' + props.incrementNumber"
+  ></Tag>
 </template>
 <script setup lang="ts">
-import { BBadge } from 'bootstrap-vue-next';
+import Tag from 'primevue/tag';
 import { computed } from 'vue';
 type Props = {
   scanType: string;

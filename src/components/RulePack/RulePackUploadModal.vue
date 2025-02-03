@@ -1,104 +1,60 @@
 <template>
-  <div>
-    <SpinnerVue v-if="!loadedData" />
-    <BModal
-      id="RulePackUploadModal"
-      ref="RulePackUploadModal"
-      size="lg"
-      button-size="sm"
-      title="IMPORT RULEPACK"
-      @show="resetModal"
-      @hidden="resetModal"
-      @ok="handleOk"
-      :static="true"
-    >
-      <form ref="form" @submit.stop.prevent="submitForm">
-        <div class="row">
-          <div class="col-md-7">
-            <BFormGroup>
-              <BFormInput
-                id="versionInput"
-                placeholder="Enter Version"
-                size="sm"
-                v-model="version"
-                :state="versionState"
-                v-on:keyup="validateVersion"
-                required
-              ></BFormInput>
-            </BFormGroup>
-          </div>
-          <div class="col-md-5">
-            <small><a href="https://semver.org/" target="_blank" rel="noopener">semver</a></small>
-            <small> Example: 1.0.0</small>
-          </div>
+  <Dialog header="Import Rulepack" v-model:visible="visible" @hide="resetModal" class="w-[500px]">
+    <div class="flex justify-center" v-if="!loadedData">
+      <ProgressSpinner />
+    </div>
+    <form v-else @submit.stop.prevent="submitForm" class=" ">
+      <div class="flex gap-4 mb-3 items-center">
+        <InputText
+          type="text"
+          v-model="version"
+          placeholder="version"
+          @keyup="validateVersion"
+          required
+        />
+        <div class="w-full text-sm">
+          <a href="https://semver.org/" target="_blank" rel="noopener">semver</a>
+          Example: 1.0.0
         </div>
-
-        <div class="row">
-          <div class="col-md-7">
-            <BFormGroup>
-              <BFormFile
-                if="fileDrop"
-                v-model="file"
-                placeholder="Choose a file or drop it here..."
-                drop-placeholder="Drop file here..."
-                accept=".toml"
-                size="sm"
-              ></BFormFile>
-            </BFormGroup>
-          </div>
-        </div>
-      </form>
-
-      <template #footer>
-        <div class="w-100">
-          <BButton
-            variant="primary"
-            class="float-end"
-            v-on:click="handleOk"
-            :disabled="!file || !versionState"
-          >
-            UPLOAD
-          </BButton>
-          <BButton variant="secondary" class="float-end me-3" v-on:click="hide"> CLOSE </BButton>
-        </div>
-      </template>
-    </BModal>
-  </div>
+      </div>
+      <FileUpload mode="basic" name="file" @select="handleFile" />
+    </form>
+    <div class="flex justify-end gap-2 mt-8">
+      <Button severity="primary" @click="handleOk" :disabled="!file || !versionState">
+        UPLOAD
+      </Button>
+      <Button severity="secondary" @click="hide"> CLOSE </Button>
+    </div>
+  </Dialog>
 </template>
 
 <script setup lang="ts">
-import AxiosConfig from '@/configuration/axios-config';
-import SpinnerVue from '@/components/Common/SpinnerVue.vue';
-import { toast } from 'vue3-toastify';
 import RulePackService from '@/services/rule-pack-service';
-import { nextTick, ref, type Ref } from 'vue';
-import {
-  BFormFile,
-  BButton,
-  BFormGroup,
-  BFormInput,
-  BModal,
-  type BvEvent,
-} from 'bootstrap-vue-next';
+import { ref, type Ref } from 'vue';
 import { OK } from '@/configuration/axios-config';
+import ProgressSpinner from 'primevue/progressspinner';
+import Dialog from 'primevue/dialog';
+import Button from 'primevue/button';
+import InputText from 'primevue/inputtext';
+import FileUpload, { type FileUploadSelectEvent } from 'primevue/fileupload';
+import { useToast } from 'primevue/usetoast';
+import { dispatchError } from '@/configuration/config';
 
 const loadedData = ref(true);
-const RulePackUploadModal = ref();
+const visible = defineModel('visible') as Ref<boolean>;
 
 const file = ref(undefined) as Ref<File | undefined>;
 const version = ref('');
 const versionState = ref(null) as Ref<boolean | null>;
 const emit = defineEmits(['on-file-upload-suceess']);
 
-function show(): void {
-  RulePackUploadModal.value.show();
-}
+const toast = useToast();
 
 function hide(): void {
   version.value = '';
   file.value = undefined;
   versionState.value = null;
-  RulePackUploadModal.value.hide();
+  visible.value = false;
 }
 
 function resetModal(): void {
@@ -117,8 +73,12 @@ function validateVersion(): boolean {
   return false;
 }
 
-function handleOk(bvModalEvt: BvEvent | MouseEvent) {
-  bvModalEvt.preventDefault();
+function handleFile(event: FileUploadSelectEvent) {
+  file.value = event.files[0];
+}
+
+function handleOk(event: Event) {
+  event.preventDefault();
   submitForm();
 }
 
@@ -128,19 +88,18 @@ function submitForm() {
     .then((response) => {
       emit('on-file-upload-suceess');
       if (response && response.status === OK) {
-        toast.success('Rulepack uploaded successfully');
+        toast.add({
+          severity: 'success',
+          summary: 'Rulepack uploaded successfully',
+          life: 3000,
+        });
       }
       loadedData.value = true;
-      // Hide the modal manually
-      nextTick(() => {
-        RulePackUploadModal.value.hide();
-      });
+      visible.value = false;
     })
     .catch((error) => {
-      AxiosConfig.handleError(error);
+      dispatchError(error);
       loadedData.value = false;
     });
 }
-
-defineExpose({ show });
 </script>

@@ -6,14 +6,19 @@ export default defineConfig((configEnv) =>
   mergeConfig(
     viteConfig(configEnv),
     defineConfig({
+      server: {
+        port: 8080,
+      },
+      define: { global: 'window' },
       test: {
+        setupFiles: 'tests/setup.ts',
         environment: 'jsdom',
         exclude: [...configDefaults.exclude, 'e2e/*', 'resc-repository-scanner/components/*'],
         root: fileURLToPath(new URL('./', import.meta.url)),
         globals: true,
         coverage: {
           include: ['src/**/*'],
-          exclude: ['**/main.ts', '**/axios-config.ts'],
+          exclude: ['**/main.ts', '**/axios-config.ts', '**/chartjs.ts', '**/preset.ts'],
           enabled: true,
           provider: 'istanbul',
           all: true,

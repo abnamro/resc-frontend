@@ -1,253 +1,160 @@
 <template>
   <AuditModal
-    ref="auditModal"
-    :selectedCheckBoxIds="selectedCheckBoxIds"
+    v-model:visible="isAuditModalVisible"
+    :selectedCheckBoxIds="selection"
     @update-audit="updateAudit"
   />
-  <ColumnSelector ref="columnModal" @update-columns="setTableFields" />
+  <ColumnSelector v-model:visible="isColumnSelectorVisible" @update-columns="setTableFields" />
 
-  <div class="py-3">
-    <BTable
-      ref="auditTable"
-      id="rule-analysis-table"
-      :items="filteredList"
-      :fields="fields as TableField[]"
-      :current-page="1"
-      :per-page="0"
-      :selectable="true"
-      :select-mode="'single'"
-      primary-key="id_"
-      responsive
-      small
-      head-variant="light"
-      @row-clicked="toggleFindingDetails"
-      :caption-top="true"
-    >
-      <template #table-caption>
-        <div class="row me-0 mr-0">
-          <div class="col-md-4">
-            <BButton
-              class="d-inline-block me-3"
-              variant="primary"
-              size="sm"
-              id="AuditButton"
-              v-on:click="showAuditModal()"
-              :disabled="auditButtonDisabled"
-              >AUDIT</BButton
-            >
-            <BButton
-              class="d-inline-block"
-              variant="primary"
-              size="sm"
-              id="AuditButton"
-              v-on:click="showColumnSelect()"
-              >Columns</BButton
-            >
-          </div>
-          <div class="col-md-4">
-            <BFormInput
-              class="hover-opacity"
-              id="filterFiles"
-              placeholder="filename"
-              v-model="filterString"
-              :required="true"
-            />
-          </div>
-        </div>
-      </template>
+  <Panel :pt:header:class="'hidden'" class="mt-4 pt-[1.125rem]">
+    <FindingTableHeader
+      v-model:filter-string="filterString"
+      v-model:is-audit-modal-visible="isAuditModalVisible"
+      v-model:is-column-selector-visible="isColumnSelectorVisible"
+      :audit-button-disabled="auditButtonDisabled"
+    />
 
-      <!-- Select all checkboxes -->
-      <template #head(select)>
-        <BFormCheckbox
-          id="allSelected"
-          class="checkbox"
-          v-model="allSelected"
-          @change="selectAllCheckboxes"
-        ></BFormCheckbox>
-      </template>
-
-      <!-- Selection checkboxes -->
-      <template #cell(select)="data">
-        <BFormCheckbox
-          class="checkbox"
-          v-model="selectedCheckBoxIds"
-          :value="data.item.id_"
-          @change="selectSingleCheckbox"
-        ></BFormCheckbox>
-        <template v-if="data.item.rowSelected">
-          <span class="sr-only">Selected</span>
+    <table class="w-full text-left mt-2">
+      <thead>
+        <tr>
+          <th class="bg-teal-500/20 pl-2">
+            <!-- <Checkbox binary v-model="selection" /> -->
+          </th>
+          <th class="bg-teal-500/20"></th>
+          <th
+            v-for="col of fields"
+            :key="col.key"
+            :class="col.class"
+            class="text-lg bg-teal-500/20"
+          >
+            {{ col.label }}
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <template v-if="filteredList === undefined">
+          <tr>
+            <td :colspan="3 + fields.length" class="text-center p-4">
+              <i class="pi pi-spin pi-spinner mr-2"></i> Loading data...
+            </td>
+          </tr>
         </template>
-        <template v-else>
-          <span class="sr-only">Not selected</span>
+        <template v-else v-for="(data, idx) in filteredList" :key="`d${data.id_}`">
+          <tr
+            :class="{
+              'bg-teal-450/10': selectedIndex === idx,
+              'hover:bg-teal-450/5': true,
+            }"
+            @click="selectedIndex = idx"
+          >
+            <td class="pl-2">
+              <Checkbox size="small" v-model="selection" :value="data.id_" />
+            </td>
+            <td>
+              <Button
+                rounded
+                text
+                :icon="'pi ' + (expanded === idx ? 'pi-chevron-down' : 'pi-chevron-right')"
+                class="border-none h-7"
+                size="small"
+                @click="toggleExpand(idx)"
+              ></Button>
+            </td>
+            <td v-for="col of fields" :class="col.class" :key="`d${data.id_}f${col.key}`">
+              <FindingStatusBadge
+                v-if="col.key === 'status'"
+                :status="data[col.key] ?? 'NOT_ANALYZED'"
+              />
+              <span
+                v-else-if="col.key === 'file_path'"
+                :title="data[col.key]"
+                class="rtl text-nowrap truncate inline-block"
+              >
+                {{ data[col.key] }}
+              </span>
+              <template v-else>
+                <!-- @vue-expect-error We expect that it is going to complain that string is not part of the reccord... -->
+                {{ data[col.key] }}
+              </template>
+            </td>
+          </tr>
+          <tr v-if="expanded === idx">
+            <td :colspan="3 + fields.length">
+              <FindingPanel :finding="data"></FindingPanel>
+            </td>
+          </tr>
         </template>
-      </template>
-
-      <!-- Collapse Icon Column -->
-      <template v-slot:cell(toggle_row)="{ detailsShowing }">
-        <FontAwesomeIcon
-          size="lg"
-          class="collapse-arrow"
-          name="dropdown-icon"
-          icon="angle-right"
-          :rotation="detailsShowing ? 90 : undefined"
-        />
-      </template>
-
-      <!-- Path Column -->
-      <template #cell(file_path)="data">
-        <span :title="data.item.file_path" class="rtl text-nowrap text-truncate d-inline-block">
-          {{ data.item.file_path }}
-        </span>
-      </template>
-
-      <!-- commit_timestamp Column -->
-      <template #cell(commit_timestamp)="data">
-        {{ data.item.commit_timestamp.substring(0, 10) }}
-      </template>
-
-      <!-- Scan timestamp Column -->
-      <template #cell(timestamp)="data">
-        {{ data.item.timestamp.substring(0, 10) }}
-      </template>
-
-      <!-- Status Column -->
-      <template #cell(status)="data">
-        <FindingStatusBadge :status="data.item.status ?? 'NOT_ANALYZED'" />
-      </template>
-
-      <!-- Remaining Columns (Rule) -->
-      <template #cell()="data">
-        {{ data.value }}
-      </template>
-
-      <!-- Expand Table Row To Display Finding Panel -->
-      <template v-slot:row-details="data">
-        <FindingPanel :finding="data.item"></FindingPanel>
-      </template>
-    </BTable>
-  </div>
+      </tbody>
+    </table>
+  </Panel>
 </template>
 <script lang="ts" setup>
 import AuditModal from '@/components/ScanFindings/AuditModal.vue';
 import FindingPanel from '@/components/ScanFindings/FindingPanel.vue';
 import type { DetailedFindingRead, FindingStatus } from '@/services/shema-to-types';
-import {
-  BTable,
-  BFormCheckbox,
-  BButton,
-  type TableField,
-  type TableItem,
-  BFormInput,
-} from 'bootstrap-vue-next';
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import FindingsService from '@/services/findings-service';
-import AxiosConfig from '@/configuration/axios-config';
 import { onKeyStroke } from '@vueuse/core';
 import { shouldIgnoreKeystroke } from '@/utils/keybind-utils';
 import { computed, ref } from 'vue';
 import { watch } from 'vue';
-import ColumnUtils, { type SimpleTableField, type TableColumn } from '@/utils/column-utils';
-import { useAuthUserStore } from '@/store';
 import ColumnSelector from '@/components/Findings/ColumnSelector.vue';
+import FindingTableHeader from './FindingTableHeader.vue';
+import { useFiltering } from '@/composables/useFiltering';
+import { useColumnFiltering } from '@/composables/useColumnFiltering';
+import { dispatchError, dispatchMessage } from '@/configuration/config';
+import Panel from 'primevue/panel';
+import Checkbox from 'primevue/checkbox';
+import Button from 'primevue/button';
+import FindingStatusBadge from '../Common/FindingStatusBadge.vue';
 
-type TableItemDetailedFindingRead = DetailedFindingRead & TableItem;
+const props = defineProps<{
+  findings: DetailedFindingRead[] | undefined;
+  isRuleFinding: boolean;
+}>();
 
-type Props = {
-  findings: DetailedFindingRead[];
-  is_rule_finding: boolean;
-};
+const isAuditModalVisible = ref(false);
+const isColumnSelectorVisible = ref(false);
 
-const props = defineProps<Props>();
+const expanded = ref(-1);
+const selection = ref<number[]>([]);
+const selectedIndex = ref<number>(0);
 
-const auditModal = ref();
-const columnModal = ref();
-const auditTable = ref();
-const filterString = ref('');
-
-const findingList = ref(props.findings as TableItemDetailedFindingRead[]);
-const selectedCheckBoxIds = ref([] as number[]);
-const allSelected = ref(false);
-const fields = ref([] as SimpleTableField[]);
-
-const auditButtonDisabled = computed(() => selectedCheckBoxIds.value.length <= 0);
-const selectedIndex = ref(undefined as number | undefined);
-const store = useAuthUserStore();
+const findingList = ref<DetailedFindingRead[] | undefined>(props.findings);
+const auditButtonDisabled = computed(() => selection.value.length === 0);
 const emit = defineEmits(['refresh-table']);
 
-// Simple filter function
-// if start with * we check the ending of the file path.
-// if end with * we check the beginning of the file path.
-// if does not contain * we only check if the needle is in the string.
-function applyFilter() {
-  if (filterString.value === '') {
-    return findingList.value;
-  }
-
-  const token = filterString.value;
-
-  if (token.startsWith('*')) {
-    return findingList.value.filter((finding) => {
-      return finding.file_path.endsWith(token.substring(1));
-    });
-  }
-
-  if (token.endsWith('*')) {
-    return findingList.value.filter((finding) => {
-      return finding.file_path.startsWith(token.substring(0, token.length - 1));
-    });
-  }
-
-  return findingList.value.filter((finding) => {
-    return finding.file_path.includes(token);
-  });
-}
-
-const filteredList = computed(applyFilter);
-
-function setTableFields(selectedColumns: TableColumn[] = []) {
-  // @ts-ignore ignore TS2589
-  fields.value = ColumnUtils.getColumns(selectedColumns, store.tableColumns, props.is_rule_finding);
-}
+const { fields, setTableFields } = useColumnFiltering(props.isRuleFinding);
+const { filterString, filteredList } = useFiltering(findingList);
 
 setTableFields();
 
-function selectSingleCheckbox() {
-  allSelected.value = false;
-}
-
-function selectAllCheckboxes() {
-  selectedCheckBoxIds.value = [];
-  if (allSelected.value) {
-    for (const finding of filteredList.value) {
-      selectedCheckBoxIds.value.push(finding.id_);
-    }
-  }
+function toggleExpand(idx: number) {
+  selectedIndex.value = idx;
+  expanded.value = expanded.value === idx ? -1 : idx;
 }
 
 function toggleAllCheckboxes() {
-  selectedCheckBoxIds.value = [];
-  allSelected.value = !allSelected.value;
-  if (allSelected.value) {
-    for (const finding of filteredList.value) {
-      selectedCheckBoxIds.value.push(finding.id_);
-    }
+  if (filteredList.value === undefined) {
+    return;
+  }
+
+  if (selection.value.length < filteredList.value.length) {
+    selection.value = filteredList.value.map((f) => f.id_);
+  } else {
+    selection.value = [];
   }
 }
 
-function showAuditModal() {
-  auditModal.value.show();
-}
-
-function showColumnSelect() {
-  columnModal.value.show();
-}
-
 function updateAudit(status: FindingStatus, comment: string) {
-  updateVisualBadge(selectedCheckBoxIds.value, status, comment);
+  updateVisualBadge(selection.value, status, comment);
   emit('refresh-table');
 }
 
 function updateVisualBadge(selectedIds: number[], status: FindingStatus, comment: string) {
+  if (findingList.value === undefined) {
+    return;
+  }
+
   findingList.value.forEach((finding: DetailedFindingRead, idx, theArray) => {
     if (selectedIds.includes(finding.id_)) {
       theArray[idx].status = status;
@@ -256,82 +163,51 @@ function updateVisualBadge(selectedIds: number[], status: FindingStatus, comment
   });
 
   if (selectedIds.length > 1) {
-    selectedCheckBoxIds.value = [];
-    allSelected.value = false;
+    selection.value = [];
     return;
   }
 
-  const index = selectedCheckBoxIds.value.indexOf(selectedIds[0]);
-  if (index !== -1) {
-    selectedCheckBoxIds.value.splice(index, 1);
-  }
+  selection.value = selection.value.filter((s) => s !== selectedIds[0]);
 }
 
-function toggleFindingDetails(row: TableItem, index: number) {
-  selectedIndex.value = index;
-
-  if (row._showDetails) {
-    row._showDetails = false;
-  } else {
-    closeAllDetails();
-    row._showDetails = true;
-  }
-}
-
-function getCurrentFindingSelected(): TableItemDetailedFindingRead | undefined {
-  if (selectedIndex.value === undefined) {
-    return undefined;
+function getCurrentFindingSelected(): DetailedFindingRead {
+  if (filteredList.value === undefined) {
+    dispatchMessage('List is empty');
+    throw new Error('oups!');
   }
 
   return filteredList.value[selectedIndex.value];
 }
 
 function selectDown(): boolean {
-  const detailsStatus = getCurrentFindingSelected()?._showDetails;
-  closeAllDetails();
+  if (filteredList.value === undefined) {
+    return false;
+  }
 
   selectedIndex.value = ((selectedIndex.value ?? -1) + 1) % filteredList.value.length;
-  auditTable.value.clearSelected();
-  auditTable.value.selectRow(selectedIndex.value);
-
-  (getCurrentFindingSelected() as TableItemDetailedFindingRead)._showDetails = detailsStatus;
+  expanded.value = expanded.value === -1 ? -1 : selectedIndex.value;
 
   return true;
 }
 
 function selectUp(): boolean {
-  const detailsStatus = getCurrentFindingSelected()?._showDetails;
-  closeAllDetails();
+  if (filteredList.value === undefined) {
+    return false;
+  }
 
-  selectedIndex.value = Math.max(0, (selectedIndex.value ?? 1) - 1);
-  auditTable.value.clearSelected();
-  auditTable.value.selectRow(selectedIndex.value);
-
-  (getCurrentFindingSelected() as TableItemDetailedFindingRead)._showDetails = detailsStatus;
+  selectedIndex.value =
+    (selectedIndex.value + filteredList.value.length - 1) % filteredList.value.length;
+  expanded.value = expanded.value === -1 ? -1 : selectedIndex.value;
 
   return true;
 }
 
-function closeAllDetails() {
-  findingList.value.forEach((_item, idx, theArray) => {
-    theArray[idx]._showDetails = false;
-  });
-}
-
 function openDetails() {
-  const item = getCurrentFindingSelected();
-  if (item === undefined) {
-    return;
-  }
-  item._showDetails = true;
+  expanded.value = selectedIndex.value;
 }
 
 function closeDetails() {
-  const item = getCurrentFindingSelected();
-  if (item === undefined) {
-    return;
-  }
-  item._showDetails = false;
+  expanded.value = -1;
 }
 
 function openCommitUrl() {
@@ -343,59 +219,46 @@ function openCommitUrl() {
 
 function toggleSelect() {
   const item = getCurrentFindingSelected();
-  if (item === undefined) {
-    return;
-  }
-  const index = selectedCheckBoxIds.value.indexOf(item.id_);
-  if (index === -1) {
-    selectedCheckBoxIds.value.push(item.id_);
+  if (selection.value.filter((idx) => idx === item.id_).length > 0) {
+    selection.value = selection.value.filter((idx) => idx !== item.id_);
   } else {
-    selectedCheckBoxIds.value.splice(index, 1);
+    selection.value.push(item.id_);
   }
 }
 
 function markAsFalsePositive() {
   const item = getCurrentFindingSelected();
-  if (item === undefined) {
-    return;
-  }
   sendUpdate([item.id_], 'FALSE_POSITIVE');
   selectDown();
 }
 
 function markAsTruePositive() {
   const item = getCurrentFindingSelected();
-  if (item === undefined) {
-    return;
-  }
   sendUpdate([item.id_], 'TRUE_POSITIVE');
   selectDown();
 }
 
 function markAsGone() {
   const item = getCurrentFindingSelected();
-  if (item === undefined) {
-    return;
-  }
   sendUpdate([item.id_], 'NOT_ACCESSIBLE');
   selectDown();
 }
 
 function markAllAsFalsePositive() {
-  sendUpdate(selectedCheckBoxIds.value, 'FALSE_POSITIVE');
+  sendUpdate(selection.value, 'FALSE_POSITIVE');
 }
 
 function markAllAsTruePositive() {
-  sendUpdate(selectedCheckBoxIds.value, 'TRUE_POSITIVE');
+  sendUpdate(selection.value, 'TRUE_POSITIVE');
 }
 
 function markAllAsGone() {
-  sendUpdate(selectedCheckBoxIds.value, 'NOT_ACCESSIBLE');
+  sendUpdate(selection.value, 'NOT_ACCESSIBLE');
 }
 
 function auditThis() {
-  if (selectedCheckBoxIds.value.length > 0) {
-    showAuditModal();
+  if (selection.value.length > 0) {
+    isAuditModalVisible.value = true;
     return;
   }
 
@@ -408,7 +271,7 @@ function sendUpdate(selectedIds: number[], status: FindingStatus) {
       updateVisualBadge(selectedIds, status, '');
     })
     .catch((error) => {
-      AxiosConfig.handleError(error);
+      dispatchError(error);
       return false;
     });
 }
@@ -484,32 +347,16 @@ onKeyStroke(
 onKeyStroke('Escape', () => document.getElementById('filterFiles')?.blur(), {
   eventName: 'keydown',
 });
+
+// onMounted(setTableFields);
+
 /* istanbul ignore next @preserve */
 watch(
   () => props.findings,
   (findings, _prevFindings) => {
     findingList.value = findings;
-    selectedCheckBoxIds.value = [];
-    allSelected.value = false;
-    selectedIndex.value = undefined;
+    selection.value = [];
+    selectedIndex.value = 0;
   },
 );
 </script>
-<style lang="scss">
-.hover-opacity {
-  opacity: 0;
-  transition: all 0.2s ease-in-out !important;
-
-  &:hover {
-    opacity: 1;
-  }
-
-  &:focus {
-    opacity: 1;
-  }
-}
-
-input.hover-opacity:valid {
-  opacity: 1;
-}
-</style>

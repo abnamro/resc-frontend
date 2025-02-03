@@ -1,30 +1,28 @@
 <template>
-  <div>
-    <BFormGroup class="label-title text-start" label="Repository" label-for="repository-filter">
-      <multiselect
-        v-model="selectedRepository"
-        :options="props.repositoryOptions"
-        :multiple="false"
-        :show-labels="true"
-        :close-on-select="true"
-        :clear-on-select="false"
-        :searchable="true"
-        :preserve-search="true"
-        :select-label="'Select'"
-        :deselect-label="'Remove'"
-        placeholder="Select Repository"
-        :preselect-first="false"
-        @update:modelValue="onRepositoryFilterChange"
-      >
-        <template v-slot:noResult><span>No repository found</span></template>
-      </multiselect>
-    </BFormGroup>
+  <div class="flex flex-col justify-start">
+    <label for="repositories" class="font-bold text-lg text-left text-muted-color-emphasis"
+      >Repositories</label
+    >
+    <MultiSelect
+      v-model:model-value="selectedRepository"
+      :options="props.repositoryOptions"
+      display="chip"
+      class="w-full"
+      placeholder="Select Repositories"
+      :show-toggle-all="false"
+      :filter="true"
+      :virtualScrollerOptions="{ itemSize: 30 }"
+      id="repositories"
+      @update:model-value="onRepositoryFilterChange"
+      :pt:option:class="'text-gray-840 dark:text-gray-130'"
+      :pt:overlay:class="'bg-gray-0 dark:bg-gray-870 dark:border-gray-780'"
+    >
+    </MultiSelect>
   </div>
 </template>
 <script setup lang="ts">
-import { BFormGroup } from 'bootstrap-vue-next';
+import MultiSelect from 'primevue/multiselect';
 import { ref } from 'vue';
-import Multiselect from 'vue-multiselect';
 
 type Props = {
   repositoryOptions: string[];
@@ -41,4 +39,3 @@ function onRepositoryFilterChange() {
   emit('on-repository-change', selectedRepository.value ?? undefined);
 }
 </script>
-<style src="vue-multiselect/dist/vue-multiselect.css"></style>

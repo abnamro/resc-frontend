@@ -6,16 +6,49 @@ import App from '@/components/Findings/FindingsTable.vue';
 import { importFA } from '@/assets/font-awesome';
 import rule_packs from '@/../tests/resources/mock_rule_packs.json';
 import detailed_findings from '@/../tests/resources/mock_detailed_findings2.json';
-import bootstrapVue from 'bootstrap-vue-next';
+import flushPromises from 'flush-promises';
+import FindingTableHeader from '@/components/Findings/FindingTableHeader.vue';
+import Panel from 'primevue/panel';
 
 let allProjects = ['ABC', 'XYZ', 'GRD0000001', 'GRD0000002'];
 let allRepos = ['bb_repo1', 'bb_repo2', 'ado_repo1', 'ado_repo2'];
 
 importFA();
 
+const tooltip = vi.fn();
+
 vi.mock('axios');
 
 describe('FindingsTable tests', () => {
+  it('Given a FindingsTable without data then FindingsTable will not be displayed', async () => {
+    const wrapper = mount(App, {
+      props: {
+        findings: undefined,
+        isRuleFinding: true,
+      },
+      components: {
+        FindingTableHeader,
+        Panel,
+      },
+      global: {
+        plugins: [createTestingPinia()],
+        stubs: {},
+        directives: {
+          tooltip,
+        },
+      },
+    });
+
+    expect(wrapper.exists()).toBe(true);
+    expect(wrapper.vm.filteredList).toBe(undefined);
+
+    expect(wrapper.vm.toggleAllCheckboxes()).toBe(undefined);
+    expect(wrapper.vm.updateVisualBadge()).toBe(undefined);
+    expect(() => wrapper.vm.getCurrentFindingSelected()).toThrowError();
+    expect(wrapper.vm.selectDown()).toBe(false);
+    expect(wrapper.vm.selectUp()).toBe(false);
+  });
+
   it('Given a FindingsTable in rule findings then FindingsTable will be displayed', async () => {
     axios.get.mockResolvedValueOnce({ data: rule_packs });
     axios.get.mockResolvedValueOnce({ data: allProjects });
@@ -25,27 +58,25 @@ describe('FindingsTable tests', () => {
     const wrapper = mount(App, {
       props: {
         findings: detailed_findings.data,
-        is_rule_finding: true,
+        isRuleFinding: true,
       },
-      components: {},
+      components: {
+        FindingTableHeader,
+        Panel,
+      },
       global: {
-        plugins: [createTestingPinia(), bootstrapVue({ plugins: { modalController: true } })],
+        plugins: [createTestingPinia()],
         stubs: {},
+        directives: {
+          tooltip,
+        },
       },
     });
 
     expect(wrapper.exists()).toBe(true);
     expect(wrapper.vm.findingList).toEqual(detailed_findings.data);
-    expect(() => wrapper.find('#allSelected').setValue(true)).not.toThrow();
-    expect(() => wrapper.vm.selectAllCheckboxes()).not.toThrow();
-    expect(wrapper.vm.selectedCheckBoxIds).toEqual([
-      detailed_findings.data[0].id_,
-      detailed_findings.data[1].id_,
-    ]);
     expect(() => wrapper.vm.toggleAllCheckboxes()).not.toThrow();
-    expect(wrapper.vm.selectedCheckBoxIds).toEqual([]);
-    expect(() => wrapper.vm.toggleAllCheckboxes()).not.toThrow();
-    expect(wrapper.vm.selectedCheckBoxIds).toEqual([
+    expect(wrapper.vm.selection).toEqual([
       detailed_findings.data[0].id_,
       detailed_findings.data[1].id_,
     ]);
@@ -65,9 +96,6 @@ describe('FindingsTable tests', () => {
       wrapper.vm.updateVisualBadge([detailed_findings.data[0].id_], 'NOT_ACCESSIBLE', ''),
     ).not.toThrow();
 
-    expect(() => wrapper.vm.selectSingleCheckbox()).not.toThrow();
-
-    expect(() => wrapper.vm.toggleFindingDetails(detailed_findings.data[0], 0)).not.toThrow();
     expect(wrapper.vm.selectedIndex).toEqual(0);
     expect(() => wrapper.vm.selectDown()).not.toThrow();
     expect(wrapper.vm.selectedIndex).toEqual(1);
@@ -76,6 +104,7 @@ describe('FindingsTable tests', () => {
 
     expect(() => wrapper.vm.openDetails()).not.toThrow();
     expect(() => wrapper.vm.openCommitUrl()).not.toThrow();
+    await flushPromises();
     expect(() => wrapper.vm.closeDetails()).not.toThrow();
     expect(() => wrapper.vm.toggleSelect()).not.toThrow();
     expect(() => wrapper.vm.markAsFalsePositive()).not.toThrow();
@@ -97,9 +126,9 @@ describe('FindingsTable tests', () => {
     expect(() => wrapper.vm.auditThis()).not.toThrow();
 
     expect(() => wrapper.find('#filterFiles').setValue('file1')).not.toThrow();
-    await wrapper.vm.$nextTick();
+    await flushPromises();
     expect(() => wrapper.find('#filterFiles').setValue('fi*')).not.toThrow();
-    await wrapper.vm.$nextTick();
+    await flushPromises();
     expect(() => wrapper.find('#filterFiles').setValue('*e1')).not.toThrow();
 
     axios.get.mockResolvedValueOnce({ data: detailed_findings });
@@ -115,12 +144,18 @@ describe('FindingsTable tests', () => {
     const wrapper = mount(App, {
       props: {
         findings: detailed_findings.data,
-        is_rule_finding: false,
+        isRuleFinding: false,
       },
-      components: {},
+      components: {
+        FindingTableHeader,
+        Panel,
+      },
       global: {
-        plugins: [createTestingPinia(), bootstrapVue({ plugins: { modalController: true } })],
+        plugins: [createTestingPinia()],
         stubs: {},
+        directives: {
+          tooltip,
+        },
       },
     });
 

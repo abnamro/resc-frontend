@@ -3,14 +3,13 @@ import axios from 'axios';
 import { describe, expect, it, vi } from 'vitest';
 import App from '@/components/Filters/ScanFindingsFilter.vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import { BTooltip, BFormGroup, BFormCheckbox } from 'bootstrap-vue-next';
 import scans_for_a_repository from '@/../tests/resources/mock_scans_for_a_repository.json';
-import Multiselect from 'vue-multiselect';
 import mock_statuses from '@/../tests/resources/mock_status.json';
 import rule_tags from '@/../tests/resources/mock_rule_tags.json';
 import RuleTagsFilter from '@/components/Filters/RuleTagsFilter.vue';
 import RuleFilter from '@/components/Filters/RuleFilter.vue';
 import { createTestingPinia } from '@pinia/testing';
+import flushPromises from 'flush-promises';
 
 vi.mock('axios');
 vi.mock('vue-router', async () => {
@@ -50,11 +49,7 @@ const repository = {
 };
 
 const components = {
-  BTooltip,
-  BFormGroup,
   FontAwesomeIcon,
-  BFormCheckbox,
-  Multiselect,
   RuleTagsFilter,
   RuleFilter,
 };
@@ -116,10 +111,7 @@ describe('ScanFindingsFilter tests', () => {
     expect(wrapper.exists()).toBe(true);
     axios.get.mockResolvedValueOnce({ data: scans_for_a_repository });
     expect(() => wrapper.vm.fetchScanDates()).not.toThrow();
-    await wrapper.vm.$nextTick();
-    await wrapper.vm.$nextTick();
-    await wrapper.vm.$nextTick();
-    await wrapper.vm.$nextTick();
+    await flushPromises();
     expect(wrapper.vm.selectedScan).not.toBe(null);
 
     axios.get.mockResolvedValueOnce(rule_tags);
@@ -169,10 +161,7 @@ describe('ScanFindingsFilter tests', () => {
     axios.get.mockResolvedValueOnce(rule_tags);
 
     expect(() => wrapper.vm.fetchScanDates()).not.toThrow();
-    await wrapper.vm.$nextTick();
-    await wrapper.vm.$nextTick();
-    await wrapper.vm.$nextTick();
-    await wrapper.vm.$nextTick();
+    await flushPromises();
     expect(wrapper.vm.selectedScan).not.toBe(null);
 
     axios.get.mockResolvedValueOnce(rule_tags);
@@ -183,6 +172,6 @@ describe('ScanFindingsFilter tests', () => {
     expect(wrapper.emitted()).toHaveProperty('previous-scans-checked');
     expect(wrapper.emitted()).toHaveProperty('on-filter-change');
     expect(wrapper.emitted()['previous-scans-checked'].length).toBe(1);
-    expect(wrapper.emitted()['on-filter-change'].length).toBe(1);
+    expect(wrapper.emitted()['on-filter-change'].length).toBe(2);
   });
 });

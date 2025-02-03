@@ -1,7 +1,6 @@
 import { mount } from '@vue/test-utils';
 import { describe, expect, it } from 'vitest';
 import App from '@/components/Common/FindingStatusBadge.vue';
-import { BBadge } from 'bootstrap-vue-next';
 import Config from '@/configuration/config';
 
 describe('FindingStatusBadge data-line tests', () => {
@@ -16,9 +15,7 @@ describe('FindingStatusBadge data-line tests', () => {
 
   function initMountApp(status_type) {
     wrapper = mount(App, {
-      components: {
-        BBadge: BBadge,
-      },
+      components: {},
       props: {
         status: status_type,
       },

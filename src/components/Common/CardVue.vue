@@ -1,43 +1,40 @@
 <template>
-  <div>
-    <BCard class="card-box">
-      <template #header>
-        <div class="d-flex align-items-center justify-content-center fw-bold">
-          <p class="mb-0 me-2">{{ title }}</p>
-          <template v-if="titleIconDefinition">
-            <FontAwesomeIcon
-              :id="titleIconTooltipId"
-              class="mb-0 me-2"
-              :style="titleIconStyle"
-              :icon="titleIconDefinition"
-            />
-            <BTooltip :target="titleIconTooltipId" placement="right">
-              {{ titleIconTooltip }}
-            </BTooltip>
-          </template>
-        </div>
+  <Card
+    class="rounded overflow-hidden"
+    :pt:body:class="'p-0 min-w-[200px]'"
+    :pt:caption:class="'px-4 py-2 bg-teal-450/20'"
+    :pt:title:class="'flex items-center justify-center'"
+    :pt:content:class="'px-4 pb-2 flex items-center justify-center font-bold'"
+  >
+    <template #title>
+      <p class="p-0 m-0 font-bold text-sm">{{ title }}</p>
+      <template v-if="titleIconDefinition">
+        <FontAwesomeIcon
+          :id="titleIconTooltipId"
+          class="ml-2 text-xs"
+          :style="titleIconStyle"
+          :icon="titleIconDefinition"
+          v-tooltip.right="titleIconTooltip"
+        />
       </template>
-
-      <template #default>
-        <div class="d-flex align-items-center justify-content-center fw-bold">
-          <h5 class="mb-0 me-2 mt-2 justify-content-center text-center" :style="contentStyle">
-            {{ formatCardBodyContent }}
-          </h5>
-          <FontAwesomeIcon
-            v-if="contentIconDefinition"
-            class="mb-0 me-2 mt-2 ml-1"
-            :style="contentIconStyle"
-            :icon="contentIconDefinition"
-          />
-        </div>
-      </template>
-    </BCard>
-  </div>
+    </template>
+    <template #content>
+      <span class="text-lg/0" :style="contentStyle">
+        {{ formatCardBodyContent }}
+      </span>
+      <FontAwesomeIcon
+        v-if="contentIconDefinition"
+        class="ml-2 text-xl"
+        :style="contentStyle"
+        :icon="contentIconDefinition"
+      />
+    </template>
+  </Card>
 </template>
 <script setup lang="ts">
 import { ref } from 'vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import { BCard, BTooltip } from 'bootstrap-vue-next';
+import Card from 'primevue/card';
 
 export type CardIcon =
   | 'info-circle'
@@ -64,15 +61,9 @@ const props = defineProps<Props>();
 const title = ref(props.cardTitle);
 const titleIconStyle = ref({
   color: props.titleIconColor,
-  fontSize: '12px',
-});
-const contentIconStyle = ref({
-  color: props.contentIconColor,
-  fontSize: '20px',
 });
 const contentStyle = ref({
   color: props.contentIconColor,
-  fontSize: '17px',
 });
 
 const titleIconDefinition = ref(props.titleIcon ? ['fas', props.titleIcon] : null);

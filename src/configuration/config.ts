@@ -120,3 +120,17 @@ export const PAGE_SIZES = [
   PAGE_SIZE_500,
   PAGE_SIZE_1000,
 ];
+
+export function dispatchError(error: any) {
+  const event = new CustomEvent('error', {
+    detail: error,
+  });
+  window.dispatchEvent(event);
+}
+
+export function dispatchMessage(message: string) {
+  const event = new CustomEvent('error', {
+    detail: { type: 'message', message },
+  });
+  window.dispatchEvent(event);
+}

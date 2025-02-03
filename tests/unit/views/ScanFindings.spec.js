@@ -5,13 +5,10 @@ import App from '@/views/ScanFindings.vue';
 import repositories from '@/../tests/resources/mock_repositories.json';
 import vcs_providers from '@/../tests/resources/mock_vcs_providers.json';
 import detailed_findings from '@/../tests/resources/mock_detailed_findings.json';
-import Pagination from '@/components/Common/PaginationVue.vue';
 import FindingStatusBadge from '@/components/Common/FindingStatusBadge.vue';
 import RepositoryPanel from '@/components/ScanFindings/RepositoryPanel.vue';
 import ScanFindingsService from '@/services/scan-findings-service';
 import ScanTypeBadge from '@/components/Common/ScanTypeBadge.vue';
-import SpinnerVue from '@/components/Common/SpinnerVue.vue';
-import { BFormCheckbox, BButton } from 'bootstrap-vue-next';
 import { importFA } from '@/assets/font-awesome';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { createTestingPinia } from '@pinia/testing';
@@ -49,14 +46,10 @@ describe('ScanFindings tests', () => {
         scanId: '1',
       },
       components: {
-        SpinnerVue,
         FindingStatusBadge,
         RepositoryPanel,
         ScanFindingsService,
         ScanTypeBadge,
-        Pagination,
-        BButton,
-        BFormCheckbox,
         FontAwesomeIcon,
       },
       global: {
@@ -88,7 +81,6 @@ describe('ScanFindings tests', () => {
           ScanFindingsFilter: true,
           RepositoriesPageFilter: true,
           FindingPanel: true,
-          BTable: true,
         },
       },
     });

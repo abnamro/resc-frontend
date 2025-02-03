@@ -1,8 +1,6 @@
 import { mount } from '@vue/test-utils';
 import { describe, expect, it } from 'vitest';
 import App from '@/components/Filters/ProjectFilter.vue';
-import { BFormGroup } from 'bootstrap-vue-next';
-import Multiselect from 'vue-multiselect';
 
 describe('ProjectFilter tests', () => {
   it('Given a ProjectFilter When props are passed then ProjectFilter will be displayed', () => {
@@ -10,10 +8,7 @@ describe('ProjectFilter tests', () => {
       props: {
         projectOptions: ['project1', 'project2'],
       },
-      components: {
-        BFormGroup: BFormGroup,
-        Multiselect: Multiselect,
-      },
+      components: {},
     });
 
     expect(wrapper.exists()).toBe(true);

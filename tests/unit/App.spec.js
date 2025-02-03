@@ -6,6 +6,7 @@ import { SidebarMenu } from 'vue-sidebar-menu';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { vi } from 'vitest';
 import Config from '@/configuration/config';
+import { createTestingPinia } from '@pinia/testing';
 
 vi.mock('vue-router', async () => {
   const actual = await vi.importActual('vue-router');
@@ -21,21 +22,20 @@ vi.mock('vue-router', async () => {
 describe('App.vue unit tests', () => {
   it('Given an App When login then Top bar and SideMenubar will be displayed', async () => {
     const wrapper = shallowMount(App, {
+      components: {
+        SidebarMenu: SidebarMenu,
+        TopBarMenu: TopBarMenu,
+        fontAwesomeIcon: FontAwesomeIcon,
+      },
+      data() {
+        return {
+          sidebarCollapsed: false,
+          sidebarNavigationMenu: sidebarMenu,
+        };
+      },
       global: {
-        components: {
-          SidebarMenu: SidebarMenu,
-          TopBarMenu: TopBarMenu,
-          fontAwesomeIcon: FontAwesomeIcon,
-        },
-        data() {
-          return {
-            sidebarCollapsed: false,
-            sidebarNavigationMenu: sidebarMenu,
-          };
-        },
-        global: {
-          stubs: ['router-view'],
-        },
+        plugins: [createTestingPinia()],
+        stubs: ['router-view'],
       },
     });
 

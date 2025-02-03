@@ -3,16 +3,26 @@
     ref="multiline"
     :data="chartData"
     :styles="styles"
-    :chartId="chartId"
-    :cssClasses="cssClasses"
+    :chartId="props.chartId"
+    :cssClasses="props.cssClasses"
     :options="chartOptions"
   />
 </template>
 <script setup lang="ts">
 import { ref } from 'vue';
 import { Line } from 'vue-chartjs';
-import type { DataSetObject } from '../Metrics/types';
+import type { DataSetObject } from '@/views/metrics/types';
 import type { ChartData, ChartOptions } from 'chart.js';
+import { $dt } from '@primevue/themes';
+import { useAuthUserStore } from '@/store';
+import { storeToRefs } from 'pinia';
+
+function getColor() {
+  return dark.value ? $dt('gray.50').value : $dt('gray.870').value;
+}
+
+const store = useAuthUserStore();
+const { dark } = storeToRefs(store);
 
 type Props = {
   chartData: { labels: string[]; datasets: DataSetObject[] };
@@ -34,18 +44,23 @@ const props = withDefaults(defineProps<Props>(), {
 });
 
 const chartData = ref(props.chartData as ChartData<'line', number[], string>);
-
-const chartOptions: ChartOptions<'line'> = {
+const color = getColor();
+const chartOptions = ref<ChartOptions<'line'>>({
   responsive: true,
-  // maintainAspectRatio: false, // breaks the graph
-};
-const chartId = ref(props.chartId);
-const cssClasses = ref(props.cssClasses);
-const styles =
-  props.styles === undefined
-    ? ref({
-        height: props.height + ' px',
-        width: props.width + ' px',
-      })
-    : ref(props.styles);
+  plugins: {
+    legend: {
+      labels: {
+        color,
+      },
+      title: {
+        color,
+      },
+    },
+  },
+  scales: {
+    x: { border: { color: color }, grid: { color: `${color}80` }, ticks: { color: color } },
+    y: { border: { color: color }, grid: { color: `${color}80` }, ticks: { color: color } },
+  },
+});
+const styles = ref(props.styles ?? { height: `${props.height} px`, width: `${props.width} px` });
 </script>

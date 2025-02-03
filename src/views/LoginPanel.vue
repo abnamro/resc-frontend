@@ -1,38 +1,35 @@
 <template>
-  <div>
-    <BContainer class="login-container justify-content-md-center col-8">
-      <BRow class="resc-header">
-        <BCol>
-          <!-- Application Name -->
-          <div>Repository Scanner (RESC)</div>
-        </BCol>
-      </BRow>
-      <BRow>
-        <BCol>
-          <!-- Auth warning -->
-          <div class="warning-msg text-start fw-bold">
-            Unauthorized access prohibited.<br />
-            {{ ssoLoginPageMessage }}
-          </div>
-        </BCol>
-      </BRow>
-      <BRow>
-        <BCol>
-          <BButton variant="primary" class="mx-auto" v-on:click="login"> LOGIN </BButton>
-        </BCol>
-      </BRow>
-    </BContainer>
+  <BatView></BatView>
+  <div class="flex justify-center mt-[10%]">
+    <Panel
+      header="Repository Scanner (RESC)"
+      :pt:header:class="'justify-center bg-teal-850 text-surface-0'"
+      class="max-w-2xl rounded overflow-hidden"
+    >
+      <div class="flex flex-col items-center">
+        <!-- Auth warning -->
+        <div class="text-red-620 dark:text-red-400 text-center font-bold p-8">
+          Unauthorized access prohibited.<br />
+          {{ ssoLoginPageMessage }}
+        </div>
+        <Button @click="login" severity="warn">Login</Button>
+        <span class="hidden dark:flex mt-4 text-muted-color-emphasis"
+          >Be careful with the light.</span
+        >
+      </div>
+    </Panel>
   </div>
 </template>
 
 <script setup lang="ts">
 import AuthService from '@/services/auth-service';
-import AxiosConfig from '@/configuration/axios-config';
-import Config from '@/configuration/config';
+import Config, { dispatchError } from '@/configuration/config';
 import { useAuthUserStore } from '@/store/index';
 import { useRouter } from 'vue-router';
 import { onKeyStroke } from '@vueuse/core';
-import { BButton, BCol, BContainer, BRow } from 'bootstrap-vue-next';
+import Panel from 'primevue/panel';
+import Button from 'primevue/button';
+import BatView from '@/components/Login/BatView.vue';
 
 const ssoLoginPageMessage = `${Config.value('ssoLoginPageMessage')}`;
 const router = useRouter();
@@ -45,37 +42,10 @@ function login() {
 /* istanbul ignore if -- @preserve */
 if (store.idToken && !AuthService.isTokenExpired(store.idToken)) {
   if (store.destinationRoute) {
-    router.push(store.destinationRoute).catch((error) => {
-      AxiosConfig.handleError(error);
-    });
+    router.push(store.destinationRoute).catch(dispatchError);
   } else {
-    router.push('/').catch((error) => {
-      AxiosConfig.handleError(error);
-    });
+    router.push('/').catch(dispatchError);
   }
 }
 onKeyStroke('Enter', login, { eventName: 'keydown' });
 </script>
-
-<style scoped>
-.warning-msg {
-  color: red;
-}
-.page-title {
-  color: #939393;
-}
-.login-container {
-  margin-top: 10%;
-  border: 1px solid #6c757d;
-  border-radius: 3px;
-}
-.login-container .row {
-  padding-top: 15px;
-  padding-bottom: 15px;
-}
-.resc-header {
-  background: #01857a;
-  color: white;
-  font-weight: bold;
-}
-</style>

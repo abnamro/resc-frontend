@@ -1,8 +1,4 @@
-import type { StyleValue } from 'vue';
-
 const _defaultColumns = [
-  'select',
-  'toggle_row',
   'project_key',
   'repository_name',
   'rule_name',
@@ -13,16 +9,15 @@ const _defaultColumns = [
   'scanType',
   'vcs_provider',
   'status',
-];
+] as const;
 
 export type TableColumn = (typeof _defaultColumns)[number];
 
 export type SimpleTableField = {
-  key: string;
+  key: TableColumn;
   sortable?: boolean;
   label: string;
   class: string;
-  thStyle: StyleValue;
 };
 
 const ColumnUtils = {
@@ -32,14 +27,11 @@ const ColumnUtils = {
       sortable: false,
       label: ColumnUtils.formatColumnLabel(column),
       class: ColumnUtils._class(column),
-      thStyle: { borderTop: '0px' },
     };
   },
 
   formatColumnLabel(column: TableColumn): string {
     const labels = {
-      select: '',
-      toggle_row: '',
       project_key: 'Project',
       repository_name: 'Repository',
       rule_name: 'Rule',
@@ -61,13 +53,13 @@ const ColumnUtils = {
   },
 
   _class(column: TableColumn): string {
-    const baseCss = 'position-sticky text-nowrap ';
+    const baseCss = 'text-nowrap ';
     if (column === 'file_path') {
       return baseCss + 'text-start mw-50';
     }
 
     if (column === 'status') {
-      return baseCss + 'text-end';
+      return baseCss + 'text-end pr-2';
     }
     return baseCss + 'text-start';
   },
@@ -113,17 +105,10 @@ const ColumnUtils = {
     return columns;
   },
 
-  getColumns(
-    selectedColumns: TableColumn[] = [],
-    memoryColumns: TableColumn[] = [],
-    isRuleFinding: boolean,
-  ): SimpleTableField[] {
+  getColumns(selectedColumns: TableColumn[] = [], isRuleFinding: boolean): SimpleTableField[] {
     const defaultColumns = _defaultColumns;
 
     // Get default selected Columns if the selection is empty.
-    if (selectedColumns.length === 0) {
-      selectedColumns = memoryColumns;
-    }
     if (selectedColumns.length === 0) {
       selectedColumns = ColumnUtils.defaultSelectableColumns();
     }

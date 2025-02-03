@@ -1,13 +1,14 @@
 import type { TableColumn } from '@/utils/column-utils';
-import AxiosConfig from '@/configuration/axios-config';
 import ScanFindingsService from '@/services/scan-findings-service';
 import type { FindingStatus, RulePackRead } from '@/services/shema-to-types';
 import { defineStore, type Store } from 'pinia';
 import type { StatusOptionType } from '@/utils/common-utils';
+import { dispatchError } from '@/configuration/config';
 
 export type TokenData = {
   id_token: string;
   access_token: string;
+  token_length: number;
 };
 
 export type UserDetails = {
@@ -26,7 +27,6 @@ type ActionsStore = {
   update_destination_route: (destinationRoute: string | null) => void;
   update_user_details: (userDetails: UserDetails | null) => void;
   update_previous_route_state: (previousRouteState: string | null | PreviousRouteState) => void;
-  update_table_column: (columns: TableColumn[]) => void;
   clear_finding_status_list: () => void;
 };
 
@@ -39,6 +39,7 @@ export type PreviousRouteState = {
 interface State {
   idToken: null | string;
   accessToken: null | string;
+  tokenLength: null | number;
   sourceRoute: null | string;
   destinationRoute: null | string;
   firstName: null | string;
@@ -48,6 +49,7 @@ interface State {
   findingStatusList: null | FindingStatus[];
   tableColumns: TableColumn[];
   selectedStatus: StatusOptionType[];
+  dark: boolean;
 }
 
 export const useAuthUserStore: () => Store<'authUser', State, GettersStore, ActionsStore> =
@@ -56,6 +58,7 @@ export const useAuthUserStore: () => Store<'authUser', State, GettersStore, Acti
     state: (): State => ({
       idToken: null,
       accessToken: null,
+      tokenLength: null,
       sourceRoute: null,
       destinationRoute: null,
       firstName: null,
@@ -65,6 +68,7 @@ export const useAuthUserStore: () => Store<'authUser', State, GettersStore, Acti
       findingStatusList: [],
       tableColumns: [],
       selectedStatus: [],
+      dark: false,
     }),
     getters: {
       get_finding_status_list(): FindingStatus[] {
@@ -77,18 +81,17 @@ export const useAuthUserStore: () => Store<'authUser', State, GettersStore, Acti
             .then((response) => {
               this.findingStatusList = response.data as FindingStatus[];
             })
-            .catch((error) => {
-              AxiosConfig.handleError(error);
-            });
+            .catch(dispatchError);
         }
 
-        return this.findingStatusList as FindingStatus[];
+        return this.findingStatusList ?? ([] as FindingStatus[]);
       },
     },
     actions: {
       update_auth_tokens(tokenData: TokenData | null) {
         this.idToken = tokenData?.id_token ?? null;
         this.accessToken = tokenData?.access_token ?? null;
+        this.tokenLength = tokenData?.token_length ?? null;
       },
       update_source_route(sourceRoute: string | null) {
         this.sourceRoute = sourceRoute;
@@ -107,9 +110,6 @@ export const useAuthUserStore: () => Store<'authUser', State, GettersStore, Acti
       clear_finding_status_list() {
         this.findingStatusList = null;
         this.selectedStatus = [];
-      },
-      update_table_column(columns: TableColumn[]) {
-        this.tableColumns = columns;
       },
     },
     modules: {},

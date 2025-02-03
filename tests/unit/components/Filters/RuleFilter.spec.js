@@ -1,8 +1,7 @@
 import { mount } from '@vue/test-utils';
 import { describe, expect, it } from 'vitest';
 import App from '@/components/Filters/RuleFilter.vue';
-import { BFormGroup } from 'bootstrap-vue-next';
-import Multiselect from 'vue-multiselect';
+import flushPromises from 'flush-promises';
 
 describe('RuleFilter tests', () => {
   function getApp() {
@@ -11,10 +10,7 @@ describe('RuleFilter tests', () => {
         rulesOptions: ['rule1', 'rule2'],
         rulesSelected: [],
       },
-      components: {
-        BFormGroup: BFormGroup,
-        Multiselect: Multiselect,
-      },
+      components: {},
     });
   }
 
@@ -27,7 +23,7 @@ describe('RuleFilter tests', () => {
     const wrapper = getApp();
     expect(wrapper.exists()).toBe(true);
     wrapper.setProps({ rulesSelected: ['rule3'] });
-    await wrapper.vm.$nextTick();
+    await flushPromises();
     expect(() => wrapper.vm.onRuleFilterChange()).not.toThrow();
     expect(wrapper.emitted()).toHaveProperty('on-rule-change');
   });

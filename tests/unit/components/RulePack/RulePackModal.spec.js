@@ -2,8 +2,8 @@ import { mount } from '@vue/test-utils';
 import axios from 'axios';
 import { describe, expect, it, vi } from 'vitest';
 import App from '@/components/RulePack/RulePackUploadModal.vue';
-import SpinnerVue from '@/components/Common/SpinnerVue.vue';
-import { BFormGroup, BModal, BFormInput, BFormFile, BButton } from 'bootstrap-vue-next';
+import ToastService from 'primevue/toastservice';
+import { createTestingPinia } from '@pinia/testing';
 
 vi.mock('axios');
 
@@ -11,14 +11,8 @@ describe('RulePackUploadModal tests', () => {
   it('Given a RulePackUploadModal then RulePackUploadModal will be initiated', async () => {
     const wrapper = mount(App, {
       props: {},
-      components: {
-        BFormGroup,
-        BModal,
-        BFormInput,
-        BFormFile,
-        BButton,
-        SpinnerVue,
-      },
+      global: { plugins: [ToastService, createTestingPinia()] },
+      components: {},
     });
 
     expect(wrapper.exists()).toBe(true);
@@ -28,8 +22,6 @@ describe('RulePackUploadModal tests', () => {
     expect(() => wrapper.vm.hide()).not.toThrow();
     axios.post.mockResolvedValueOnce({ status: 200 });
     expect(() => wrapper.vm.handleOk(new MouseEvent('click'))).not.toThrow();
-    expect(wrapper.find('.spinner').exists()).toBe(false);
     expect(() => wrapper.vm.resetModal()).not.toThrow();
-    expect(() => wrapper.vm.show()).not.toThrow();
   });
 });

@@ -10,15 +10,15 @@ describe('LoginCallback tests', () => {
   });
 
   it('Given a LoginCallback then Callback will throw error on mount', () => {
-    expect(() =>
-      mount(App, {
-        props: {},
-        components: {},
-        global: {
-          plugins: [createTestingPinia()],
-        },
-      }),
-    ).toThrowError('authCode && codeVerifier are null!');
+    vi.spyOn(window, 'dispatchEvent');
+    mount(App, {
+      props: {},
+      components: {},
+      global: {
+        plugins: [createTestingPinia()],
+      },
+    });
+    expect(window.dispatchEvent).toBeCalled();
   });
 
   it('Given a LoginCallback then AuthService execute Login', () => {

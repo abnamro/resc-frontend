@@ -1,7 +1,6 @@
 import { mount } from '@vue/test-utils';
 import { describe, expect, it } from 'vitest';
 import App from '@/components/Filters/RepositoriesPageFilter.vue';
-import { BFormCheckbox } from 'bootstrap-vue-next';
 
 describe('RepositoriesPageFilter tests', () => {
   function getApp() {
@@ -10,9 +9,7 @@ describe('RepositoriesPageFilter tests', () => {
         projectOptions: ['project1', 'project2'],
         repositoryOptions: ['repo1', 'repo2'],
       },
-      components: {
-        BFormCheckbox: BFormCheckbox,
-      },
+      components: {},
       global: {
         stubs: {
           VcsProviderFilter: true,

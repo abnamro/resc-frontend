@@ -1,52 +1,49 @@
 <template>
-  <KeybindingModal ref="keybindingModal"></KeybindingModal>
-  <div class="topbar-menu-group me-4 mt-2">
+  <KeybindingModal v-model:visible="isKeybindingModalOpen" />
+  <div class="absolute right-4 top-2 flex gap-2">
     <div
-      class="square float-start px-3 d-flex align-items-center cursor-help justify-content-center rounded-circle bg-warning text-white font-weight-bold"
-      @click="showKeybindingHelp"
+      @click="toggleDarkMode"
+      class="p-button-icon-only p-button-rounded p-button-secondary cursor-pointer flex justify-center items-center opacity-0 hover:opacity-100 transition-opacity duration-300 dark:hidden pt-1 bg-gray-840 fill-gray-50"
     >
-      ?
+      <svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" fill="#ffffff" stroke="#ffffff">
+        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+        <g id="SVGRepo_iconCarrier">
+          <path
+            fill="#f2f2f2"
+            d="M362.005 149.115s-7 55.77-79 83.36v-24.69c-2.76-1-4.63 7.88-7.26 9.15h-39.49c-2.63-1.27-4.5-10.11-7.26-9.15v24.69c-72-27.59-79-83.36-79-83.36-60.71 67.68-121.41 80-121.41 80 102.53-16.11 101.36 44.89 101.36 44.89 69.71-11.91 65.64 36.31 65.64 36.31 60.63-6.9 60.41 52.57 60.41 52.57s-.22-59.47 60.41-52.57c0 0-4.07-48.22 65.64-36.31 0 0-1.16-61 101.37-44.88.02.01-60.69-12.33-121.41-80.01z"
+          ></path>
+        </g>
+      </svg>
     </div>
-
-    <BButtonToolbar
-      aria-label="Toolbar with button groups and dropdown menu"
-      class="float-end"
-      v-if="displayLoggedInUser"
-    >
-      <BDropdown class="mx-1" right toggle-class="rounded-circle" no-caret>
-        <template #button-content>
-          <FontAwesomeIcon icon="user" />
-        </template>
-
-        <BDropdownItem disabled>
-          <table aria-hidden="true">
-            <tbody>
-              <tr>
-                <td class="user-avatar-badge">
-                  <BAvatar
-                    button
-                    v-bind:text="avatarText"
-                    class="align-baseline user-avatar"
-                  ></BAvatar>
-                </td>
-                <td>
-                  <span class="profile-menu-username">{{ userFullName }}</span
-                  ><br /><span class="profile-menu-email">{{ userEmail }}</span>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </BDropdownItem>
-
-        <div>
-          <BDropdownDivider />
-          <BDropdownItem v-on:click="logout">
-            <FontAwesomeIcon class="sign-out-icon" icon="sign-out-alt" />
-            <span class="sign-out-text">Logout</span></BDropdownItem
-          >
+    <Button
+      rounded
+      class="hidden dark:flex"
+      icon="pi pi-sun"
+      severity="secondary"
+      @click="toggleDarkMode"
+    ></Button>
+    <Button
+      rounded
+      icon="pi pi-question"
+      severity="secondary"
+      @click="isKeybindingModalOpen = true"
+    ></Button>
+    <Button rounded icon="pi pi-user" v-if="displayLoggedInUser" @click="toggle"></Button>
+    <Popover ref="op" v-if="displayLoggedInUser">
+      <div class="flex flex-col gap-4 w-[25rem]">
+        <div class="flex gap-2">
+          <Avatar :label="avatarText" size="large" />
+          <div class="flex flex-col justify-end">
+            <span class="font-bold text-xl">{{ userFullName }}</span>
+            <span class="text-sm text-muted-color">{{ userEmail }}</span>
+          </div>
         </div>
-      </BDropdown>
-    </BButtonToolbar>
+        <div class="flex justify-end">
+          <Button text icon="pi pi-sign-out" @click="logout" label="Logout"></Button>
+        </div>
+      </div>
+    </Popover>
   </div>
 </template>
 
@@ -56,16 +53,18 @@ import AuthService from '@/services/auth-service';
 import Config from '@/configuration/config';
 import { useAuthUserStore } from '@/store/index';
 import { computed, ref } from 'vue';
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import {
-  BAvatar,
-  BButtonToolbar,
-  BDropdown,
-  BDropdownDivider,
-  BDropdownItem,
-} from 'bootstrap-vue-next';
+import Popover from 'primevue/popover';
+import Button from 'primevue/button';
+import Avatar from 'primevue/avatar';
+import { useDarkMode } from '@/composables/useDarkmode';
+import { storeToRefs } from 'pinia';
 
-const keybindingModal = ref();
+const isKeybindingModalOpen = ref(false);
+const op = ref();
+
+const store = useAuthUserStore();
+const { dark } = storeToRefs(store);
+const { toggleDarkMode } = useDarkMode(dark);
 
 const displayLoggedInUser = computed(() => {
   const authenticationRequired = `${Config.value('authenticationRequired')}`;
@@ -89,25 +88,11 @@ const userEmail = computed(() => {
   return store.email ? `${store.email}` : null;
 });
 
+function toggle(event: Event) {
+  op.value.toggle(event);
+}
+
 function logout() {
   AuthService.doLogOut();
 }
-
-function showKeybindingHelp() {
-  keybindingModal.value.show();
-}
 </script>
-<style scoped>
-.topbar-menu-group {
-  float: right;
-}
-
-.square {
-  height: 38px;
-  width: 40px;
-}
-
-.cursor-help {
-  cursor: help;
-}
-</style>

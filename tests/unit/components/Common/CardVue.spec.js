@@ -1,27 +1,14 @@
 import { mount } from '@vue/test-utils';
 import { describe, expect, it, vi } from 'vitest';
 import App from '@/components/Common/CardVue.vue';
-import { BTooltip } from 'bootstrap-vue-next';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { importFA } from '@/assets/font-awesome';
+import { Card } from 'primevue';
 
 importFA();
+const tooltip = vi.fn();
 
 describe('CardVue tests', () => {
-  let spy;
-
-  afterAll(() => {
-    console.warn.mockRestore();
-  });
-
-  afterEach(() => {
-    console.warn.mockClear();
-  });
-
-  beforeEach(() => {
-    spy = vi.spyOn(console, 'warn').mockImplementation(() => {});
-  });
-
   it('Given a Card When props are passed then Card will be displayed', async () => {
     const wrapper = mount(App, {
       props: {
@@ -35,20 +22,20 @@ describe('CardVue tests', () => {
         contentIconColor: 'green',
       },
       components: {
-        BTooltip,
+        Card,
         FontAwesomeIcon,
       },
       global: {
         stubs: {},
+        directives: {
+          tooltip,
+        },
       },
     });
 
     expect(wrapper.exists()).toBe(true);
-    expect(wrapper.find('.card-box').exists()).toBe(true);
     expect(wrapper.html()).toContain('card-title');
     expect(wrapper.html()).toContain('card-content');
-    expect(spy).toHaveBeenCalled();
-    expect(spy.mock.calls[0][0]).toContain('Target element not found');
   });
 
   it('Given a Card When minor props are passed then Card will be displayed', () => {
@@ -58,14 +45,16 @@ describe('CardVue tests', () => {
       },
       global: {
         stubs: { FontAwesomeIcon: true },
+        directives: {
+          tooltip,
+        },
       },
       components: {
-        BTooltip: BTooltip,
+        Card,
       },
     });
 
     expect(wrapper.exists()).toBe(true);
-    expect(wrapper.find('.card-box').exists()).toBe(true);
     expect(wrapper.html()).toContain('card-title');
     expect(wrapper.vm.titleIconDefinition).toBe(null);
   });

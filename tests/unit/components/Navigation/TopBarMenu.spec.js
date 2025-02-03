@@ -2,18 +2,12 @@ import { mount } from '@vue/test-utils';
 import { describe, expect, it, vi } from 'vitest';
 import App from '@/components/Navigation/TopBarMenu.vue';
 import { useAuthUserStore } from '@/store';
-import {
-  BAvatar,
-  BButtonToolbar,
-  BDropdown,
-  BDropdownDivider,
-  BDropdownItem,
-} from 'bootstrap-vue-next';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { createRouter, createWebHistory } from 'vue-router';
 import Config from '@/configuration/config';
 import { importFA } from '@/assets/font-awesome';
 import { createTestingPinia } from '@pinia/testing';
+import flushPromises from 'flush-promises';
 
 importFA();
 
@@ -32,12 +26,7 @@ describe('TopBarMenu.vue unit tests', () => {
       global: {
         router,
         components: {
-          BButtonToolbar,
-          BDropdown,
           FontAwesomeIcon,
-          BDropdownItem,
-          BAvatar,
-          BDropdownDivider,
         },
         plugins: [
           createTestingPinia({
@@ -61,7 +50,7 @@ describe('TopBarMenu.vue unit tests', () => {
     expect(wrapper.vm.userFullName).toBe('user test');
     expect(wrapper.vm.userEmail).toBe('testuser@test.com');
     expect(wrapper.vm.avatarText).toBe('ut');
-    wrapper.find('.sign-out-text').trigger('click');
+    wrapper.vm.logout();
     await wrapper.vm.$nextTick();
     const store = useAuthUserStore();
     expect(store.idToken).toBe(null);
@@ -70,10 +59,7 @@ describe('TopBarMenu.vue unit tests', () => {
     expect(store.firstName).toBe(null);
     expect(store.lastName).toBe(null);
     expect(store.email).toBe(null);
-    await wrapper.vm.$nextTick();
-    await wrapper.vm.$nextTick();
-    await wrapper.vm.$nextTick();
-    await wrapper.vm.$nextTick();
+    await flushPromises();
     expect(store.destinationRoute).toBe('/');
   });
 });
