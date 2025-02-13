@@ -1,11 +1,10 @@
 import { fileURLToPath, URL } from 'node:url';
 
-import tailwindcss from 'tailwindcss';
+import tailwindcss from '@tailwindcss/vite';
 import { defineConfig, HttpProxy, loadEnv, type ProxyOptions, type UserConfig } from 'vite';
 import { nodePolyfills } from 'vite-plugin-node-polyfills';
 import vue from '@vitejs/plugin-vue';
 import Components from 'unplugin-vue-components/vite';
-import postcssNesting from 'postcss-nesting';
 
 // https://vitejs.dev/config/
 const baseConfig = {
@@ -13,13 +12,9 @@ const baseConfig = {
     port: 8080,
     cors: false,
   },
-  css: {
-    postcss: {
-      plugins: [tailwindcss(), postcssNesting],
-    },
-  },
   plugins: [
     vue(),
+    tailwindcss(),
     Components({ resolvers: [] }),
     nodePolyfills({
       // To add only specific polyfills, add them here. If no option is passed, adds all polyfills

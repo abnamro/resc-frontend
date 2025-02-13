@@ -35,13 +35,14 @@
   --vsm-item-padding: 10px;
   --vsm-icon-bg: var(--primary-bg);
   z-index: 20;
+}
 
-  .vsm--header {
+.v-sidebar-menu .vsm--header {
     font-size: 12px;
     padding: 10px;
   }
 
-  .vsm--icon {
+.v-sidebar-menu .vsm--icon {
     background-color: var(--primary-bg);
     height: 20px;
     line-height: 20px;
@@ -49,18 +50,17 @@
     padding: 5px;
   }
   
-  .vsm--link_level-1.vsm--link_exact-active,
-  .vsm--link_level-1.vsm--link_active {
+.v-sidebar-menu .vsm--link_level-1.vsm--link_exact-active,
+.v-sidebar-menu .vsm--link_level-1.vsm--link_active {
     box-shadow: 3px 0 0 0 var(--p-primary-500) inset;
   }
 
-  .vsm--mobile-item {
+.v-sidebar-menu .vsm--mobile-item {
     display: none;
   }
 
-  .vsm--toggle-btn {
+.v-sidebar-menu .vsm--toggle-btn {
     height: 50px;
-  }
 }
 
 .vsm--mobile-bg {

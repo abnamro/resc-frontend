@@ -1,45 +1,157 @@
-@import 'vsm.scss';
+@import './vsm.css';
 
 @import 'primeicons/primeicons.css';
 
-@layer tailwind-base, primevue, tailwind-utilities;
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+@plugin "tailwindcss-primeui";
 
-@layer tailwind-base {
-	@import 'tailwindcss/base';
+/*
+	The default border color has changed to `currentColor` in Tailwind CSS v4,
+	so we've added these compatibility styles to make sure everything still
+	looks the same as it did with Tailwind CSS v3.
+
+	If we ever want to remove these styles, we need to add an explicit border
+	color utility to any element that depends on these defaults.
+*/
+@layer base {
+	*,
+	::after,
+	::before,
+	::backdrop,
+	::file-selector-button {
+		border-color: var(--color-gray-200, currentColor);
+	}
 }
 
-@layer tailwind-utilities {
-	@import 'tailwindcss/components';
-	@import 'tailwindcss/utilities';
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Typography plugin */
+@utility prose {
+	a {
+		text-underline-offset: 0.2rem;
+		text-decoration: underline dashed;
+	}
+}
+
+@theme {
+	--color-*: initial; /* ONLY use the following colours */
+
+	--color-gray-0: #FFFFFF; /* (White) */
+	--color-gray-50: #F3F3F3; /* (N-50) */
+	--color-gray-90: #E9E9E9; /* (N-55) */
+	--color-gray-130: #DEDEDE; /* (N-65) */
+	--color-gray-370: #A1A1A1;
+	--color-gray-490: #828282;
+	--color-gray-510: #7D7D7D; /* (N-200) */
+	--color-gray-620: #616161; /* (N-400) */
+	--color-gray-780: #383838; /* (D-100) */
+	--color-gray-840: #292929; /* (D-400) */
+	--color-gray-870: #222222; /* (N-670) */
+	--color-gray-880: #1E1E1E; /* (D-800) */
+	--color-gray-930: #121212;  /* (D-900) */
+
+	--color-teal-DEFAULT: #004C4C;
+	--color-teal-450: #61B8AB; /* (DG-600) */
+	--color-teal-500: #4FB0A1; /* (DG-670) */
+	--color-teal-550: #489F92; /* (DG-500) */
+	--color-teal-850: #004C4C; /* (G-500) */
+	--color-teal-890: #003737; /* (G-600) */
+	--color-teal-920: #002929; /* (G-670) */
+
+	--color-yellow-DEFAULT: #FFD200;
+	--color-yellow-500: #FFD200; /* (Y-300) */
+	--color-yellow-520: #F3C000; /* (Y-400) */
+	--color-yellow-550: #E5B400; /* (Y-500) */
+	--color-yellow-570: #D9AA00; /* (DY-500) */
+
+	--color-blue-70: #E3F0F7; /* (I-50) */
+	--color-blue-350: #5AB8F2; /* (DI-500) */
+	--color-blue-660: #005CDE; /* (I-500) */
+	--color-blue-840: #1B2C36; /* (DI-50) */
+
+	--color-green-70: #E4F5EB; /* (S-50) */
+	--color-green-570: #75B12B; /* (DS-500) */
+	--color-green-750: #007F42; /* (S-500) */
+	--color-green-840: #232E23; /* (DS-50) */
+
+	--color-red-60: #FAE8E6; /* (A-50) */
+	--color-red-300: #DF9186; /* (DA-500) */
+	--color-red-350: #E0796B; /* (DA-600) */
+	--color-red-400: #E45F4E; /* (DA-700) */
+	--color-red-620: #C21700; /* (A-500) */
+	--color-red-750: #B51500; /* (A-600) */
+	--color-red-770: #A81400; /* (A-700) */
+	--color-red-840: #341D1D; /* (DA-50) */
+
+	--color-grayOpacity-0: #FFFFFFBF;
+	--color-grayOpacity-50: #F3F3F3BF;
+	--color-grayOpacity-880: #1E1E1EBF;
+	--color-grayOpacity-930: #121212BF;
+	--color-grayOpacity-1000: #000000B3;
+
+	--color-sky-50: #f0f9ff;
+	--color-sky-100: #e0f2fe;
+	--color-sky-200: #bae6fd;
+	--color-sky-300: #7dd3fc;
+	--color-sky-400: #38bdf8;
+	--color-sky-500: #0ea5e9;
+	--color-sky-600: #0284c7;
+	--color-sky-700: #0369a1;
+	--color-sky-800: #075985;
+	--color-sky-900: #0c4a6e;
+	--color-sky-950: #082f49;
+
+	--text-2xs: 0.65rem;
+	--text-2xs--line-height: 0.8rem;
+	--text-3xs: 0.55rem;
+	--text-3xs--line-height: 0.7rem;
+
+	/* landingIntroPopIn: 'popIn 2s forwards ease-in-out', */
+	--animate-landingIntroFadeOut: fadeOut 2s 2s forwards ease-in-out; /* delayed by 2s */
+	/* landingSlidesPopIn: 'popIn 2s 3s forwards ease-in-out', // delayed by 3s
+	landingEnterPopIn: 'zoomIn 2s 4s forwards ease-in-out', // delayed by 4s
+	landingAnimateDown: 'animateDown 1s 3.1s forwards ease-in-out',
+	landingAnimateUp: 'animateUp 1s 3.1s forwards ease-in-out',
+	delayedFadeOut: 'fadeOut 2s 2s forwards ease-in-out',
+	pulseTo0: 'pulseTo0 2s infinite', */
+}
+
+@keyframes fadeOut {
+	0% {
+		opacity: 1;
+	}
+	100% {
+		opacity: 0;
+	}
 }
 
 html {
-  font-family: sans-serif;
-  line-height: 1.15;
+	font-family: sans-serif;
+	line-height: 1.15;
 }
 
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  min-height: 100svh;
+	font-family: Avenir, Helvetica, Arial, sans-serif;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	text-align: center;
+	min-height: 100svh;
 }
 
 body.dark {
-  background: var(--p-surface-900);
+	background: var(--p-surface-900);
 }
 
 .rtl {
-  direction: rtl;
-  max-width: 70ch;
+	direction: rtl;
+	max-width: 70ch;
 }
 
 h1, h2, h3, h4, h5 {
-  color: var(--p-primary-850)
+	color: var(--p-primary-850)
 }
 
 .dark h1, .dark h2, .dark h3, .dark h4, .dark h5 {
-  color: var(--p-primary-550)
+	color: var(--p-primary-550)
 } 
