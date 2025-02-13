@@ -1,6 +1,6 @@
 <template>
   <Card
-    class="rounded overflow-hidden"
+    class="rounded-sm overflow-hidden"
     :pt:body:class="'p-0 min-w-[200px]'"
     :pt:caption:class="'px-4 py-2 bg-teal-450/20'"
     :pt:title:class="'flex items-center justify-center'"
@@ -19,7 +19,7 @@
       </template>
     </template>
     <template #content>
-      <span class="text-lg/0" :style="contentStyle">
+      <span class="text-lg leading-6" :style="contentStyle">
         {{ formatCardBodyContent }}
       </span>
       <FontAwesomeIcon
