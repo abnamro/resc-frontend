@@ -1,5 +1,8 @@
+# Build arguments
+ARG SOURCE_REGISTRY
+
 # build stage
-FROM node:22-alpine3.20 as build-stage
+FROM ${SOURCE_REGISTRY}node:22-alpine3.20 as build-stage
 RUN apk -U upgrade
 WORKDIR /app
 COPY package*.json ./
@@ -8,7 +11,7 @@ COPY ./ .
 RUN npm run build
 
 # production stage
-FROM nginx:1.26.0-alpine as production-stage
+FROM ${SOURCE_REGISTRY}nginx:1.26.0-alpine as production-stage
 RUN apk -U upgrade && \
     mkdir /app
 COPY --from=build-stage /app/dist /app
