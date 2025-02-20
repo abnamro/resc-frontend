@@ -10,6 +10,9 @@
 > ## This component is part of Repository Scanner - [resc](https://github.com/abnamro/repository-scanner)
 
 
+> [!IMPORTANT]  
+> ## DO NOT INSTALL resc-frontend VIA NPM. we do not publish this package there. Only the docker image is a valid and safe way to use/install the frontend.
+
 <!-- TABLE OF CONTENTS -->
 ## Table of contents
 1. [About the component](#about-the-component)
