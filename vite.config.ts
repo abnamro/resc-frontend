@@ -50,6 +50,17 @@ const baseConfig = {
       util: '@browsery/util',
     },
   },
+	build: {
+		rollupOptions: {
+			output: {
+				manualChunks(id) {
+					if (id.includes("node_modules")) {
+						return id.toString().split("node_modules/")[1].split("/")[0].toString();
+					}
+				},
+			},
+		},
+	},
   test: {
     reporters: ['verbose', 'vitest-sonar-reporter'],
     outputFile: 'sonar-report.xml',

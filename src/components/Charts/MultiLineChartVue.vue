@@ -13,7 +13,7 @@ import { ref } from 'vue';
 import { Line } from 'vue-chartjs';
 import type { DataSetObject } from '@/views/metrics/types';
 import type { ChartData, ChartOptions } from 'chart.js';
-import { $dt } from '@primevue/themes';
+import { $dt } from '@primeuix/themes';
 import { useAuthUserStore } from '@/store';
 import { storeToRefs } from 'pinia';
 
