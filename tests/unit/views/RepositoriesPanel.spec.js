@@ -36,7 +36,6 @@ vi.mock('vue-router', async () => {
 });
 
 describe('RepositoriesPanel tests', () => {
-
   beforeAll(() => {
     Object.defineProperty(window, 'matchMedia', {
       writable: true,
@@ -52,7 +51,6 @@ describe('RepositoriesPanel tests', () => {
       })),
     });
   });
-
 
   let wrapper;
   window.open = vi.fn();

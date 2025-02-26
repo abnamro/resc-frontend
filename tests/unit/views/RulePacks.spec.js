@@ -15,7 +15,6 @@ importFA();
 vi.mock('axios');
 vi.mock('windows');
 describe('RulePacks tests', () => {
-
   beforeAll(() => {
     Object.defineProperty(window, 'matchMedia', {
       writable: true,

@@ -28,7 +28,6 @@ vi.mock('vue-router', async () => {
 });
 
 describe('ScanFindings tests', () => {
-
   beforeAll(() => {
     Object.defineProperty(window, 'matchMedia', {
       writable: true,

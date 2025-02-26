@@ -4,6 +4,7 @@ import { describe, expect, it, vi, beforeAll } from 'vitest';
 import { createTestingPinia } from '@pinia/testing';
 import App from '@/components/Findings/FindingsTable.vue';
 import { importFA } from '@/assets/font-awesome';
+import rules from '@/../tests/resources/mock_rules.json';
 import detailed_findings from '@/../tests/resources/mock_detailed_findings2.json';
 import flushPromises from 'flush-promises';
 import FindingTableHeader from '@/components/Findings/FindingTableHeader.vue';
@@ -31,7 +32,6 @@ describe('FindingsTable tests', () => {
       })),
     });
   });
-
 
   it('Given a FindingsTable without data then FindingsTable will not be displayed', async () => {
     const wrapper = mount(App, {
@@ -79,11 +79,11 @@ describe('FindingsTable tests', () => {
           };
         case 'findings/1/audit':
           return {
-            data: {}
+            data: {},
           };
 
         case '/rule-packs/0.0.0/rules?rule_name=Hardcoded-Username':
-          return { data: rules }
+          return { data: rules };
         default:
           console.log(q);
       }
@@ -191,11 +191,11 @@ describe('FindingsTable tests', () => {
               total: 0,
               skip: 0,
               limit: 0,
-            } 
+            },
           };
 
         case '/rule-packs/0.0.0/rules?rule_name=Hardcoded-Username':
-          return { data: rules }
+          return { data: rules };
         default:
           console.log(q);
       }

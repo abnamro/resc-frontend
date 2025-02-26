@@ -1,4 +1,4 @@
-import type { Preset } from "@primeuix/themes/types";
+import type { Preset } from '@primeuix/themes/types';
 
 const BasicAAB: Preset = {
   primitive: {
@@ -392,13 +392,13 @@ const BasicAAB: Preset = {
           root: {
             background: '{surface.130}',
             color: '{primary.850}',
-          }
+          },
         },
         dark: {
           root: {
             background: '{surface.780}',
             color: '{primary.500}',
-          }
+          },
         },
       },
     },
@@ -860,13 +860,13 @@ const BasicAAB: Preset = {
           root: {
             background: '{content.background}',
             color: '{content.color}',
-          }
+          },
         },
         dark: {
           root: {
             background: 'transparent',
             color: '{content.color}',
-          }
+          },
         },
       },
     },
@@ -1017,12 +1017,12 @@ const BasicAAB: Preset = {
         light: {
           root: {
             background: 'transparent',
-          }
+          },
         },
         dark: {
           root: {
             background: 'transparent',
-          }
+          },
         },
       },
       list: {
@@ -1079,7 +1079,7 @@ const BasicAAB: Preset = {
             color: '{text.color}',
             background: '{surface.50}',
             borderColor: 'transparent',
-          }
+          },
         },
         dark: {
           root: {
@@ -1097,7 +1097,7 @@ const BasicAAB: Preset = {
             color: '{text.color}',
             background: '{surface.50}',
             borderColor: 'transparent',
-          }
+          },
         },
         dark: {
           root: {
@@ -1140,8 +1140,8 @@ const BasicAAB: Preset = {
           legend: {
             // background: '{surface.900}',
             // hover: {
-              // background: '{surface.800}',
-              // color: '{surface.0}'
+            // background: '{surface.800}',
+            // color: '{surface.0}'
             // },
           },
           toggleIcon: {
@@ -1258,14 +1258,14 @@ const BasicAAB: Preset = {
             background: '{surface.50}',
             color: '{surface.780}',
             borderColor: '{surface.780}',
-          }
+          },
         },
         dark: {
           root: {
             background: '{surface.880}',
             color: '{surface.130}',
             borderColor: '{surface.780}',
-          }
+          },
         },
       },
     },
@@ -1278,12 +1278,12 @@ const BasicAAB: Preset = {
         light: {
           root: {
             color: '{surface.780}',
-          }
+          },
         },
         dark: {
           root: {
             color: '{surface.370}',
-          }
+          },
         },
       },
     },
