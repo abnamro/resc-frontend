@@ -1,6 +1,6 @@
 import { mount } from '@vue/test-utils';
 import axios from 'axios';
-import { describe, expect, it, vi } from 'vitest';
+import { describe, expect, it, vi, beforeAll } from 'vitest';
 import App from '@/components/ScanFindings/Tabs/AuditTab.vue';
 import status from '@/../tests/resources/mock_status.json';
 import findings from '@/../tests/resources/mock_findings.json';
@@ -10,6 +10,22 @@ import flushPromises from 'flush-promises';
 vi.mock('axios');
 
 describe('Audit Tab', () => {
+  beforeAll(() => {
+    Object.defineProperty(window, 'matchMedia', {
+      writable: true,
+      value: vi.fn().mockImplementation((query) => ({
+        matches: false,
+        media: query,
+        onchange: null,
+        addListener: vi.fn(), // Deprecated
+        removeListener: vi.fn(), // Deprecated
+        addEventListener: vi.fn(),
+        removeEventListener: vi.fn(),
+        dispatchEvent: vi.fn(),
+      })),
+    });
+  });
+
   it('display an audit', async () => {
     // Mock axios response
     axios.get.mockResolvedValueOnce(status);

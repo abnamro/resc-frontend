@@ -1,4 +1,6 @@
-const BasicAAB = {
+import type { Preset } from '@primeuix/themes/types';
+
+const BasicAAB: Preset = {
   primitive: {
     borderRadius: { none: '0', xs: '2px', sm: '4px', md: '6px', lg: '8px', xl: '12px' },
     gray: {
@@ -387,29 +389,39 @@ const BasicAAB = {
     avatar: {
       colorScheme: {
         light: {
-          background: '{surface.130}',
-          color: '{primary.850}',
+          root: {
+            background: '{surface.130}',
+            color: '{primary.850}',
+          },
         },
         dark: {
-          background: '{surface.780}',
-          color: '{primary.500}',
+          root: {
+            background: '{surface.780}',
+            color: '{primary.500}',
+          },
         },
       },
     },
     progressbar: {
-      height: '0.25rem',
+      root: {
+        height: '0.25rem',
+      },
       colorScheme: {
         light: {
+          root: {
+            background: '{surface.300}',
+          },
           value: {
             background: '{yellow.520}',
           },
-          background: '{surface.300}',
         },
         dark: {
+          root: {
+            background: '{surface.700}',
+          },
           value: {
             background: '{yellow.570}',
           },
-          background: '{surface.700}',
         },
       },
     },
@@ -843,76 +855,61 @@ const BasicAAB = {
       },
     },
     paginator: {
-      root: {
-        colorScheme: {
-          light: {
+      colorScheme: {
+        light: {
+          root: {
             background: '{content.background}',
             color: '{content.color}',
           },
-          dark: {
+        },
+        dark: {
+          root: {
             background: 'transparent',
             color: '{content.color}',
           },
         },
       },
-      currentPageReport: { color: '{text.muted.color}' },
-      // 	jumpToPageInput: { maxWidth: "2.5rem" },
-      colorSheme: {
-        light: {
-          root: {
-            background: '{content.background}',
-            color: '{content.color}',
-          },
-        },
-        dark: {
-          root: {
-            background: '{content.dark.background}',
-            color: '{content.dark.color}',
-          },
-        },
-      },
     },
+    // root: {
+    //   currentPageReport: { color: '{text.muted.color}' },
+    //   // 	jumpToPageInput: { maxWidth: "2.5rem" },
+    //   colorSheme: {
+    //     light: {
+    //       root: {
+    //         background: '{content.background}',
+    //         color: '{content.color}',
+    //       },
+    //     },
+    //     dark: {
+    //       root: {
+    //         background: '{content.dark.background}',
+    //         color: '{content.dark.color}',
+    //       },
+    //     },
+    //   },
+    // },
     checkbox: {
       colorScheme: {
         light: {
-          disabled: {
-            background: '{surface.130}',
-            border: '{surface.130}',
-          },
-          checked: {
-            disabled: {
-              border: {
-                color: '{surface.130}',
-              },
-            },
+          root: {
+            disabledBackground: '{surface.130}',
+            borderColor: '{surface.130}',
+            checkedDisabledBorderColor: '{surface.130}',
           },
           icon: {
-            disabled: {
-              color: '{primary-500}',
-            },
+            disabledColor: '{primary-500}',
           },
         },
         dark: {
-          background: '{surface.880}',
-          border: {
-            color: '{surface.620}',
-          },
-          disabled: {
-            background: '{surface.780}',
-            border: '{surface.780}',
-          },
-          checked: {
-            background: '{primary.500}',
-            disabled: {
-              border: {
-                color: '{surface.780}',
-              },
-            },
+          root: {
+            background: '{surface.880}',
+            borderColor: '{surface.620}',
+            disabledBackground: '{surface.780}',
+            checkedDisabledBorderColor: '{surface.780}',
+            checkedBackground: '{primary.500}',
           },
           icon: {
-            disabled: {
-              color: '{primary-500}',
-            },
+            disabledColor: '{primary-500}',
           },
         },
       },
@@ -955,8 +952,6 @@ const BasicAAB = {
             borderColor: '{content.border.color}',
             color: '{content.color}',
             padding: '0 0 0.5rem 0',
-            fontWeight: '500',
-            gap: '0.5rem',
           },
           panel: {
             background: '{content.background}',
@@ -1018,12 +1013,14 @@ const BasicAAB = {
       },
     },
     multiselect: {
-      root: {
-        colorScheme: {
-          light: {
+      colorScheme: {
+        light: {
+          root: {
             background: 'transparent',
           },
-          dark: {
+        },
+        dark: {
+          root: {
             background: 'transparent',
           },
         },
@@ -1032,81 +1029,63 @@ const BasicAAB = {
         padding: '0 0',
       },
       option: {
-        border: {
-          radius: 0,
-        },
-        focus: {
-          background: 'linear-gradient({primary.450}, {primary.550})',
-          color: '{surface.0}',
-        },
+        borderRadius: '0',
+        focusBackground: 'linear-gradient({primary.450}, {primary.550})',
+        focusColor: '{surface.0}',
       },
     },
     select: {
-      background: 'transparent',
-      border: {
-        radius: 0,
-      },
-      padding: {
-        x: '1rem',
-        y: '0.25rem',
+      root: {
+        background: 'transparent',
+        borderRadius: '0',
+        paddingX: '1rem',
+        paddingY: '0.25rem',
+        transitionDuration: '0',
+        shadow: 'none',
       },
       option: {
         padding: '0 1rem',
-        border: {
-          radius: 0,
-        },
+        borderRadius: '0',
       },
-      transition: {
-        duration: 0,
-      },
-      shadow: 'none',
       colorScheme: {
         light: {
           option: {
             color: '{surface.510}',
-            focus: {
-              background: 'linear-gradient({primary.450}, {primary.550})',
-              color: '{surface.0}',
-            },
+            focusBackground: 'linear-gradient({primary.450}, {primary.550})',
+            focusColor: '{surface.0}',
           },
         },
         dark: {
-          disabled: {
-            background: 'transparent',
+          root: {
+            disabledBackground: 'transparent',
+            color: '{surface.130}',
           },
           option: {
             color: '{surface.400}',
-            focus: {
-              background: 'linear-gradient({primary.450}, {primary.550})',
-              color: '{surface.0}',
-            },
+            focusBackground: 'linear-gradient({primary.450}, {primary.550})',
+            focusColor: '{surface.0}',
           },
           overlay: {
             background: '{surface.880}',
-            border: {
-              color: '{surface.870}',
-            },
+            borderColor: '{surface.870}',
           },
-          color: '{surface.130}',
         },
       },
     },
     dialog: {
       colorScheme: {
         light: {
-          color: '{text.color}',
-          background: '{surface.50}',
-          border: {
-            color: 'transparent',
+          root: {
+            color: '{text.color}',
+            background: '{surface.50}',
+            borderColor: 'transparent',
           },
         },
         dark: {
           root: {
             color: '{text.color}',
             background: '{surface.870}',
-            border: {
-              color: 'transparent',
-            },
+            borderColor: 'transparent',
           },
         },
       },
@@ -1114,19 +1093,17 @@ const BasicAAB = {
     popover: {
       colorScheme: {
         light: {
-          color: '{text.color}',
-          background: '{surface.50}',
-          border: {
-            color: 'transparent',
+          root: {
+            color: '{text.color}',
+            background: '{surface.50}',
+            borderColor: 'transparent',
           },
         },
         dark: {
           root: {
             color: '{text.color}',
             background: '{surface.870}',
-            border: {
-              color: 'transparent',
-            },
+            borderColor: 'transparent',
           },
         },
       },
@@ -1162,15 +1139,13 @@ const BasicAAB = {
           },
           legend: {
             // background: '{surface.900}',
-            hover: {
-              // background: '{surface.800}',
-              // color: '{surface.0}'
-            },
+            // hover: {
+            // background: '{surface.800}',
+            // color: '{surface.0}'
+            // },
           },
-          'toggle-icon': {
-            hover: {
-              // color: '{primary.500}'
-            },
+          toggleIcon: {
+            // hoverColor: '{primary.500}'
           },
         },
       },
@@ -1209,22 +1184,25 @@ const BasicAAB = {
         },
       },
       tablist: {
-        colorScheme: {
-          light: {
-            background: 'transparent',
-            border: {
-              color: 'transparent',
-            },
-          },
-          dark: {
-            background: 'transparent',
-            border: {
-              color: 'transparent',
-            },
-          },
-        },
+        background: 'transparent',
+        borderColor: 'transparent',
+        // colorScheme: {
+        //   light: {
+        //     background: 'transparent',
+        //     border: {
+        //       color: 'transparent',
+        //     },
+        //   },
+        //   dark: {
+        //     background: 'transparent',
+        //     border: {
+        //       color: 'transparent',
+        //     },
+        //   },
+        // },
       },
       tab: {
+        // @ts-expect-error
         colorScheme: {
           light: {
             background: 'transparent',
@@ -1267,46 +1245,45 @@ const BasicAAB = {
         },
       },
       tabpanel: {
-        colorScheme: {
-          light: {
-            background: 'transparent',
-          },
-          dark: {
-            background: 'transparent',
-          },
-        },
+        background: 'transparent',
       },
     },
     inputtext: {
-      shadow: 'none',
+      root: {
+        shadow: 'none',
+      },
       colorScheme: {
         light: {
-          background: '{surface.50}',
-          color: '{surface.780}',
-          border: {
+          root: {
+            background: '{surface.50}',
             color: '{surface.780}',
+            borderColor: '{surface.780}',
           },
         },
         dark: {
-          background: '{surface.880}',
-          color: '{surface.130}',
-          border: {
-            color: '{surface.780}',
+          root: {
+            background: '{surface.880}',
+            color: '{surface.130}',
+            borderColor: '{surface.780}',
           },
         },
       },
     },
     textarea: {
-      background: 'transparent',
-      transition: {
-        duration: 0,
+      root: {
+        background: 'transparent',
+        transitionDuration: '0',
       },
       colorScheme: {
         light: {
-          color: '{surface.780}',
+          root: {
+            color: '{surface.780}',
+          },
         },
         dark: {
-          color: '{surface.370}',
+          root: {
+            color: '{surface.370}',
+          },
         },
       },
     },

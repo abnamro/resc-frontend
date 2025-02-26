@@ -1,6 +1,6 @@
 import { mount } from '@vue/test-utils';
 import axios from 'axios';
-import { describe, expect, it, vi } from 'vitest';
+import { describe, expect, it, vi, beforeAll } from 'vitest';
 import App from '@/views/RepositoriesPanel.vue';
 import repositories from '@/../tests/resources/mock_repositories.json';
 import vcs_providers from '@/../tests/resources/mock_vcs_providers.json';
@@ -36,6 +36,22 @@ vi.mock('vue-router', async () => {
 });
 
 describe('RepositoriesPanel tests', () => {
+  beforeAll(() => {
+    Object.defineProperty(window, 'matchMedia', {
+      writable: true,
+      value: vi.fn().mockImplementation((query) => ({
+        matches: false,
+        media: query,
+        onchange: null,
+        addListener: vi.fn(), // Deprecated
+        removeListener: vi.fn(), // Deprecated
+        addEventListener: vi.fn(),
+        removeEventListener: vi.fn(),
+        dispatchEvent: vi.fn(),
+      })),
+    });
+  });
+
   let wrapper;
   window.open = vi.fn();
 

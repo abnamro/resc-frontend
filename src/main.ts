@@ -9,8 +9,8 @@ import { importFA } from '@/assets/font-awesome';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import PrimeVue from 'primevue/config';
 import ToastService from 'primevue/toastservice';
-import Aura from '@primevue/themes/aura';
-import { definePreset } from '@primevue/themes';
+import Aura from '@primeuix/themes/aura';
+import { definePreset } from '@primeuix/themes';
 import Tooltip from 'primevue/tooltip';
 import BasicAAB from './styles/preset';
 
