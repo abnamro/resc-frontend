@@ -46,8 +46,7 @@ describe('FindingsTable tests', () => {
       },
       global: {
         plugins: [createTestingPinia()],
-        stubs: {
-        },
+        stubs: {},
         directives: {
           tooltip,
         },
@@ -103,7 +102,7 @@ describe('FindingsTable tests', () => {
       global: {
         plugins: [createTestingPinia()],
         stubs: {
-          FindingPanel
+          FindingPanel,
         },
         directives: {
           tooltip,
@@ -207,8 +206,7 @@ describe('FindingsTable tests', () => {
       },
       global: {
         plugins: [createTestingPinia()],
-        stubs: {
-        },
+        stubs: {},
         directives: {
           tooltip,
         },
