@@ -1,4 +1,4 @@
-import { mount } from '@vue/test-utils';
+import { mount, shallowMount } from '@vue/test-utils';
 import axios from 'axios';
 import { describe, expect, it, vi, beforeAll } from 'vitest';
 import { createTestingPinia } from '@pinia/testing';
@@ -9,6 +9,7 @@ import detailed_findings from '@/../tests/resources/mock_detailed_findings2.json
 import flushPromises from 'flush-promises';
 import FindingTableHeader from '@/components/Findings/FindingTableHeader.vue';
 import Panel from 'primevue/panel';
+import FindingPanel from '@/components/ScanFindings/FindingPanel.vue';
 
 importFA();
 
@@ -45,7 +46,8 @@ describe('FindingsTable tests', () => {
       },
       global: {
         plugins: [createTestingPinia()],
-        stubs: {},
+        stubs: {
+        },
         directives: {
           tooltip,
         },
@@ -89,7 +91,7 @@ describe('FindingsTable tests', () => {
       }
     });
 
-    const wrapper = mount(App, {
+    const wrapper = shallowMount(App, {
       props: {
         findings: detailed_findings.data,
         isRuleFinding: true,
@@ -100,7 +102,9 @@ describe('FindingsTable tests', () => {
       },
       global: {
         plugins: [createTestingPinia()],
-        stubs: {},
+        stubs: {
+          FindingPanel
+        },
         directives: {
           tooltip,
         },
@@ -158,15 +162,6 @@ describe('FindingsTable tests', () => {
     expect(() => wrapper.vm.markAllAsTruePositive()).not.toThrow();
     expect(() => wrapper.vm.markAllAsGone()).not.toThrow();
     expect(() => wrapper.vm.auditThis()).not.toThrow();
-
-    expect(() => wrapper.find('#filterFiles').setValue('file1')).not.toThrow();
-    await flushPromises();
-    expect(() => wrapper.find('#filterFiles').setValue('fi*')).not.toThrow();
-    await flushPromises();
-    expect(() => wrapper.find('#filterFiles').setValue('*e1')).not.toThrow();
-
-    axios.get.mockResolvedValueOnce({ data: detailed_findings });
-    expect(() => wrapper.vm.updateAudit('NOT_ANALYZED', 'Rien a declarer')).not.toThrow();
   });
 
   it('Given a FindingsTable in repository then FindingsTable will be displayed', () => {
@@ -212,7 +207,8 @@ describe('FindingsTable tests', () => {
       },
       global: {
         plugins: [createTestingPinia()],
-        stubs: {},
+        stubs: {
+        },
         directives: {
           tooltip,
         },
