@@ -52,3 +52,4 @@ export type StatusCount = components['schemas']['StatusCount'];
 export type VCSInstanceCreate = components['schemas']['VCSInstanceCreate'];
 export type VCSInstanceRead = components['schemas']['VCSInstanceRead'];
 export type VCSProviders = components['schemas']['VCSProviders'];
+export type AuditFinding = components['schemas']['AuditFinding'];

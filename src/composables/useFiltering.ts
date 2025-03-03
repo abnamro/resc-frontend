@@ -1,15 +1,13 @@
 import { computed, ref, type Ref } from 'vue';
 
-type Filtered<T> = T & { file_path: string };
-
-export function useFiltering<T>(findingList: Ref<Filtered<T>[] | undefined>) {
+export function useFiltering<T>(findingList: Ref<(T & { file_path: string })[] | undefined>) {
   const filterString = ref('');
 
   // Simple filter function
   // if start with * we check the ending of the file path.
   // if end with * we check the beginning of the file path.
   // if does not contain * we only check if the needle is in the string.
-  function applyFilter() {
+  function applyFilter(): (T & { file_path: string })[] | undefined {
     if (findingList.value === undefined) {
       return undefined;
     }

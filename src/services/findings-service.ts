@@ -147,6 +147,46 @@ const FindingsService = {
       },
     });
   },
+
+  async getAudits(
+    perPage: number,
+    skipRowCount: number,
+    auditor: string | undefined,
+    from_date: Date | undefined,
+    to_date: Date | undefined,
+    status: FindingStatus[] | undefined,
+    is_latest: boolean | undefined,
+  ): Promise<
+    AxiosResponse<
+      paths['/resc/v1/audits']['get']['responses']['200']['content']['application/json']
+    >
+  > {
+    const params: paths['/resc/v1/audits']['get']['parameters']['query'] = {};
+
+    if (perPage) {
+      params.limit = perPage;
+    }
+    if (skipRowCount) {
+      params.skip = skipRowCount;
+    }
+    if (auditor) {
+      params.auditor = auditor;
+    }
+    if (from_date) {
+      params.from_date = from_date.toISOString();
+    }
+    if (to_date) {
+      params.to_date = to_date.toISOString();
+    }
+    if (status && status.length > 0) {
+      params.status = status;
+    }
+    if (is_latest) {
+      params.is_latest = true;
+    }
+
+    return axios.get(`audits`, { params });
+  },
 };
 
 export default FindingsService;

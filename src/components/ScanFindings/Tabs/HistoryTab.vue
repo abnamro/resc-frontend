@@ -5,7 +5,7 @@
         <td>
           {{ DateUtils.formatDate(data.timestamp) }}
         </td>
-        <td>{{ data.auditor }}</td>
+        <td>{{ userFormat(data.auditor) }}</td>
         <td>
           <FindingStatusBadge :status="data.status ?? 'NOT_ANALYZED'" />
         </td>
@@ -24,12 +24,14 @@ import FindingsService from '@/services/findings-service';
 import type { AuditRead, DetailedFindingRead } from '@/services/shema-to-types';
 import { onMounted, ref } from 'vue';
 import { dispatchError } from '@/configuration/config';
+import { useFormatter } from '@/composables/useFormatter';
 
 type Props = {
   finding: DetailedFindingRead;
 };
 const props = defineProps<Props>();
 
+const { userFormat } = useFormatter();
 const finding = ref(props.finding);
 const auditList = ref<AuditRead[] | undefined>(undefined);
 const totalRows = ref(0);

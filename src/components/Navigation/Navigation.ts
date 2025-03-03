@@ -75,4 +75,14 @@ export const sidebarMenu = [
       },
     },
   },
+  {
+    href: '/audits',
+    title: 'AUDIT',
+    icon: {
+      element: 'font-awesome-icon',
+      attributes: {
+        icon: 'clipboard-check',
+      },
+    },
+  },
 ];
