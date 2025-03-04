@@ -78,5 +78,9 @@ describe('AuditView tests', () => {
     expect(() => wrapper.vm.sendUpdate(['123456'], 'FALSE_POSITIVE')).not.toThrow();
     expect(wrapper.vm.selectedIndex).toBe(0);
     expect(wrapper.vm.audits).not.toBe(undefined);
+    expect(() => wrapper.vm.toggleSelect()).not.toThrow();
+
+    expect(() => wrapper.vm.updateAudit('FALSE_POSITIVE', '')).not.toThrow();
+    expect(wrapper.vm.trimPath('0123456789012345678901234567890123456789')).toBe('012345678901234567890123456789');
   });
 });
