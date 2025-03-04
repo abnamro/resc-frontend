@@ -1,0 +1,32 @@
+{
+    "data": [
+        {
+            "audit_id": 123456789,
+            "status": "TRUE_POSITIVE",
+            "auditor": "albus.dumbledore@hogwarts.uk",
+            "comment": "",
+            "timestamp": "2025-03-03T16:21:36.043000",
+            "is_latest": true,
+            "finding_id": 123456,
+            "file_path": "magic.wand",
+            "line_number": 30,
+            "column_start": 0,
+            "column_end": 10,
+            "commit_id": "07fa249f695075b32063385c5f5404c206c3e92e",
+            "commit_message": "Avada Kedavra",
+            "commit_timestamp": "2023-03-11T06:04:57.610000",
+            "author": "He-Who-Must-Not-Be-Named",
+            "email": "voldemort@Horcruxes.dead",
+            "rule_name": "public-key",
+            "project_key": "Harry",
+            "repository_name": "Potter",
+            "repository_url": "https://git.hogwarts.uk/",
+            "vcs_provider": "AZURE_DEVOPS",
+            "is_dir_scan": false,
+            "commit_url": "https://git.hogwarts.uk/Harry/_git/Potter/commit/07fa249f695075b32063385c5f5404c206c3e92e?path=/magic.wand&line=62&lineEnd=63&lineStartColumn=1&lineEndColumn=1&type=2&lineStyle=plain"
+        }
+    ],
+    "total": 560,
+    "limit": 100,
+    "skip": 0
+}
