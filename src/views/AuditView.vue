@@ -37,7 +37,6 @@
               date-format="dd/mm/yyyy"
               :min-date="fromDate"
               :max-date="todaysDate"
-              :disabled="endDateDisabled"
               @update:model-value="fetchPaginatedData"
             />
           </div>
@@ -186,9 +185,6 @@ const todaysDate = computed(() => {
   const now = new Date();
   const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
   return new Date(today);
-});
-const endDateDisabled = computed(() => {
-  return fromDate.value ? false : true;
 });
 
 const { totalRows, currentPage, perPage, handlePageClick, handlePageSizeChange } =
