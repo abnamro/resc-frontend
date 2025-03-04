@@ -1,13 +1,57 @@
 import { computed, ref, type Ref } from 'vue';
 
-export function useFiltering<T>(findingList: Ref<(T & { file_path: string })[] | undefined>) {
+export type FindingMeta = { file_path: string; rule_name: string; repository_name: string };
+
+type Filter = {
+  filename: string;
+  repo: string;
+  rule: string;
+};
+
+export function useFiltering<T>(findingList: Ref<(T & FindingMeta)[] | undefined>) {
   const filterString = ref('');
+
+  function contains(haystack: string, needle: string): boolean {
+    if (needle.startsWith('*')) {
+      return haystack.endsWith(needle.slice(1));
+    }
+    if (needle.endsWith('*')) {
+      return haystack.startsWith(needle.slice(0, needle.length - 1));
+    }
+    return haystack.includes(needle);
+  }
+
+  function filters(filter: Filter, finding: FindingMeta): boolean {
+    let keep = true;
+    if (filter.filename !== '' && !contains(finding.file_path, filter.filename)) {
+      keep = false;
+    }
+    if (filter.repo !== '' && !contains(finding.repository_name, filter.repo)) {
+      keep = false;
+    }
+    if (filter.rule !== '' && !contains(finding.rule_name, filter.rule)) {
+      keep = false;
+    }
+    return keep;
+  }
+
+  function parseTokenString(token: string, filterForFinding: Filter) {
+    if (token.startsWith('f:')) {
+      filterForFinding.filename = token.slice(2);
+    } else if (token.startsWith('r:')) {
+      filterForFinding.rule = token.slice(2);
+    } else if (token.startsWith('rp:')) {
+      filterForFinding.repo = token.slice(3);
+    } else {
+      filterForFinding.filename = token;
+    }
+  }
 
   // Simple filter function
   // if start with * we check the ending of the file path.
   // if end with * we check the beginning of the file path.
   // if does not contain * we only check if the needle is in the string.
-  function applyFilter(): (T & { file_path: string })[] | undefined {
+  function applyFilter(): (T & FindingMeta)[] | undefined {
     if (findingList.value === undefined) {
       return undefined;
     }
@@ -19,19 +63,18 @@ export function useFiltering<T>(findingList: Ref<(T & { file_path: string })[] |
       return findingList.value;
     }
 
-    const token = filterString.value;
+    const filterForFinding: Filter = {
+      filename: '',
+      repo: '',
+      rule: '',
+    };
 
-    if (token.startsWith('*')) {
-      return findingList.value.filter((finding) => finding.file_path.endsWith(token.substring(1)));
+    const tokens = filterString.value.split(' ');
+    for (let i = 0; i < tokens.length; i++) {
+      parseTokenString(tokens[i], filterForFinding);
     }
 
-    if (token.endsWith('*')) {
-      return findingList.value.filter((finding) =>
-        finding.file_path.startsWith(token.substring(0, token.length - 1)),
-      );
-    }
-
-    return findingList.value.filter((finding) => finding.file_path.includes(token));
+    return findingList.value.filter((finding) => filters(filterForFinding, finding));
   }
 
   const filteredList = computed(applyFilter);

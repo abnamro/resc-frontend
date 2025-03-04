@@ -6,12 +6,11 @@ export function useAuditFunctions<T>(
   selection: Ref<number[]>,
   selectedIndex: Ref<number>,
   expanded: Ref<number>,
-  itemList: Ref<undefined | (T & {commit_url: string})[]>,
+  itemList: Ref<undefined | (T & { commit_url: string })[]>,
   isAuditModalVisible: Ref<boolean>,
   getKey: (item: T) => number,
   sendUpdate: (ids: number[], status: FindingStatus) => void,
 ) {
-
   function toggleExpand(idx: number) {
     selectedIndex.value = idx;
     expanded.value = expanded.value === idx ? -1 : idx;
@@ -29,7 +28,7 @@ export function useAuditFunctions<T>(
     }
   }
 
-  function getCurrentFindingSelected(): T & {commit_url: string} {
+  function getCurrentFindingSelected(): T & { commit_url: string } {
     if (itemList.value === undefined) {
       dispatchMessage('List is empty');
       throw new Error('oups!');

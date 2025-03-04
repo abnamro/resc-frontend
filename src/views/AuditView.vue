@@ -2,11 +2,15 @@
   <div class="p-4">
     <h1 class="text-left text-3xl mb-10">AUDITS</h1>
 
-    <AuditModal v-model:visible="isAuditModalVisible" :selectedCheckBoxIds="selection" @update-audit="updateAudit" />
+    <AuditModal
+      v-model:visible="isAuditModalVisible"
+      :selectedCheckBoxIds="selection"
+      @update-audit="updateAudit"
+    />
 
-      <Panel :pt:header:class="'hidden'" class="pt-[1.125rem]">
-      <div class="grid grid-cols-10 gap-x-2 gap-y-4">
-        <div class="col-span-2">
+    <Panel :pt:header:class="'hidden'" class="pt-[1.125rem]">
+      <div class="grid grid-cols-3 md:grid-cols-6 xl:grid-cols-12 gap-x-2 gap-y-4">
+        <div class="col-span-3">
           <div class="flex flex-col justify-start">
             <label for="start-date" class="font-bold text-lg text-left text-muted-color-emphasis"
               >From Date</label
@@ -22,7 +26,7 @@
         </div>
 
         <!-- End Date Filter -->
-        <div class="col-span-2">
+        <div class="col-span-3">
           <div class="flex flex-col justify-start">
             <label for="end-date" class="font-bold text-lg text-left text-muted-color-emphasis"
               >To Date</label
@@ -41,15 +45,14 @@
 
         <div class="col-span-3 text-left flex items-center">
           <div class="flex flex-col justify-start w-full">
-            <label for="includeDeletedRepositories" class="font-bold text-lg text-left text-muted-color-emphasis">Auditor</label>
-            <InputText
-            class="w-full"
-            v-model="auditor"
-            @change="fetchPaginatedData"
-          />
+            <label
+              for="includeDeletedRepositories"
+              class="font-bold text-lg text-left text-muted-color-emphasis"
+              >Auditor</label
+            >
+            <InputText class="w-full" v-model="auditor" @change="fetchPaginatedData" />
           </div>
         </div>
-
 
         <!-- Include zero finding repos -->
         <div class="col-span-3 text-left flex items-end">
@@ -60,14 +63,21 @@
             @change="fetchPaginatedData"
           >
           </ToggleSwitch>
-          <label for="isLatestAudit" class="ml-2 text-lg text-left text-muted-color-emphasis"
-              >Only include latest audits.</label
-            >
+          <label for="isLatestAudit" class="ml-2 text-left text-muted-color-emphasis"
+            >Only include latest audits.</label
+          >
         </div>
       </div>
     </Panel>
-    
+
     <Panel :pt:header:class="'hidden'" class="mt-4 pt-[1.125rem]">
+      <FindingTableHeader
+        v-model:filter-string="filterString"
+        v-model:is-audit-modal-visible="isAuditModalVisible"
+        :audit-button-disabled="auditButtonDisabled"
+        :has-column-selector="false"
+      />
+
       <table class="w-full text-left mt-2">
         <thead>
           <tr class="bg-teal-500/20 pl-2">
@@ -92,39 +102,62 @@
               </td>
             </tr>
           </template>
-          <template v-else v-for="(data, idx) in audits" :key="`d${data.audit_id}-${selection.length}`">
-            <tr :class="{
-              'h-7': true,
-              'line-through text-muted-color': audited.includes(data.audit_id),
-              'bg-teal-450/10': selectedIndex === idx,
-              'hover:bg-teal-450/5': true,
-            }" @click="selectedIndex = idx">
+          <template
+            v-else
+            v-for="(data, idx) in filteredList"
+            :key="`d${data.audit_id}-${selection.length}`"
+          >
+            <tr
+              :class="{
+                'h-7': true,
+                'line-through text-muted-color': audited.includes(data.audit_id),
+                'bg-teal-450/10': selectedIndex === idx,
+                'hover:bg-teal-450/5': true,
+              }"
+              @click="selectedIndex = idx"
+            >
               <td class="pl-2">
-                <Checkbox size="small" v-model="selection" :value="data.finding_id"
-                  v-if="!audited.includes(data.audit_id)" />
+                <Checkbox
+                  size="small"
+                  v-model="selection"
+                  :value="data.finding_id"
+                  v-if="!audited.includes(data.audit_id)"
+                />
               </td>
               <td class="px-1 text-nowrap">{{ data.project_key }}</td>
               <td class="px-1 text-nowrap">{{ data.repository_name }}</td>
               <td class="px-1 text-nowrap">{{ data.rule_name }}</td>
-              <td class="px-1 text-nowrap">{{ trimPath(data.file_path) + ' :' + data.line_number }}</td>
-              <td class="px-1 text-nowrap" >
+              <td class="px-1 text-nowrap">
+                {{ trimPath(data.file_path) + ' :' + data.line_number }}
+              </td>
+              <td class="px-1 text-nowrap">
                 <FindingStatusBadge :status="data.status" />
                 <i v-if="data.comment" class="ml-1 pi pi-comment" v-tooltip="data.comment"></i>
               </td>
               <td>{{ data.timestamp.slice(0, 10) }}</td>
-              <td class="text-nowrap text-right" v-tooltip.top="data.auditor">{{ userFormat(data.auditor) }}</td>
+              <td class="text-nowrap text-right" v-tooltip.top="data.auditor">
+                {{ userFormat(data.auditor) }}
+              </td>
             </tr>
           </template>
         </tbody>
       </table>
     </Panel>
 
-    <Paginator v-model:first="currentPage" v-model:rows="perPage" :totalRecords="totalRows"
-      :rowsPerPageOptions="PAGE_SIZES" @update:first="handlePageClick" @update:rows="handlePageSizeChange" />
+    <Paginator
+      v-model:first="currentPage"
+      v-model:rows="perPage"
+      :totalRecords="totalRows"
+      :rowsPerPageOptions="PAGE_SIZES"
+      @update:first="handlePageClick"
+      @update:rows="handlePageSizeChange"
+    />
   </div>
 </template>
 <script setup lang="ts">
+import FindingTableHeader from '@/components/Findings/FindingTableHeader.vue';
 import { useAuditFunctions } from '@/composables/useAuditFunctions';
+import { useFiltering } from '@/composables/useFiltering';
 import { useFormatter } from '@/composables/useFormatter';
 import { usePaginator } from '@/composables/usePaginator';
 import { dispatchError, MAX_LENGTH_PATH, PAGE_SIZES } from '@/configuration/config';
@@ -149,7 +182,7 @@ const expanded = ref(-1);
 const selection = ref<number[]>([]);
 const audited = ref<number[]>([]);
 const selectedIndex = ref<number>(0);
-  const todaysDate = computed(() => {
+const todaysDate = computed(() => {
   const now = new Date();
   const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
   return new Date(today);
@@ -157,7 +190,6 @@ const selectedIndex = ref<number>(0);
 const endDateDisabled = computed(() => {
   return fromDate.value ? false : true;
 });
-
 
 const { totalRows, currentPage, perPage, handlePageClick, handlePageSizeChange } =
   usePaginator(fetchPaginatedData);
@@ -167,6 +199,8 @@ const fromDate = ref<Date | undefined>(undefined);
 const toDate = ref<Date | undefined>(undefined);
 const status = ref<FindingStatus[]>([]);
 const isLatest = ref(true);
+const auditButtonDisabled = computed(() => selection.value.length === 0);
+const { filterString, filteredList } = useFiltering(audits);
 
 function trimPath(path: string) {
   if (path.length < MAX_LENGTH_PATH) {
@@ -196,7 +230,7 @@ function fetchPaginatedData() {
 function sendUpdate(selectedIds: number[], status: FindingStatus) {
   FindingsService.auditFindings(selectedIds, status, '')
     .then(() => {
-      updateVisualBadge(selectedIds, status, '');
+      updateVisualBadge(selectedIds, status);
     })
     .catch((error) => {
       dispatchError(error);
@@ -224,18 +258,18 @@ const {
   selectedIndex,
   expanded,
   // @ts-expect-error
-  audits,
+  filteredList,
   isAuditModalVisible,
   (item) => item.finding_id,
-  sendUpdate
-)
+  sendUpdate,
+);
 
-function updateAudit(status: FindingStatus, comment: string) {
-  updateVisualBadge(selection.value, status, comment);
+function updateAudit(status: FindingStatus, _comment: string) {
+  updateVisualBadge(selection.value, status);
   fetchPaginatedData();
 }
 
-function updateVisualBadge(selectedIds: number[], status: FindingStatus, comment: string) {
+function updateVisualBadge(selectedIds: number[], status: FindingStatus) {
   if (audits.value === undefined) {
     return;
   }
@@ -256,7 +290,6 @@ function updateVisualBadge(selectedIds: number[], status: FindingStatus, comment
 }
 
 onMounted(fetchPaginatedData);
-
 
 /* istanbul ignore next @preserve */
 onKeyStroke(['ArrowLeft', 'h', 'H'], () => !shouldIgnoreKeystroke() && closeDetails(), {

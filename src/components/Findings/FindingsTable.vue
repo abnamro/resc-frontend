@@ -12,6 +12,7 @@
       v-model:is-audit-modal-visible="isAuditModalVisible"
       v-model:is-column-selector-visible="isColumnSelectorVisible"
       :audit-button-disabled="auditButtonDisabled"
+      :has-column-selector="true"
     />
 
     <table class="w-full text-left mt-2">
@@ -131,20 +132,20 @@ setTableFields();
 
 const {
   toggleExpand,
-    toggleAllCheckboxes,
-    selectDown,
-    selectUp,
-    openDetails,
-    closeDetails,
-    openCommitUrl,
-    toggleSelect,
-    markAsFalsePositive,
-    markAsTruePositive,
-    markAsGone,
-    markAllAsFalsePositive,
-    markAllAsTruePositive,
-    markAllAsGone,
-    auditThis,
+  toggleAllCheckboxes,
+  selectDown,
+  selectUp,
+  openDetails,
+  closeDetails,
+  openCommitUrl,
+  toggleSelect,
+  markAsFalsePositive,
+  markAsTruePositive,
+  markAsGone,
+  markAllAsFalsePositive,
+  markAllAsTruePositive,
+  markAllAsGone,
+  auditThis,
 } = useAuditFunctions(
   selection,
   selectedIndex,
@@ -153,8 +154,8 @@ const {
   filteredList,
   isAuditModalVisible,
   (item) => item.id_,
-  sendUpdate
-)
+  sendUpdate,
+);
 
 function updateAudit(status: FindingStatus, comment: string) {
   updateVisualBadge(selection.value, status, comment);
