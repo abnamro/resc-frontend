@@ -217,8 +217,8 @@ function fetchPaginatedData() {
       audits.value = response.data.data;
       totalRows.value = response.data.total;
     })
-  /* istanbul ignore next @preserve */
-  .catch(dispatchError);
+    /* istanbul ignore next @preserve */
+    .catch(dispatchError);
 }
 
 function sendUpdate(selectedIds: number[], statusCandidate: FindingStatus) {
@@ -226,12 +226,13 @@ function sendUpdate(selectedIds: number[], statusCandidate: FindingStatus) {
     .then(() => {
       updateVisualBadge(selectedIds, statusCandidate);
     })
-  .catch(
+    .catch(
       /* istanbul ignore next @preserve */
-    (error) => {
-      dispatchError(error);
-      return false;
-    });
+      (error) => {
+        dispatchError(error);
+        return false;
+      },
+    );
 }
 
 const {
@@ -286,7 +287,8 @@ function updateVisualBadge(selectedIds: number[], statusCandidate: FindingStatus
 
   selection.value = selection.value.filter(
     /* istanbul ignore next @preserve */
-    (s) => s !== selectedIds[0]);
+    (s) => s !== selectedIds[0],
+  );
 }
 
 onMounted(fetchPaginatedData);

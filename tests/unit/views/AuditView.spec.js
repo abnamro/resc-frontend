@@ -81,6 +81,8 @@ describe('AuditView tests', () => {
     expect(() => wrapper.vm.toggleSelect()).not.toThrow();
 
     expect(() => wrapper.vm.updateAudit('FALSE_POSITIVE', '')).not.toThrow();
-    expect(wrapper.vm.trimPath('0123456789012345678901234567890123456789')).toBe('012345678901234567890123456789');
+    expect(wrapper.vm.trimPath('0123456789012345678901234567890123456789')).toBe(
+      '012345678901234567890123456789',
+    );
   });
 });
