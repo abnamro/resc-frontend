@@ -3,11 +3,11 @@
     <Button icon="pi pi-exclamation-triangle" rounded @click="isOpen = !isOpen"></Button>
   </div>
   <Collapse
-    class="v-collapse w-full flex flex-col z-50 justify-center absolute bg-black/90 text-left"
+    class="v-collapse w-full flex flex-col z-50 justify-center absolute bg-surface-950/90 text-left"
     :when="isOpen && errors.length > 0"
   >
-    <h1 class="font-bold text-green-400 text-xl px-4 pt-4 pb-2 underline">Error logs:</h1>
-    <div v-for="(error, idx) in errors" class="px-4 text-green-300" :key="'error' + idx">
+    <h1 class="font-bold !text-yellow-520 text-xl px-4 pt-4 pb-2 underline">Error logs:</h1>
+    <div v-for="(error, idx) in errors" class="px-4 text-teal-450 last:pb-4" :key="'error' + idx">
       <span v-if="isJsError(error)">
         {{ error.message }} in {{ error.filename }}:{{ error.lineno }}
       </span>

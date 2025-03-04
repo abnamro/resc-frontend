@@ -14,6 +14,7 @@ import ScanFindings from '@/views/ScanFindings.vue';
 import RuleAnalysis from '@/views/RuleAnalysis.vue';
 import RulePacks from '@/views/RulePacks.vue';
 import RuleMetrics from '@/views/metrics/RuleMetrics.vue';
+import AuditView from '@/views/AuditView.vue';
 import Login from '@/views/LoginPanel.vue';
 import LoginCallback from '@/components/Login/LoginCallback.vue';
 import AuthService from '@/services/auth-service';
@@ -61,6 +62,11 @@ const routes = [
     path: '/rulepacks',
     name: 'RulePacks',
     component: RulePacks,
+  },
+  {
+    path: '/audits',
+    name: 'Audits',
+    component: AuditView,
   },
   {
     path: '/:catchAll(.*)',

@@ -12,14 +12,13 @@
       v-model:is-audit-modal-visible="isAuditModalVisible"
       v-model:is-column-selector-visible="isColumnSelectorVisible"
       :audit-button-disabled="auditButtonDisabled"
+      :has-column-selector="true"
     />
 
     <table class="w-full text-left mt-2">
       <thead>
         <tr>
-          <th class="bg-teal-500/20 pl-2">
-            <!-- <Checkbox binary v-model="selection" /> -->
-          </th>
+          <th class="bg-teal-500/20 pl-2"></th>
           <th class="bg-teal-500/20"></th>
           <th
             v-for="col of fields"
@@ -101,11 +100,12 @@ import ColumnSelector from '@/components/Findings/ColumnSelector.vue';
 import FindingTableHeader from './FindingTableHeader.vue';
 import { useFiltering } from '@/composables/useFiltering';
 import { useColumnFiltering } from '@/composables/useColumnFiltering';
-import { dispatchError, dispatchMessage } from '@/configuration/config';
+import { dispatchError } from '@/configuration/config';
 import Panel from 'primevue/panel';
 import Checkbox from 'primevue/checkbox';
 import Button from 'primevue/button';
 import FindingStatusBadge from '../Common/FindingStatusBadge.vue';
+import { useAuditFunctions } from '@/composables/useAuditFunctions';
 
 const props = defineProps<{
   findings: DetailedFindingRead[] | undefined;
@@ -128,22 +128,32 @@ const { filterString, filteredList } = useFiltering(findingList);
 
 setTableFields();
 
-function toggleExpand(idx: number) {
-  selectedIndex.value = idx;
-  expanded.value = expanded.value === idx ? -1 : idx;
-}
-
-function toggleAllCheckboxes() {
-  if (filteredList.value === undefined) {
-    return;
-  }
-
-  if (selection.value.length < filteredList.value.length) {
-    selection.value = filteredList.value.map((f) => f.id_);
-  } else {
-    selection.value = [];
-  }
-}
+const {
+  toggleExpand,
+  toggleAllCheckboxes,
+  selectDown,
+  selectUp,
+  openDetails,
+  closeDetails,
+  openCommitUrl,
+  toggleSelect,
+  markAsFalsePositive,
+  markAsTruePositive,
+  markAsGone,
+  markAllAsFalsePositive,
+  markAllAsTruePositive,
+  markAllAsGone,
+  auditThis,
+} = useAuditFunctions(
+  selection,
+  selectedIndex,
+  expanded,
+  // @ts-expect-error
+  filteredList,
+  isAuditModalVisible,
+  (item) => item.id_,
+  sendUpdate,
+);
 
 function updateAudit(status: FindingStatus, comment: string) {
   updateVisualBadge(selection.value, status, comment);
@@ -168,101 +178,6 @@ function updateVisualBadge(selectedIds: number[], status: FindingStatus, comment
   }
 
   selection.value = selection.value.filter((s) => s !== selectedIds[0]);
-}
-
-function getCurrentFindingSelected(): DetailedFindingRead {
-  if (filteredList.value === undefined) {
-    dispatchMessage('List is empty');
-    throw new Error('oups!');
-  }
-
-  return filteredList.value[selectedIndex.value];
-}
-
-function selectDown(): boolean {
-  if (filteredList.value === undefined) {
-    return false;
-  }
-
-  selectedIndex.value = ((selectedIndex.value ?? -1) + 1) % filteredList.value.length;
-  expanded.value = expanded.value === -1 ? -1 : selectedIndex.value;
-
-  return true;
-}
-
-function selectUp(): boolean {
-  if (filteredList.value === undefined) {
-    return false;
-  }
-
-  selectedIndex.value =
-    (selectedIndex.value + filteredList.value.length - 1) % filteredList.value.length;
-  expanded.value = expanded.value === -1 ? -1 : selectedIndex.value;
-
-  return true;
-}
-
-function openDetails() {
-  expanded.value = selectedIndex.value;
-}
-
-function closeDetails() {
-  expanded.value = -1;
-}
-
-function openCommitUrl() {
-  const url = getCurrentFindingSelected()?.commit_url;
-  if (url !== undefined && url !== null) {
-    window.open(url, '_blank')?.focus();
-  }
-}
-
-function toggleSelect() {
-  const item = getCurrentFindingSelected();
-  if (selection.value.filter((idx) => idx === item.id_).length > 0) {
-    selection.value = selection.value.filter((idx) => idx !== item.id_);
-  } else {
-    selection.value.push(item.id_);
-  }
-}
-
-function markAsFalsePositive() {
-  const item = getCurrentFindingSelected();
-  sendUpdate([item.id_], 'FALSE_POSITIVE');
-  selectDown();
-}
-
-function markAsTruePositive() {
-  const item = getCurrentFindingSelected();
-  sendUpdate([item.id_], 'TRUE_POSITIVE');
-  selectDown();
-}
-
-function markAsGone() {
-  const item = getCurrentFindingSelected();
-  sendUpdate([item.id_], 'NOT_ACCESSIBLE');
-  selectDown();
-}
-
-function markAllAsFalsePositive() {
-  sendUpdate(selection.value, 'FALSE_POSITIVE');
-}
-
-function markAllAsTruePositive() {
-  sendUpdate(selection.value, 'TRUE_POSITIVE');
-}
-
-function markAllAsGone() {
-  sendUpdate(selection.value, 'NOT_ACCESSIBLE');
-}
-
-function auditThis() {
-  if (selection.value.length > 0) {
-    isAuditModalVisible.value = true;
-    return;
-  }
-
-  openDetails();
 }
 
 function sendUpdate(selectedIds: number[], status: FindingStatus) {

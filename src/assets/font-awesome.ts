@@ -19,6 +19,7 @@ import {
   faThumbsDown,
   faMedal,
   faAward,
+  faClipboardCheck,
 } from '@fortawesome/free-solid-svg-icons';
 
 import { library } from '@fortawesome/fontawesome-svg-core';
@@ -45,5 +46,6 @@ export function importFA() {
     faThumbsDown,
     faMedal,
     faAward,
+    faClipboardCheck,
   );
 }

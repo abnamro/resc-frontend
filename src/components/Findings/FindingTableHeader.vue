@@ -8,7 +8,11 @@
         :disabled="props.auditButtonDisabled"
         >AUDIT</Button
       >
-      <Button class="" severity="primary" v-on:click="isColumnSelectorVisible = true"
+      <Button
+        v-if="props.hasColumnSelector"
+        class=""
+        severity="primary"
+        v-on:click="isColumnSelectorVisible = true"
         >Columns</Button
       >
     </div>
@@ -16,7 +20,7 @@
       <InputText
         class="opacity-0 hover:opacity-100 focus:opacity-100 valid:opacity-100 w-1/2 transition-all duration-200 ease-in-out"
         id="filterFiles"
-        placeholder="filename"
+        placeholder="f:filename r:rulename rp:repository"
         v-model="filterString"
         :required="true"
       />
@@ -29,6 +33,7 @@ import InputText from 'primevue/inputtext';
 import type { Ref } from 'vue';
 
 const props = defineProps<{
+  hasColumnSelector: boolean;
   auditButtonDisabled: boolean;
 }>();
 const isAuditModalVisible = defineModel('isAuditModalVisible') as Ref<boolean>;

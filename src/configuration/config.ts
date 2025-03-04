@@ -112,6 +112,7 @@ export const PAGE_SIZE_50 = 50;
 export const PAGE_SIZE_100 = 100;
 export const PAGE_SIZE_500 = 500;
 export const PAGE_SIZE_1000 = 1000;
+export const MAX_LENGTH_PATH = 30;
 
 export const PAGE_SIZES = [
   PAGE_SIZE_20,

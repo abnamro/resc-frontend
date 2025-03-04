@@ -284,6 +284,25 @@ export interface paths {
      */
     get: operations['get_count_by_time_resc_v1_findings_count_by_time__time_type__get'];
   };
+  '/resc/v1/audits': {
+    /**
+     * Get audits
+     * @description Retrieve all audits objects paginated
+     *
+     * - **db_connection**: Session of the database connection
+     * - **skip**: Integer amount of records to skip to support pagination
+     * - **limit**: Integer amount of records to return, to support pagination
+     * - **auditor**: String to filter which auditor to audit.
+     * - **from_date**: DateTime to filter from which we look at (oldest)
+     * - **to_date**: DateTime to filter to which we look at (youngest)
+     * - **status**: Finding status to filter on
+     * - **is_latest**: Whether to only consider latest audits.
+     * - **return**: [AuditFinding]
+     *     The output will contain a PaginationModel containing the list of AuditFinding type objects,
+     *     or an empty list if no audits was found
+     */
+    get: operations['get_all_audits_resc_v1_audits_get'];
+  };
   '/resc/v1/detailed-findings': {
     /**
      * Get all detailed findings
@@ -513,6 +532,10 @@ export interface paths {
      * - **return**: The output will contain the updated metadata of the repository
      */
     patch: operations['toggle_deleted_at_for_repository_resc_v1_repositories__repository_id__toggle_deleted_patch'];
+  };
+  '/resc/v1/repositories/active': {
+    /** Mark the repositories as deleted: The list provided is the list of still active repositories. */
+    post: operations['get_active_repositories_mark_rest_as_deleted_resc_v1_repositories_active_post'];
   };
   '/resc/v1/scans': {
     /**
@@ -776,6 +799,15 @@ export type webhooks = Record<string, never>;
 
 export interface components {
   schemas: {
+    /** ActiveRepositories */
+    ActiveRepositories: {
+      /** Project Key */
+      project_key: string;
+      /** Repositories */
+      repositories: components['schemas']['SimpleRepository'][];
+      /** Vcs Instance Name */
+      vcs_instance_name: string;
+    };
     /** AuditCountOverTime */
     AuditCountOverTime: {
       /** Time Period */
@@ -789,6 +821,62 @@ export interface components {
        * @default 0
        */
       total?: number;
+    };
+    /** AuditFinding */
+    AuditFinding: {
+      /** Audit Id */
+      audit_id: number;
+      status: components['schemas']['FindingStatus'];
+      /** Auditor */
+      auditor: string;
+      /** Comment */
+      comment?: string | null;
+      /**
+       * Timestamp
+       * Format: date-time
+       */
+      timestamp: string;
+      /** Is Latest */
+      is_latest: boolean;
+      /** Finding Id */
+      finding_id: number;
+      /** File Path */
+      file_path: string;
+      /** Line Number */
+      line_number: number;
+      /** Column Start */
+      column_start: number;
+      /** Column End */
+      column_end: number;
+      /** Commit Id */
+      commit_id: string;
+      /** Commit Message */
+      commit_message: string;
+      /**
+       * Commit Timestamp
+       * Format: date-time
+       */
+      commit_timestamp: string;
+      /** Author */
+      author: string;
+      /** Email */
+      email: string;
+      /** Rule Name */
+      rule_name: string;
+      /** Project Key */
+      project_key: string;
+      /** Repository Name */
+      repository_name: string;
+      /**
+       * Repository Url
+       * Format: uri
+       */
+      repository_url: string;
+      vcs_provider: components['schemas']['VCSProviders'];
+      /** Is Dir Scan */
+      is_dir_scan: boolean;
+      /** Commit Url */
+      commit_url?: string | null;
     };
     /** AuditMultiple */
     AuditMultiple: {
@@ -1080,6 +1168,17 @@ export interface components {
      * }
      */
     Model422: Record<string, never>;
+    /** PaginationModel[AuditFinding] */
+    PaginationModel_AuditFinding_: {
+      /** Data */
+      data: components['schemas']['AuditFinding'][];
+      /** Total */
+      total: number;
+      /** Limit */
+      limit: number;
+      /** Skip */
+      skip: number;
+    };
     /** PaginationModel[AuditRead] */
     PaginationModel_AuditRead_: {
       /** Data */
@@ -1413,6 +1512,13 @@ export interface components {
      * @enum {string}
      */
     ScanType: 'BASE' | 'INCREMENTAL';
+    /** SimpleRepository */
+    SimpleRepository: {
+      /** Id */
+      id: string;
+      /** Name */
+      name: string;
+    };
     /** StatusCount */
     StatusCount: {
       status: components['schemas']['FindingStatus'];
@@ -2430,6 +2536,57 @@ export interface operations {
     };
   };
   /**
+   * Get audits
+   * @description Retrieve all audits objects paginated
+   *
+   * - **db_connection**: Session of the database connection
+   * - **skip**: Integer amount of records to skip to support pagination
+   * - **limit**: Integer amount of records to return, to support pagination
+   * - **auditor**: String to filter which auditor to audit.
+   * - **from_date**: DateTime to filter from which we look at (oldest)
+   * - **to_date**: DateTime to filter to which we look at (youngest)
+   * - **status**: Finding status to filter on
+   * - **is_latest**: Whether to only consider latest audits.
+   * - **return**: [AuditFinding]
+   *     The output will contain a PaginationModel containing the list of AuditFinding type objects,
+   *     or an empty list if no audits was found
+   */
+  get_all_audits_resc_v1_audits_get: {
+    parameters: {
+      query?: {
+        skip?: number;
+        limit?: number;
+        auditor?: string | null;
+        from_date?: string | null;
+        to_date?: string | null;
+        status?: components['schemas']['FindingStatus'][] | null;
+        is_latest?: boolean | null;
+      };
+    };
+    responses: {
+      /** @description Retrieve all the past audits */
+      200: {
+        content: {
+          'application/json': components['schemas']['PaginationModel_AuditFinding_'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+      /** @description Internal server error. Contact your system administrator */
+      500: {
+        content: never;
+      };
+      /** @description Unable to communicate with DataBase, Please contact your system administrator */
+      503: {
+        content: never;
+      };
+    };
+  };
+  /**
    * Get all detailed findings
    * @description Retrieve all findings objects paginated
    * - **query_string**
@@ -3099,6 +3256,42 @@ export interface operations {
       };
     };
   };
+  /** Mark the repositories as deleted: The list provided is the list of still active repositories. */
+  get_active_repositories_mark_rest_as_deleted_resc_v1_repositories_active_post: {
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['ActiveRepositories'];
+      };
+    };
+    responses: {
+      /** @description Mark the repositories as deleted */
+      200: {
+        content: {
+          'application/json': unknown;
+        };
+      };
+      /** @description Some repositories are not found */
+      404: {
+        content: {
+          'application/json': components['schemas']['Model404'];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        content: {
+          'application/json': components['schemas']['HTTPValidationError'];
+        };
+      };
+      /** @description Internal server error. Contact your system administrator */
+      500: {
+        content: never;
+      };
+      /** @description Unable to communicate with DataBase, Please contact your system administrator */
+      503: {
+        content: never;
+      };
+    };
+  };
   /**
    * Get scans
    * @description Retrieve all scan objects paginated
@@ -3169,6 +3362,12 @@ export interface operations {
       400: {
         content: {
           'application/json': components['schemas']['Model400'];
+        };
+      };
+      /** @description Repository not found */
+      404: {
+        content: {
+          'application/json': components['schemas']['Model404'];
         };
       };
       /** @description Validation Error */
