@@ -63,7 +63,7 @@ describe('AuditView tests', () => {
     spy.mockImplementation((q) => {
       switch (q) {
         case 'audits':
-          return data;
+          return { data: data };
         default:
           console.log(q);
       }
@@ -75,7 +75,8 @@ describe('AuditView tests', () => {
 
     expect(() => wrapper.vm.selectDown()).not.toThrow();
     // This does not seem to trigger coverage sadly...
-    expect(() => wrapper.vm.sendUpdate(['123456'], 'FALSE_POSITIVE'));
+    expect(() => wrapper.vm.sendUpdate(['123456'], 'FALSE_POSITIVE')).not.toThrow();
     expect(wrapper.vm.selectedIndex).toBe(0);
+    expect(wrapper.vm.audits).not.toBe(undefined);
   });
 });

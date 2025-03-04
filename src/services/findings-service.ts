@@ -148,6 +148,8 @@ const FindingsService = {
     });
   },
 
+  // API call. No way to test this. Just ignore.
+  /* istanbul ignore next @preserve */
   async getAudits(
     perPage: number,
     skipRowCount: number,

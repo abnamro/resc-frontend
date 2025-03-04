@@ -18,9 +18,7 @@
     <table class="w-full text-left mt-2">
       <thead>
         <tr>
-          <th class="bg-teal-500/20 pl-2">
-            <!-- <Checkbox binary v-model="selection" /> -->
-          </th>
+          <th class="bg-teal-500/20 pl-2"></th>
           <th class="bg-teal-500/20"></th>
           <th
             v-for="col of fields"

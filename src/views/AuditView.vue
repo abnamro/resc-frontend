@@ -223,10 +223,10 @@ function fetchPaginatedData() {
     .catch(dispatchError);
 }
 
-function sendUpdate(selectedIds: number[], status: FindingStatus) {
-  FindingsService.auditFindings(selectedIds, status, '')
+function sendUpdate(selectedIds: number[], statusCandidate: FindingStatus) {
+  FindingsService.auditFindings(selectedIds, statusCandidate, '')
     .then(() => {
-      updateVisualBadge(selectedIds, status);
+      updateVisualBadge(selectedIds, statusCandidate);
     })
     .catch((error) => {
       dispatchError(error);
@@ -260,19 +260,19 @@ const {
   sendUpdate,
 );
 
-function updateAudit(status: FindingStatus, _comment: string) {
-  updateVisualBadge(selection.value, status);
+function updateAudit(statusCandidate: FindingStatus, _comment: string) {
+  updateVisualBadge(selection.value, statusCandidate);
   fetchPaginatedData();
 }
 
-function updateVisualBadge(selectedIds: number[], status: FindingStatus) {
+function updateVisualBadge(selectedIds: number[], statusCandidate: FindingStatus) {
   if (audits.value === undefined) {
     return;
   }
 
   audits.value.forEach((finding: AuditFinding, idx, theArray) => {
     if (selectedIds.includes(finding.finding_id)) {
-      theArray[idx].status = status;
+      theArray[idx].status = statusCandidate;
       audited.value.push(theArray[idx].audit_id);
     }
   });
