@@ -36,7 +36,7 @@ if [[ ! -z $VITE_SSO_ID_TOKEN_ISSUER_URL ]]; then
     findstring="connect-src 'self';"
     replacestring="connect-src 'self' $VITE_SSO_ID_TOKEN_ISSUER_URL;"
     echo "Content-Security-Policy Replacing $findstring with $replacestring"
-    sed -i -e "s/$findstring/$replacestring/g" /etc/nginx/nginx.conf
+    sed -i -e "s#$findstring#$replacestring#g" /etc/nginx/nginx.conf
 fi
 
 /docker-entrypoint.sh "$@"
