@@ -68,7 +68,7 @@ function handleSubmit() {
     comment.value,
   )
     .then(() => {
-      emit('update-audit', status, comment);
+      emit('update-audit', status.value, comment.value);
     })
     .catch(dispatchError);
 
