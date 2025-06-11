@@ -136,10 +136,11 @@ jobs:
           else
               echo "Event is neither pull_request nor push"
           fi
-
+      
       - name: Determine if image needs to be published
         run: |
-          if [[ ${{ env.BRANCH_NAME }} == 'main' ]]; then
+          echo "Branch name: ${{ env.BRANCH_NAME }}"
+          if [[ "${{ env.BRANCH_NAME }}" == 'main' ]]; then
               echo "PUBLISH_IMAGE=true" >> "$GITHUB_ENV"
               echo "Going to publish image to registry"
           else
