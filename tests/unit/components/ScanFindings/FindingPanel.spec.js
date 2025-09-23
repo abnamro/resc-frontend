@@ -1,4 +1,4 @@
-import { mount } from '@vue/test-utils';
+import { shallowMount } from '@vue/test-utils';
 import { describe, expect, it } from 'vitest';
 import App from '@/components/ScanFindings/FindingPanel.vue';
 import finding from '@/../tests/resources/mock_detailed_findings.json';
@@ -6,7 +6,7 @@ import { createTestingPinia } from '@pinia/testing';
 
 describe('FindingPanel Tab', () => {
   it('display a finding', async () => {
-    const wrapper = mount(App, {
+    const wrapper = shallowMount(App, {
       props: {
         finding: finding.data[0],
       },
