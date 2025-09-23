@@ -1,5 +1,5 @@
 import { mount } from '@vue/test-utils';
-import { describe, expect, it, vi } from 'vitest';
+import { beforeAll, describe, expect, it, vi } from 'vitest';
 import App from '@/components/Charts/MultiLineChartVue.vue';
 import { Line } from 'vue-chartjs';
 import { createTestingPinia } from '@pinia/testing';
@@ -7,6 +7,22 @@ import { createTestingPinia } from '@pinia/testing';
 HTMLCanvasElement.prototype.getContext = vi.fn();
 
 describe('MultilineChart tests', () => {
+  beforeAll(() => {
+    Object.defineProperty(window, 'matchMedia', {
+      writable: true,
+      value: vi.fn().mockImplementation((query) => ({
+        matches: false,
+        media: query,
+        onchange: null,
+        addListener: vi.fn(), // Deprecated
+        removeListener: vi.fn(), // Deprecated
+        addEventListener: vi.fn(),
+        removeEventListener: vi.fn(),
+        dispatchEvent: vi.fn(),
+      })),
+    });
+  });
+
   let spy;
   afterAll(() => {
     console.error.mockRestore();
@@ -53,7 +69,6 @@ describe('MultilineChart tests', () => {
         },
         styles: { height: '300px', width: '200px' },
       },
-      global: {},
     });
 
     expect(wrapper.exists()).toBe(true);

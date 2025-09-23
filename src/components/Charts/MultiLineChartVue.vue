@@ -18,7 +18,7 @@ import { useAuthUserStore } from '@/store';
 import { storeToRefs } from 'pinia';
 
 function getColor() {
-  return dark.value ? $dt('gray.50').value : $dt('gray.870').value;
+  return dark.value ? $dt('gray.50').value + '' : $dt('gray.870').value + '';
 }
 
 const store = useAuthUserStore();
